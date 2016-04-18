@@ -1,0 +1,529 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 46;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		7B3B99691CC4437E00900838 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B3B99681CC4437E00900838 /* AppDelegate.swift */; };
+		7B3B996B1CC4437E00900838 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B3B996A1CC4437E00900838 /* ViewController.swift */; };
+		7B3B996E1CC4437E00900838 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 7B3B996C1CC4437E00900838 /* Main.storyboard */; };
+		7B3B99701CC4437E00900838 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 7B3B996F1CC4437E00900838 /* Assets.xcassets */; };
+		7B3B99731CC4437E00900838 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 7B3B99711CC4437E00900838 /* LaunchScreen.storyboard */; };
+		7B3B997E1CC4437E00900838 /* UrsusTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B3B997D1CC4437E00900838 /* UrsusTests.swift */; };
+		7B3B99891CC4437E00900838 /* UrsusUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B3B99881CC4437E00900838 /* UrsusUITests.swift */; };
+		7B3B99981CC448B300900838 /* RequestManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B3B99971CC448B300900838 /* RequestManager.swift */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		7B3B997A1CC4437E00900838 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 7B3B995D1CC4437E00900838 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 7B3B99641CC4437E00900838;
+			remoteInfo = Ursus;
+		};
+		7B3B99851CC4437E00900838 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 7B3B995D1CC4437E00900838 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 7B3B99641CC4437E00900838;
+			remoteInfo = Ursus;
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXFileReference section */
+		7B3B99651CC4437E00900838 /* Ursus.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Ursus.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		7B3B99681CC4437E00900838 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
+		7B3B996A1CC4437E00900838 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
+		7B3B996D1CC4437E00900838 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
+		7B3B996F1CC4437E00900838 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		7B3B99721CC4437E00900838 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
+		7B3B99741CC4437E00900838 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		7B3B99791CC4437E00900838 /* UrsusTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = UrsusTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		7B3B997D1CC4437E00900838 /* UrsusTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UrsusTests.swift; sourceTree = "<group>"; };
+		7B3B997F1CC4437E00900838 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		7B3B99841CC4437E00900838 /* UrsusUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = UrsusUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		7B3B99881CC4437E00900838 /* UrsusUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UrsusUITests.swift; sourceTree = "<group>"; };
+		7B3B998A1CC4437E00900838 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		7B3B99961CC443DF00900838 /* Ursus.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = Ursus.entitlements; sourceTree = "<group>"; };
+		7B3B99971CC448B300900838 /* RequestManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RequestManager.swift; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		7B3B99621CC4437E00900838 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		7B3B99761CC4437E00900838 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		7B3B99811CC4437E00900838 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		7B3B995C1CC4437E00900838 = {
+			isa = PBXGroup;
+			children = (
+				7B3B99671CC4437E00900838 /* Ursus */,
+				7B3B997C1CC4437E00900838 /* UrsusTests */,
+				7B3B99871CC4437E00900838 /* UrsusUITests */,
+				7B3B99661CC4437E00900838 /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		7B3B99661CC4437E00900838 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				7B3B99651CC4437E00900838 /* Ursus.app */,
+				7B3B99791CC4437E00900838 /* UrsusTests.xctest */,
+				7B3B99841CC4437E00900838 /* UrsusUITests.xctest */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		7B3B99671CC4437E00900838 /* Ursus */ = {
+			isa = PBXGroup;
+			children = (
+				7B3B99961CC443DF00900838 /* Ursus.entitlements */,
+				7B3B99681CC4437E00900838 /* AppDelegate.swift */,
+				7B3B996A1CC4437E00900838 /* ViewController.swift */,
+				7B3B996C1CC4437E00900838 /* Main.storyboard */,
+				7B3B996F1CC4437E00900838 /* Assets.xcassets */,
+				7B3B99711CC4437E00900838 /* LaunchScreen.storyboard */,
+				7B3B99741CC4437E00900838 /* Info.plist */,
+				7B3B99971CC448B300900838 /* RequestManager.swift */,
+			);
+			path = Ursus;
+			sourceTree = "<group>";
+		};
+		7B3B997C1CC4437E00900838 /* UrsusTests */ = {
+			isa = PBXGroup;
+			children = (
+				7B3B997D1CC4437E00900838 /* UrsusTests.swift */,
+				7B3B997F1CC4437E00900838 /* Info.plist */,
+			);
+			path = UrsusTests;
+			sourceTree = "<group>";
+		};
+		7B3B99871CC4437E00900838 /* UrsusUITests */ = {
+			isa = PBXGroup;
+			children = (
+				7B3B99881CC4437E00900838 /* UrsusUITests.swift */,
+				7B3B998A1CC4437E00900838 /* Info.plist */,
+			);
+			path = UrsusUITests;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		7B3B99641CC4437E00900838 /* Ursus */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 7B3B998D1CC4437E00900838 /* Build configuration list for PBXNativeTarget "Ursus" */;
+			buildPhases = (
+				7B3B99611CC4437E00900838 /* Sources */,
+				7B3B99621CC4437E00900838 /* Frameworks */,
+				7B3B99631CC4437E00900838 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = Ursus;
+			productName = Ursus;
+			productReference = 7B3B99651CC4437E00900838 /* Ursus.app */;
+			productType = "com.apple.product-type.application";
+		};
+		7B3B99781CC4437E00900838 /* UrsusTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 7B3B99901CC4437E00900838 /* Build configuration list for PBXNativeTarget "UrsusTests" */;
+			buildPhases = (
+				7B3B99751CC4437E00900838 /* Sources */,
+				7B3B99761CC4437E00900838 /* Frameworks */,
+				7B3B99771CC4437E00900838 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				7B3B997B1CC4437E00900838 /* PBXTargetDependency */,
+			);
+			name = UrsusTests;
+			productName = UrsusTests;
+			productReference = 7B3B99791CC4437E00900838 /* UrsusTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
+		7B3B99831CC4437E00900838 /* UrsusUITests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 7B3B99931CC4437E00900838 /* Build configuration list for PBXNativeTarget "UrsusUITests" */;
+			buildPhases = (
+				7B3B99801CC4437E00900838 /* Sources */,
+				7B3B99811CC4437E00900838 /* Frameworks */,
+				7B3B99821CC4437E00900838 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				7B3B99861CC4437E00900838 /* PBXTargetDependency */,
+			);
+			name = UrsusUITests;
+			productName = UrsusUITests;
+			productReference = 7B3B99841CC4437E00900838 /* UrsusUITests.xctest */;
+			productType = "com.apple.product-type.bundle.ui-testing";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		7B3B995D1CC4437E00900838 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				LastSwiftUpdateCheck = 0730;
+				LastUpgradeCheck = 0730;
+				ORGANIZATIONNAME = "Jeffery Jackson, Jr.";
+				TargetAttributes = {
+					7B3B99641CC4437E00900838 = {
+						CreatedOnToolsVersion = 7.3;
+						DevelopmentTeam = ZR82Q7TH8E;
+						SystemCapabilities = {
+							com.apple.Push = {
+								enabled = 1;
+							};
+							com.apple.iCloud = {
+								enabled = 1;
+							};
+						};
+					};
+					7B3B99781CC4437E00900838 = {
+						CreatedOnToolsVersion = 7.3;
+						TestTargetID = 7B3B99641CC4437E00900838;
+					};
+					7B3B99831CC4437E00900838 = {
+						CreatedOnToolsVersion = 7.3;
+						TestTargetID = 7B3B99641CC4437E00900838;
+					};
+				};
+			};
+			buildConfigurationList = 7B3B99601CC4437E00900838 /* Build configuration list for PBXProject "Ursus" */;
+			compatibilityVersion = "Xcode 3.2";
+			developmentRegion = English;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				Base,
+			);
+			mainGroup = 7B3B995C1CC4437E00900838;
+			productRefGroup = 7B3B99661CC4437E00900838 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				7B3B99641CC4437E00900838 /* Ursus */,
+				7B3B99781CC4437E00900838 /* UrsusTests */,
+				7B3B99831CC4437E00900838 /* UrsusUITests */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		7B3B99631CC4437E00900838 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				7B3B99731CC4437E00900838 /* LaunchScreen.storyboard in Resources */,
+				7B3B99701CC4437E00900838 /* Assets.xcassets in Resources */,
+				7B3B996E1CC4437E00900838 /* Main.storyboard in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		7B3B99771CC4437E00900838 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		7B3B99821CC4437E00900838 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		7B3B99611CC4437E00900838 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				7B3B99981CC448B300900838 /* RequestManager.swift in Sources */,
+				7B3B996B1CC4437E00900838 /* ViewController.swift in Sources */,
+				7B3B99691CC4437E00900838 /* AppDelegate.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		7B3B99751CC4437E00900838 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				7B3B997E1CC4437E00900838 /* UrsusTests.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		7B3B99801CC4437E00900838 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				7B3B99891CC4437E00900838 /* UrsusUITests.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		7B3B997B1CC4437E00900838 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 7B3B99641CC4437E00900838 /* Ursus */;
+			targetProxy = 7B3B997A1CC4437E00900838 /* PBXContainerItemProxy */;
+		};
+		7B3B99861CC4437E00900838 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 7B3B99641CC4437E00900838 /* Ursus */;
+			targetProxy = 7B3B99851CC4437E00900838 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
+/* Begin PBXVariantGroup section */
+		7B3B996C1CC4437E00900838 /* Main.storyboard */ = {
+			isa = PBXVariantGroup;
+			children = (
+				7B3B996D1CC4437E00900838 /* Base */,
+			);
+			name = Main.storyboard;
+			sourceTree = "<group>";
+		};
+		7B3B99711CC4437E00900838 /* LaunchScreen.storyboard */ = {
+			isa = PBXVariantGroup;
+			children = (
+				7B3B99721CC4437E00900838 /* Base */,
+			);
+			name = LaunchScreen.storyboard;
+			sourceTree = "<group>";
+		};
+/* End PBXVariantGroup section */
+
+/* Begin XCBuildConfiguration section */
+		7B3B998B1CC4437E00900838 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 9.3;
+				MTL_ENABLE_DEBUG_INFO = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = iphoneos;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		7B3B998C1CC4437E00900838 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 9.3;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				SDKROOT = iphoneos;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
+		7B3B998E1CC4437E00900838 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_ENTITLEMENTS = Ursus/Ursus.entitlements;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				INFOPLIST_FILE = Ursus/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = com.arcyn1c.Ursus;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Debug;
+		};
+		7B3B998F1CC4437E00900838 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_ENTITLEMENTS = Ursus/Ursus.entitlements;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				INFOPLIST_FILE = Ursus/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = com.arcyn1c.Ursus;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Release;
+		};
+		7B3B99911CC4437E00900838 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				INFOPLIST_FILE = UrsusTests/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = com.arcyn1c.UrsusTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Ursus.app/Ursus";
+			};
+			name = Debug;
+		};
+		7B3B99921CC4437E00900838 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				INFOPLIST_FILE = UrsusTests/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = com.arcyn1c.UrsusTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Ursus.app/Ursus";
+			};
+			name = Release;
+		};
+		7B3B99941CC4437E00900838 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				INFOPLIST_FILE = UrsusUITests/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = com.arcyn1c.UrsusUITests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				TEST_TARGET_NAME = Ursus;
+			};
+			name = Debug;
+		};
+		7B3B99951CC4437E00900838 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				INFOPLIST_FILE = UrsusUITests/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = com.arcyn1c.UrsusUITests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				TEST_TARGET_NAME = Ursus;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		7B3B99601CC4437E00900838 /* Build configuration list for PBXProject "Ursus" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				7B3B998B1CC4437E00900838 /* Debug */,
+				7B3B998C1CC4437E00900838 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		7B3B998D1CC4437E00900838 /* Build configuration list for PBXNativeTarget "Ursus" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				7B3B998E1CC4437E00900838 /* Debug */,
+				7B3B998F1CC4437E00900838 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		7B3B99901CC4437E00900838 /* Build configuration list for PBXNativeTarget "UrsusTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				7B3B99911CC4437E00900838 /* Debug */,
+				7B3B99921CC4437E00900838 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		7B3B99931CC4437E00900838 /* Build configuration list for PBXNativeTarget "UrsusUITests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				7B3B99941CC4437E00900838 /* Debug */,
+				7B3B99951CC4437E00900838 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 7B3B995D1CC4437E00900838 /* Project object */;
+}
