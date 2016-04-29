@@ -8,32 +8,29 @@
 
 import UIKit
 
-class RequestManager: NSObject, NSURLSessionDelegate {
+class RequestManager: NSObject, NSURLSessionDataDelegate {
 	
 	// Variables
-	static let requestManager = RequestManager()
-	private let session: NSURLSession = NSURLSession(configuration: .defaultSessionConfiguration(), delegate: requestManager, delegateQueue: nil)
-	let searchURL = "https://itunes.apple.com/search"
-	let lookupURL = "https://itunes.apple.com/lookup"
+	static let defaultManager = RequestManager()
+	
+	private let searchURL = "https://itunes.apple.com/search"
+	private let lookupURL = "https://itunes.apple.com/lookup"
+
+	private let session = NSURLSession(configuration: .defaultSessionConfiguration(), delegate: defaultManager, delegateQueue: nil)
 	
 	
-	// Initialization
+	// MARK: Initialization
 	override init() {
 		
 		super.init()
 		
-		searchForArtist("Kendrick Lamar") { (response, error) in
-			
-			print(response)
-			
-		}
-				
 	}
 	
 	
-	// Methods
+	// MARK: Methods
 	func searchForArtist(artist: String, completion: ((response: NSArray?, error: NSError?) -> Void)) {
 		
+		print("Trying harder...")
 		// create URL for data request
 		if let url = NSURL(string: "\(searchURL)?term=\(artist)&media=music&entity=musicArtist&attribute=aritstTerm") {
 			

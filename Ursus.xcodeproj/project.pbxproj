@@ -100,14 +100,14 @@
 		7B3B99671CC4437E00900838 /* Ursus */ = {
 			isa = PBXGroup;
 			children = (
-				7B3B99961CC443DF00900838 /* Ursus.entitlements */,
 				7B3B99681CC4437E00900838 /* AppDelegate.swift */,
-				7B3B996A1CC4437E00900838 /* ViewController.swift */,
-				7B3B996C1CC4437E00900838 /* Main.storyboard */,
 				7B3B996F1CC4437E00900838 /* Assets.xcassets */,
-				7B3B99711CC4437E00900838 /* LaunchScreen.storyboard */,
 				7B3B99741CC4437E00900838 /* Info.plist */,
+				7B3B99711CC4437E00900838 /* LaunchScreen.storyboard */,
+				7B3B996C1CC4437E00900838 /* Main.storyboard */,
 				7B3B99971CC448B300900838 /* RequestManager.swift */,
+				7B3B99961CC443DF00900838 /* Ursus.entitlements */,
+				7B3B996A1CC4437E00900838 /* ViewController.swift */,
 			);
 			path = Ursus;
 			sourceTree = "<group>";
