@@ -1,26 +1,657 @@
-<?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="10116" systemVersion="15F28b" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" initialViewController="BYZ-38-t0r">
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="11762" systemVersion="16D25a" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES" initialViewController="igh-Gg-oBy">
+    <device id="retina5_5" orientation="portrait">
+        <adaptation id="fullscreen"/>
+    </device>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="10085"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="11757"/>
+        <capability name="Aspect ratio constraints" minToolsVersion="5.1"/>
+        <capability name="Constraints to layout margins" minToolsVersion="6.0"/>
+        <capability name="Segues with Peek and Pop" minToolsVersion="7.1"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <scenes>
-        <!--View Controller-->
-        <scene sceneID="tne-QT-ifu">
+        <!--Settings-->
+        <scene sceneID="via-ck-cnN">
             <objects>
-                <viewController id="BYZ-38-t0r" customClass="ViewController" customModule="Ursus" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController title="Settings" id="tIm-Ss-63n" customClass="SettingsViewController" customModule="Ursus" customModuleProvider="target" sceneMemberID="viewController">
                     <layoutGuides>
-                        <viewControllerLayoutGuide type="top" id="y3c-jy-aDJ"/>
-                        <viewControllerLayoutGuide type="bottom" id="wfy-db-euE"/>
+                        <viewControllerLayoutGuide type="top" id="B8Y-Dv-aM3"/>
+                        <viewControllerLayoutGuide type="bottom" id="yos-1I-7FX"/>
                     </layoutGuides>
-                    <view key="view" contentMode="scaleToFill" id="8bC-Xf-vdC">
-                        <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
+                    <view key="view" contentMode="scaleToFill" id="cFL-hZ-xTD">
+                        <rect key="frame" x="0.0" y="0.0" width="414" height="736"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
+                        <subviews>
+                            <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="44" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="YVl-xn-yY5">
+                                <rect key="frame" x="0.0" y="0.0" width="414" height="736"/>
+                                <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                            </tableView>
+                        </subviews>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <constraints>
+                            <constraint firstItem="YVl-xn-yY5" firstAttribute="width" secondItem="cFL-hZ-xTD" secondAttribute="width" id="7Z2-eX-T31"/>
+                            <constraint firstItem="YVl-xn-yY5" firstAttribute="centerY" secondItem="cFL-hZ-xTD" secondAttribute="centerY" id="TVK-JQ-H09"/>
+                            <constraint firstItem="YVl-xn-yY5" firstAttribute="height" secondItem="cFL-hZ-xTD" secondAttribute="height" id="Xpi-0k-36J"/>
+                            <constraint firstItem="YVl-xn-yY5" firstAttribute="centerX" secondItem="cFL-hZ-xTD" secondAttribute="centerX" id="f3o-wE-p72"/>
+                        </constraints>
+                    </view>
+                    <connections>
+                        <outlet property="tableView" destination="YVl-xn-yY5" id="qvg-5E-4gr"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="oR9-o4-9ac" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="-3013" y="1139"/>
+        </scene>
+        <!--ArtistSearch-->
+        <scene sceneID="Wcv-Rb-N4r">
+            <objects>
+                <viewController storyboardIdentifier="ArtistSearch" title="ArtistSearch" modalPresentationStyle="overCurrentContext" useStoryboardIdentifierAsRestorationIdentifier="YES" id="exg-Xr-PvW" customClass="ArtistSearchViewController" customModule="Ursus" customModuleProvider="target" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="D3W-Yu-vn6"/>
+                        <viewControllerLayoutGuide type="bottom" id="vyF-8P-k86"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" id="LEf-zx-oO1">
+                        <rect key="frame" x="0.0" y="0.0" width="414" height="736"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <visualEffectView opaque="NO" userInteractionEnabled="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="g2Q-r8-ZJG">
+                                <rect key="frame" x="0.0" y="0.0" width="414" height="736"/>
+                                <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" id="Nn2-Au-cke">
+                                    <rect key="frame" x="0.0" y="0.0" width="414" height="736"/>
+                                    <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                                    <gestureRecognizers/>
+                                </view>
+                                <blurEffect style="light"/>
+                            </visualEffectView>
+                            <view clipsSubviews="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="7TU-SM-TI1" customClass="ArtistSearchBar" customModule="Ursus" customModuleProvider="target">
+                                <rect key="frame" x="67" y="736" width="280" height="50"/>
+                                <subviews>
+                                    <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" placeholder="Search for an artist" textAlignment="center" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="JnG-Tf-vdC" customClass="ArtistSearchBarTextField" customModule="Ursus" customModuleProvider="target">
+                                        <rect key="frame" x="0.0" y="0.0" width="280" height="50"/>
+                                        <color key="textColor" red="0.20000000000000001" green="0.20000000000000001" blue="0.20000000000000001" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                        <fontDescription key="fontDescription" type="system" weight="medium" pointSize="19"/>
+                                        <textInputTraits key="textInputTraits" autocapitalizationType="words" spellCheckingType="no" returnKeyType="search" enablesReturnKeyAutomatically="YES"/>
+                                        <connections>
+                                            <outlet property="delegate" destination="7TU-SM-TI1" id="ouV-6C-ToS"/>
+                                        </connections>
+                                    </textField>
+                                    <label hidden="YES" opaque="NO" userInteractionEnabled="NO" alpha="0.0" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Search for an artist" textAlignment="center" lineBreakMode="wordWrap" numberOfLines="2" baselineAdjustment="alignBaselines" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="qDP-3l-cD9">
+                                        <rect key="frame" x="57" y="14" width="167" height="23"/>
+                                        <fontDescription key="fontDescription" type="system" weight="medium" pointSize="19"/>
+                                        <nil key="textColor"/>
+                                        <nil key="highlightedColor"/>
+                                        <size key="shadowOffset" width="0.0" height="0.0"/>
+                                    </label>
+                                    <view opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="MO9-L4-GxX" customClass="SearchButton" customModule="Ursus" customModuleProvider="target">
+                                        <rect key="frame" x="5" y="3" width="45" height="45"/>
+                                        <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                                        <constraints>
+                                            <constraint firstAttribute="width" secondItem="MO9-L4-GxX" secondAttribute="height" multiplier="1:1" id="c4V-h2-buh"/>
+                                        </constraints>
+                                        <userDefinedRuntimeAttributes>
+                                            <userDefinedRuntimeAttribute type="boolean" keyPath="rounded" value="NO"/>
+                                        </userDefinedRuntimeAttributes>
+                                    </view>
+                                </subviews>
+                                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                                <color key="tintColor" red="0.20000000000000001" green="0.20000000000000001" blue="0.20000000000000001" alpha="1" colorSpace="calibratedRGB"/>
+                                <constraints>
+                                    <constraint firstAttribute="bottom" secondItem="JnG-Tf-vdC" secondAttribute="bottom" id="4rK-Vz-sqi"/>
+                                    <constraint firstAttribute="height" constant="50" id="4rY-Nj-FQ7"/>
+                                    <constraint firstItem="MO9-L4-GxX" firstAttribute="centerY" secondItem="JnG-Tf-vdC" secondAttribute="centerY" id="IuQ-Cd-N8G"/>
+                                    <constraint firstItem="JnG-Tf-vdC" firstAttribute="centerX" secondItem="7TU-SM-TI1" secondAttribute="centerX" id="KQI-Dt-P2n"/>
+                                    <constraint firstItem="MO9-L4-GxX" firstAttribute="trailing" secondItem="JnG-Tf-vdC" secondAttribute="leading" constant="-10" id="NHx-zm-Hyc"/>
+                                    <constraint firstItem="qDP-3l-cD9" firstAttribute="centerX" secondItem="7TU-SM-TI1" secondAttribute="centerX" id="g0A-nY-EoX"/>
+                                    <constraint firstItem="MO9-L4-GxX" firstAttribute="height" secondItem="JnG-Tf-vdC" secondAttribute="height" constant="-5" id="jbE-Y8-EKK"/>
+                                    <constraint firstItem="JnG-Tf-vdC" firstAttribute="top" secondItem="7TU-SM-TI1" secondAttribute="top" id="mTJ-s6-gHJ"/>
+                                    <constraint firstAttribute="width" relation="lessThanOrEqual" constant="280" id="oym-vZ-LDh"/>
+                                    <constraint firstItem="JnG-Tf-vdC" firstAttribute="width" secondItem="7TU-SM-TI1" secondAttribute="width" id="qoa-9H-Xob"/>
+                                    <constraint firstItem="MO9-L4-GxX" firstAttribute="leading" secondItem="JnG-Tf-vdC" secondAttribute="leading" constant="5" id="vVb-uf-Jlx"/>
+                                    <constraint firstItem="qDP-3l-cD9" firstAttribute="top" secondItem="JnG-Tf-vdC" secondAttribute="bottom" constant="-36" id="zRH-hu-cVb"/>
+                                </constraints>
+                                <variation key="default">
+                                    <mask key="constraints">
+                                        <exclude reference="NHx-zm-Hyc"/>
+                                    </mask>
+                                </variation>
+                                <connections>
+                                    <outlet property="searchIcon" destination="MO9-L4-GxX" id="upL-0v-aIB"/>
+                                    <outlet property="searchIconHiddenConstraint" destination="NHx-zm-Hyc" id="m3a-P8-pSs"/>
+                                    <outlet property="searchIconVisibleConstraint" destination="vVb-uf-Jlx" id="4wR-8g-cl5"/>
+                                    <outlet property="searchTermLabel" destination="qDP-3l-cD9" id="0Bt-hC-o78"/>
+                                    <outlet property="textField" destination="JnG-Tf-vdC" id="oJY-pM-c2d"/>
+                                    <outlet property="textFieldFullWidthConstraint" destination="qoa-9H-Xob" id="yU0-uC-aYq"/>
+                                </connections>
+                            </view>
+                        </subviews>
+                        <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                        <gestureRecognizers/>
+                        <constraints>
+                            <constraint firstItem="7TU-SM-TI1" firstAttribute="centerY" secondItem="LEf-zx-oO1" secondAttribute="centerY" id="4to-X8-R76"/>
+                            <constraint firstItem="7TU-SM-TI1" firstAttribute="width" secondItem="LEf-zx-oO1" secondAttribute="width" priority="750" id="5s2-0C-Z4N"/>
+                            <constraint firstItem="g2Q-r8-ZJG" firstAttribute="centerX" secondItem="LEf-zx-oO1" secondAttribute="centerX" id="Hr2-u5-LLq"/>
+                            <constraint firstItem="vyF-8P-k86" firstAttribute="top" secondItem="7TU-SM-TI1" secondAttribute="top" id="Zqk-Xr-WWm"/>
+                            <constraint firstItem="g2Q-r8-ZJG" firstAttribute="width" secondItem="LEf-zx-oO1" secondAttribute="width" id="n70-Ic-s6A"/>
+                            <constraint firstItem="g2Q-r8-ZJG" firstAttribute="height" secondItem="LEf-zx-oO1" secondAttribute="height" id="ndU-2Z-u8X"/>
+                            <constraint firstItem="g2Q-r8-ZJG" firstAttribute="centerY" secondItem="LEf-zx-oO1" secondAttribute="centerY" id="qWq-nI-slO"/>
+                            <constraint firstItem="7TU-SM-TI1" firstAttribute="centerX" secondItem="LEf-zx-oO1" secondAttribute="centerX" id="tX7-wa-VLs"/>
+                        </constraints>
+                        <variation key="default">
+                            <mask key="constraints">
+                                <exclude reference="4to-X8-R76"/>
+                            </mask>
+                        </variation>
+                        <connections>
+                            <outletCollection property="gestureRecognizers" destination="KK7-0p-vFP" appends="YES" id="XWn-2x-Z9r"/>
+                        </connections>
+                    </view>
+                    <connections>
+                        <outlet property="blurView" destination="g2Q-r8-ZJG" id="iAD-Uo-GXf"/>
+                        <outlet property="searchBar" destination="7TU-SM-TI1" id="Fbw-X8-mOp"/>
+                        <outlet property="searchBarCenteredConstraint" destination="4to-X8-R76" id="kM2-j3-i7q"/>
+                        <outlet property="searchBarHidingConstraint" destination="Zqk-Xr-WWm" id="720-cx-UqL"/>
+                        <segue destination="eq1-Fd-vdq" kind="custom" identifier="ArtistSearch-&gt;ArtistSearchResults" customClass="UrsusStoryboardSegue" customModule="Ursus" customModuleProvider="target" animates="NO" id="QMU-U7-kqF"/>
+                        <segue destination="YBR-9N-AHs" kind="custom" identifier="ArtistSearch-&gt;Artist" customClass="UrsusStoryboardSegue" customModule="Ursus" customModuleProvider="target" id="qkx-Fg-KPo"/>
+                        <segue destination="Zsd-jN-gNZ" kind="unwind" identifier="ArtistSearch-&gt;NewAlbums" customClass="UrsusStoryboardSegue" customModule="Ursus" customModuleProvider="target" unwindAction="prepareForUnwindFor:" id="eBZ-vG-HyK"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="D13-5Y-cXW" userLabel="First Responder" sceneMemberID="firstResponder"/>
+                <exit id="Zsd-jN-gNZ" userLabel="Exit" sceneMemberID="exit"/>
+                <tapGestureRecognizer id="KK7-0p-vFP">
+                    <connections>
+                        <action selector="dismissSearch:" destination="exg-Xr-PvW" id="8RI-e9-p4Y"/>
+                    </connections>
+                </tapGestureRecognizer>
+            </objects>
+            <point key="canvasLocation" x="-1571" y="1139"/>
+        </scene>
+        <!--New Albums-->
+        <scene sceneID="Vt8-o4-acr">
+            <objects>
+                <viewController storyboardIdentifier="NewAlbums" title="New Albums" useStoryboardIdentifierAsRestorationIdentifier="YES" id="igh-Gg-oBy" customClass="NewAlbumsViewController" customModule="Ursus" customModuleProvider="target" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="YXQ-LD-UHn"/>
+                        <viewControllerLayoutGuide type="bottom" id="94J-02-LLS"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" id="d2B-jT-KG2" customClass="FrostedBackdrop" customModule="Ursus" customModuleProvider="target">
+                        <rect key="frame" x="0.0" y="0.0" width="414" height="736"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <imageView userInteractionEnabled="NO" alpha="0.0" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="yi5-Gm-0oe">
+                                <rect key="frame" x="0.0" y="0.0" width="414" height="736"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                            </imageView>
+                            <view opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="W0L-hh-39d" customClass="FrostedBackdropOverlay" customModule="Ursus" customModuleProvider="target">
+                                <rect key="frame" x="0.0" y="0.0" width="414" height="736"/>
+                                <subviews>
+                                    <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" directionalLockEnabled="YES" alwaysBounceVertical="YES" showsHorizontalScrollIndicator="NO" delaysContentTouches="NO" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="wp9-6I-nbw">
+                                        <rect key="frame" x="0.0" y="0.0" width="414" height="736"/>
+                                        <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                                        <inset key="scrollIndicatorInsets" minX="0.0" minY="100" maxX="0.0" maxY="80"/>
+                                        <collectionViewFlowLayout key="collectionViewLayout" minimumLineSpacing="0.0" minimumInteritemSpacing="0.0" id="mFj-ff-foT">
+                                            <size key="itemSize" width="414" height="100"/>
+                                            <size key="headerReferenceSize" width="0.0" height="0.0"/>
+                                            <size key="footerReferenceSize" width="0.0" height="0.0"/>
+                                            <inset key="sectionInset" minX="0.0" minY="100" maxX="0.0" maxY="0.0"/>
+                                        </collectionViewFlowLayout>
+                                        <cells>
+                                            <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="NewAlbumCell" id="OmI-ep-WJH" customClass="NewAlbumsCollectionViewCell" customModule="Ursus" customModuleProvider="target">
+                                                <rect key="frame" x="0.0" y="100" width="414" height="100"/>
+                                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                                <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center">
+                                                    <rect key="frame" x="0.0" y="0.0" width="414" height="100"/>
+                                                    <autoresizingMask key="autoresizingMask"/>
+                                                    <subviews>
+                                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Artist Name" lineBreakMode="middleTruncation" minimumScaleFactor="1" adjustsLetterSpacingToFitWidth="YES" translatesAutoresizingMaskIntoConstraints="NO" id="wy4-a4-Vef" customClass="NewAlbumsCollectionViewCellAlbumArtistNameLabel" customModule="Ursus" customModuleProvider="target">
+                                                            <rect key="frame" x="92" y="52" width="304" height="19.333333333333329"/>
+                                                            <fontDescription key="fontDescription" type="system" pointSize="16"/>
+                                                            <nil key="textColor"/>
+                                                            <nil key="highlightedColor"/>
+                                                        </label>
+                                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Album Title" lineBreakMode="middleTruncation" numberOfLines="2" minimumScaleFactor="0.84999999999999998" adjustsLetterSpacingToFitWidth="YES" translatesAutoresizingMaskIntoConstraints="NO" id="8Ao-1W-PMW" customClass="NewAlbumsCollectionViewCellAlbumTitleLabel" customModule="Ursus" customModuleProvider="target">
+                                                            <rect key="frame" x="92" y="29" width="304" height="21"/>
+                                                            <fontDescription key="fontDescription" type="system" weight="semibold" pointSize="17"/>
+                                                            <nil key="textColor"/>
+                                                            <nil key="highlightedColor"/>
+                                                        </label>
+                                                        <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="8TL-MB-ole" customClass="AlbumArtView" customModule="Ursus" customModuleProvider="target">
+                                                            <rect key="frame" x="18" y="18" width="64" height="64"/>
+                                                            <subviews>
+                                                                <imageView clipsSubviews="YES" userInteractionEnabled="NO" alpha="0.0" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="itS-Wx-cuM" customClass="AlbumArtViewImageView" customModule="Ursus" customModuleProvider="target">
+                                                                    <rect key="frame" x="19.199999999999999" y="19.199999999999999" width="25.599999999999998" height="25.599999999999998"/>
+                                                                </imageView>
+                                                            </subviews>
+                                                            <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                                                            <constraints>
+                                                                <constraint firstAttribute="width" secondItem="8TL-MB-ole" secondAttribute="height" multiplier="1:1" id="FEE-XP-7FS"/>
+                                                                <constraint firstItem="itS-Wx-cuM" firstAttribute="centerX" secondItem="8TL-MB-ole" secondAttribute="centerX" id="Jj9-fP-mmq"/>
+                                                                <constraint firstItem="itS-Wx-cuM" firstAttribute="width" secondItem="8TL-MB-ole" secondAttribute="width" id="OJs-fx-YAk"/>
+                                                                <constraint firstItem="itS-Wx-cuM" firstAttribute="height" secondItem="8TL-MB-ole" secondAttribute="height" id="dE3-9v-0y6"/>
+                                                                <constraint firstItem="itS-Wx-cuM" firstAttribute="centerY" secondItem="8TL-MB-ole" secondAttribute="centerY" id="qg3-lx-TWe"/>
+                                                            </constraints>
+                                                            <connections>
+                                                                <outlet property="imageView" destination="itS-Wx-cuM" id="sp8-tj-fey"/>
+                                                            </connections>
+                                                        </view>
+                                                    </subviews>
+                                                </view>
+                                                <constraints>
+                                                    <constraint firstItem="wy4-a4-Vef" firstAttribute="leading" secondItem="8TL-MB-ole" secondAttribute="trailing" constant="10" id="Hcu-YB-Yj3"/>
+                                                    <constraint firstAttribute="bottomMargin" secondItem="8TL-MB-ole" secondAttribute="bottom" constant="10" id="Ntk-ji-N0k"/>
+                                                    <constraint firstItem="8Ao-1W-PMW" firstAttribute="centerY" secondItem="8TL-MB-ole" secondAttribute="centerY" constant="-10.5" id="Y0q-Mb-dHc"/>
+                                                    <constraint firstItem="wy4-a4-Vef" firstAttribute="width" secondItem="8Ao-1W-PMW" secondAttribute="width" id="hvP-VC-l7v"/>
+                                                    <constraint firstItem="8TL-MB-ole" firstAttribute="leading" secondItem="OmI-ep-WJH" secondAttribute="leadingMargin" constant="10" id="jDu-rR-M9v"/>
+                                                    <constraint firstItem="8TL-MB-ole" firstAttribute="top" secondItem="OmI-ep-WJH" secondAttribute="topMargin" constant="10" id="rfz-fk-l9Z"/>
+                                                    <constraint firstAttribute="trailingMargin" secondItem="8Ao-1W-PMW" secondAttribute="trailing" constant="10" id="tld-ss-X5a"/>
+                                                    <constraint firstItem="wy4-a4-Vef" firstAttribute="leading" secondItem="8Ao-1W-PMW" secondAttribute="leading" id="udK-EK-MFQ"/>
+                                                    <constraint firstItem="wy4-a4-Vef" firstAttribute="top" secondItem="8Ao-1W-PMW" secondAttribute="bottom" constant="2" id="wuH-pf-KKs"/>
+                                                </constraints>
+                                                <connections>
+                                                    <outlet property="albumArtView" destination="8TL-MB-ole" id="ePB-VV-fcL"/>
+                                                    <outlet property="albumArtistNameLabel" destination="wy4-a4-Vef" id="LHh-Fk-T3C"/>
+                                                    <outlet property="albumTitleLabel" destination="8Ao-1W-PMW" id="paQ-7v-YuS"/>
+                                                    <segue destination="Jai-jZ-F7n" kind="custom" identifier="NewAlbums-&gt;Album" customClass="UrsusStoryboardSegue" customModule="Ursus" customModuleProvider="target" animates="NO" id="kRG-BK-4CJ">
+                                                        <segue key="commit" inheritsFrom="parent" id="sTC-nE-yKX"/>
+                                                        <segue key="preview" inheritsFrom="commit" id="qfX-CP-nSz"/>
+                                                    </segue>
+                                                </connections>
+                                            </collectionViewCell>
+                                        </cells>
+                                        <connections>
+                                            <outlet property="dataSource" destination="igh-Gg-oBy" id="2ZP-pz-al7"/>
+                                            <outlet property="delegate" destination="igh-Gg-oBy" id="TWr-PD-Ke7"/>
+                                        </connections>
+                                    </collectionView>
+                                    <view opaque="NO" userInteractionEnabled="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="lXh-cc-Zs0" customClass="ScrollFadeView" customModule="Ursus" customModuleProvider="target">
+                                        <rect key="frame" x="0.0" y="0.0" width="414" height="120"/>
+                                        <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                                        <constraints>
+                                            <constraint firstAttribute="height" constant="120" id="fh7-rn-616"/>
+                                        </constraints>
+                                    </view>
+                                    <view opaque="NO" userInteractionEnabled="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Cab-Gj-3U5" customClass="ScrollFadeView" customModule="Ursus" customModuleProvider="target">
+                                        <rect key="frame" x="0.0" y="616" width="414" height="120"/>
+                                        <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                                        <constraints>
+                                            <constraint firstAttribute="height" constant="120" id="AV5-Xj-jaW"/>
+                                        </constraints>
+                                    </view>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="New Albums" textAlignment="center" lineBreakMode="clip" minimumScaleFactor="0.90000000000000002" translatesAutoresizingMaskIntoConstraints="NO" id="dJq-kZ-pyu">
+                                        <rect key="frame" x="146" y="30" width="120.66666666666669" height="24"/>
+                                        <fontDescription key="fontDescription" type="boldSystem" pointSize="20"/>
+                                        <nil key="textColor"/>
+                                        <nil key="highlightedColor"/>
+                                    </label>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="6ns-9j-jLp" customClass="UrsusButton" customModule="Ursus" customModuleProvider="target">
+                                        <rect key="frame" x="364" y="27" width="30" height="30"/>
+                                        <constraints>
+                                            <constraint firstAttribute="height" constant="30" id="ILK-QW-wp1"/>
+                                        </constraints>
+                                        <fontDescription key="fontDescription" type="system" pointSize="18"/>
+                                        <color key="tintColor" white="0.80000000000000004" alpha="0.75" colorSpace="calibratedWhite"/>
+                                        <state key="normal" title="3"/>
+                                        <userDefinedRuntimeAttributes>
+                                            <userDefinedRuntimeAttribute type="boolean" keyPath="rounded" value="YES"/>
+                                        </userDefinedRuntimeAttributes>
+                                    </button>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="nzW-n9-0kI" userLabel="Settings Button" customClass="SettingsButton" customModule="Ursus" customModuleProvider="target">
+                                        <rect key="frame" x="20" y="736" width="45" height="45"/>
+                                        <constraints>
+                                            <constraint firstAttribute="width" secondItem="nzW-n9-0kI" secondAttribute="height" multiplier="1:1" id="6nU-qx-wTO"/>
+                                            <constraint firstAttribute="height" constant="45" id="dX7-nK-mw2"/>
+                                        </constraints>
+                                        <connections>
+                                            <segue destination="tIm-Ss-63n" kind="custom" identifier="NewAlbums-&gt;Settings" customClass="UrsusStoryboardSegue" customModule="Ursus" customModuleProvider="target" animates="NO" id="ubg-n1-0s5"/>
+                                        </connections>
+                                    </button>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="nrJ-fe-wG3" customClass="ArtistsButton" customModule="Ursus" customModuleProvider="target">
+                                        <rect key="frame" x="80" y="736" width="45" height="45"/>
+                                        <constraints>
+                                            <constraint firstAttribute="width" secondItem="nrJ-fe-wG3" secondAttribute="height" multiplier="1:1" id="Bth-WU-8lc"/>
+                                            <constraint firstAttribute="height" constant="45" id="u3J-b8-tNQ"/>
+                                        </constraints>
+                                        <connections>
+                                            <segue destination="r2U-EQ-06c" kind="custom" identifier="NewAlbums-&gt;FollowingArtists" customClass="UrsusStoryboardSegue" customModule="Ursus" customModuleProvider="target" animates="NO" id="sgU-aW-9BD"/>
+                                        </connections>
+                                    </button>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="3Qu-ZD-RnC" userLabel="Search Button" customClass="SearchButton" customModule="Ursus" customModuleProvider="target">
+                                        <rect key="frame" x="140" y="736" width="45" height="45"/>
+                                        <constraints>
+                                            <constraint firstAttribute="width" secondItem="3Qu-ZD-RnC" secondAttribute="height" multiplier="1:1" id="7Xn-JE-flW"/>
+                                            <constraint firstAttribute="height" constant="45" id="Dep-8x-EpB"/>
+                                            <constraint firstAttribute="height" constant="60" id="Qi4-xP-p9g"/>
+                                        </constraints>
+                                        <color key="tintColor" red="0.20000000000000001" green="0.20000000000000001" blue="0.20000000000000001" alpha="1" colorSpace="calibratedRGB"/>
+                                        <variation key="default">
+                                            <mask key="constraints">
+                                                <exclude reference="Qi4-xP-p9g"/>
+                                            </mask>
+                                        </variation>
+                                        <connections>
+                                            <segue destination="exg-Xr-PvW" kind="custom" identifier="NewAlbums-&gt;ArtistSearch" customClass="UrsusStoryboardSegue" customModule="Ursus" customModuleProvider="target" animates="NO" id="WLt-g6-SgG"/>
+                                        </connections>
+                                    </button>
+                                </subviews>
+                                <constraints>
+                                    <constraint firstItem="wp9-6I-nbw" firstAttribute="top" secondItem="W0L-hh-39d" secondAttribute="top" id="01d-iZ-QZP"/>
+                                    <constraint firstAttribute="trailing" secondItem="Cab-Gj-3U5" secondAttribute="trailing" id="0qA-dY-05R"/>
+                                    <constraint firstItem="dJq-kZ-pyu" firstAttribute="top" secondItem="W0L-hh-39d" secondAttribute="top" constant="30" id="1js-hv-CUa"/>
+                                    <constraint firstItem="nrJ-fe-wG3" firstAttribute="top" secondItem="W0L-hh-39d" secondAttribute="bottom" id="4GY-wv-eOy"/>
+                                    <constraint firstItem="lXh-cc-Zs0" firstAttribute="leading" secondItem="W0L-hh-39d" secondAttribute="leading" id="54v-Yi-WwY"/>
+                                    <constraint firstItem="dJq-kZ-pyu" firstAttribute="centerX" secondItem="W0L-hh-39d" secondAttribute="centerX" id="5T8-Z2-rpZ"/>
+                                    <constraint firstItem="wp9-6I-nbw" firstAttribute="leading" secondItem="W0L-hh-39d" secondAttribute="leading" id="6OQ-ZB-dHU"/>
+                                    <constraint firstItem="nzW-n9-0kI" firstAttribute="bottom" secondItem="W0L-hh-39d" secondAttribute="bottom" constant="-20" id="Aqg-oO-6J4"/>
+                                    <constraint firstItem="Cab-Gj-3U5" firstAttribute="leading" secondItem="W0L-hh-39d" secondAttribute="leading" id="F5L-QQ-ryw"/>
+                                    <constraint firstItem="nrJ-fe-wG3" firstAttribute="leading" secondItem="nzW-n9-0kI" secondAttribute="trailing" constant="15" id="HCx-dm-03m"/>
+                                    <constraint firstAttribute="trailing" secondItem="wp9-6I-nbw" secondAttribute="trailing" id="JQD-r7-Bnn"/>
+                                    <constraint firstAttribute="trailing" secondItem="6ns-9j-jLp" secondAttribute="trailing" constant="20" id="N75-VZ-xIH"/>
+                                    <constraint firstItem="nrJ-fe-wG3" firstAttribute="bottom" secondItem="W0L-hh-39d" secondAttribute="bottom" constant="-20" id="PQC-AF-13e"/>
+                                    <constraint firstItem="3Qu-ZD-RnC" firstAttribute="top" secondItem="W0L-hh-39d" secondAttribute="bottom" id="Plf-ri-JqR"/>
+                                    <constraint firstItem="3Qu-ZD-RnC" firstAttribute="centerX" secondItem="W0L-hh-39d" secondAttribute="centerX" id="Xvd-3I-0Cm"/>
+                                    <constraint firstItem="6ns-9j-jLp" firstAttribute="centerY" secondItem="dJq-kZ-pyu" secondAttribute="centerY" id="b8r-8b-23G"/>
+                                    <constraint firstAttribute="trailing" secondItem="lXh-cc-Zs0" secondAttribute="trailing" id="cb9-Sn-FjU"/>
+                                    <constraint firstAttribute="bottom" secondItem="wp9-6I-nbw" secondAttribute="bottom" id="fF4-2O-Rf5"/>
+                                    <constraint firstItem="nzW-n9-0kI" firstAttribute="leading" secondItem="W0L-hh-39d" secondAttribute="leading" constant="20" id="gF8-ZN-glg"/>
+                                    <constraint firstItem="3Qu-ZD-RnC" firstAttribute="bottom" secondItem="W0L-hh-39d" secondAttribute="bottom" constant="-20" id="k48-gX-dFU"/>
+                                    <constraint firstItem="3Qu-ZD-RnC" firstAttribute="leading" secondItem="nrJ-fe-wG3" secondAttribute="trailing" constant="15" id="mBX-eO-FeG"/>
+                                    <constraint firstAttribute="bottom" secondItem="Cab-Gj-3U5" secondAttribute="bottom" id="nHc-zp-Ack"/>
+                                    <constraint firstItem="nzW-n9-0kI" firstAttribute="top" secondItem="W0L-hh-39d" secondAttribute="bottom" id="oUL-Eu-Fca"/>
+                                    <constraint firstItem="lXh-cc-Zs0" firstAttribute="top" secondItem="W0L-hh-39d" secondAttribute="top" id="sPE-za-wAr"/>
+                                </constraints>
+                                <variation key="default">
+                                    <mask key="constraints">
+                                        <exclude reference="Aqg-oO-6J4"/>
+                                        <exclude reference="PQC-AF-13e"/>
+                                        <exclude reference="Xvd-3I-0Cm"/>
+                                        <exclude reference="k48-gX-dFU"/>
+                                    </mask>
+                                </variation>
+                            </view>
+                        </subviews>
+                        <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                        <constraints>
+                            <constraint firstItem="W0L-hh-39d" firstAttribute="centerX" secondItem="d2B-jT-KG2" secondAttribute="centerX" id="2fi-cn-ZeO"/>
+                            <constraint firstItem="W0L-hh-39d" firstAttribute="height" secondItem="d2B-jT-KG2" secondAttribute="height" id="7S1-vf-khb"/>
+                            <constraint firstItem="W0L-hh-39d" firstAttribute="width" secondItem="d2B-jT-KG2" secondAttribute="width" id="DVf-6s-GCI"/>
+                            <constraint firstItem="W0L-hh-39d" firstAttribute="centerY" secondItem="d2B-jT-KG2" secondAttribute="centerY" id="ffC-Ux-5Dw"/>
+                        </constraints>
+                        <connections>
+                            <outlet property="imageView" destination="yi5-Gm-0oe" id="jRN-VU-tqF"/>
+                            <outlet property="overlay" destination="W0L-hh-39d" id="9Q3-XM-eCo"/>
+                        </connections>
+                    </view>
+                    <connections>
+                        <outlet property="artistsButton" destination="nrJ-fe-wG3" id="fM4-dH-c7f"/>
+                        <outlet property="artistsButtonHiddenConstraint" destination="4GY-wv-eOy" id="zxI-32-esX"/>
+                        <outlet property="artistsButtonVisibleConstraint" destination="PQC-AF-13e" id="uRC-XM-HsS"/>
+                        <outlet property="backdrop" destination="d2B-jT-KG2" id="vFM-Sj-Rkc"/>
+                        <outlet property="bottomScrollFadeView" destination="Cab-Gj-3U5" id="NHW-hX-Tle"/>
+                        <outlet property="followingArtistsCountButton" destination="6ns-9j-jLp" id="u5l-EG-1eX"/>
+                        <outlet property="navigationTitle" destination="dJq-kZ-pyu" id="M4N-aI-1Mc"/>
+                        <outlet property="newAlbumsCollectionView" destination="wp9-6I-nbw" id="fa7-0g-dIF"/>
+                        <outlet property="searchButton" destination="3Qu-ZD-RnC" id="3eJ-vg-on3"/>
+                        <outlet property="searchButtonFocusedCenteredConstraint" destination="Xvd-3I-0Cm" id="wkZ-tJ-Mo4"/>
+                        <outlet property="searchButtonFocusedSizeConstraint" destination="Qi4-xP-p9g" id="bzR-MV-9Vl"/>
+                        <outlet property="searchButtonHiddenConstraint" destination="Plf-ri-JqR" id="5N0-iU-ulc"/>
+                        <outlet property="searchButtonRestingConstraint" destination="mBX-eO-FeG" id="EKk-Oy-IYa"/>
+                        <outlet property="searchButtonRestingSizeConstraint" destination="Dep-8x-EpB" id="rzS-vv-9MJ"/>
+                        <outlet property="searchButtonVisibleConstraint" destination="k48-gX-dFU" id="6oM-1y-19J"/>
+                        <outlet property="settingsButton" destination="nzW-n9-0kI" id="TLa-i1-R2h"/>
+                        <outlet property="settingsButtonHiddenConstraint" destination="oUL-Eu-Fca" id="RXW-6B-qgE"/>
+                        <outlet property="settingsButtonVisibleConstraint" destination="Aqg-oO-6J4" id="t57-cH-nJS"/>
+                        <outlet property="topScrollFadeView" destination="lXh-cc-Zs0" id="EhT-PY-4tp"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="tI2-kc-gZW" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="-1571.0144927536232" y="335.86956521739131"/>
+        </scene>
+        <!--FollowingArtists-->
+        <scene sceneID="Sho-Fl-vwd">
+            <objects>
+                <viewController storyboardIdentifier="FollowingArtists" title="FollowingArtists" useStoryboardIdentifierAsRestorationIdentifier="YES" id="r2U-EQ-06c" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="Je4-3X-OUu"/>
+                        <viewControllerLayoutGuide type="bottom" id="4Sy-E3-Bk2"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" id="GEe-YW-PHK">
+                        <rect key="frame" x="0.0" y="0.0" width="414" height="736"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                    </view>
+                    <connections>
+                        <segue destination="YBR-9N-AHs" kind="custom" identifier="FollowingArtists-&gt;Artist" customClass="UrsusStoryboardSegue" customModule="Ursus" customModuleProvider="target" id="FPD-CQ-WAN"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="7p2-cg-9ta" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="-2297" y="1139"/>
+        </scene>
+        <!--Artist Search Results-->
+        <scene sceneID="lIr-pR-ftG">
+            <objects>
+                <viewController storyboardIdentifier="ArtistSearchResults" title="Artist Search Results" useStoryboardIdentifierAsRestorationIdentifier="YES" id="eq1-Fd-vdq" customClass="ArtistSearchResultsViewController" customModule="Ursus" customModuleProvider="target" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="JT9-Q7-UsE"/>
+                        <viewControllerLayoutGuide type="bottom" id="iUg-Uh-EQL"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" id="anH-Cv-Cr8" customClass="FrostedBackdrop" customModule="Ursus" customModuleProvider="target">
+                        <rect key="frame" x="0.0" y="0.0" width="414" height="736"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <imageView userInteractionEnabled="NO" alpha="0.0" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="c6I-me-ufY">
+                                <rect key="frame" x="0.0" y="0.0" width="414" height="736"/>
+                            </imageView>
+                            <view opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="H7q-3R-aPp" customClass="FrostedBackdropOverlay" customModule="Ursus" customModuleProvider="target">
+                                <rect key="frame" x="0.0" y="0.0" width="414" height="736"/>
+                                <subviews>
+                                    <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="Cwn-1B-Gqe">
+                                        <rect key="frame" x="0.0" y="0.0" width="414" height="736"/>
+                                        <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                                        <collectionViewFlowLayout key="collectionViewLayout" minimumLineSpacing="10" minimumInteritemSpacing="10" id="BVM-9w-txU">
+                                            <size key="itemSize" width="414" height="120"/>
+                                            <size key="headerReferenceSize" width="0.0" height="0.0"/>
+                                            <size key="footerReferenceSize" width="0.0" height="0.0"/>
+                                            <inset key="sectionInset" minX="0.0" minY="0.0" maxX="0.0" maxY="0.0"/>
+                                        </collectionViewFlowLayout>
+                                        <cells>
+                                            <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="ArtistCell" id="Fg2-Rx-MwZ">
+                                                <rect key="frame" x="0.0" y="0.0" width="414" height="120"/>
+                                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                                <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center">
+                                                    <rect key="frame" x="0.0" y="0.0" width="414" height="120"/>
+                                                    <autoresizingMask key="autoresizingMask"/>
+                                                </view>
+                                            </collectionViewCell>
+                                        </cells>
+                                    </collectionView>
+                                </subviews>
+                                <constraints>
+                                    <constraint firstAttribute="bottom" secondItem="Cwn-1B-Gqe" secondAttribute="bottom" id="09z-LH-cxe"/>
+                                    <constraint firstItem="Cwn-1B-Gqe" firstAttribute="top" secondItem="H7q-3R-aPp" secondAttribute="top" id="SAK-kG-SHM"/>
+                                    <constraint firstItem="Cwn-1B-Gqe" firstAttribute="leading" secondItem="H7q-3R-aPp" secondAttribute="leading" id="fDm-E3-3oC"/>
+                                    <constraint firstAttribute="trailing" secondItem="Cwn-1B-Gqe" secondAttribute="trailing" id="kwk-9J-AYw"/>
+                                </constraints>
+                            </view>
+                        </subviews>
+                        <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                        <constraints>
+                            <constraint firstItem="c6I-me-ufY" firstAttribute="centerX" secondItem="anH-Cv-Cr8" secondAttribute="centerX" id="0Pg-u9-ZY9"/>
+                            <constraint firstItem="H7q-3R-aPp" firstAttribute="width" secondItem="anH-Cv-Cr8" secondAttribute="width" id="0Qx-pQ-uXI"/>
+                            <constraint firstItem="c6I-me-ufY" firstAttribute="width" secondItem="anH-Cv-Cr8" secondAttribute="width" id="FkH-yG-LKZ"/>
+                            <constraint firstItem="H7q-3R-aPp" firstAttribute="centerY" secondItem="anH-Cv-Cr8" secondAttribute="centerY" id="Mp4-ND-AW8"/>
+                            <constraint firstItem="H7q-3R-aPp" firstAttribute="centerX" secondItem="anH-Cv-Cr8" secondAttribute="centerX" id="N4A-zP-46s"/>
+                            <constraint firstItem="c6I-me-ufY" firstAttribute="centerY" secondItem="anH-Cv-Cr8" secondAttribute="centerY" id="Ox7-Bc-mHA"/>
+                            <constraint firstItem="c6I-me-ufY" firstAttribute="height" secondItem="anH-Cv-Cr8" secondAttribute="height" id="kL0-TT-agJ"/>
+                            <constraint firstItem="H7q-3R-aPp" firstAttribute="height" secondItem="anH-Cv-Cr8" secondAttribute="height" id="z4d-E7-OP1"/>
+                        </constraints>
+                        <connections>
+                            <outlet property="imageView" destination="c6I-me-ufY" id="DQC-hK-kvQ"/>
+                            <outlet property="overlay" destination="H7q-3R-aPp" id="yUn-JW-mAk"/>
+                        </connections>
+                    </view>
+                    <connections>
+                        <segue destination="YBR-9N-AHs" kind="custom" identifier="ArtistSearchResults-&gt;Artist" customClass="UrsusStoryboardSegue" customModule="Ursus" customModuleProvider="target" animates="NO" id="aHu-jn-v9x"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="BNc-Sd-N24" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="-829" y="1139"/>
+        </scene>
+        <!--Album-->
+        <scene sceneID="zPJ-Lr-gTs">
+            <objects>
+                <viewController storyboardIdentifier="Album" title="Album" useStoryboardIdentifierAsRestorationIdentifier="YES" id="Jai-jZ-F7n" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="6V8-x3-bg4"/>
+                        <viewControllerLayoutGuide type="bottom" id="bbN-Ct-K6h"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" id="5F0-qW-O4b">
+                        <rect key="frame" x="0.0" y="0.0" width="414" height="736"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="yxE-Rx-EIc" customClass="AlbumArtView" customModule="Ursus" customModuleProvider="target">
+                                <rect key="frame" x="50" y="60" width="314" height="314"/>
+                                <subviews>
+                                    <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="BvF-hn-rgu" customClass="AlbumArtViewImageView" customModule="Ursus" customModuleProvider="target">
+                                        <rect key="frame" x="94.199999999999989" y="94.199999999999989" width="125.60000000000002" height="125.60000000000002"/>
+                                    </imageView>
+                                </subviews>
+                                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                                <constraints>
+                                    <constraint firstItem="BvF-hn-rgu" firstAttribute="width" secondItem="yxE-Rx-EIc" secondAttribute="width" id="QbG-WC-rSy"/>
+                                    <constraint firstItem="BvF-hn-rgu" firstAttribute="centerX" secondItem="yxE-Rx-EIc" secondAttribute="centerX" id="Tei-RN-Owo"/>
+                                    <constraint firstAttribute="width" secondItem="yxE-Rx-EIc" secondAttribute="height" multiplier="1:1" id="bZ6-dE-6JB"/>
+                                    <constraint firstItem="BvF-hn-rgu" firstAttribute="centerY" secondItem="yxE-Rx-EIc" secondAttribute="centerY" id="eqo-K5-zAR"/>
+                                    <constraint firstItem="BvF-hn-rgu" firstAttribute="height" secondItem="yxE-Rx-EIc" secondAttribute="height" id="mtN-Q4-vfe"/>
+                                </constraints>
+                                <connections>
+                                    <outlet property="imageView" destination="BvF-hn-rgu" id="hxA-d6-Rha"/>
+                                </connections>
+                            </view>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Album Title" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumScaleFactor="0.84999999999999998" adjustsLetterSpacingToFitWidth="YES" translatesAutoresizingMaskIntoConstraints="NO" id="RnH-Qp-XwS">
+                                <rect key="frame" x="0.0" y="404" width="414" height="26"/>
+                                <fontDescription key="fontDescription" type="system" weight="medium" pointSize="21"/>
+                                <nil key="textColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                        </subviews>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <color key="tintColor" red="0.20000000000000001" green="0.20000000000000001" blue="0.20000000000000001" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                        <constraints>
+                            <constraint firstItem="yxE-Rx-EIc" firstAttribute="leading" secondItem="5F0-qW-O4b" secondAttribute="leadingMargin" constant="30" id="0AH-2r-G2B"/>
+                            <constraint firstItem="yxE-Rx-EIc" firstAttribute="top" secondItem="6V8-x3-bg4" secondAttribute="bottom" constant="40" id="Acw-gG-kHm"/>
+                            <constraint firstItem="RnH-Qp-XwS" firstAttribute="centerX" secondItem="5F0-qW-O4b" secondAttribute="centerX" id="Xn5-QT-qJp"/>
+                            <constraint firstItem="RnH-Qp-XwS" firstAttribute="top" secondItem="yxE-Rx-EIc" secondAttribute="bottom" constant="30" id="agB-Uh-2Ox"/>
+                            <constraint firstAttribute="trailingMargin" secondItem="yxE-Rx-EIc" secondAttribute="trailing" constant="30" id="dym-nT-ldb"/>
+                            <constraint firstItem="RnH-Qp-XwS" firstAttribute="width" secondItem="5F0-qW-O4b" secondAttribute="width" id="q6T-Dr-QiM"/>
+                        </constraints>
                     </view>
                 </viewController>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="gCy-57-Dhm" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
+            <point key="canvasLocation" x="417" y="1139"/>
+        </scene>
+        <!--Artist-->
+        <scene sceneID="53E-9z-o5B">
+            <objects>
+                <viewController storyboardIdentifier="Artist" title="Artist" useStoryboardIdentifierAsRestorationIdentifier="YES" id="YBR-9N-AHs" customClass="ArtistViewController" customModule="Ursus" customModuleProvider="target" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="oCb-XY-4oj"/>
+                        <viewControllerLayoutGuide type="bottom" id="rnZ-5c-b0u"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" id="0qN-3A-WmB" customClass="FrostedBackdrop" customModule="Ursus" customModuleProvider="target">
+                        <rect key="frame" x="0.0" y="0.0" width="414" height="736"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <imageView userInteractionEnabled="NO" alpha="0.0" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="AHS-hV-37G">
+                                <rect key="frame" x="0.0" y="0.0" width="414" height="736"/>
+                            </imageView>
+                            <view opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="xr9-8J-QUD" customClass="FrostedBackdropOverlay" customModule="Ursus" customModuleProvider="target">
+                                <rect key="frame" x="0.0" y="0.0" width="414" height="736"/>
+                                <subviews>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="C4E-GX-90Y" customClass="UrsusButton" customModule="Ursus" customModuleProvider="target">
+                                        <rect key="frame" x="107" y="666" width="200" height="50"/>
+                                        <constraints>
+                                            <constraint firstAttribute="width" relation="lessThanOrEqual" constant="200" id="28W-E8-eK0"/>
+                                            <constraint firstAttribute="height" constant="50" id="LKg-oM-08i"/>
+                                        </constraints>
+                                        <fontDescription key="fontDescription" type="system" weight="medium" pointSize="20"/>
+                                        <state key="normal" title="Follow">
+                                            <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                        </state>
+                                        <connections>
+                                            <action selector="followArtist:" destination="YBR-9N-AHs" eventType="touchUpInside" id="gMd-tL-O5T"/>
+                                        </connections>
+                                    </button>
+                                    <label opaque="NO" userInteractionEnabled="NO" alpha="0.40000000000000002" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Vampire Weekend" textAlignment="center" lineBreakMode="clip" numberOfLines="2" minimumScaleFactor="0.5" adjustsLetterSpacingToFitWidth="YES" translatesAutoresizingMaskIntoConstraints="NO" id="aUR-vT-kOE">
+                                        <rect key="frame" x="108" y="353.66666666666669" width="198" height="29"/>
+                                        <constraints>
+                                            <constraint firstAttribute="height" relation="lessThanOrEqual" constant="76.670000000000002" id="rDQ-gt-axj"/>
+                                            <constraint firstAttribute="width" relation="lessThanOrEqual" constant="500" id="slT-r6-a8P"/>
+                                        </constraints>
+                                        <fontDescription key="fontDescription" type="system" weight="medium" pointSize="32"/>
+                                        <nil key="textColor"/>
+                                        <nil key="highlightedColor"/>
+                                        <variation key="heightClass=regular-widthClass=compact">
+                                            <fontDescription key="fontDescription" type="system" weight="medium" pointSize="24"/>
+                                        </variation>
+                                    </label>
+                                </subviews>
+                                <constraints>
+                                    <constraint firstItem="aUR-vT-kOE" firstAttribute="centerX" secondItem="xr9-8J-QUD" secondAttribute="centerX" id="2mZ-lG-t71"/>
+                                    <constraint firstItem="aUR-vT-kOE" firstAttribute="top" secondItem="xr9-8J-QUD" secondAttribute="top" constant="20" id="7so-AG-NVo"/>
+                                    <constraint firstAttribute="bottom" secondItem="C4E-GX-90Y" secondAttribute="bottom" constant="20" id="7yz-Ov-ZPS"/>
+                                    <constraint firstItem="C4E-GX-90Y" firstAttribute="top" secondItem="xr9-8J-QUD" secondAttribute="bottom" id="Apx-vd-6mY"/>
+                                    <constraint firstItem="C4E-GX-90Y" firstAttribute="width" secondItem="xr9-8J-QUD" secondAttribute="width" priority="750" id="BrN-t3-kKZ"/>
+                                    <constraint firstItem="C4E-GX-90Y" firstAttribute="centerX" secondItem="xr9-8J-QUD" secondAttribute="centerX" id="Ic2-3t-uyx"/>
+                                    <constraint firstItem="aUR-vT-kOE" firstAttribute="centerY" secondItem="xr9-8J-QUD" secondAttribute="centerY" id="pAe-zs-ldr"/>
+                                </constraints>
+                                <variation key="default">
+                                    <mask key="constraints">
+                                        <exclude reference="7so-AG-NVo"/>
+                                        <exclude reference="Apx-vd-6mY"/>
+                                    </mask>
+                                </variation>
+                            </view>
+                        </subviews>
+                        <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                        <constraints>
+                            <constraint firstItem="xr9-8J-QUD" firstAttribute="centerY" secondItem="0qN-3A-WmB" secondAttribute="centerY" id="6FT-xq-Quf"/>
+                            <constraint firstItem="xr9-8J-QUD" firstAttribute="width" secondItem="0qN-3A-WmB" secondAttribute="width" id="70T-SF-m6p"/>
+                            <constraint firstItem="AHS-hV-37G" firstAttribute="centerX" secondItem="0qN-3A-WmB" secondAttribute="centerX" id="IQa-za-09A"/>
+                            <constraint firstItem="AHS-hV-37G" firstAttribute="width" secondItem="0qN-3A-WmB" secondAttribute="width" id="SCz-lN-hi4"/>
+                            <constraint firstItem="AHS-hV-37G" firstAttribute="centerY" secondItem="0qN-3A-WmB" secondAttribute="centerY" id="dvZ-8p-ivf"/>
+                            <constraint firstItem="xr9-8J-QUD" firstAttribute="height" secondItem="0qN-3A-WmB" secondAttribute="height" id="kQa-RZ-4Nm"/>
+                            <constraint firstItem="AHS-hV-37G" firstAttribute="height" secondItem="0qN-3A-WmB" secondAttribute="height" id="rkZ-I7-vEt"/>
+                            <constraint firstItem="xr9-8J-QUD" firstAttribute="centerX" secondItem="0qN-3A-WmB" secondAttribute="centerX" id="wS5-xR-0AP"/>
+                        </constraints>
+                        <connections>
+                            <outlet property="imageView" destination="AHS-hV-37G" id="RJD-Kd-tqM"/>
+                            <outlet property="overlay" destination="xr9-8J-QUD" id="oiJ-wk-Z3T"/>
+                        </connections>
+                    </view>
+                    <connections>
+                        <outlet property="artistNameLabel" destination="aUR-vT-kOE" id="2ge-hJ-fmd"/>
+                        <outlet property="artistNameLabelCenteredConstraint" destination="pAe-zs-ldr" id="YWI-ab-qpY"/>
+                        <outlet property="artistNameLabelRestingConstraint" destination="7so-AG-NVo" id="GC0-9e-ZJ4"/>
+                        <outlet property="followButton" destination="C4E-GX-90Y" id="iCX-4l-bQA"/>
+                        <outlet property="followButtonHidingConstraint" destination="Apx-vd-6mY" id="t23-ww-fuk"/>
+                        <outlet property="followButtonRestingConstraint" destination="7yz-Ov-ZPS" id="Ob0-2j-uHs"/>
+                        <segue destination="Jai-jZ-F7n" kind="custom" identifier="Artist-&gt;Album" customClass="UrsusStoryboardSegue" customModule="Ursus" customModuleProvider="target" id="nLE-vA-c11"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="zJk-bn-ceC" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="-1571" y="1952"/>
         </scene>
     </scenes>
+    <inferredMetricsTieBreakers>
+        <segue reference="kRG-BK-4CJ"/>
+        <segue reference="qkx-Fg-KPo"/>
+    </inferredMetricsTieBreakers>
+    <color key="tintColor" red="0.94901960780000005" green="0.2156862745" blue="0.25882352939999997" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
 </document>
