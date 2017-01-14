@@ -13,8 +13,6 @@ class SearchButton: UrsusButton {
 	override func themeDidChange() {
 		super.themeDidChange()
 		
-		self.setNeedsDisplay()
-		
 		if PreferenceManager.shared.themeMode == .dark {
 			self.tintColor = StyleKit.darkPrimaryTextColor
 		} else {
@@ -30,14 +28,10 @@ class SearchButton: UrsusButton {
 		super.draw(rect)
 		
 		if PreferenceManager.shared.themeMode == .dark {
-			if self.rounded {
-				self.layer.backgroundColor = UIColor(white: 0.05, alpha: 0.7).cgColor
-			}
+            self.layer.backgroundColor = UIColor(white: 0.05, alpha: 0.7).cgColor
 			StyleKit.drawSearchIcon(frame: rect, resizing: .aspectFit, iconColor: self.tintColor.withAlpha(0.2))
 		} else {
-			if self.rounded {
-				self.layer.backgroundColor = UIColor(white: 0.95, alpha: 0.45).cgColor
-			}
+			self.layer.backgroundColor = UIColor(white: 0.95, alpha: 0.45).cgColor
 			StyleKit.drawSearchIcon(frame: rect, resizing: .aspectFit, iconColor: self.tintColor.withAlpha(0.25))
 		}
 

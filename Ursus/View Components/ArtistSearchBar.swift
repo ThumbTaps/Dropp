@@ -75,13 +75,13 @@ class ArtistSearchBar: UIView, UITextFieldDelegate {
 		Notification.Name.UrsusThemeDidChange.add(self, selector: #selector(self.themeDidChange))
 	}
 	func themeDidChange() {
-		self.setNeedsDisplay()
 		
 		if PreferenceManager.shared.themeMode == .dark {
 			self.tintColor = StyleKit.darkPrimaryTextColor
 		} else {
 			self.tintColor = StyleKit.lightPrimaryTextColor
 		}
+		self.setNeedsDisplay()
 	}
 	override func awakeFromNib() {
 		super.awakeFromNib()

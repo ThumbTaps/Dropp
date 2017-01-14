@@ -20,10 +20,10 @@ class Artist: NSObject, NSCoding {
 	var summary: String?
 	var genre: String?
 	var artworkURLs: [String: URL]?
-	var latestAlbum: Album?
+	var latestRelease: Release?
 	
 	
-	init(itunesID: Int!, name: String!, itunesURL: URL!, summary: String?, genre: String?, artworkURLs: [String: URL]?, latestAlbum: Album?) {
+	init(itunesID: Int!, name: String!, itunesURL: URL!, summary: String?, genre: String?, artworkURLs: [String: URL]?, latestRelease: Release?) {
 		
 		super.init()
 		
@@ -33,7 +33,7 @@ class Artist: NSObject, NSCoding {
 		self.summary = summary
 		self.genre = genre
 		self.artworkURLs = artworkURLs
-		self.latestAlbum = latestAlbum
+		self.latestRelease = latestRelease
 	}
 	
 	
@@ -53,8 +53,8 @@ class Artist: NSObject, NSCoding {
 		if self.artworkURLs != nil {
 			aCoder.encode(self.artworkURLs, forKey: "artworkURLs")
 		}
-		if self.latestAlbum != nil {
-			aCoder.encode(self.latestAlbum, forKey: "latestAlbum")
+		if self.latestRelease != nil {
+			aCoder.encode(self.latestRelease, forKey: "latestRelease")
 		}
 	}
 	required init?(coder aDecoder: NSCoder) {
@@ -67,6 +67,6 @@ class Artist: NSObject, NSCoding {
 		self.summary = aDecoder.decodeObject(forKey: "summary") as? String
 		self.genre = aDecoder.decodeObject(forKey: "genre") as? String
 		self.artworkURLs = aDecoder.decodeObject(forKey: "artworkURLs") as? [String: URL]
-		self.latestAlbum = aDecoder.decodeObject(forKey: "latestAlbum") as? Album
+		self.latestRelease = aDecoder.decodeObject(forKey: "latestRelease") as? Release
 	}
 }

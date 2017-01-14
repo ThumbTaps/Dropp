@@ -12,20 +12,20 @@ class UrsusStoryboardSegue: UIStoryboardSegue {
     
     override func perform() {
 		
-		if self.identifier == "NewAlbums->Settings" {
+		if self.identifier == "NewReleases->Settings" {
 			self.source.present(self.destination, animated: false)
 			
-		} else if self.identifier == "Settings->NewAlbums" {
+		} else if self.identifier == "Settings->NewReleases" {
 			self.source.dismiss(animated: false)
 		}
 		
 			
 			
 			
-		else if self.identifier == "NewAlbums->FollowingArtists" {
+		else if self.identifier == "NewReleases->Artists" {
 			self.source.present(self.destination, animated: false)
 			
-		} else if self.identifier == "FollowingArtists->NewAlbums" {
+		} else if self.identifier == "Artists->NewReleases" {
 			self.source.dismiss(animated: false)
 		}
 			
@@ -33,10 +33,10 @@ class UrsusStoryboardSegue: UIStoryboardSegue {
 			
 			
 			
-        else if self.identifier == "NewAlbums->ArtistSearch" {
+        else if self.identifier == "NewReleases->ArtistSearch" {
             self.source.present(self.destination, animated: false)
 			
-		} else if self.identifier == "ArtistSearch->NewAlbums" {
+		} else if self.identifier == "ArtistSearch->NewReleases" {
 			
 			let artistSearch = self.source as! ArtistSearchViewController
 			

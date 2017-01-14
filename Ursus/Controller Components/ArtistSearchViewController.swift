@@ -181,7 +181,7 @@ class ArtistSearchViewController: UrsusViewController, ArtistSearchBarDelegate, 
 					
 					UIApplication.shared.isNetworkActivityIndicatorVisible = true
 					
-					RequestManager.shared.getLatestAlbum(for: itunesArtistInfo["artistId"] as! Int, completion: { (response, error) in
+					RequestManager.shared.getLatestRelease(for: itunesArtistInfo["artistId"] as! Int, completion: { (release, error) in
 						
 						UIApplication.shared.isNetworkActivityIndicatorVisible = false
 						
@@ -193,7 +193,7 @@ class ArtistSearchViewController: UrsusViewController, ArtistSearchBarDelegate, 
 							summary: (lastFMArtistInfo["bio"] as? [String: Any])?["summary"] as? String,
 							genre: itunesArtistInfo["primaryGenreName"] as? String,
 							artworkURLs: artistArtworkURLs,
-							latestAlbum: nil
+							latestRelease: release
 						)
 						
 						UIApplication.shared.isNetworkActivityIndicatorVisible = true
@@ -276,7 +276,7 @@ class ArtistSearchViewController: UrsusViewController, ArtistSearchBarDelegate, 
 			
 		} else {
 			
-			self.performSegue(withIdentifier: "ArtistSearch->NewAlbums", sender: nil)
+			self.performSegue(withIdentifier: "ArtistSearch->NewReleases", sender: nil)
 		}
 	}
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {

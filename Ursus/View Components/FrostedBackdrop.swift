@@ -40,6 +40,8 @@ class FrostedBackdrop: UIView {
 	override func draw(_ rect: CGRect) {
 		// Drawing code
 		
+		self.layer.cornerRadius = 12
+		
 		if PreferenceManager.shared.themeMode == .dark {
 			self.layer.backgroundColor = StyleKit.darkBackgroundColor.cgColor
 			StyleKit.drawDarkBackdrop(frame: CGRect(x: 0, y: rect.height - rect.width, width: rect.width, height: rect.width), resizing: .aspectFit)
@@ -55,25 +57,41 @@ class FrostedBackdrop: UIView {
 @IBDesignable
 class FrostedBackdropOverlay: UIView {
 	
+    @IBInspectable var changesWithTheme: Bool = true
+    
 	override init(frame: CGRect) {
 		super.init(frame: frame)
-		self.themeDidChange()
-		Notification.Name.UrsusThemeDidChange.add(self, selector: #selector(self.themeDidChange))
+        
+        if self.changesWithTheme {
+            self.themeDidChange()
+            Notification.Name.UrsusThemeDidChange.add(self, selector: #selector(self.themeDidChange))
+        }
 	}
 	required init?(coder aDecoder: NSCoder) {
 		super.init(coder: aDecoder)
-		self.themeDidChange()
-		Notification.Name.UrsusThemeDidChange.add(self, selector: #selector(self.themeDidChange))
+        if self.changesWithTheme {
+            self.themeDidChange()
+            Notification.Name.UrsusThemeDidChange.add(self, selector: #selector(self.themeDidChange))
+        }
 	}
 	func themeDidChange() {
 		self.setNeedsDisplay()		
 	}
+    override func tintColorDidChange() {
+        super.tintColorDidChange()
+        self.setNeedsDisplay()
+    }
 	override func draw(_ rect: CGRect) {
-				
-		if PreferenceManager.shared.themeMode == .dark {
-			self.layer.backgroundColor = StyleKit.darkBackdropOverlayColor.cgColor
-		} else {
-			self.layer.backgroundColor = StyleKit.lightBackdropOverlayColor.cgColor
-		}
+		
+        if self.changesWithTheme {
+            if PreferenceManager.shared.themeMode == .dark {
+                self.layer.backgroundColor = StyleKit.darkBackdropOverlayColor.cgColor
+            } else {
+                self.layer.backgroundColor = StyleKit.lightBackdropOverlayColor.cgColor
+            }
+        } else {
+            self.layer.backgroundColor = self.tintColor.cgColor
+			self.backgroundColor = UIColor.clear
+        }
 	}
 }

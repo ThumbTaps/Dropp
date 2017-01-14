@@ -135,7 +135,7 @@ class RequestManager: NSObject, URLSessionDataDelegate {
 		}
 		
 	}
-	func getLatestAlbum(for artistID: Int, completion: @escaping ((_ album: Album?, _ error: NSError?) -> Void)) {
+	func getLatestRelease(for artistID: Int, completion: @escaping ((_ release: Release?, _ error: NSError?) -> Void)) {
 		
 		// create URL for data request
 		if let url = URL(string: "\(self.itunesLookupURL)?id=\(artistID)&media=music&entity=album&attribute=albumTerm&sort=recent") {
@@ -162,7 +162,7 @@ class RequestManager: NSObject, URLSessionDataDelegate {
 						let dateFormatter = DateFormatter()
 						dateFormatter.dateFormat = "YYYY-MM-dd"
 						
-						var resultsParsedToAlbums = results.map({ ( result ) -> Album in
+						var resultsParsedToReleases = results.map({ ( result ) -> Release in
 							
 							let itunesID = result["collectionId"] as! Int
 							let title = result["collectionName"] as! String
@@ -171,27 +171,27 @@ class RequestManager: NSObject, URLSessionDataDelegate {
 							let itunesURL = URL(string: result["collectionViewUrl"] as! String)
 							let artworkURL = URL(string: result["artworkUrl100"] as! String)
 							
-							let album = Album(itunesID: itunesID, title: title, releaseDate: releaseDate, summary: nil, genre: genre, itunesURL: itunesURL, artworkURL: artworkURL)
+							let release = Release(itunesID: itunesID, title: title, releaseDate: releaseDate, summary: nil, genre: genre, itunesURL: itunesURL, artworkURL: artworkURL)
 							
-							return album
+							return release
 						})
 						
 						// remove singles if necessary
 						if PreferenceManager.shared.ignoreSingles {
-							resultsParsedToAlbums = resultsParsedToAlbums.filter {
+							resultsParsedToReleases = resultsParsedToReleases.filter {
 								$0.title.range(of: " - Single") == nil
 							}
 						}
 						
 						// remove EPs if necessary
 						if PreferenceManager.shared.ignoreEPs {
-							resultsParsedToAlbums = resultsParsedToAlbums.filter { $0.title.range(of: " - EP") == nil }
+							resultsParsedToReleases = resultsParsedToReleases.filter { $0.title.range(of: " - EP") == nil }
 						}
 						
-						let latestAlbum = resultsParsedToAlbums.max(by: ({ $0.isNewerThan(album: $1) }))
+						let latestRelease = resultsParsedToReleases.max(by: ({ $0.isNewerThan(release: $1) }))
 						
 						// trigger completion handler
-						completion(latestAlbum, nil)
+						completion(latestRelease, nil)
 						
 					} catch _ {
 						

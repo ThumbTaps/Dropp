@@ -53,37 +53,37 @@ class PreferenceManager: NSObject {
 	}
 	
 	
-	private var _newAlbums: [Album] = []
-	var newAlbums: [Album] {
+	private var _newReleases: [Release] = []
+	var newReleases: [Release] {
 		set {
-			self._newAlbums = newValue
+			self._newReleases = newValue
 		}
 		get {
-			return self.followingArtists.flatMap({ $0.latestAlbum })
+			return self.followingArtists.flatMap({ $0.latestRelease })
 		}
 	}
 	var lastUpdate: Date? = nil
-	func updateNewAlbums(completion: (() -> Void)?=nil) {
+	func updateNewReleases(completion: (() -> Void)?=nil) {
 		
 		if self.followingArtists.count > 0 {
 			
 			self.followingArtists.forEach { (followed) in
 				
-				RequestManager.shared.getLatestAlbum(for: followed.itunesID, completion: { (album: Album?, error: NSError?) in
+				RequestManager.shared.getLatestRelease(for: followed.itunesID, completion: { (release: Release?, error: NSError?) in
 					
 					if error == nil {
 						
-						if album != nil {
+						if release != nil {
 							
-							if followed.latestAlbum != nil {
+							if followed.latestRelease != nil {
 								
-								if album!.itunesID != followed.latestAlbum!.itunesID && album!.isNewerThan(album: followed.latestAlbum!) {
+								if release!.itunesID != followed.latestRelease!.itunesID && release!.isNewerThan(release: followed.latestRelease!) {
 									
-									followed.latestAlbum = album!
+									followed.latestRelease = release!
 								}
 							} else {
 								
-								followed.latestAlbum = album!
+								followed.latestRelease = release!
 							}
 							
 						}
