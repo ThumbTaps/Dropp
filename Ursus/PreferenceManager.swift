@@ -36,7 +36,9 @@ class PreferenceManager: NSObject {
 	
 	var followingArtists: [Artist] = []
 	func follow(artist: Artist) {
-		self.followingArtists.append(artist)
+        if self.followingArtists.index(where: { $0.itunesID == artist.itunesID }) == nil {
+            self.followingArtists.append(artist)
+        }
 		
 		self.saveFollowingArtists()
 	}

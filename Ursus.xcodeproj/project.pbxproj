@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		210D492F5379AC336881D453 /* Pods_UrsusTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C4271E9964D26860660C1774 /* Pods_UrsusTests.framework */; };
+		72D5CC5FF741B20CD526DBC7 /* Pods_UrsusUITests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 17701650A4D779507C79561C /* Pods_UrsusUITests.framework */; };
 		7B121F801E2C3AAA004458DC /* ThemeModeCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B121F7F1E2C3AAA004458DC /* ThemeModeCollectionViewCell.swift */; };
 		7B150E841DDFDF0800965D2A /* StyleKit.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B150E831DDFDF0800965D2A /* StyleKit.swift */; };
 		7B15CB4D1DDBDF9600CE48C1 /* ArtistViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B15CB4C1DDBDF9600CE48C1 /* ArtistViewController.swift */; };
@@ -45,11 +47,14 @@
 		7B79991A1E1DE092003E2F28 /* SearchButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B7999191E1DE092003E2F28 /* SearchButton.swift */; };
 		7B79991C1E1F3C21003E2F28 /* ArtistSearchViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B79991B1E1F3C21003E2F28 /* ArtistSearchViewController.swift */; };
 		7B8200ED1CDABE9200A99C68 /* Artist.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B8200EC1CDABE9200A99C68 /* Artist.swift */; };
+		7BA979BE1E2D0F76003553D6 /* UrsusAnimatedTransitionController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BA979BD1E2D0F76003553D6 /* UrsusAnimatedTransitionController.swift */; };
 		7BB3D5EA1DEBDBEB002367C3 /* BackButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BB3D5E91DEBDBEB002367C3 /* BackButton.swift */; };
 		7BBB6D6F1E2AC2A700C2F466 /* UrsusCountIndicator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BBB6D6E1E2AC2A700C2F466 /* UrsusCountIndicator.swift */; };
 		7BC8DE251DED285B0004A7F9 /* RoundedTextField.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BC8DE241DED285B0004A7F9 /* RoundedTextField.swift */; };
+		7BD89A171E2D74EC00FAF502 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 7BD89A161E2D74EC00FAF502 /* GoogleService-Info.plist */; };
 		7BEB34BD1DF061E300888FF1 /* UrsusViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BEB34BC1DF061E300888FF1 /* UrsusViewController.swift */; };
 		7BEB34BF1DF0679800888FF1 /* UrsusStoryboardSegue.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BEB34BE1DF0679800888FF1 /* UrsusStoryboardSegue.swift */; };
+		DC9BC1081C914DAB67480E0B /* Pods_Ursus.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 161B513C4B4A6044F64D9C1A /* Pods_Ursus.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -84,6 +89,11 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		161B513C4B4A6044F64D9C1A /* Pods_Ursus.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Ursus.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		17701650A4D779507C79561C /* Pods_UrsusUITests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_UrsusUITests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		4643552B41BC957071F398CF /* Pods-UrsusTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-UrsusTests.debug.xcconfig"; path = "Pods/Target Support Files/Pods-UrsusTests/Pods-UrsusTests.debug.xcconfig"; sourceTree = "<group>"; };
+		473F026E9ABAA59BB29D35D9 /* Pods-UrsusUITests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-UrsusUITests.release.xcconfig"; path = "Pods/Target Support Files/Pods-UrsusUITests/Pods-UrsusUITests.release.xcconfig"; sourceTree = "<group>"; };
+		71C360F3A9BA924567BD0BF9 /* Pods-UrsusUITests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-UrsusUITests.debug.xcconfig"; path = "Pods/Target Support Files/Pods-UrsusUITests/Pods-UrsusUITests.debug.xcconfig"; sourceTree = "<group>"; };
 		7B121F7F1E2C3AAA004458DC /* ThemeModeCollectionViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ThemeModeCollectionViewCell.swift; sourceTree = "<group>"; };
 		7B150E831DDFDF0800965D2A /* StyleKit.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StyleKit.swift; sourceTree = "<group>"; };
 		7B15CB4C1DDBDF9600CE48C1 /* ArtistViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ArtistViewController.swift; sourceTree = "<group>"; };
@@ -128,11 +138,17 @@
 		7B79991B1E1F3C21003E2F28 /* ArtistSearchViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ArtistSearchViewController.swift; sourceTree = "<group>"; };
 		7B7B88B51E0DD81E0012B8A3 /* Telekinesis.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Telekinesis.framework; path = Frameworks/Telekinesis.framework; sourceTree = "<group>"; };
 		7B8200EC1CDABE9200A99C68 /* Artist.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Artist.swift; sourceTree = "<group>"; };
+		7BA979BD1E2D0F76003553D6 /* UrsusAnimatedTransitionController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UrsusAnimatedTransitionController.swift; sourceTree = "<group>"; };
 		7BB3D5E91DEBDBEB002367C3 /* BackButton.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BackButton.swift; sourceTree = "<group>"; };
 		7BBB6D6E1E2AC2A700C2F466 /* UrsusCountIndicator.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UrsusCountIndicator.swift; sourceTree = "<group>"; };
 		7BC8DE241DED285B0004A7F9 /* RoundedTextField.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RoundedTextField.swift; sourceTree = "<group>"; };
+		7BD89A161E2D74EC00FAF502 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		7BEB34BC1DF061E300888FF1 /* UrsusViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UrsusViewController.swift; sourceTree = "<group>"; };
 		7BEB34BE1DF0679800888FF1 /* UrsusStoryboardSegue.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UrsusStoryboardSegue.swift; sourceTree = "<group>"; };
+		A9AE32A717C7271F3F5B41C8 /* Pods-Ursus.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Ursus.release.xcconfig"; path = "Pods/Target Support Files/Pods-Ursus/Pods-Ursus.release.xcconfig"; sourceTree = "<group>"; };
+		C4271E9964D26860660C1774 /* Pods_UrsusTests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_UrsusTests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		E8C3E14020C2F526B042C182 /* Pods-UrsusTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-UrsusTests.release.xcconfig"; path = "Pods/Target Support Files/Pods-UrsusTests/Pods-UrsusTests.release.xcconfig"; sourceTree = "<group>"; };
+		F682E1AD5AE21C18DE9E99D7 /* Pods-Ursus.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Ursus.debug.xcconfig"; path = "Pods/Target Support Files/Pods-Ursus/Pods-Ursus.debug.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -142,6 +158,7 @@
 			files = (
 				7B679B4C1E21730800649FD6 /* CoreLocation.framework in Frameworks */,
 				7B1FF6F31E26D801004F496E /* Telekinesis.framework in Frameworks */,
+				DC9BC1081C914DAB67480E0B /* Pods_Ursus.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -149,6 +166,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				210D492F5379AC336881D453 /* Pods_UrsusTests.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -156,6 +174,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				72D5CC5FF741B20CD526DBC7 /* Pods_UrsusUITests.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -178,6 +197,7 @@
 				7B3B99671CC4437E00900838 /* Ursus */,
 				7B3B997C1CC4437E00900838 /* UrsusTests */,
 				7B3B99871CC4437E00900838 /* UrsusUITests */,
+				7BBE54AE4B31BDEDC871CDDD /* Pods */,
 			);
 			sourceTree = "<group>";
 		};
@@ -198,6 +218,7 @@
 				7B3B996F1CC4437E00900838 /* Assets.xcassets */,
 				7B442A261DDABB3C00F52AB0 /* Controller Components */,
 				7B22577F1DDE746700F81E12 /* Extensions */,
+				7BD89A161E2D74EC00FAF502 /* GoogleService-Info.plist */,
 				7B3B99741CC4437E00900838 /* Info.plist */,
 				7B3B99711CC4437E00900838 /* LaunchScreen.storyboard */,
 				7B3B996C1CC4437E00900838 /* Main.storyboard */,
@@ -240,6 +261,7 @@
 				7B679B4F1E22AD3B00649FD6 /* SettingsViewController.swift */,
 				7BEB34BE1DF0679800888FF1 /* UrsusStoryboardSegue.swift */,
 				7BEB34BC1DF061E300888FF1 /* UrsusViewController.swift */,
+				7BA979BD1E2D0F76003553D6 /* UrsusAnimatedTransitionController.swift */,
 			);
 			path = "Controller Components";
 			sourceTree = "<group>";
@@ -280,11 +302,27 @@
 			path = "Model Components";
 			sourceTree = "<group>";
 		};
+		7BBE54AE4B31BDEDC871CDDD /* Pods */ = {
+			isa = PBXGroup;
+			children = (
+				F682E1AD5AE21C18DE9E99D7 /* Pods-Ursus.debug.xcconfig */,
+				A9AE32A717C7271F3F5B41C8 /* Pods-Ursus.release.xcconfig */,
+				4643552B41BC957071F398CF /* Pods-UrsusTests.debug.xcconfig */,
+				E8C3E14020C2F526B042C182 /* Pods-UrsusTests.release.xcconfig */,
+				71C360F3A9BA924567BD0BF9 /* Pods-UrsusUITests.debug.xcconfig */,
+				473F026E9ABAA59BB29D35D9 /* Pods-UrsusUITests.release.xcconfig */,
+			);
+			name = Pods;
+			sourceTree = "<group>";
+		};
 		7BD653781DE2B0860069E46E /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
 				7B679B4B1E21730800649FD6 /* CoreLocation.framework */,
 				7B7B88B51E0DD81E0012B8A3 /* Telekinesis.framework */,
+				161B513C4B4A6044F64D9C1A /* Pods_Ursus.framework */,
+				C4271E9964D26860660C1774 /* Pods_UrsusTests.framework */,
+				17701650A4D779507C79561C /* Pods_UrsusUITests.framework */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -296,11 +334,14 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 7B3B998D1CC4437E00900838 /* Build configuration list for PBXNativeTarget "Ursus" */;
 			buildPhases = (
+				E180C41C0564AC80676202FE /* [CP] Check Pods Manifest.lock */,
 				7B3B99611CC4437E00900838 /* Sources */,
 				7B3B99621CC4437E00900838 /* Frameworks */,
 				7B3B99631CC4437E00900838 /* Resources */,
 				7BB6699A1CD6DF870035DFCD /* ShellScript */,
 				7B1FF6F51E26D801004F496E /* Embed Frameworks */,
+				11BF025DF091E010030A699F /* [CP] Embed Pods Frameworks */,
+				6D50DF186C048982A6FF4B07 /* [CP] Copy Pods Resources */,
 			);
 			buildRules = (
 			);
@@ -315,9 +356,12 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 7B3B99901CC4437E00900838 /* Build configuration list for PBXNativeTarget "UrsusTests" */;
 			buildPhases = (
+				B07A149FAB2CDF60F252884F /* [CP] Check Pods Manifest.lock */,
 				7B3B99751CC4437E00900838 /* Sources */,
 				7B3B99761CC4437E00900838 /* Frameworks */,
 				7B3B99771CC4437E00900838 /* Resources */,
+				3FC45E0E44C7F42E6286DFA7 /* [CP] Embed Pods Frameworks */,
+				CB8A043BBCEA1F6E6D660F08 /* [CP] Copy Pods Resources */,
 			);
 			buildRules = (
 			);
@@ -333,9 +377,12 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 7B3B99931CC4437E00900838 /* Build configuration list for PBXNativeTarget "UrsusUITests" */;
 			buildPhases = (
+				17E0BB1EC58214F1017CED5C /* [CP] Check Pods Manifest.lock */,
 				7B3B99801CC4437E00900838 /* Sources */,
 				7B3B99811CC4437E00900838 /* Frameworks */,
 				7B3B99821CC4437E00900838 /* Resources */,
+				FFEDED24790DEF11B31DBBE7 /* [CP] Embed Pods Frameworks */,
+				C72C8C6D8D285C723B657541 /* [CP] Copy Pods Resources */,
 			);
 			buildRules = (
 			);
@@ -411,6 +458,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				7B3B99731CC4437E00900838 /* LaunchScreen.storyboard in Resources */,
+				7BD89A171E2D74EC00FAF502 /* GoogleService-Info.plist in Resources */,
 				7B3B99701CC4437E00900838 /* Assets.xcassets in Resources */,
 				7B3B996E1CC4437E00900838 /* Main.storyboard in Resources */,
 			);
@@ -433,6 +481,66 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXShellScriptBuildPhase section */
+		11BF025DF091E010030A699F /* [CP] Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "[CP] Embed Pods Frameworks";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-Ursus/Pods-Ursus-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		17E0BB1EC58214F1017CED5C /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_ROOT}/../Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n";
+			showEnvVarsInLog = 0;
+		};
+		3FC45E0E44C7F42E6286DFA7 /* [CP] Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "[CP] Embed Pods Frameworks";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-UrsusTests/Pods-UrsusTests-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		6D50DF186C048982A6FF4B07 /* [CP] Copy Pods Resources */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "[CP] Copy Pods Resources";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-Ursus/Pods-Ursus-resources.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
 		7BB6699A1CD6DF870035DFCD /* ShellScript */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
@@ -445,6 +553,81 @@
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
 			shellScript = "";
+		};
+		B07A149FAB2CDF60F252884F /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_ROOT}/../Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n";
+			showEnvVarsInLog = 0;
+		};
+		C72C8C6D8D285C723B657541 /* [CP] Copy Pods Resources */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "[CP] Copy Pods Resources";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-UrsusUITests/Pods-UrsusUITests-resources.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		CB8A043BBCEA1F6E6D660F08 /* [CP] Copy Pods Resources */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "[CP] Copy Pods Resources";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-UrsusTests/Pods-UrsusTests-resources.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		E180C41C0564AC80676202FE /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_ROOT}/../Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n";
+			showEnvVarsInLog = 0;
+		};
+		FFEDED24790DEF11B31DBBE7 /* [CP] Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "[CP] Embed Pods Frameworks";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-UrsusUITests/Pods-UrsusUITests-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
 		};
 /* End PBXShellScriptBuildPhase section */
 
@@ -475,6 +658,7 @@
 				7B1FF6FD1E271ADE004F496E /* ArtistCollectionViewCell.swift in Sources */,
 				7B71CCC41DD7C0D700DAE910 /* ArtistSearchBar.swift in Sources */,
 				7B679B521E22C7F500649FD6 /* ArtistsButton.swift in Sources */,
+				7BA979BE1E2D0F76003553D6 /* UrsusAnimatedTransitionController.swift in Sources */,
 				7B71CCC21DD7A87200DAE910 /* NewReleasesViewController.swift in Sources */,
 				7B1E33B21E29976F00D5F37B /* ReleaseViewController.swift in Sources */,
 				7B121F801E2C3AAA004458DC /* ThemeModeCollectionViewCell.swift in Sources */,
@@ -634,6 +818,7 @@
 		};
 		7B3B998E1CC4437E00900838 /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = F682E1AD5AE21C18DE9E99D7 /* Pods-Ursus.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_ENTITLEMENTS = Ursus/Ursus.entitlements;
@@ -654,6 +839,7 @@
 		};
 		7B3B998F1CC4437E00900838 /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = A9AE32A717C7271F3F5B41C8 /* Pods-Ursus.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_ENTITLEMENTS = Ursus/Ursus.entitlements;
@@ -674,6 +860,7 @@
 		};
 		7B3B99911CC4437E00900838 /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 4643552B41BC957071F398CF /* Pods-UrsusTests.debug.xcconfig */;
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				INFOPLIST_FILE = UrsusTests/Info.plist;
@@ -687,6 +874,7 @@
 		};
 		7B3B99921CC4437E00900838 /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = E8C3E14020C2F526B042C182 /* Pods-UrsusTests.release.xcconfig */;
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				INFOPLIST_FILE = UrsusTests/Info.plist;
@@ -700,6 +888,7 @@
 		};
 		7B3B99941CC4437E00900838 /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 71C360F3A9BA924567BD0BF9 /* Pods-UrsusUITests.debug.xcconfig */;
 			buildSettings = {
 				INFOPLIST_FILE = UrsusUITests/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
@@ -712,6 +901,7 @@
 		};
 		7B3B99951CC4437E00900838 /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 473F026E9ABAA59BB29D35D9 /* Pods-UrsusUITests.release.xcconfig */;
 			buildSettings = {
 				INFOPLIST_FILE = UrsusUITests/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";

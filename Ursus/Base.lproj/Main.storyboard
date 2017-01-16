@@ -15,7 +15,7 @@
         <!--Settings-->
         <scene sceneID="via-ck-cnN">
             <objects>
-                <viewController title="Settings" id="tIm-Ss-63n" customClass="SettingsViewController" customModule="Ursus" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController title="Settings" modalPresentationStyle="currentContext" id="tIm-Ss-63n" customClass="SettingsViewController" customModule="Ursus" customModuleProvider="target" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="B8Y-Dv-aM3"/>
                         <viewControllerLayoutGuide type="bottom" id="yos-1I-7FX"/>
@@ -362,7 +362,7 @@
         <!--New Releases-->
         <scene sceneID="Vt8-o4-acr">
             <objects>
-                <viewController storyboardIdentifier="NewReleases" title="New Releases" useStoryboardIdentifierAsRestorationIdentifier="YES" id="igh-Gg-oBy" customClass="NewReleasesViewController" customModule="Ursus" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="NewReleases" title="New Releases" modalPresentationStyle="overCurrentContext" useStoryboardIdentifierAsRestorationIdentifier="YES" id="igh-Gg-oBy" customClass="NewReleasesViewController" customModule="Ursus" customModuleProvider="target" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="YXQ-LD-UHn"/>
                         <viewControllerLayoutGuide type="bottom" id="94J-02-LLS"/>
@@ -473,19 +473,6 @@
                                             <constraint firstAttribute="height" constant="120" id="AV5-Xj-jaW"/>
                                         </constraints>
                                     </view>
-                                    <button opaque="NO" userInteractionEnabled="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="zNO-xx-eEi" customClass="UrsusCountIndicator" customModule="Ursus" customModuleProvider="target">
-                                        <rect key="frame" x="369" y="-37" width="30" height="30"/>
-                                        <constraints>
-                                            <constraint firstAttribute="height" constant="30" id="YBr-TJ-bEn"/>
-                                            <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="30" id="ZMu-Bu-yy3"/>
-                                            <constraint firstAttribute="width" secondItem="zNO-xx-eEi" secondAttribute="height" multiplier="1:1" priority="750" id="jc0-HG-gjg"/>
-                                        </constraints>
-                                        <state key="normal" title="0"/>
-                                        <userDefinedRuntimeAttributes>
-                                            <userDefinedRuntimeAttribute type="boolean" keyPath="glyphOnly" value="NO"/>
-                                            <userDefinedRuntimeAttribute type="boolean" keyPath="bordered" value="NO"/>
-                                        </userDefinedRuntimeAttributes>
-                                    </button>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="nzW-n9-0kI" userLabel="Settings Button" customClass="SettingsButton" customModule="Ursus" customModuleProvider="target">
                                         <rect key="frame" x="20" y="736" width="45" height="45"/>
                                         <constraints>
@@ -529,6 +516,20 @@
                                         <color key="textColor" red="0.20000000000000001" green="0.20000000000000001" blue="0.20000000000000001" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                         <nil key="highlightedColor"/>
                                     </label>
+                                    <button opaque="NO" userInteractionEnabled="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="headTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="zNO-xx-eEi" customClass="UrsusCountIndicator" customModule="Ursus" customModuleProvider="target">
+                                        <rect key="frame" x="414" y="-37" width="30" height="30"/>
+                                        <constraints>
+                                            <constraint firstAttribute="height" constant="30" id="YBr-TJ-bEn"/>
+                                            <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="30" id="ZMu-Bu-yy3"/>
+                                            <constraint firstAttribute="width" secondItem="zNO-xx-eEi" secondAttribute="height" multiplier="1:1" priority="750" id="jc0-HG-gjg"/>
+                                        </constraints>
+                                        <fontDescription key="fontDescription" type="system" pointSize="18"/>
+                                        <state key="normal" title="0"/>
+                                        <userDefinedRuntimeAttributes>
+                                            <userDefinedRuntimeAttribute type="boolean" keyPath="glyphOnly" value="NO"/>
+                                            <userDefinedRuntimeAttribute type="boolean" keyPath="bordered" value="NO"/>
+                                        </userDefinedRuntimeAttributes>
+                                    </button>
                                 </subviews>
                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                 <color key="tintColor" red="0.94901960780000005" green="0.2156862745" blue="0.25882352939999997" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
@@ -537,12 +538,13 @@
                                     <constraint firstAttribute="trailing" secondItem="Cab-Gj-3U5" secondAttribute="trailing" id="0qA-dY-05R"/>
                                     <constraint firstItem="nrJ-fe-wG3" firstAttribute="top" secondItem="W0L-hh-39d" secondAttribute="bottom" id="4GY-wv-eOy"/>
                                     <constraint firstItem="lXh-cc-Zs0" firstAttribute="leading" secondItem="W0L-hh-39d" secondAttribute="leading" id="54v-Yi-WwY"/>
-                                    <constraint firstAttribute="trailing" secondItem="zNO-xx-eEi" secondAttribute="trailing" constant="15" id="5df-Js-6GE"/>
+                                    <constraint firstItem="zNO-xx-eEi" firstAttribute="trailing" secondItem="W0L-hh-39d" secondAttribute="trailing" constant="-15" id="5df-Js-6GE"/>
                                     <constraint firstItem="wp9-6I-nbw" firstAttribute="leading" secondItem="W0L-hh-39d" secondAttribute="leading" id="6OQ-ZB-dHU"/>
                                     <constraint firstItem="nzW-n9-0kI" firstAttribute="bottom" secondItem="W0L-hh-39d" secondAttribute="bottom" constant="-20" id="Aqg-oO-6J4"/>
                                     <constraint firstItem="Cab-Gj-3U5" firstAttribute="leading" secondItem="W0L-hh-39d" secondAttribute="leading" id="F5L-QQ-ryw"/>
                                     <constraint firstItem="nrJ-fe-wG3" firstAttribute="leading" secondItem="nzW-n9-0kI" secondAttribute="trailing" constant="15" id="HCx-dm-03m"/>
                                     <constraint firstAttribute="trailing" secondItem="wp9-6I-nbw" secondAttribute="trailing" id="JQD-r7-Bnn"/>
+                                    <constraint firstItem="zNO-xx-eEi" firstAttribute="leading" secondItem="W0L-hh-39d" secondAttribute="trailing" id="K8p-45-hQd"/>
                                     <constraint firstItem="mEf-hi-SXp" firstAttribute="top" secondItem="W0L-hh-39d" secondAttribute="top" constant="30" id="OAp-M4-X29"/>
                                     <constraint firstItem="nrJ-fe-wG3" firstAttribute="bottom" secondItem="W0L-hh-39d" secondAttribute="bottom" constant="-20" id="PQC-AF-13e"/>
                                     <constraint firstItem="3Qu-ZD-RnC" firstAttribute="top" secondItem="W0L-hh-39d" secondAttribute="bottom" id="Plf-ri-JqR"/>
@@ -563,6 +565,7 @@
                                 <variation key="default">
                                     <mask key="constraints">
                                         <exclude reference="OAp-M4-X29"/>
+                                        <exclude reference="5df-Js-6GE"/>
                                         <exclude reference="Aqg-oO-6J4"/>
                                         <exclude reference="PQC-AF-13e"/>
                                         <exclude reference="Xvd-3I-0Cm"/>
@@ -595,6 +598,8 @@
                         <outlet property="navigationTitleHidingConstraint" destination="jND-UK-fTW" id="xUO-Rg-6Cu"/>
                         <outlet property="navigationTitleRestingConstraint" destination="OAp-M4-X29" id="HpT-LF-yu6"/>
                         <outlet property="newReleasesCountIndicator" destination="zNO-xx-eEi" id="pH4-Tm-C9S"/>
+                        <outlet property="newReleasesCountIndicatorHidingConstraint" destination="K8p-45-hQd" id="Vz8-rl-NfF"/>
+                        <outlet property="newReleasesCountIndicatorRestingConstraint" destination="5df-Js-6GE" id="pT5-XD-8Q8"/>
                         <outlet property="searchButton" destination="3Qu-ZD-RnC" id="3eJ-vg-on3"/>
                         <outlet property="searchButtonFocusedCenteredConstraint" destination="Xvd-3I-0Cm" id="wkZ-tJ-Mo4"/>
                         <outlet property="searchButtonFocusedSizeConstraint" destination="Qi4-xP-p9g" id="bzR-MV-9Vl"/>
@@ -1066,7 +1071,7 @@
                                                     <subviews>
                                                         <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" directionalLockEnabled="YES" showsHorizontalScrollIndicator="NO" editable="NO" translatesAutoresizingMaskIntoConstraints="NO" id="EL4-aY-rYd">
                                                             <rect key="frame" x="20" y="20" width="374" height="150"/>
-                                                            <mutableString key="text">Lorem ipsum dolor sit er elit lamet, consectetaur cillium adipisicing pecu, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. Nam liber te conscient to factor tum poen legum odioque civiuda.</mutableString>
+                                                            <string key="text">Lorem ipsum dolor sit er elit lamet, consectetaur cillium adipisicing pecu, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. Nam liber te conscient to factor tum poen legum odioque civiuda.</string>
                                                             <color key="textColor" red="0.53333333333333333" green="0.53333333333333333" blue="0.53333333333333333" alpha="1" colorSpace="calibratedRGB"/>
                                                             <fontDescription key="fontDescription" name=".AppleSystemUIFont" family=".AppleSystemUIFont" pointSize="15"/>
                                                             <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
