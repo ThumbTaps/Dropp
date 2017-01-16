@@ -9,11 +9,35 @@
 import UIKit
 
 class ReleaseViewController: UrsusViewController {
-
+	
+	@IBOutlet weak var blurView: UIVisualEffectView!
+	@IBOutlet weak var releaseArtworkView: ReleaseArtView!
+	@IBOutlet weak var releaseTitleLabel: UILabel!
+	
+	var currentRelease: Release!
+	
     override func viewDidLoad() {
         super.viewDidLoad()
 
         // Do any additional setup after loading the view.
+		self.releaseTitleLabel.text = self.currentRelease?.title
+		
+		// load artwork
+		if self.currentRelease.artworkURL != nil {
+			
+			RequestManager.shared.loadImage(from: self.currentRelease.artworkURL!) { (image, error) in
+				
+				if error == nil {
+					
+					self.releaseArtworkView.imageView.image = image
+					self.releaseArtworkView.showArtwork()
+					
+				} else {
+					
+				}
+			}
+		}
+		
     }
 
     override func didReceiveMemoryWarning() {

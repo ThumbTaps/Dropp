@@ -18,7 +18,7 @@ class BackButton: UIButton {
     override func draw(_ rect: CGRect) {
         // Drawing code
 		
-        StyleKit.drawBackIcon(frame: CGRect(x: 0, y: 0, width: self.frame.width * 0.43, height: self.frame.height), resizing: .aspectFit, iconColor: self.tintColor)
+        StyleKit.drawLeftIcon(frame: CGRect(x: 0, y: 0, width: self.frame.width * 0.43, height: self.frame.height), resizing: .aspectFit, iconColor: self.tintColor)
         StyleKit.drawSearchIcon(frame: CGRect(x: self.frame.width * 0.43, y: 0, width: self.frame.width * 0.57, height: self.frame.height), resizing: .aspectFit, iconColor: self.tintColor)
     }
 }

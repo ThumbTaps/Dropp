@@ -53,11 +53,6 @@ class ArtistSearchViewController: UrsusViewController, ArtistSearchBarDelegate, 
 		
     }
 	
-	override func viewWillAppear(_ animated: Bool) {
-		super.viewWillAppear(animated)
-		
-	}
-	
 	override func viewDidAppear(_ animated: Bool) {
 		super.viewDidAppear(animated)
 				
@@ -144,7 +139,7 @@ class ArtistSearchViewController: UrsusViewController, ArtistSearchBarDelegate, 
 
             guard error == nil else {
                 
-                print(error)
+                print(error!)
                 return
             }
             
@@ -181,7 +176,7 @@ class ArtistSearchViewController: UrsusViewController, ArtistSearchBarDelegate, 
 					
 					UIApplication.shared.isNetworkActivityIndicatorVisible = true
 					
-					RequestManager.shared.getLatestRelease(for: itunesArtistInfo["artistId"] as! Int, completion: { (release, error) in
+					RequestManager.shared.getReleases(for: itunesArtistInfo["artistId"] as! Int, completion: { (releases, error) in
 						
 						UIApplication.shared.isNetworkActivityIndicatorVisible = false
 						
@@ -193,7 +188,7 @@ class ArtistSearchViewController: UrsusViewController, ArtistSearchBarDelegate, 
 							summary: (lastFMArtistInfo["bio"] as? [String: Any])?["summary"] as? String,
 							genre: itunesArtistInfo["primaryGenreName"] as? String,
 							artworkURLs: artistArtworkURLs,
-							latestRelease: release
+							releases: releases
 						)
 						
 						UIApplication.shared.isNetworkActivityIndicatorVisible = true
@@ -203,19 +198,15 @@ class ArtistSearchViewController: UrsusViewController, ArtistSearchBarDelegate, 
 							
 							UIApplication.shared.isNetworkActivityIndicatorVisible = false
 							
-							artworkImage?.getColors(completionHandler: { (imageColors) in
-								
-								let artistViewData: [String: Any] = [
-									"artist": artist,
-									"artistArtwork": artworkImage!,
-									"colorPalette": imageColors
-								]
-								
-								self.transitionData = artistViewData
-								
-								self.performingArtistSearch = false
-								
-							})
+							let artistViewData: [String: Any] = [
+								"artist": artist,
+								"artistArtwork": artworkImage!
+							]
+							
+							self.transitionData = artistViewData
+							
+							self.performingArtistSearch = false
+							
 							
 						}
 						
@@ -288,7 +279,6 @@ class ArtistSearchViewController: UrsusViewController, ArtistSearchBarDelegate, 
             if let artistData = sender as? [String: Any] {
                 (segue.destination as! ArtistViewController).artist = artistData["artist"] as? Artist
                 (segue.destination as! ArtistViewController).artistArtwork = artistData["artistArtwork"] as? UIImage
-                (segue.destination as! ArtistViewController).colorPalette = artistData["colorPalette"] as? UIImageColors
             }
             
         }

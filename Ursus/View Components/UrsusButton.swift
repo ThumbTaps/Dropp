@@ -13,6 +13,8 @@ class UrsusButton: UIButton {
 	
 	@IBInspectable var changesWithTheme: Bool = true
     @IBInspectable var tapScale: CGFloat = 1.2
+	@IBInspectable var glyphOnly: Bool = false
+	@IBInspectable var bordered: Bool = true
 	
 	override init(frame: CGRect) {
 		
@@ -36,6 +38,10 @@ class UrsusButton: UIButton {
 		}
 		
 	}
+	override func awakeFromNib() {
+		super.awakeFromNib()
+		self.setNeedsDisplay()
+	}
 	func themeDidChange() {
 		if PreferenceManager.shared.themeMode == .dark {
 			self.tintColor = StyleKit.darkTintColor
@@ -52,6 +58,7 @@ class UrsusButton: UIButton {
 			self.titleLabel?.textColor = StyleKit.lightIconGlyphColor
 		}
 		self.setNeedsDisplay()
+		self.setNeedsLayout()
 	}
     // Only override draw() if you perform custom drawing.
     // An empty implementation adversely affects performance during animation.
@@ -59,10 +66,21 @@ class UrsusButton: UIButton {
 		
         // Drawing code
         self.layer.cornerRadius = rect.height / 2
-
-        self.layer.borderWidth = 2
-		self.layer.borderColor = UIColor.black.withAlpha(0.15).cgColor
-        self.layer.backgroundColor = self.tintColor.cgColor
+		
+		if self.glyphOnly {
+			self.layer.backgroundColor = UIColor.clear.cgColor
+		} else {
+			self.layer.backgroundColor = self.tintColor.cgColor
+			
+		}
+		if self.bordered {
+			self.layer.borderColor = UIColor.black.withAlpha(0.15).cgColor
+			self.layer.borderWidth = 2
+			
+		} else {
+			self.layer.borderColor = UIColor.clear.cgColor
+			self.layer.borderWidth = 0
+		}
 		
     }
 	func radiate() {
@@ -101,6 +119,10 @@ class UrsusButton: UIButton {
 		})
 		
 		super.touchesEnded(touches, with: event)
+	}
+	override func touchesCancelled(_ touches: Set<UITouch>, with event: UIEvent?) {
+		super.touchesCancelled(touches, with: event)
+		self.touchesEnded(touches, with: event)
 	}
 
 }

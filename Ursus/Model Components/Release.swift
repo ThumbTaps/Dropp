@@ -8,6 +8,9 @@
 
 import UIKit
 
+enum ReleaseType {
+	case single, EP, album
+}
 class Release: NSObject, NSCoding {
 	
 	var itunesID: Int!
@@ -18,9 +21,20 @@ class Release: NSObject, NSCoding {
 	var itunesURL: URL!
 	var artworkURL: URL?
 	var seenByUser: Bool = false
+	var type: ReleaseType {
+		get {
+			if self.title.lowercased().hasSuffix("- single") {
+				return .single
+			} else if self.title.lowercased().hasSuffix(" ep") {
+				return .EP
+			} else {
+				return .album
+			}
+		}
+	}
 	
 	
-	init(itunesID: Int!, title: String!, releaseDate: Date!, summary: String?, genre: String?, itunesURL: URL!, artworkURL: URL?) {
+	init(itunesID: Int!, title: String!, releaseDate: Date!, summary: String?, genre: String?, itunesURL: URL!, artworkURL: URL?, seenByUser: Bool) {
 		
 		super.init()
 		
@@ -31,6 +45,7 @@ class Release: NSObject, NSCoding {
 		self.genre = genre
 		self.itunesURL = itunesURL
 		self.artworkURL = artworkURL
+		self.seenByUser = seenByUser
 	}
 	
 	
@@ -66,7 +81,7 @@ class Release: NSObject, NSCoding {
 	
 	
 	// MARK: - Custom Methods
-	func isNewerThan(release: Release) -> Bool {
+	func isNewerThan(_ release: Release) -> Bool {
 		return release.releaseDate > self.releaseDate
 	}
 

@@ -75,14 +75,14 @@ class ScrollFadeView: UIView {
 		
 		let colorSpace = CGColorSpaceCreateDeviceRGB()
 		
-		var firstColor = self.tintColor.withAlpha(0)
-		var firstColorComponents = firstColor.cgColor.components
-		var secondColor = self.tintColor.withAlpha(0.7)
-		var secondColorComponents = secondColor.cgColor.components
-		var thirdColor = self.tintColor.withAlpha(0.85)
-		var thirdColorComponents = thirdColor.cgColor.components
-		var fourthColor = self.tintColor.withAlpha(1)
-		var fourthColorComponents = fourthColor.cgColor.components
+		let firstColor = self.tintColor.withAlpha(0)
+		let firstColorComponents = firstColor.cgColor.components
+		let secondColor = self.tintColor.withAlpha(0.7)
+		let secondColorComponents = secondColor.cgColor.components
+		let thirdColor = self.tintColor.withAlpha(0.85)
+		let thirdColorComponents = thirdColor.cgColor.components
+		let fourthColor = self.tintColor.withAlpha(1)
+		let fourthColorComponents = fourthColor.cgColor.components
 		
 		let colorComponents = [firstColorComponents[0], firstColorComponents[1], firstColorComponents[2], firstColorComponents[3], secondColorComponents[0], secondColorComponents[1], secondColorComponents[2], secondColorComponents[3], thirdColorComponents[0], thirdColorComponents[1], thirdColorComponents[2], thirdColorComponents[3], fourthColorComponents[0], fourthColorComponents[1], fourthColorComponents[2], fourthColorComponents[3]]
 		

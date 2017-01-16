@@ -10,8 +10,6 @@ import UIKit
 
 class ArtistsViewController: UrsusViewController, UICollectionViewDataSource, UICollectionViewDelegate, UICollectionViewDelegateFlowLayout {
 	
-	@IBOutlet weak var artistsCollectionView: UICollectionView!
-	
     override func viewDidLoad() {
         super.viewDidLoad()
 
@@ -43,14 +41,20 @@ class ArtistsViewController: UrsusViewController, UICollectionViewDataSource, UI
 		return cell
 	}
 
-    /*
+	
+	
+	
+	
+	
     // MARK: - Navigation
 
     // In a storyboard-based application, you will often want to do a little preparation before navigation
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         // Get the new view controller using segue.destinationViewController.
         // Pass the selected object to the new view controller.
+		
+		// load artist data to pass on to artist view
+		
     }
-    */
 
 }

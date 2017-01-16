@@ -27,6 +27,7 @@ extension Notification.Name {
 	}
 
 	static let UrsusThemeDidChange = Notification.Name(rawValue: "UrsusThemeDidChange")
+	static let UrsusThemeModeDeterminerDidChange = Notification.Name(rawValue: "UrsusThemeModeDeterminerDidChange")
 }
 
 class PreferenceManager: NSObject {
@@ -59,7 +60,25 @@ class PreferenceManager: NSObject {
 			self._newReleases = newValue
 		}
 		get {
-			return self.followingArtists.flatMap({ $0.latestRelease })
+			return self.followingArtists.flatMap({
+				$0.releases.filter({ (release) -> Bool in
+					if !release.seenByUser {
+
+						if self.ignoreEPs && release.type == .EP {
+							return false
+
+						} else if self.ignoreSingles && release.type == .single {
+							return false
+							
+						} else {
+							return true
+						}
+						
+					} else {
+						return false
+					}
+				})
+			})
 		}
 	}
 	var lastUpdate: Date? = nil
@@ -69,24 +88,10 @@ class PreferenceManager: NSObject {
 			
 			self.followingArtists.forEach { (followed) in
 				
-				RequestManager.shared.getLatestRelease(for: followed.itunesID, completion: { (release: Release?, error: NSError?) in
+				RequestManager.shared.getReleases(for: followed.itunesID, completion: { (releases: [Release], error: NSError?) in
 					
 					if error == nil {
-						
-						if release != nil {
-							
-							if followed.latestRelease != nil {
-								
-								if release!.itunesID != followed.latestRelease!.itunesID && release!.isNewerThan(release: followed.latestRelease!) {
-									
-									followed.latestRelease = release!
-								}
-							} else {
-								
-								followed.latestRelease = release!
-							}
-							
-						}
+						followed.releases = releases
 					}
 					
 					if self.followingArtists.last?.itunesID == followed.itunesID {
@@ -103,8 +108,8 @@ class PreferenceManager: NSObject {
 			completion?()
 		}
 		
-		
 	}
+	
 	
 	
 	
@@ -116,7 +121,7 @@ class PreferenceManager: NSObject {
 			if self._autoThemeMode {
 				self.themeMode = self.determineThemeMode()
 			}
-			UserDefaults.standard.set(self.autoThemeMode, forKey: "autoThemeMode")
+			UserDefaults.standard.set(self._autoThemeMode, forKey: "autoThemeMode")
 			UserDefaults.standard.synchronize()
 		}
 		get {
@@ -160,6 +165,7 @@ class PreferenceManager: NSObject {
 			}
 
 			self._themeModeDeterminer = newValue
+			Notification.Name.UrsusThemeModeDeterminerDidChange.post()
 			UserDefaults.standard.set(self._themeModeDeterminer.rawValue, forKey: "themeModeDeterminer")
 			UserDefaults.standard.synchronize()
 			self.themeMode = self.determineThemeMode()

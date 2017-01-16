@@ -8,20 +8,23 @@
 
 import UIKit
 
-class SettingsViewController: UIViewController, UITableViewDataSource, UITableViewDelegate {
-	
-	@IBOutlet weak var tableView: UITableView!
-	
+class SettingsViewController: UrsusViewController, UICollectionViewDataSource, UICollectionViewDelegate, UICollectionViewDelegateFlowLayout {
+		
     override func viewDidLoad() {
-        super.viewDidLoad()
-
-        // Do any additional setup after loading the view.
-		Notification.Name.UrsusThemeDidChange.add(self, selector: #selector(self.themeDidChange))
+        super.viewDidLoad()		
 
     }
 	
 	override func viewWillAppear(_ animated: Bool) {
 		super.viewWillAppear(animated)
+		
+		if PreferenceManager.shared.themeMode == .dark {
+			
+			self.view.backgroundColor = StyleKit.darkTintColor
+		} else {
+			self.view.backgroundColor = StyleKit.lightTintColor
+		}
+
 	}
 
     override func didReceiveMemoryWarning() {
@@ -30,15 +33,14 @@ class SettingsViewController: UIViewController, UITableViewDataSource, UITableVi
     }
 	
 	
-	func themeDidChange() {
+	override func themeDidChange() {
+		
+		super.themeDidChange()
 		
 		if PreferenceManager.shared.themeMode == .dark {
 			
-			self.view.tintColor = StyleKit.darkIconGlyphColor
 			self.view.backgroundColor = StyleKit.darkTintColor
 		} else {
-			
-			self.view.tintColor = StyleKit.lightIconGlyphColor
 			self.view.backgroundColor = StyleKit.lightTintColor
 		}
 	}
@@ -59,25 +61,81 @@ class SettingsViewController: UIViewController, UITableViewDataSource, UITableVi
 	
 	
 	
-	// MARK: - UITableViewDataSource
-	func numberOfSections(in tableView: UITableView) -> Int {
-		
+	// MARK: - UICollectionViewDataSource
+	func numberOfSections(in collectionView: UICollectionView) -> Int {
 		return 1
 	}
-	func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-		
-		return 1
+	func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+		switch section {
+		case 0:
+			return 1
+		default:
+			return 0
+		}
 	}
-	func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-		
-		var cell: UITableViewCell = tableView.dequeueReusableCell(withIdentifier: "BasicSetting")!
+	func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
+		var size = CGSize(width: collectionView.frame.width, height: 60)
 		
 		switch indexPath.section {
 		case 0:
-			break
-		default: break
+			switch indexPath.row {
+			case 0: size.height = 120
+			default: return size
+			}
+		default: return size
+		}
+		return size
+	}
+	func collectionView(_ collectionView: UICollectionView, viewForSupplementaryElementOfKind kind: String, at indexPath: IndexPath) -> UICollectionReusableView {
+		
+		var reusableView = UICollectionReusableView()
+		
+		if kind == UICollectionElementKindSectionHeader {
+			
+			switch indexPath.section {
+			case 0:
+				reusableView = collectionView.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: "SettingsCollectionViewHeader", for: indexPath) as! HeaderCollectionReusableView
+				(reusableView as! HeaderCollectionReusableView).textLabel.text = "THEME OPTIONS"
+				return reusableView
+			default: return reusableView
+			}
 		}
 		
-		return cell
+		else if kind == UICollectionElementKindSectionFooter {
+			return reusableView
+		}
+		
+		return reusableView
 	}
+	func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+		
+		var cell = UICollectionViewCell()
+		switch indexPath.section {
+		case 0:
+			switch indexPath.row {
+			case 0:
+				cell = collectionView.dequeueReusableCell(withReuseIdentifier: "ThemeModeCell", for: indexPath) as! ThemeModeCollectionViewCell
+				if PreferenceManager.shared.autoThemeMode {
+					(cell as! ThemeModeCollectionViewCell).autoOption.selected = true
+				} else {
+					if PreferenceManager.shared.autoThemeMode {
+						(cell as! ThemeModeCollectionViewCell).autoOption.selected = true
+					} else {
+						
+						if PreferenceManager.shared.themeMode == .dark {
+							(cell as! ThemeModeCollectionViewCell).darkOption.selected = true
+						} else {
+							(cell as! ThemeModeCollectionViewCell).lightOption.selected = true
+						}
+					}
+				}
+				break
+			default: return cell
+			}
+			return cell
+		default: return cell
+		}
+		
+	}
+
 }

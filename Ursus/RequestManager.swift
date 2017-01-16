@@ -135,7 +135,7 @@ class RequestManager: NSObject, URLSessionDataDelegate {
 		}
 		
 	}
-	func getLatestRelease(for artistID: Int, completion: @escaping ((_ release: Release?, _ error: NSError?) -> Void)) {
+	func getReleases(for artistID: Int, completion: @escaping ((_ releases: [Release], _ error: NSError?) -> Void)) {
 		
 		// create URL for data request
 		if let url = URL(string: "\(self.itunesLookupURL)?id=\(artistID)&media=music&entity=album&attribute=albumTerm&sort=recent") {
@@ -146,7 +146,7 @@ class RequestManager: NSObject, URLSessionDataDelegate {
 					
 					print(error!.localizedDescription)
                     
-                    completion(nil, error as? NSError)
+                    completion([], error as? NSError)
 					
 				} else {
 					
@@ -162,7 +162,7 @@ class RequestManager: NSObject, URLSessionDataDelegate {
 						let dateFormatter = DateFormatter()
 						dateFormatter.dateFormat = "YYYY-MM-dd"
 						
-						var resultsParsedToReleases = results.map({ ( result ) -> Release in
+						let releases = results.map({ ( result ) -> Release in
 							
 							let itunesID = result["collectionId"] as! Int
 							let title = result["collectionName"] as! String
@@ -170,33 +170,24 @@ class RequestManager: NSObject, URLSessionDataDelegate {
 							let genre = result["primaryGenreName"] as? String
 							let itunesURL = URL(string: result["collectionViewUrl"] as! String)
 							let artworkURL = URL(string: result["artworkUrl100"] as! String)
-							
-							let release = Release(itunesID: itunesID, title: title, releaseDate: releaseDate, summary: nil, genre: genre, itunesURL: itunesURL, artworkURL: artworkURL)
+							let release = Release(itunesID: itunesID, title: title, releaseDate: releaseDate, summary: nil, genre: genre, itunesURL: itunesURL, artworkURL: artworkURL, seenByUser: true)
 							
 							return release
 						})
 						
-						// remove singles if necessary
-						if PreferenceManager.shared.ignoreSingles {
-							resultsParsedToReleases = resultsParsedToReleases.filter {
-								$0.title.range(of: " - Single") == nil
-							}
-						}
-						
-						// remove EPs if necessary
-						if PreferenceManager.shared.ignoreEPs {
-							resultsParsedToReleases = resultsParsedToReleases.filter { $0.title.range(of: " - EP") == nil }
-						}
-						
-						let latestRelease = resultsParsedToReleases.max(by: ({ $0.isNewerThan(release: $1) }))
+						// mark latest release as unseen
+						releases.first(where: { (release) -> Bool in
+							
+							return (PreferenceManager.shared.ignoreSingles && PreferenceManager.shared.ignoreEPs && release.type == .album) || (!PreferenceManager.shared.ignoreSingles && release.type == .single) || (!PreferenceManager.shared.ignoreEPs && release.type == .EP)
+						})?.seenByUser = false
 						
 						// trigger completion handler
-						completion(latestRelease, nil)
+						completion(releases, nil)
 						
 					} catch _ {
 						
 						// trigger completion handler
-						completion(nil, nil)
+						completion([], nil)
 						
 					}
 				}

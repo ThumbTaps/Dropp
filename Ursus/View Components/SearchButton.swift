@@ -14,9 +14,9 @@ class SearchButton: UrsusButton {
 		super.themeDidChange()
 		
 		if PreferenceManager.shared.themeMode == .dark {
-			self.tintColor = StyleKit.darkPrimaryTextColor
+			self.tintColor = StyleKit.darkBackgroundColor
 		} else {
-			self.tintColor = StyleKit.lightPrimaryTextColor
+			self.tintColor = StyleKit.lightBackgroundColor
 		}
 	}
 
@@ -27,12 +27,20 @@ class SearchButton: UrsusButton {
 		
 		super.draw(rect)
 		
-		if PreferenceManager.shared.themeMode == .dark {
-            self.layer.backgroundColor = UIColor(white: 0.05, alpha: 0.7).cgColor
-			StyleKit.drawSearchIcon(frame: rect, resizing: .aspectFit, iconColor: self.tintColor.withAlpha(0.2))
+		if self.tintColor.isDarkColor {
+			if !self.glyphOnly {
+				self.layer.backgroundColor = self.tintColor.withAlpha(0.7).cgColor
+			} else {
+				self.layer.backgroundColor = UIColor.clear.cgColor
+			}
+			StyleKit.drawSearchIcon(frame: rect, resizing: .aspectFit, iconColor: StyleKit.darkPrimaryTextColor.withAlpha(0.2))
 		} else {
-			self.layer.backgroundColor = UIColor(white: 0.95, alpha: 0.45).cgColor
-			StyleKit.drawSearchIcon(frame: rect, resizing: .aspectFit, iconColor: self.tintColor.withAlpha(0.25))
+			if !self.glyphOnly {
+				self.layer.backgroundColor = self.tintColor.withAlpha(0.45).cgColor
+			} else {
+				self.layer.backgroundColor = UIColor.clear.cgColor
+			}
+			StyleKit.drawSearchIcon(frame: rect, resizing: .aspectFit, iconColor: StyleKit.lightPrimaryTextColor.withAlpha(0.25))
 		}
 
     }

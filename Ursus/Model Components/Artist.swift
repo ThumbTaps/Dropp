@@ -20,10 +20,23 @@ class Artist: NSObject, NSCoding {
 	var summary: String?
 	var genre: String?
 	var artworkURLs: [String: URL]?
-	var latestRelease: Release?
+	var releases: [Release]! = []
+	var latestRelease: Release? {
+		get {
+			return (self.releases.filter { (release) -> Bool in
+				if PreferenceManager.shared.ignoreSingles && release.type == .single {
+					return false
+				} else if PreferenceManager.shared.ignoreEPs && release.type == .EP {
+					return false
+				} else {
+					return true
+				}
+			}).max(by: { $0.isNewerThan($1) })
+		}
+	}
 	
 	
-	init(itunesID: Int!, name: String!, itunesURL: URL!, summary: String?, genre: String?, artworkURLs: [String: URL]?, latestRelease: Release?) {
+	init(itunesID: Int!, name: String!, itunesURL: URL!, summary: String?, genre: String?, artworkURLs: [String: URL]?, releases: [Release]?) {
 		
 		super.init()
 		
@@ -33,7 +46,7 @@ class Artist: NSObject, NSCoding {
 		self.summary = summary
 		self.genre = genre
 		self.artworkURLs = artworkURLs
-		self.latestRelease = latestRelease
+		self.releases = releases
 	}
 	
 	
@@ -53,8 +66,8 @@ class Artist: NSObject, NSCoding {
 		if self.artworkURLs != nil {
 			aCoder.encode(self.artworkURLs, forKey: "artworkURLs")
 		}
-		if self.latestRelease != nil {
-			aCoder.encode(self.latestRelease, forKey: "latestRelease")
+		if self.releases != nil {
+			aCoder.encode(self.releases, forKey: "releases")
 		}
 	}
 	required init?(coder aDecoder: NSCoder) {
@@ -67,6 +80,6 @@ class Artist: NSObject, NSCoding {
 		self.summary = aDecoder.decodeObject(forKey: "summary") as? String
 		self.genre = aDecoder.decodeObject(forKey: "genre") as? String
 		self.artworkURLs = aDecoder.decodeObject(forKey: "artworkURLs") as? [String: URL]
-		self.latestRelease = aDecoder.decodeObject(forKey: "latestRelease") as? Release
+		self.releases = aDecoder.decodeObject(forKey: "releases") as! [Release]
 	}
 }
