@@ -10,17 +10,39 @@ import UIKit
 
 class DownButton: UrsusButton {
 
-    // Only override draw() if you perform custom drawing.
-    // An empty implementation adversely affects performance during animation.
-    override func draw(_ rect: CGRect) {
-        // Drawing code
-		super.draw(rect)
+	override func themeDidChange() {
+		super.themeDidChange()
 		
 		if PreferenceManager.shared.themeMode == .dark {
-			StyleKit.drawDownIcon(frame: rect, resizing: .aspectFit, iconColor: StyleKit.darkIconGlyphColor)
+			self.tintColor = StyleKit.darkPrimaryTextColor
 		} else {
-			StyleKit.drawDownIcon(frame: rect, resizing: .aspectFit, iconColor: StyleKit.lightIconGlyphColor)
+			self.tintColor = StyleKit.lightPrimaryTextColor
 		}
-    }
+	}
+	
+	// Only override draw() if you perform custom drawing.
+	// An empty implementation adversely affects performance during animation.
+	override func draw(_ rect: CGRect) {
+		// Drawing code
+		
+		super.draw(rect)
+		
+		if self.tintColor.isDarkColor {
+			if !self.glyphOnly {
+				self.layer.backgroundColor = self.tintColor.withAlpha(0.7).cgColor
+			} else {
+				self.layer.backgroundColor = UIColor.clear.cgColor
+			}
+			StyleKit.drawDownIcon(frame: rect, resizing: .aspectFit, iconColor: self.tintColor.withAlpha(0.2))
+		} else {
+			if !self.glyphOnly {
+				self.layer.backgroundColor = self.tintColor.withAlpha(0.45).cgColor
+			} else {
+				self.layer.backgroundColor = UIColor.clear.cgColor
+			}
+			StyleKit.drawDownIcon(frame: rect, resizing: .aspectFit, iconColor: self.tintColor.withAlpha(0.25))
+		}
+		
+	}
 
 }

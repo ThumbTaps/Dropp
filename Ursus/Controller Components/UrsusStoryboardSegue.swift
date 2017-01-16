@@ -24,7 +24,19 @@ class UrsusStoryboardSegue: UIStoryboardSegue {
 			
 			
 		else if self.identifier == "NewReleases->Settings" {
+            
+//            let settings = self.destination as! SettingsViewController
+//            settings.view.addSubview(self.source.view.copy() as! UIView)
+//            settings.view.removeConstraint(settings.newReleasesViewContainerRestingConstraint)
+//            settings.view.addConstraint(settings.newReleasesViewContainerPresentedConstraint)
+//            settings.view.layoutIfNeeded()
+
 			self.source.present(self.destination, animated: false)
+//            settings.view.removeConstraint(settings.newReleasesViewContainerPresentedConstraint)
+//            settings.view.addConstraint(settings.newReleasesViewContainerRestingConstraint)
+//            UIView.animate(withDuration: 0.7, delay: 0, usingSpringWithDamping: 0.8, initialSpringVelocity: 1, options: .curveEaseOut, animations: { 
+//                settings.view.layoutIfNeeded()
+//            }, completion: nil)
 			
 		} else if self.identifier == "Settings->NewReleases" {
 			self.source.dismiss(animated: false)

@@ -1,0 +1,73 @@
+//
+//  HeaderCollectionReusableView.swift
+//  Ursus
+//
+//  Created by Jeffery Jackson, Jr. on 1/13/17.
+//  Copyright © 2017 Jeffery Jackson, Jr. All rights reserved.
+//
+
+import UIKit
+
+class HeaderCollectionReusableView: UICollectionReusableView {
+	
+	@IBInspectable var changesWithTheme: Bool = true
+	
+	@IBOutlet weak var textLabel: UILabel!
+	
+	override init(frame: CGRect) {
+		super.init(frame: frame)
+		
+		if self.changesWithTheme {
+			
+			self.themeDidChange()
+			Notification.Name.UrsusThemeDidChange.add(self, selector: #selector(self.themeDidChange))
+		}
+	}
+	required init?(coder aDecoder: NSCoder) {
+		super.init(coder: aDecoder)
+		
+		if self.changesWithTheme {
+			
+			self.themeDidChange()
+			Notification.Name.UrsusThemeDidChange.add(self, selector: #selector(self.themeDidChange))
+		}
+	}
+	func themeDidChange() {
+		
+		if PreferenceManager.shared.themeMode == .dark {
+			self.tintColor = StyleKit.darkBackdropOverlayColor
+		} else {
+			self.tintColor = StyleKit.lightBackdropOverlayColor
+		}
+	}
+	override func tintColorDidChange() {
+		super.tintColorDidChange()
+		
+		if self.tintColor.isDarkColor {
+			
+			self.textLabel?.textColor = StyleKit.darkSecondaryTextColor
+		} else {
+			
+			self.textLabel?.textColor = StyleKit.lightSecondaryTextColor
+		}
+		self.setNeedsDisplay()
+	}
+	override func draw(_ rect: CGRect) {
+		
+		let path = UIBezierPath()
+		path.move(to: CGPoint(x: 0, y: rect.height))
+		path.addLine(to: CGPoint(x: rect.width, y: rect.height))
+		path.close()
+		
+		if self.tintColor.isDarkColor {
+			StyleKit.darkStrokeColor.set()
+		} else {
+			StyleKit.lightStrokeColor.set()
+		}
+		
+		self.layer.backgroundColor = self.tintColor.cgColor
+		
+		path.stroke()
+		
+	}
+}

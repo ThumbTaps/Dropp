@@ -9,7 +9,10 @@
 import UIKit
 
 class SettingsViewController: UrsusViewController, UICollectionViewDataSource, UICollectionViewDelegate, UICollectionViewDelegateFlowLayout {
-		
+    
+    @IBOutlet weak var newReleasesViewContainer: UIView!
+    @IBOutlet weak var newReleasesViewContainerPresentedConstraint: NSLayoutConstraint!
+    @IBOutlet weak var newReleasesViewContainerRestingConstraint: NSLayoutConstraint!
     override func viewDidLoad() {
         super.viewDidLoad()		
 
@@ -21,8 +24,10 @@ class SettingsViewController: UrsusViewController, UICollectionViewDataSource, U
 		if PreferenceManager.shared.themeMode == .dark {
 			
 			self.view.backgroundColor = StyleKit.darkTintColor
+			self.collectionView?.backgroundColor = StyleKit.darkBackdropOverlayColor.withAlphaComponent(0.95)
 		} else {
 			self.view.backgroundColor = StyleKit.lightTintColor
+			self.collectionView?.backgroundColor = StyleKit.lightBackdropOverlayColor.withAlphaComponent(0.95)
 		}
 
 	}
@@ -40,8 +45,10 @@ class SettingsViewController: UrsusViewController, UICollectionViewDataSource, U
 		if PreferenceManager.shared.themeMode == .dark {
 			
 			self.view.backgroundColor = StyleKit.darkTintColor
+            self.collectionView?.backgroundColor = StyleKit.darkBackdropOverlayColor.withAlphaComponent(0.95)
 		} else {
 			self.view.backgroundColor = StyleKit.lightTintColor
+            self.collectionView?.backgroundColor = StyleKit.lightBackdropOverlayColor.withAlphaComponent(0.95)
 		}
 	}
 	
