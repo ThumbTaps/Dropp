@@ -16,8 +16,15 @@ class UrsusStoryboardSegue: UIStoryboardSegue {
 			self.source.present(self.destination, animated: false)
 		
 		} else if self.identifier == "Release->NewReleases" {
-			self.source.dismiss(animated: false)
 			
+			let release = self.source as! ReleaseViewController
+			
+			UIView.animate(withDuration: 0.4, animations: {
+				release.blurView.effect = nil
+			}, completion: { (completed) in
+				self.source.dismiss(animated: false)
+			})
+
 		}
 			
 			
@@ -75,7 +82,7 @@ class UrsusStoryboardSegue: UIStoryboardSegue {
 				UIView.animate(withDuration: 0.85, delay: 0, usingSpringWithDamping: 0.8, initialSpringVelocity: 0.6, options: .curveEaseIn, animations: {
 					
 					artistSearch.view.layoutIfNeeded()
-				}, completion: { (Bool) in
+				}, completion: { (completed) in
 					
 					artistSearch.dismiss(animated: false)
 				})
@@ -107,6 +114,24 @@ class UrsusStoryboardSegue: UIStoryboardSegue {
         } else if self.identifier == "Artist->ArtistSearch" {
             self.source.dismiss(animated: false)
         }
+			
+			
+			
+			
+			
+		else if self.identifier == "Artist->Release" {
+			self.source.present(self.destination, animated: false)
+			
+		} else if self.identifier == "Release->Artist" {
+
+			let release = self.source as! ReleaseViewController
+			
+			UIView.animate(withDuration: 0.4, animations: {
+				release.blurView.effect = nil
+			}, completion: { (completed) in
+				self.source.dismiss(animated: false)
+			})
+		}
     }
 	
 }

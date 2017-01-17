@@ -170,7 +170,7 @@ class NewReleasesViewController: UrsusViewController, UICollectionViewDataSource
 			cell.secondaryLabel.text = artist.name
 		}
 		
-		RequestManager.shared.loadImage(from: PreferenceManager.shared.newReleases[indexPath.row].artworkURL!) { (image, error) in
+		RequestManager.shared.loadImage(from: PreferenceManager.shared.newReleases[indexPath.row].thumbnailURL!) { (image, error) in
 			
 			DispatchQueue.main.async {
 				cell.releaseArtView.imageView.image = image
@@ -203,6 +203,17 @@ class NewReleasesViewController: UrsusViewController, UICollectionViewDataSource
 		// Pass the selected object to the new view controller.
 		
 //		segue.destination.transitioningDelegate = self
+		if segue.identifier == "NewReleases->Release" {
+			// set current release for release view controller
+			(segue.destination as! ReleaseViewController).currentRelease = PreferenceManager.shared.newReleases[(self.collectionView?.indexPathsForSelectedItems?[0].row)!]
+			
+			// adjust colors
+			if PreferenceManager.shared.themeMode == .dark {
+				segue.destination.view.tintColor = StyleKit.darkBackgroundColor
+			} else {
+				segue.destination.view.tintColor = StyleKit.lightBackgroundColor
+			}
+		}
 	}
     @IBAction func prepareForUnwind(for segue: UIStoryboardSegue) {
     }

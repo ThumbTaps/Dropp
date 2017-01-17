@@ -8,6 +8,7 @@
 
 import UIKit
 import Firebase
+import UserNotifications
 
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {
@@ -22,6 +23,26 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
 		// Override point for customization after application launch.
 		FIRApp.configure()
+		
+		UNUserNotificationCenter.current().requestAuthorization(options: [.alert, .sound, .badge]) { (granted, error) in
+			if granted {
+				
+			}
+		}
+		//		let content = UNMutableNotificationContent()
+		//		content.title = "10 Second Notification Demo"
+		//		content.subtitle = "From MakeAppPie.com"
+		//		content.body = "Notification after 10 seconds - Your pizza is Ready!!"
+		//		content.categoryIdentifier = "message"
+		//
+		//		let trigger = UNTimeIntervalNotificationTrigger(timeInterval: 10.0, repeats: false)
+		//
+		//		let request = UNNotificationRequest(identifier: "10.second.message", content: content, trigger: trigger)
+		//
+		//		UNUserNotificationCenter.current().add(
+		//			request, withCompletionHandler: nil)
+		
+		application.registerForRemoteNotifications()
 		
 		return true
 	}
@@ -50,6 +71,21 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 		// Called when the application is about to terminate. Save data if appropriate. See also applicationDidEnterBackground:.
 		PreferenceManager.shared.save()
 	}
-    
+	
+	func application(_ application: UIApplication, didRegisterForRemoteNotificationsWithDeviceToken deviceToken: Data) {
+		
+		let deviceTokenString = deviceToken.reduce("", {$0 + String(format: "%02X", $1)})
+		
+		print("Device token: \(deviceTokenString)")
+	}
+	func application(_ application: UIApplication, didFailToRegisterForRemoteNotificationsWithError error: Error) {
+		
+		print("Failed to register for remote notifications.")
+	}
+	func application(_ application: UIApplication, didReceiveRemoteNotification userInfo: [AnyHashable : Any], fetchCompletionHandler completionHandler: @escaping (UIBackgroundFetchResult) -> Void) {
+		
+		print("Hello there.")
+	}
+	
 }
 

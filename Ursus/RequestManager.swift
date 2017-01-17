@@ -162,6 +162,7 @@ class RequestManager: NSObject, URLSessionDataDelegate {
 						let dateFormatter = DateFormatter()
 						dateFormatter.dateFormat = "YYYY-MM-dd"
 						
+						print(results)
 						let releases = results.map({ ( result ) -> Release in
 							
 							let itunesID = result["collectionId"] as! Int
@@ -169,8 +170,19 @@ class RequestManager: NSObject, URLSessionDataDelegate {
 							let releaseDate = dateFormatter.date(from: (result["releaseDate"] as! String).components(separatedBy: "T")[0])
 							let genre = result["primaryGenreName"] as? String
 							let itunesURL = URL(string: result["collectionViewUrl"] as! String)
-							let artworkURL = URL(string: result["artworkUrl100"] as! String)
-							let release = Release(itunesID: itunesID, title: title, releaseDate: releaseDate, summary: nil, genre: genre, itunesURL: itunesURL, artworkURL: artworkURL, seenByUser: true)
+							let artworkURL = URL(string: (result["artworkUrl100"] as! String).replacingOccurrences(of: "100x100bb", with: "1000x1000"))
+							let thumbnailURL = URL(string: (result["artworkUrl100"] as! String).replacingOccurrences(of: "100x100bb", with: "200x200"))
+							let release = Release(
+								itunesID: itunesID,
+								title: title,
+								releaseDate: releaseDate,
+								summary: nil,
+								genre: genre,
+								itunesURL: itunesURL,
+								artworkURL: artworkURL,
+								thumbnailURL: thumbnailURL,
+								seenByUser: true
+							)
 							
 							return release
 						})

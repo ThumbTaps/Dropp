@@ -10,7 +10,15 @@ import UIKit
 
 class HeaderCollectionReusableView: UICollectionReusableView {
 	
-	@IBInspectable var changesWithTheme: Bool = true
+	@IBInspectable var changesWithTheme: Bool = true {
+		didSet {
+			if self.changesWithTheme {
+				Notification.Name.UrsusThemeDidChange.add(self, selector: #selector(self.themeDidChange))
+			} else {
+				Notification.Name.UrsusThemeDidChange.remove(self)
+			}
+		}
+	}
 	
 	@IBOutlet weak var textLabel: UILabel!
 	

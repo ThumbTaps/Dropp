@@ -11,7 +11,15 @@ import UIKit
 @IBDesignable
 class UrsusButton: UIButton {
 	
-	@IBInspectable var changesWithTheme: Bool = true
+	@IBInspectable var changesWithTheme: Bool = true {
+		didSet {
+			if self.changesWithTheme {
+				Notification.Name.UrsusThemeDidChange.add(self, selector: #selector(self.themeDidChange))
+			} else {
+				Notification.Name.UrsusThemeDidChange.remove(self)
+			}
+		}
+	}
     @IBInspectable var tapScale: CGFloat = 1.2
 	@IBInspectable var glyphOnly: Bool = false
 	@IBInspectable var bordered: Bool = true

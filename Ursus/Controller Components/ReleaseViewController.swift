@@ -15,22 +15,41 @@ class ReleaseViewController: UrsusViewController {
 	@IBOutlet weak var releaseTitleLabel: UILabel!
 	
 	var currentRelease: Release!
+	var themeMode: ThemeMode?
 	
     override func viewDidLoad() {
         super.viewDidLoad()
 
         // Do any additional setup after loading the view.
+		if self.themeMode == nil {
+			self.themeMode = PreferenceManager.shared.themeMode
+		} else {
+			// stop monitoring theme (forced by source view controller)
+			Notification.Name.UrsusThemeDidChange.remove(self)
+		}
+		
 		self.releaseTitleLabel.text = self.currentRelease?.title
+		
+		self.blurView.effect = nil
 		
 		// load artwork
 		if self.currentRelease.artworkURL != nil {
 			
+			// show network activity indicator
+			UIApplication.shared.isNetworkActivityIndicatorVisible = true
+			
 			RequestManager.shared.loadImage(from: self.currentRelease.artworkURL!) { (image, error) in
+				
+				// hide network activity indicator
+				UIApplication.shared.isNetworkActivityIndicatorVisible = false
 				
 				if error == nil {
 					
-					self.releaseArtworkView.imageView.image = image
-					self.releaseArtworkView.showArtwork()
+					DispatchQueue.main.async {
+						
+						self.releaseArtworkView.imageView.image = image
+						self.releaseArtworkView.showArtwork()
+					}
 					
 				} else {
 					
@@ -39,12 +58,53 @@ class ReleaseViewController: UrsusViewController {
 		}
 		
     }
+	
+	override func viewDidAppear(_ animated: Bool) {
+		super.viewDidAppear(animated)
+		
+		DispatchQueue.main.async {
+			
+			UIView.animate(withDuration: 0.4, animations: {
+				
+				if self.themeMode == .dark {
+					self.blurView.effect = UIBlurEffect(style: .dark)
+				} else {
+					self.blurView.effect = UIBlurEffect(style: .light)
+				}
+				
+			})
+		}
+	}
 
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
     }
-    
+	
+	override var preferredStatusBarStyle: UIStatusBarStyle {
+		get {
+			if self.themeMode == .dark {
+				return .lightContent
+			} else {
+				return .default
+			}
+		}
+	}
+
+	override func themeDidChange() {
+		super.themeDidChange()
+		
+		DispatchQueue.main.async {
+			
+			if self.themeMode == .dark {
+				self.blurView.effect = UIBlurEffect(style: .dark)
+			} else {
+				self.blurView.effect = UIBlurEffect(style: .light)
+			}
+			
+		}
+
+	}
 
     /*
     // MARK: - Navigation

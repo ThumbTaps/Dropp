@@ -15,7 +15,15 @@ enum ScrollFadeViewPlacement {
 @IBDesignable
 class ScrollFadeView: UIView {
 	
-	@IBInspectable var changesWithTheme: Bool = true
+	@IBInspectable var changesWithTheme: Bool = true {
+		didSet {
+			if self.changesWithTheme {
+				Notification.Name.UrsusThemeDidChange.add(self, selector: #selector(self.themeDidChange))
+			} else {
+				Notification.Name.UrsusThemeDidChange.remove(self)
+			}
+		}
+	}
 	var placement: ScrollFadeViewPlacement = .bottom
 	
 	override init(frame: CGRect) {

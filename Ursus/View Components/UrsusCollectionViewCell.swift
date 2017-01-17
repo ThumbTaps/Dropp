@@ -10,7 +10,15 @@ import UIKit
 
 class UrsusCollectionViewCell: UICollectionViewCell {
     
-	@IBInspectable var changesWithTheme: Bool = true
+	@IBInspectable var changesWithTheme: Bool = true {
+		didSet {
+			if self.changesWithTheme {
+				Notification.Name.UrsusThemeDidChange.add(self, selector: #selector(self.themeDidChange))
+			} else {
+				Notification.Name.UrsusThemeDidChange.remove(self)
+			}
+		}
+	}
 	
 	override init(frame: CGRect) {
 		super.init(frame: frame)

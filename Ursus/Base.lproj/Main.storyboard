@@ -899,7 +899,7 @@
         <!--Release-->
         <scene sceneID="zPJ-Lr-gTs">
             <objects>
-                <viewController storyboardIdentifier="Release" title="Release" useStoryboardIdentifierAsRestorationIdentifier="YES" id="Jai-jZ-F7n" customClass="ReleaseViewController" customModule="Ursus" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="Release" title="Release" modalPresentationStyle="overCurrentContext" useStoryboardIdentifierAsRestorationIdentifier="YES" id="Jai-jZ-F7n" customClass="ReleaseViewController" customModule="Ursus" customModuleProvider="target" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="6V8-x3-bg4"/>
                         <viewControllerLayoutGuide type="bottom" id="bbN-Ct-K6h"/>
@@ -935,25 +935,24 @@
                                     <outlet property="imageView" destination="BvF-hn-rgu" id="hxA-d6-Rha"/>
                                 </connections>
                             </view>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Release Title" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumScaleFactor="0.84999999999999998" adjustsLetterSpacingToFitWidth="YES" translatesAutoresizingMaskIntoConstraints="NO" id="RnH-Qp-XwS">
-                                <rect key="frame" x="0.0" y="404" width="414" height="26"/>
-                                <fontDescription key="fontDescription" type="system" weight="medium" pointSize="21"/>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Release Title" textAlignment="center" lineBreakMode="wordWrap" numberOfLines="2" minimumScaleFactor="0.84999999999999998" adjustsLetterSpacingToFitWidth="YES" translatesAutoresizingMaskIntoConstraints="NO" id="RnH-Qp-XwS">
+                                <rect key="frame" x="50.333333333333343" y="394" width="314" height="26.333333333333314"/>
+                                <fontDescription key="fontDescription" type="boldSystem" pointSize="22"/>
                                 <nil key="textColor"/>
                                 <nil key="highlightedColor"/>
                             </label>
                         </subviews>
-                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                        <color key="tintColor" red="0.20000000000000001" green="0.20000000000000001" blue="0.20000000000000001" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                        <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                         <constraints>
                             <constraint firstItem="yxE-Rx-EIc" firstAttribute="leading" secondItem="5F0-qW-O4b" secondAttribute="leadingMargin" constant="30" id="0AH-2r-G2B"/>
                             <constraint firstItem="yxE-Rx-EIc" firstAttribute="top" secondItem="6V8-x3-bg4" secondAttribute="bottom" constant="40" id="Acw-gG-kHm"/>
                             <constraint firstItem="PLj-OM-XIA" firstAttribute="centerX" secondItem="5F0-qW-O4b" secondAttribute="centerX" id="DCb-gN-w25"/>
                             <constraint firstItem="PLj-OM-XIA" firstAttribute="centerY" secondItem="5F0-qW-O4b" secondAttribute="centerY" id="QeL-XK-scG"/>
                             <constraint firstItem="RnH-Qp-XwS" firstAttribute="centerX" secondItem="5F0-qW-O4b" secondAttribute="centerX" id="Xn5-QT-qJp"/>
-                            <constraint firstItem="RnH-Qp-XwS" firstAttribute="top" secondItem="yxE-Rx-EIc" secondAttribute="bottom" constant="30" id="agB-Uh-2Ox"/>
+                            <constraint firstItem="RnH-Qp-XwS" firstAttribute="top" secondItem="yxE-Rx-EIc" secondAttribute="bottom" constant="20" id="agB-Uh-2Ox"/>
+                            <constraint firstItem="RnH-Qp-XwS" firstAttribute="width" secondItem="yxE-Rx-EIc" secondAttribute="width" id="beT-XG-3TW"/>
                             <constraint firstAttribute="trailingMargin" secondItem="yxE-Rx-EIc" secondAttribute="trailing" constant="30" id="dym-nT-ldb"/>
                             <constraint firstItem="PLj-OM-XIA" firstAttribute="width" secondItem="5F0-qW-O4b" secondAttribute="width" id="kNU-bv-jf3"/>
-                            <constraint firstItem="RnH-Qp-XwS" firstAttribute="width" secondItem="5F0-qW-O4b" secondAttribute="width" id="q6T-Dr-QiM"/>
                             <constraint firstItem="PLj-OM-XIA" firstAttribute="height" secondItem="5F0-qW-O4b" secondAttribute="height" id="rC5-sM-6X2"/>
                         </constraints>
                     </view>
@@ -1056,7 +1055,7 @@
                                                     <outlet property="releaseArtView" destination="rrY-xV-xHl" id="CF7-7O-ddI"/>
                                                     <outlet property="releaseTitleLabel" destination="twd-rS-kl8" id="Wa6-CX-ITW"/>
                                                     <outlet property="secondaryLabel" destination="A4y-WI-aEX" id="xK4-DV-B3g"/>
-                                                    <segue destination="Jai-jZ-F7n" kind="custom" identifier="Artist-&gt;Release" customClass="UrsusStoryboardSegue" customModule="Ursus" customModuleProvider="target" id="aQx-GT-xWZ">
+                                                    <segue destination="Jai-jZ-F7n" kind="custom" identifier="Artist-&gt;Release" customClass="UrsusStoryboardSegue" customModule="Ursus" customModuleProvider="target" animates="NO" id="aQx-GT-xWZ">
                                                         <segue key="commit" inheritsFrom="parent" id="qXs-qg-053"/>
                                                         <segue key="preview" inheritsFrom="commit" id="ts8-HO-27d"/>
                                                     </segue>
@@ -1243,8 +1242,8 @@
         </scene>
     </scenes>
     <inferredMetricsTieBreakers>
-        <segue reference="sTC-nE-yKX"/>
-        <segue reference="e6B-KM-uuu"/>
+        <segue reference="aQx-GT-xWZ"/>
+        <segue reference="qkx-Fg-KPo"/>
     </inferredMetricsTieBreakers>
     <color key="tintColor" red="0.94901960780000005" green="0.2156862745" blue="0.25882352939999997" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
 </document>

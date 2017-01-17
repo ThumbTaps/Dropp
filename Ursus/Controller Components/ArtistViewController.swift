@@ -139,7 +139,7 @@ class ArtistViewController: UrsusViewController, UICollectionViewDataSource, UIC
 			
 			cell.secondaryLabel.text = "Released on \(dateFormatter.string(from: self.artist.latestRelease!.releaseDate))"
             
-            RequestManager.shared.loadImage(from: self.artist.latestRelease!.artworkURL!) { (image, error) in
+            RequestManager.shared.loadImage(from: self.artist.latestRelease!.thumbnailURL!) { (image, error) in
                 
                 DispatchQueue.main.async {
                     cell.releaseArtView.imageView.image = image
@@ -182,5 +182,17 @@ class ArtistViewController: UrsusViewController, UICollectionViewDataSource, UIC
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         // Get the new view controller using segue.destinationViewController.
         // Pass the selected object to the new view controller.
+		
+		if segue.identifier == "Artist->Release" {
+			// set current release for release view controller
+			(segue.destination as! ReleaseViewController).currentRelease = self.artist.latestRelease
+			
+			// adjust colors
+			if self.colorPalette!.backgroundColor.isDarkColor {
+				(segue.destination as! ReleaseViewController).themeMode = .dark
+			} else {
+				(segue.destination as! ReleaseViewController).themeMode = .light
+			}
+		}
     }
 }
