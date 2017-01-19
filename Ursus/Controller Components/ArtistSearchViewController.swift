@@ -10,7 +10,6 @@ import UIKit
 
 class ArtistSearchViewController: UrsusViewController, ArtistSearchBarDelegate, UIGestureRecognizerDelegate {
 	
-	@IBOutlet weak var blurView: UIVisualEffectView!
 	@IBOutlet weak var searchBar: ArtistSearchBar!
 	@IBOutlet weak var searchBarHidingConstraint: NSLayoutConstraint!
 	@IBOutlet weak var searchBarCenteredConstraint: NSLayoutConstraint!
@@ -46,40 +45,17 @@ class ArtistSearchViewController: UrsusViewController, ArtistSearchBarDelegate, 
 		
 		self.searchBar.delegate = self
 		
-		// start blur view off as nil (why on earth can't this be done from IB?)
-		self.blurView.effect = nil
-		
 		Notification.Name.UIApplicationWillResignActive.add(self, selector: #selector(self.applicationWillResignActive))
 		
     }
 	
 	override func viewDidAppear(_ animated: Bool) {
 		super.viewDidAppear(animated)
-				
+		
+		
 		self.searchBar.textField.becomeFirstResponder()
-		
-		searchBar.textField.selectedTextRange = searchBar.textField.textRange(from: searchBar.textField.beginningOfDocument, to: searchBar.textField.endOfDocument)
-		
-		DispatchQueue.main.async {
-			
-			// update auto layout constraints
-			self.view.removeConstraint(self.searchBarHidingConstraint)
-			self.view.addConstraint(self.searchBarCenteredConstraint)
-			
-			UIView.animate(withDuration: 0.7, delay: 0, usingSpringWithDamping: 0.8, initialSpringVelocity: 0.8, options: .curveEaseOut, animations: {
-				self.view.layoutIfNeeded()
-			})
-			
-			UIView.animate(withDuration: 0.4, animations: {
-				
-				if PreferenceManager.shared.themeMode == .dark {
-					self.blurView.effect = UIBlurEffect(style: .dark)
-				} else {
-					self.blurView.effect = UIBlurEffect(style: .light)
-				}
-				
-			})
-		}
+		self.searchBar.textField.selectedTextRange = searchBar.textField.textRange(from: searchBar.textField.beginningOfDocument, to: searchBar.textField.endOfDocument)
+		self.showSearchBar()
 	}
 
     override func didReceiveMemoryWarning() {
@@ -106,27 +82,40 @@ class ArtistSearchViewController: UrsusViewController, ArtistSearchBarDelegate, 
 		
 		self.searchBar.textField.becomeFirstResponder()
 	}
-	override func themeDidChange() {
-		
-		super.themeDidChange()
-		
-		DispatchQueue.main.async {
-			
-			if PreferenceManager.shared.themeMode == .dark {
-				self.blurView.effect = UIBlurEffect(style: .dark)
-			} else {
-				self.blurView.effect = UIBlurEffect(style: .light)
-			}
-			
-		}
-
-	}
 	
 	
 	
 	
 	
 	// MARK: - Custom Functions
+	func showSearchBar(completion: (() -> Void)?=nil) {
+			
+		DispatchQueue.main.async {
+			// update auto layout constraints
+			self.view.removeConstraint(self.searchBarHidingConstraint)
+			self.view.addConstraint(self.searchBarCenteredConstraint)
+			
+			UIView.animate(withDuration: 0.7, delay: 0, usingSpringWithDamping: 0.8, initialSpringVelocity: 0.8, options: .curveEaseOut, animations: {
+				self.view.layoutIfNeeded()
+			}, completion: { (completed) in
+				completion?()
+			})
+		}
+	}
+	func hideSearchBar(completion: (() -> Void)?=nil) {
+		
+		DispatchQueue.main.async {
+			// update auto layout constraints
+			self.view.removeConstraint(self.searchBarCenteredConstraint)
+			self.view.addConstraint(self.searchBarHidingConstraint)
+			
+			UIView.animate(withDuration: 0.35, delay: 0, options: .curveEaseOut, animations: {
+				self.view.layoutIfNeeded()
+			}, completion: { (completed) in
+				completion?()
+			})
+		}
+	}
 	func performSearch(for artist: String!) {
 		self.performingArtistSearch = true
 		
@@ -267,11 +256,17 @@ class ArtistSearchViewController: UrsusViewController, ArtistSearchBarDelegate, 
 			
 		} else {
 			
-			self.performSegue(withIdentifier: "ArtistSearch->NewReleases", sender: nil)
+			self.searchBar.textField.resignFirstResponder()
+			self.hideSearchBar {
+				self.performSegue(withIdentifier: "ArtistSearch->NewReleases", sender: nil)
+			}
 		}
 	}
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        if segue.identifier == "ArtistSearch->ArtistSearchResults" {
+		
+		if segue.identifier == "ArtistSearch->NewReleases" {
+			
+		} else if segue.identifier == "ArtistSearch->ArtistSearchResults" {
             
         } else if segue.identifier == "ArtistSearch->Artist" {
             

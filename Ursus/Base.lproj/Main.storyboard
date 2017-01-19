@@ -15,7 +15,7 @@
         <!--Settings-->
         <scene sceneID="via-ck-cnN">
             <objects>
-                <viewController title="Settings" modalPresentationStyle="currentContext" id="tIm-Ss-63n" customClass="SettingsViewController" customModule="Ursus" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController title="Settings" providesPresentationContextTransitionStyle="YES" modalPresentationStyle="overFullScreen" id="tIm-Ss-63n" customClass="SettingsViewController" customModule="Ursus" customModuleProvider="target" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="B8Y-Dv-aM3"/>
                         <viewControllerLayoutGuide type="bottom" id="yos-1I-7FX"/>
@@ -181,6 +181,35 @@
                                         <gestureRecognizers/>
                                         <size key="customSize" width="414" height="60"/>
                                     </collectionViewCell>
+                                    <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="SettingsOnOffCell" id="qle-yU-QY0" customClass="ThemeModeCollectionViewCell" customModule="Ursus" customModuleProvider="target">
+                                        <rect key="frame" x="0.0" y="230" width="414" height="60"/>
+                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                        <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center">
+                                            <rect key="frame" x="0.0" y="0.0" width="414" height="60"/>
+                                            <autoresizingMask key="autoresizingMask"/>
+                                            <subviews>
+                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Ignore Singles" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="fQh-3R-1io">
+                                                    <rect key="frame" x="18" y="19" width="120.66666666666666" height="23"/>
+                                                    <fontDescription key="fontDescription" type="system" pointSize="19"/>
+                                                    <color key="textColor" red="0.20000000000000001" green="0.20000000000000001" blue="0.20000000000000001" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                                    <nil key="highlightedColor"/>
+                                                </label>
+                                                <switch opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" contentHorizontalAlignment="center" contentVerticalAlignment="center" on="YES" translatesAutoresizingMaskIntoConstraints="NO" id="lFD-Os-OcA">
+                                                    <rect key="frame" x="347" y="15" width="51" height="31"/>
+                                                    <color key="onTintColor" red="0.94901960780000005" green="0.2156862745" blue="0.25882352939999997" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                                </switch>
+                                            </subviews>
+                                        </view>
+                                        <color key="tintColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                                        <gestureRecognizers/>
+                                        <constraints>
+                                            <constraint firstItem="fQh-3R-1io" firstAttribute="leading" secondItem="qle-yU-QY0" secondAttribute="leadingMargin" constant="10" id="7IE-aP-17W"/>
+                                            <constraint firstItem="lFD-Os-OcA" firstAttribute="centerY" secondItem="qle-yU-QY0" secondAttribute="centerY" id="MUD-ph-FHm"/>
+                                            <constraint firstItem="lFD-Os-OcA" firstAttribute="trailing" secondItem="qle-yU-QY0" secondAttribute="trailingMargin" constant="-10" id="bWJ-zi-BQZ"/>
+                                            <constraint firstItem="fQh-3R-1io" firstAttribute="centerY" secondItem="qle-yU-QY0" secondAttribute="centerY" id="mY4-WF-VVw"/>
+                                        </constraints>
+                                        <size key="customSize" width="414" height="60"/>
+                                    </collectionViewCell>
                                 </cells>
                                 <collectionReusableView key="sectionHeaderView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="SettingsCollectionViewHeader" id="ki3-RK-6Jd" customClass="HeaderCollectionReusableView" customModule="Ursus" customModuleProvider="target">
                                     <rect key="frame" x="0.0" y="0.0" width="414" height="50"/>
@@ -229,16 +258,18 @@
                     <connections>
                         <outlet property="collectionView" destination="5sC-6p-ItM" id="oy1-dq-qRd"/>
                         <outlet property="topScrollFadeView" destination="9pc-lh-ZPo" id="fFf-7I-XLv"/>
+                        <segue destination="Kna-iH-fwp" kind="unwind" identifier="Settings-&gt;NewReleases" customClass="UrsusStoryboardSegue" customModule="Ursus" customModuleProvider="target" unwindAction="prepareForUnwindFor:" id="Kam-og-nSw"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="oR9-o4-9ac" userLabel="First Responder" sceneMemberID="firstResponder"/>
+                <exit id="Kna-iH-fwp" userLabel="Exit" sceneMemberID="exit"/>
             </objects>
             <point key="canvasLocation" x="-3013.04347826087" y="1138.858695652174"/>
         </scene>
         <!--ArtistSearch-->
         <scene sceneID="Wcv-Rb-N4r">
             <objects>
-                <viewController storyboardIdentifier="ArtistSearch" title="ArtistSearch" modalPresentationStyle="overCurrentContext" useStoryboardIdentifierAsRestorationIdentifier="YES" id="exg-Xr-PvW" customClass="ArtistSearchViewController" customModule="Ursus" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="ArtistSearch" title="ArtistSearch" modalPresentationStyle="overFullScreen" useStoryboardIdentifierAsRestorationIdentifier="YES" id="exg-Xr-PvW" customClass="ArtistSearchViewController" customModule="Ursus" customModuleProvider="target" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="D3W-Yu-vn6"/>
                         <viewControllerLayoutGuide type="bottom" id="vyF-8P-k86"/>
@@ -247,15 +278,6 @@
                         <rect key="frame" x="0.0" y="0.0" width="414" height="736"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <visualEffectView opaque="NO" userInteractionEnabled="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="g2Q-r8-ZJG">
-                                <rect key="frame" x="0.0" y="0.0" width="414" height="736"/>
-                                <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" id="Nn2-Au-cke">
-                                    <rect key="frame" x="0.0" y="0.0" width="414" height="736"/>
-                                    <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                                    <gestureRecognizers/>
-                                </view>
-                                <blurEffect style="light"/>
-                            </visualEffectView>
                             <view clipsSubviews="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="7TU-SM-TI1" customClass="ArtistSearchBar" customModule="Ursus" customModuleProvider="target">
                                 <rect key="frame" x="67" y="736" width="280" height="50"/>
                                 <subviews>
@@ -323,11 +345,7 @@
                         <constraints>
                             <constraint firstItem="7TU-SM-TI1" firstAttribute="centerY" secondItem="LEf-zx-oO1" secondAttribute="centerY" id="4to-X8-R76"/>
                             <constraint firstItem="7TU-SM-TI1" firstAttribute="width" secondItem="LEf-zx-oO1" secondAttribute="width" priority="750" id="5s2-0C-Z4N"/>
-                            <constraint firstItem="g2Q-r8-ZJG" firstAttribute="centerX" secondItem="LEf-zx-oO1" secondAttribute="centerX" id="Hr2-u5-LLq"/>
                             <constraint firstItem="vyF-8P-k86" firstAttribute="top" secondItem="7TU-SM-TI1" secondAttribute="top" id="Zqk-Xr-WWm"/>
-                            <constraint firstItem="g2Q-r8-ZJG" firstAttribute="width" secondItem="LEf-zx-oO1" secondAttribute="width" id="n70-Ic-s6A"/>
-                            <constraint firstItem="g2Q-r8-ZJG" firstAttribute="height" secondItem="LEf-zx-oO1" secondAttribute="height" id="ndU-2Z-u8X"/>
-                            <constraint firstItem="g2Q-r8-ZJG" firstAttribute="centerY" secondItem="LEf-zx-oO1" secondAttribute="centerY" id="qWq-nI-slO"/>
                             <constraint firstItem="7TU-SM-TI1" firstAttribute="centerX" secondItem="LEf-zx-oO1" secondAttribute="centerX" id="tX7-wa-VLs"/>
                         </constraints>
                         <variation key="default">
@@ -340,7 +358,6 @@
                         </connections>
                     </view>
                     <connections>
-                        <outlet property="blurView" destination="g2Q-r8-ZJG" id="iAD-Uo-GXf"/>
                         <outlet property="searchBar" destination="7TU-SM-TI1" id="Fbw-X8-mOp"/>
                         <outlet property="searchBarCenteredConstraint" destination="4to-X8-R76" id="kM2-j3-i7q"/>
                         <outlet property="searchBarHidingConstraint" destination="Zqk-Xr-WWm" id="720-cx-UqL"/>
@@ -362,7 +379,7 @@
         <!--New Releases-->
         <scene sceneID="Vt8-o4-acr">
             <objects>
-                <viewController storyboardIdentifier="NewReleases" title="New Releases" modalPresentationStyle="overCurrentContext" useStoryboardIdentifierAsRestorationIdentifier="YES" id="igh-Gg-oBy" customClass="NewReleasesViewController" customModule="Ursus" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="NewReleases" title="New Releases" useStoryboardIdentifierAsRestorationIdentifier="YES" id="igh-Gg-oBy" customClass="NewReleasesViewController" customModule="Ursus" customModuleProvider="target" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="YXQ-LD-UHn"/>
                         <viewControllerLayoutGuide type="bottom" id="94J-02-LLS"/>
@@ -445,7 +462,7 @@
                                                     <outlet property="releaseArtView" destination="8TL-MB-ole" id="jXp-v1-CYU"/>
                                                     <outlet property="releaseTitleLabel" destination="8Ao-1W-PMW" id="gCZ-B4-p4i"/>
                                                     <outlet property="secondaryLabel" destination="wy4-a4-Vef" id="zTY-N7-rdp"/>
-                                                    <segue destination="Jai-jZ-F7n" kind="custom" identifier="NewReleases-&gt;Release" customClass="UrsusStoryboardSegue" customModule="Ursus" customModuleProvider="target" animates="NO" id="kRG-BK-4CJ">
+                                                    <segue destination="Jai-jZ-F7n" kind="custom" identifier="NewReleases-&gt;Release" customClass="UrsusStoryboardSegue" customModule="Ursus" customModuleProvider="target" id="kRG-BK-4CJ">
                                                         <segue key="commit" inheritsFrom="parent" id="sTC-nE-yKX"/>
                                                         <segue key="preview" inheritsFrom="commit" id="qfX-CP-nSz"/>
                                                     </segue>
@@ -480,7 +497,7 @@
                                             <constraint firstAttribute="height" constant="45" id="dX7-nK-mw2"/>
                                         </constraints>
                                         <connections>
-                                            <segue destination="tIm-Ss-63n" kind="custom" identifier="NewReleases-&gt;Settings" customClass="UrsusStoryboardSegue" customModule="Ursus" customModuleProvider="target" animates="NO" id="ubg-n1-0s5"/>
+                                            <segue destination="tIm-Ss-63n" kind="custom" identifier="NewReleases-&gt;Settings" customClass="UrsusStoryboardSegue" customModule="Ursus" customModuleProvider="target" id="ubg-n1-0s5"/>
                                         </connections>
                                     </button>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="nrJ-fe-wG3" customClass="ArtistsButton" customModule="Ursus" customModuleProvider="target">
@@ -490,7 +507,7 @@
                                             <constraint firstAttribute="height" constant="45" id="u3J-b8-tNQ"/>
                                         </constraints>
                                         <connections>
-                                            <segue destination="r2U-EQ-06c" kind="custom" identifier="NewReleases-&gt;Artists" customClass="UrsusStoryboardSegue" customModule="Ursus" customModuleProvider="target" animates="NO" id="sgU-aW-9BD"/>
+                                            <segue destination="r2U-EQ-06c" kind="custom" identifier="NewReleases-&gt;Artists" customClass="UrsusStoryboardSegue" customModule="Ursus" customModuleProvider="target" id="sgU-aW-9BD"/>
                                         </connections>
                                     </button>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="3Qu-ZD-RnC" userLabel="Search Button" customClass="SearchButton" customModule="Ursus" customModuleProvider="target">
@@ -507,7 +524,7 @@
                                             </mask>
                                         </variation>
                                         <connections>
-                                            <segue destination="exg-Xr-PvW" kind="custom" identifier="NewReleases-&gt;ArtistSearch" customClass="UrsusStoryboardSegue" customModule="Ursus" customModuleProvider="target" animates="NO" id="WLt-g6-SgG"/>
+                                            <segue destination="exg-Xr-PvW" kind="custom" identifier="NewReleases-&gt;ArtistSearch" customClass="UrsusStoryboardSegue" customModule="Ursus" customModuleProvider="target" id="WLt-g6-SgG"/>
                                         </connections>
                                     </button>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="New Releases" textAlignment="center" lineBreakMode="tailTruncation" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="mEf-hi-SXp">
@@ -791,7 +808,7 @@
                                 </variation>
                             </view>
                         </subviews>
-                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                         <constraints>
                             <constraint firstItem="2jX-1a-dhb" firstAttribute="height" secondItem="GEe-YW-PHK" secondAttribute="height" id="2Pz-V4-MuW"/>
                             <constraint firstItem="2jX-1a-dhb" firstAttribute="width" secondItem="GEe-YW-PHK" secondAttribute="width" id="2xu-jB-GGf"/>
@@ -908,14 +925,6 @@
                         <rect key="frame" x="0.0" y="0.0" width="414" height="736"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <visualEffectView opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="PLj-OM-XIA">
-                                <rect key="frame" x="0.0" y="0.0" width="414" height="736"/>
-                                <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" id="7Bc-VO-HAv">
-                                    <rect key="frame" x="0.0" y="0.0" width="414" height="736"/>
-                                    <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                                </view>
-                                <blurEffect style="light"/>
-                            </visualEffectView>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="yxE-Rx-EIc" customClass="ReleaseArtView" customModule="Ursus" customModuleProvider="target">
                                 <rect key="frame" x="50" y="60" width="314" height="314"/>
                                 <subviews>
@@ -946,18 +955,13 @@
                         <constraints>
                             <constraint firstItem="yxE-Rx-EIc" firstAttribute="leading" secondItem="5F0-qW-O4b" secondAttribute="leadingMargin" constant="30" id="0AH-2r-G2B"/>
                             <constraint firstItem="yxE-Rx-EIc" firstAttribute="top" secondItem="6V8-x3-bg4" secondAttribute="bottom" constant="40" id="Acw-gG-kHm"/>
-                            <constraint firstItem="PLj-OM-XIA" firstAttribute="centerX" secondItem="5F0-qW-O4b" secondAttribute="centerX" id="DCb-gN-w25"/>
-                            <constraint firstItem="PLj-OM-XIA" firstAttribute="centerY" secondItem="5F0-qW-O4b" secondAttribute="centerY" id="QeL-XK-scG"/>
                             <constraint firstItem="RnH-Qp-XwS" firstAttribute="centerX" secondItem="5F0-qW-O4b" secondAttribute="centerX" id="Xn5-QT-qJp"/>
                             <constraint firstItem="RnH-Qp-XwS" firstAttribute="top" secondItem="yxE-Rx-EIc" secondAttribute="bottom" constant="20" id="agB-Uh-2Ox"/>
                             <constraint firstItem="RnH-Qp-XwS" firstAttribute="width" secondItem="yxE-Rx-EIc" secondAttribute="width" id="beT-XG-3TW"/>
                             <constraint firstAttribute="trailingMargin" secondItem="yxE-Rx-EIc" secondAttribute="trailing" constant="30" id="dym-nT-ldb"/>
-                            <constraint firstItem="PLj-OM-XIA" firstAttribute="width" secondItem="5F0-qW-O4b" secondAttribute="width" id="kNU-bv-jf3"/>
-                            <constraint firstItem="PLj-OM-XIA" firstAttribute="height" secondItem="5F0-qW-O4b" secondAttribute="height" id="rC5-sM-6X2"/>
                         </constraints>
                     </view>
                     <connections>
-                        <outlet property="blurView" destination="PLj-OM-XIA" id="CXd-bv-udl"/>
                         <outlet property="releaseArtworkView" destination="yxE-Rx-EIc" id="vBF-xK-Eql"/>
                         <outlet property="releaseTitleLabel" destination="RnH-Qp-XwS" id="kY4-f4-aQ2"/>
                     </connections>
@@ -1242,7 +1246,7 @@
         </scene>
     </scenes>
     <inferredMetricsTieBreakers>
-        <segue reference="aQx-GT-xWZ"/>
+        <segue reference="kRG-BK-4CJ"/>
         <segue reference="qkx-Fg-KPo"/>
     </inferredMetricsTieBreakers>
     <color key="tintColor" red="0.94901960780000005" green="0.2156862745" blue="0.25882352939999997" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>

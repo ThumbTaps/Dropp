@@ -182,7 +182,7 @@ class ArtistViewController: UrsusViewController, UICollectionViewDataSource, UIC
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         // Get the new view controller using segue.destinationViewController.
         // Pass the selected object to the new view controller.
-		
+				
 		if segue.identifier == "Artist->Release" {
 			// set current release for release view controller
 			(segue.destination as! ReleaseViewController).currentRelease = self.artist.latestRelease

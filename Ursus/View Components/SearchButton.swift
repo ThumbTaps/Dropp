@@ -33,12 +33,18 @@ class SearchButton: UrsusButton {
 			} else {
 				self.layer.backgroundColor = UIColor.clear.cgColor
 			}
+			if self.bordered {
+				self.layer.borderColor = StyleKit.darkStrokeColor.cgColor
+			}
 			StyleKit.drawSearchIcon(frame: rect, resizing: .aspectFit, iconColor: StyleKit.darkPrimaryTextColor.withAlpha(0.2))
 		} else {
 			if !self.glyphOnly {
 				self.layer.backgroundColor = self.tintColor.withAlpha(0.45).cgColor
 			} else {
 				self.layer.backgroundColor = UIColor.clear.cgColor
+			}
+			if self.bordered {
+				self.layer.borderColor = StyleKit.lightStrokeColor.cgColor
 			}
 			StyleKit.drawSearchIcon(frame: rect, resizing: .aspectFit, iconColor: StyleKit.lightPrimaryTextColor.withAlpha(0.25))
 		}

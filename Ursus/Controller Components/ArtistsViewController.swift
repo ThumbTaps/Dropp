@@ -53,7 +53,6 @@ class ArtistsViewController: UrsusViewController, UICollectionViewDataSource, UI
         // Get the new view controller using segue.destinationViewController.
         // Pass the selected object to the new view controller.
 		
-		// load artist data to pass on to artist view
 		
     }
 

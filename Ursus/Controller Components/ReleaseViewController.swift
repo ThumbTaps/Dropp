@@ -10,7 +10,6 @@ import UIKit
 
 class ReleaseViewController: UrsusViewController {
 	
-	@IBOutlet weak var blurView: UIVisualEffectView!
 	@IBOutlet weak var releaseArtworkView: ReleaseArtView!
 	@IBOutlet weak var releaseTitleLabel: UILabel!
 	
@@ -29,8 +28,6 @@ class ReleaseViewController: UrsusViewController {
 		}
 		
 		self.releaseTitleLabel.text = self.currentRelease?.title
-		
-		self.blurView.effect = nil
 		
 		// load artwork
 		if self.currentRelease.artworkURL != nil {
@@ -62,18 +59,6 @@ class ReleaseViewController: UrsusViewController {
 	override func viewDidAppear(_ animated: Bool) {
 		super.viewDidAppear(animated)
 		
-		DispatchQueue.main.async {
-			
-			UIView.animate(withDuration: 0.4, animations: {
-				
-				if self.themeMode == .dark {
-					self.blurView.effect = UIBlurEffect(style: .dark)
-				} else {
-					self.blurView.effect = UIBlurEffect(style: .light)
-				}
-				
-			})
-		}
 	}
 
     override func didReceiveMemoryWarning() {
@@ -94,16 +79,6 @@ class ReleaseViewController: UrsusViewController {
 	override func themeDidChange() {
 		super.themeDidChange()
 		
-		DispatchQueue.main.async {
-			
-			if self.themeMode == .dark {
-				self.blurView.effect = UIBlurEffect(style: .dark)
-			} else {
-				self.blurView.effect = UIBlurEffect(style: .light)
-			}
-			
-		}
-
 	}
 
     /*

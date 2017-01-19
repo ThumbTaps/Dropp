@@ -9,9 +9,7 @@
 import UIKit
 
 class NewReleasesViewController: UrsusViewController, UICollectionViewDataSource, UICollectionViewDelegate, UICollectionViewDelegateFlowLayout {
-	
-    let animationController = UrsusAnimatedTransitionController()
-    
+		
 	@IBOutlet weak var settingsButton: SettingsButton!
 	@IBOutlet weak var artistsButton: ArtistsButton!
 	@IBOutlet weak var searchButton: SearchButton!
@@ -30,8 +28,7 @@ class NewReleasesViewController: UrsusViewController, UICollectionViewDataSource
 	@IBOutlet weak var searchButtonFocusedSizeConstraint: NSLayoutConstraint!
     @IBOutlet weak var newReleasesCountIndicatorHidingConstraint: NSLayoutConstraint!
     @IBOutlet weak var newReleasesCountIndicatorRestingConstraint: NSLayoutConstraint!
-	
-	
+			
 	override func viewDidLoad() {
 		super.viewDidLoad()
 		
@@ -195,14 +192,15 @@ class NewReleasesViewController: UrsusViewController, UICollectionViewDataSource
 	
 	
 	// MARK: - Navigation
-
+	func dismissDestination() {
+		self.presentedViewController?.performSegue(withIdentifier: "Settings->NewReleases", sender: nil)
+	}
 	
 	// In a storyboard-based application, you will often want to do a little preparation before navigation
 	override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
 		// Get the new view controller using segue.destinationViewController.
 		// Pass the selected object to the new view controller.
 		
-//		segue.destination.transitioningDelegate = self
 		if segue.identifier == "NewReleases->Release" {
 			// set current release for release view controller
 			(segue.destination as! ReleaseViewController).currentRelease = PreferenceManager.shared.newReleases[(self.collectionView?.indexPathsForSelectedItems?[0].row)!]
@@ -214,15 +212,10 @@ class NewReleasesViewController: UrsusViewController, UICollectionViewDataSource
 				segue.destination.view.tintColor = StyleKit.lightBackgroundColor
 			}
 		}
+		
+		else if segue.identifier == "NewReleases->Settings" {
+			let tapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(self.dismissDestination))
+			self.view.addGestureRecognizer(tapGestureRecognizer)
+		}
 	}
-    @IBAction func prepareForUnwind(for segue: UIStoryboardSegue) {
-    }
-}
-
-extension NewReleasesViewController: UIViewControllerTransitioningDelegate {
-    func animationControllerForPresentedController(presented: UIViewController, presentingController presenting: UIViewController, sourceController source: UIViewController) -> UIViewControllerAnimatedTransitioning? {
-        
-        self.animationController.originFrame = self.view.frame
-        return self.animationController
-    }
 }

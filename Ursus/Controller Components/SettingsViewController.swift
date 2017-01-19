@@ -9,13 +9,12 @@
 import UIKit
 
 class SettingsViewController: UrsusViewController, UICollectionViewDataSource, UICollectionViewDelegate, UICollectionViewDelegateFlowLayout {
-    
-    @IBOutlet weak var newReleasesViewContainer: UIView!
-    @IBOutlet weak var newReleasesViewContainerPresentedConstraint: NSLayoutConstraint!
-    @IBOutlet weak var newReleasesViewContainerRestingConstraint: NSLayoutConstraint!
+	
+	var unwindSegueIdentifier = "Settings->NewReleases"
+	
     override func viewDidLoad() {
-        super.viewDidLoad()		
-
+        super.viewDidLoad()
+		
     }
 	
 	override func viewWillAppear(_ animated: Bool) {
@@ -54,20 +53,6 @@ class SettingsViewController: UrsusViewController, UICollectionViewDataSource, U
 	
     
 
-    /*
-    // MARK: - Navigation
-
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        // Get the new view controller using segue.destinationViewController.
-        // Pass the selected object to the new view controller.
-    }
-    */
-	
-	
-	
-	
-	
 	// MARK: - UICollectionViewDataSource
 	func numberOfSections(in collectionView: UICollectionView) -> Int {
 		return 1
@@ -145,4 +130,18 @@ class SettingsViewController: UrsusViewController, UICollectionViewDataSource, U
 		
 	}
 
+	
+	
+	
+	
+	// MARK: - Navigation
+	func dismiss() {
+		
+		self.performSegue(withIdentifier: self.unwindSegueIdentifier, sender: nil)
+	}
+	// In a storyboard-based application, you will often want to do a little preparation before navigation
+	override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+	// Get the new view controller using segue.destinationViewController.
+	// Pass the selected object to the new view controller.
+	}
 }
