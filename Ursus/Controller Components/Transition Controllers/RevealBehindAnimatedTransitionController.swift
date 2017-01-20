@@ -22,7 +22,7 @@ class RevealBehindAnimatedTransitionController: NSObject, UIViewControllerAnimat
 		}
 	}
 	func transitionDuration(using transitionContext: UIViewControllerContextTransitioning?) -> TimeInterval {
-		return self.presenting ? 0.8 : 0.8
+		return self.presenting ? 0.8 : 0.7
 	}
 	func animateTransition(using transitionContext: UIViewControllerContextTransitioning) {
 		guard let source = transitionContext.viewController(forKey: .from),
@@ -73,7 +73,7 @@ class RevealBehindAnimatedTransitionController: NSObject, UIViewControllerAnimat
 			transitionContext.containerView.addSubview(source.view)
 			transitionContext.containerView.addSubview(destination.view)
 			
-			UIView.animate(withDuration: duration, delay: 0, usingSpringWithDamping: 0.7, initialSpringVelocity: 0.5, options: .curveEaseOut, animations: {
+			UIView.animate(withDuration: duration, delay: 0, usingSpringWithDamping: 0.8, initialSpringVelocity: 0.3, options: .curveEaseOut, animations: {
 				destination.view.transform = CGAffineTransform(scaleX: 1, y: 1)
 				destination.view.frame = transitionContext.finalFrame(for: destination)
 			}, completion: { (completed) in

@@ -34,6 +34,13 @@ class PreferenceManager: NSObject {
 	
 	static let shared = PreferenceManager()
 	
+	var firstLaunch = true {
+		didSet {
+			UserDefaults.standard.set(self.firstLaunch, forKey: "firstLaunch")
+			UserDefaults.standard.synchronize()
+		}
+	}
+	
 	var followingArtists: [Artist] = []
 	func follow(artist: Artist) {
         if self.followingArtists.index(where: { $0.itunesID == artist.itunesID }) == nil {
@@ -93,6 +100,23 @@ class PreferenceManager: NSObject {
 				RequestManager.shared.getReleases(for: followed.itunesID, completion: { (releases: [Release], error: NSError?) in
 					
 					if error == nil {
+//						let newReleases: [Release] = releases.filter({ (release) -> Bool in
+//							return followed.releases.contains(where: { (otherRelease) -> Bool in
+//								otherRelease.itunesID != release.itunesID
+//							})
+//						})
+//						
+//						followed.releases.append(contentsOf: newReleases)
+						releases.forEach({ (release) in
+							if followed.releases.filter({ $0.seenByUser }).contains(where: { (existingRelease) -> Bool in
+								return release.itunesID == existingRelease.itunesID
+							}) {
+								release.seenByUser = true
+							} else {
+								release.seenByUser = false
+							}
+						})
+						
 						followed.releases = releases
 					}
 					
@@ -263,8 +287,18 @@ class PreferenceManager: NSObject {
 	
 	var keyboardStyle: UIKeyboardAppearance = .light
 	
-	var ignoreSingles: Bool = true
-	var ignoreEPs: Bool = true
+	var ignoreSingles: Bool = true {
+		didSet {
+			UserDefaults.standard.set(self.ignoreSingles, forKey: "ignoreSingles")
+			UserDefaults.standard.synchronize()
+		}
+	}
+	var ignoreEPs: Bool = true {
+		didSet {
+			UserDefaults.standard.set(self.ignoreSingles, forKey: "ignoreEPs")
+			UserDefaults.standard.synchronize()
+		}
+	}
 	
 	
 	
@@ -289,6 +323,8 @@ class PreferenceManager: NSObject {
 		UserDefaults.standard.set(self.ignoreSingles, forKey: "ignoreSingles")
 		UserDefaults.standard.set(self.ignoreEPs, forKey: "ignoreEPs")
 		
+		UserDefaults.standard.set(self.firstLaunch, forKey: "firstLaunch")
+		
 		UserDefaults.standard.synchronize()
 	}
 	func load(completion: (() -> Void)?=nil) {
@@ -312,6 +348,8 @@ class PreferenceManager: NSObject {
 		
 		self.ignoreSingles = UserDefaults.standard.bool(forKey: "ignoreSingles")
 		self.ignoreEPs = UserDefaults.standard.bool(forKey: "ignoreEPs")
+		
+		self.firstLaunch = UserDefaults.standard.bool(forKey: "firstLaunch")
 		
 		completion?()
 	}

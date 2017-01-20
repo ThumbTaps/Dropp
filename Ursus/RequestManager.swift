@@ -162,7 +162,6 @@ class RequestManager: NSObject, URLSessionDataDelegate {
 						let dateFormatter = DateFormatter()
 						dateFormatter.dateFormat = "YYYY-MM-dd"
 						
-						print(results)
 						let releases = results.map({ ( result ) -> Release in
 							
 							let itunesID = result["collectionId"] as! Int
@@ -186,12 +185,6 @@ class RequestManager: NSObject, URLSessionDataDelegate {
 							
 							return release
 						})
-						
-						// mark latest release as unseen
-						releases.first(where: { (release) -> Bool in
-							
-							return (PreferenceManager.shared.ignoreSingles && PreferenceManager.shared.ignoreEPs && release.type == .album) || (!PreferenceManager.shared.ignoreSingles && release.type == .single) || (!PreferenceManager.shared.ignoreEPs && release.type == .EP)
-						})?.seenByUser = false
 						
 						// trigger completion handler
 						completion(releases, nil)

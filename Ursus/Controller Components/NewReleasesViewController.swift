@@ -20,11 +20,9 @@ class NewReleasesViewController: UrsusViewController, UICollectionViewDataSource
 	@IBOutlet weak var settingsButtonHidingConstraint: NSLayoutConstraint!
 	@IBOutlet weak var artistsButtonShowingConstraint: NSLayoutConstraint!
 	@IBOutlet weak var artistsButtonHidingConstraint: NSLayoutConstraint!
-	@IBOutlet weak var searchButtonRestingConstraint: NSLayoutConstraint!
 	@IBOutlet weak var searchButtonShowingConstraint: NSLayoutConstraint!
 	@IBOutlet weak var searchButtonHidingConstraint: NSLayoutConstraint!
 	@IBOutlet weak var searchButtonRestingSizeConstraint: NSLayoutConstraint!
-	@IBOutlet weak var searchButtonFocusedCenteredConstraint: NSLayoutConstraint!
 	@IBOutlet weak var searchButtonFocusedSizeConstraint: NSLayoutConstraint!
     @IBOutlet weak var newReleasesCountIndicatorHidingConstraint: NSLayoutConstraint!
     @IBOutlet weak var newReleasesCountIndicatorRestingConstraint: NSLayoutConstraint!
@@ -35,28 +33,26 @@ class NewReleasesViewController: UrsusViewController, UICollectionViewDataSource
 //		let refreshControl = UIRefreshControl(frame: CGRect(x: 0, y: 100, width: 45, height: 45))
 //		self.collectionView.addSubview(refreshControl)
 		
-		if PreferenceManager.shared.followingArtists.count == 0 {
+		UIApplication.shared.isNetworkActivityIndicatorVisible = true
+		PreferenceManager.shared.updateNewReleases {
 			
-			self.bottomScrollFadeView?.alpha = 0.5
-			
-		} else {
-			
-			PreferenceManager.shared.updateNewReleases {
+			UIApplication.shared.isNetworkActivityIndicatorVisible = false
+			DispatchQueue.main.async {
+				// update new release count
+				self.newReleasesCountIndicator.setTitle(String(PreferenceManager.shared.newReleases.count), for: .normal)
 				
-                DispatchQueue.main.async {
-                    // update new release count
-                    self.newReleasesCountIndicator.titleLabel?.text = String(PreferenceManager.shared.newReleases.count)
-                    
-                    self.collectionView?.reloadData()
-
-                }
+				self.collectionView?.reloadData()
+				
 			}
 		}
-		
 	}
 	
 	override func viewWillAppear(_ animated: Bool) {
 		super.viewWillAppear(animated)
+		
+		if PreferenceManager.shared.followingArtists.isEmpty {
+			self.bottomScrollFadeView?.alpha = 0.5
+		}
 		
 		DispatchQueue.main.async {
 			
@@ -72,22 +68,37 @@ class NewReleasesViewController: UrsusViewController, UICollectionViewDataSource
 	override func viewDidAppear(_ animated: Bool) {
 		super.viewDidAppear(animated)
 		
-		if PreferenceManager.shared.followingArtists.count > 0 {
+		if PreferenceManager.shared.followingArtists.isEmpty {
 			
 			DispatchQueue.main.async {
 				
-				self.backdrop?.overlay.removeConstraints([self.settingsButtonHidingConstraint, self.artistsButtonHidingConstraint, self.searchButtonHidingConstraint, self.newReleasesCountIndicatorHidingConstraint])
-				self.backdrop?.overlay.addConstraints([self.settingsButtonShowingConstraint, self.artistsButtonShowingConstraint, self.searchButtonShowingConstraint, self.newReleasesCountIndicatorRestingConstraint])
+				self.backdrop?.overlay.removeConstraints([self.settingsButtonHidingConstraint, self.searchButtonHidingConstraint])
+				self.backdrop?.overlay.addConstraints([self.settingsButtonShowingConstraint, self.searchButtonShowingConstraint])
+				self.searchButton?.removeConstraint(self.searchButtonRestingSizeConstraint)
+				self.searchButton?.addConstraint(self.searchButtonFocusedSizeConstraint)
 			}
-		
+			
+			// show search bar
+			if PreferenceManager.shared.firstLaunch {
+				self.performSegue(withIdentifier: "NewReleases->ArtistSearch", sender: nil)
+				PreferenceManager.shared.firstLaunch = false
+			}
+			
 		} else {
 			
 			DispatchQueue.main.async {
 				
-				self.backdrop?.overlay.removeConstraints([self.settingsButtonHidingConstraint, self.searchButtonHidingConstraint, self.searchButtonRestingConstraint])
-				self.backdrop?.overlay.addConstraints([self.settingsButtonShowingConstraint, self.searchButtonShowingConstraint, self.searchButtonFocusedCenteredConstraint])
-				self.searchButton?.removeConstraint(self.searchButtonRestingSizeConstraint)
-				self.searchButton?.addConstraint(self.searchButtonFocusedSizeConstraint)
+				self.backdrop?.overlay.removeConstraints([self.settingsButtonHidingConstraint, self.artistsButtonHidingConstraint, self.searchButtonHidingConstraint])
+				self.backdrop?.overlay.addConstraints([self.settingsButtonShowingConstraint, self.artistsButtonShowingConstraint, self.searchButtonShowingConstraint])
+				
+				if PreferenceManager.shared.newReleases.isEmpty {
+				
+					self.searchButton?.removeConstraint(self.searchButtonRestingSizeConstraint)
+					self.searchButton?.addConstraint(self.searchButtonFocusedSizeConstraint)
+				} else {
+					self.backdrop?.overlay.removeConstraint(self.newReleasesCountIndicatorHidingConstraint)
+					self.backdrop?.overlay.addConstraint(self.newReleasesCountIndicatorRestingConstraint)
+				}
 			}
 		}
 		
@@ -98,13 +109,7 @@ class NewReleasesViewController: UrsusViewController, UICollectionViewDataSource
 				self.backdrop?.overlay.layoutIfNeeded()
 				self.searchButton?.layoutIfNeeded()
 				self.searchButton?.setNeedsDisplay()
-			}) { (Bool) in
-				
-				// show search bar
-				if PreferenceManager.shared.followingArtists.isEmpty {
-					self.performSegue(withIdentifier: "NewReleases->ArtistSearch", sender: nil)
-				}
-			}
+			})
 		}
 		
 	}
