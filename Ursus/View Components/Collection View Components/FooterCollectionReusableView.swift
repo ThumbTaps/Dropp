@@ -25,7 +25,7 @@ class FooterCollectionReusableView: UICollectionReusableView {
 	func themeDidChange() {
 		self.setNeedsDisplay()
 		
-		if PreferenceManager.shared.themeMode == .dark {
+		if PreferenceManager.shared.theme == .dark {
 			self.textLabel?.textColor = StyleKit.darkTertiaryTextColor
 		} else {
 			self.textLabel?.textColor = StyleKit.lightTertiaryTextColor
@@ -33,7 +33,7 @@ class FooterCollectionReusableView: UICollectionReusableView {
 	}
 	override func draw(_ rect: CGRect) {
 		
-		if PreferenceManager.shared.themeMode == .dark {
+		if PreferenceManager.shared.theme == .dark {
 			self.layer.backgroundColor = StyleKit.darkBackdropOverlayColor.withAlpha(0.2).cgColor
 		} else {
 			self.layer.backgroundColor = StyleKit.lightBackdropOverlayColor.cgColor

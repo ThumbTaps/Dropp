@@ -76,7 +76,7 @@ class ArtistSearchBar: UIView, UITextFieldDelegate {
 	}
 	func themeDidChange() {
 		
-		if PreferenceManager.shared.themeMode == .dark {
+		if PreferenceManager.shared.theme == .dark {
 			self.tintColor = StyleKit.darkPrimaryTextColor
 		} else {
 			self.tintColor = StyleKit.lightPrimaryTextColor
@@ -217,7 +217,7 @@ class ArtistSearchBarTextField: RoundedTextField {
 	func themeDidChange() {
 		self.setNeedsDisplay()
 		
-		if PreferenceManager.shared.themeMode == .dark {
+		if PreferenceManager.shared.theme == .dark {
 			self.keyboardAppearance = .dark
 		} else {
 			self.keyboardAppearance = .light
@@ -228,13 +228,13 @@ class ArtistSearchBarTextField: RoundedTextField {
 		
 		super.draw(rect)
 		
-		if PreferenceManager.shared.themeMode == .dark {
-			self.layer.backgroundColor = UIColor(white: 0.05, alpha: 0.5).cgColor
+		if PreferenceManager.shared.theme == .dark {
+			self.layer.backgroundColor = StyleKit.darkBackgroundColor.withAlpha(0.5).cgColor
 			self.layer.borderColor = StyleKit.darkStrokeColor.cgColor
 			self.textColor = StyleKit.darkPrimaryTextColor
 			self.attributedPlaceholder = NSAttributedString(string: self.placeholder!, attributes: [NSForegroundColorAttributeName: StyleKit.darkTertiaryTextColor])
 		} else {
-			self.layer.backgroundColor = UIColor(white: 0.95, alpha: 0.45).cgColor
+			self.layer.backgroundColor = StyleKit.lightBackgroundColor.withAlpha(0.5).cgColor
 			self.layer.borderColor = StyleKit.lightStrokeColor.cgColor
 			self.textColor = StyleKit.lightPrimaryTextColor
 			self.attributedPlaceholder = NSAttributedString(string: self.placeholder!, attributes: [NSForegroundColorAttributeName: StyleKit.lightTertiaryTextColor])

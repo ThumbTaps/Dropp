@@ -27,7 +27,7 @@ class FrostedBackdrop: UIView {
 	func themeDidChange() {
 		self.setNeedsDisplay()
 		
-		if PreferenceManager.shared.themeMode == .dark {
+		if PreferenceManager.shared.theme == .dark {
 			self.tintColor = StyleKit.darkTintColor
 		} else {
 			self.tintColor = StyleKit.lightTintColor
@@ -42,7 +42,7 @@ class FrostedBackdrop: UIView {
 		
 		self.layer.cornerRadius = 12
 		
-		if PreferenceManager.shared.themeMode == .dark {
+		if PreferenceManager.shared.theme == .dark {
 			self.layer.backgroundColor = StyleKit.darkBackgroundColor.cgColor
 			StyleKit.drawDarkBackdrop(frame: CGRect(x: 0, y: rect.height - rect.width, width: rect.width, height: rect.width), resizing: .aspectFit)
 		} else {
@@ -84,7 +84,7 @@ class FrostedBackdropOverlay: UIView {
 	override func draw(_ rect: CGRect) {
 		
         if self.changesWithTheme {
-            if PreferenceManager.shared.themeMode == .dark {
+            if PreferenceManager.shared.theme == .dark {
                 self.layer.backgroundColor = StyleKit.darkBackdropOverlayColor.cgColor
             } else {
                 self.layer.backgroundColor = StyleKit.lightBackdropOverlayColor.cgColor

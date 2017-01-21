@@ -17,10 +17,17 @@ class ArtistsButton: UrsusButton {
 		// Drawing code
 		super.draw(rect)
 		
-		if PreferenceManager.shared.themeMode == .dark {
-			StyleKit.drawArtistsIcon(frame: rect, resizing: .aspectFit, iconColor: StyleKit.darkIconGlyphColor)
+		if !self.glyphOnly && self.changesWithTheme {
+			if PreferenceManager.shared.theme == .dark {
+				
+				StyleKit.drawArtistsIcon(frame: rect, resizing: .aspectFit, iconColor: StyleKit.darkIconGlyphColor)
+			} else {
+				
+				StyleKit.drawArtistsIcon(frame: rect, resizing: .aspectFit, iconColor: StyleKit.lightIconGlyphColor)
+			}
 		} else {
-			StyleKit.drawArtistsIcon(frame: rect, resizing: .aspectFit, iconColor: StyleKit.lightIconGlyphColor)
+			
+			StyleKit.drawArtistsIcon(frame: rect, resizing: .aspectFit, iconColor: self.tintColor)
 		}
 	}
 	

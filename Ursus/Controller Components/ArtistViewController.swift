@@ -189,9 +189,9 @@ class ArtistViewController: UrsusViewController, UICollectionViewDataSource, UIC
 			
 			// adjust colors
 			if self.colorPalette!.backgroundColor.isDarkColor {
-				(segue.destination as! ReleaseViewController).themeMode = .dark
+				(segue.destination as! ReleaseViewController).theme = .dark
 			} else {
-				(segue.destination as! ReleaseViewController).themeMode = .light
+				(segue.destination as! ReleaseViewController).theme = .light
 			}
 		}
     }

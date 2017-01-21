@@ -39,7 +39,7 @@ class ReleaseArtView: UIView {
 
 	override func draw(_ rect: CGRect) {
 		
-		if PreferenceManager.shared.themeMode == .dark {
+		if PreferenceManager.shared.theme == .dark {
 			StyleKit.drawDarkPlaceholderReleaseArtwork(frame: rect, resizing: .aspectFit)
 			self.layer.borderColor = StyleKit.darkStrokeColor.cgColor
 		} else {

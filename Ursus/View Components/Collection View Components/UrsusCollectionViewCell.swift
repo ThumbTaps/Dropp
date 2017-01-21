@@ -8,6 +8,7 @@
 
 import UIKit
 
+@IBDesignable
 class UrsusCollectionViewCell: UICollectionViewCell {
     
 	@IBInspectable var changesWithTheme: Bool = true {
@@ -27,6 +28,7 @@ class UrsusCollectionViewCell: UICollectionViewCell {
 			self.themeDidChange()
 			Notification.Name.UrsusThemeDidChange.add(self, selector: #selector(self.themeDidChange))
 		}
+		self.selectedBackgroundView = UIView(frame: self.bounds)
 	}
 	required init?(coder aDecoder: NSCoder) {
 		super.init(coder: aDecoder)
@@ -35,10 +37,11 @@ class UrsusCollectionViewCell: UICollectionViewCell {
 			self.themeDidChange()
 			Notification.Name.UrsusThemeDidChange.add(self, selector: #selector(self.themeDidChange))
 		}
+		self.selectedBackgroundView = UIView(frame: self.bounds)
 	}
 	func themeDidChange() {
 		
-		if PreferenceManager.shared.themeMode == .dark {
+		if PreferenceManager.shared.theme == .dark {
 			self.tintColor = StyleKit.darkBackdropOverlayColor
 			
 		} else {
@@ -49,7 +52,15 @@ class UrsusCollectionViewCell: UICollectionViewCell {
 	override func tintColorDidChange() {
 		super.tintColorDidChange()
 		
-		self.setNeedsDisplay()
+		DispatchQueue.main.async {
+			
+			if self.tintColor.isDarkColor {
+				self.selectedBackgroundView?.backgroundColor = StyleKit.darkStrokeColor
+			} else {
+				self.selectedBackgroundView?.backgroundColor = StyleKit.lightStrokeColor
+			}
+			self.setNeedsDisplay()
+		}
 	}
 	override func draw(_ rect: CGRect) {
 		

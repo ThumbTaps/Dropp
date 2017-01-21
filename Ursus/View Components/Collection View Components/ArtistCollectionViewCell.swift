@@ -14,16 +14,20 @@ class ArtistCollectionViewCell: UrsusCollectionViewCell {
 	@IBOutlet weak var artistArtView: ArtistArtView!
 	@IBOutlet weak var artistNameLabel: UILabel!
 	
+	override func awakeFromNib() {
+		super.awakeFromNib()
+		
+		self.tintColorDidChange()
+	}
 	override func tintColorDidChange() {
 		super.tintColorDidChange()
 		
 		if self.tintColor.isDarkColor {
-			
 			self.artistNameLabel?.textColor = StyleKit.darkPrimaryTextColor
 		} else {
-			
 			self.artistNameLabel?.textColor = StyleKit.lightPrimaryTextColor
 		}
+		self.setNeedsDisplay()
 	}
 
 }

@@ -17,6 +17,9 @@
 		7B179DB41E107E82000F0DED /* ReleaseCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B179DB31E107E82000F0DED /* ReleaseCollectionViewCell.swift */; };
 		7B179DB61E11A113000F0DED /* ReleaseArtView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B179DB51E11A113000F0DED /* ReleaseArtView.swift */; };
 		7B188E971DDD2F1400C78AE7 /* FrostedBackdrop.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B188E961DDD2F1400C78AE7 /* FrostedBackdrop.swift */; };
+		7B1912AC1E32DC290027B1D1 /* CheckmarkButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B1912AB1E32DC290027B1D1 /* CheckmarkButton.swift */; };
+		7B1912AE1E32F4FC0027B1D1 /* DisplayBrightnessMinButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B1912AD1E32F4FC0027B1D1 /* DisplayBrightnessMinButton.swift */; };
+		7B1912B11E32F6100027B1D1 /* DisplayBrightnessMaxButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B1912B01E32F6100027B1D1 /* DisplayBrightnessMaxButton.swift */; };
 		7B1E33B01E298A5E00D5F37B /* HeaderCollectionReusableView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B1E33AF1E298A5E00D5F37B /* HeaderCollectionReusableView.swift */; };
 		7B1E33B21E29976F00D5F37B /* ReleaseViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B1E33B11E29976F00D5F37B /* ReleaseViewController.swift */; };
 		7B1E33B41E29DEAB00D5F37B /* DownButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B1E33B31E29DEAB00D5F37B /* DownButton.swift */; };
@@ -28,6 +31,7 @@
 		7B1FF6FB1E271A12004F496E /* ArtistArtView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B1FF6FA1E271A12004F496E /* ArtistArtView.swift */; };
 		7B1FF6FD1E271ADE004F496E /* ArtistCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B1FF6FC1E271ADE004F496E /* ArtistCollectionViewCell.swift */; };
 		7B2257811DDE74A900F81E12 /* UIImageColors.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B2257801DDE74A900F81E12 /* UIImageColors.swift */; };
+		7B2839E81E330B8900B217D6 /* DisplayBrightnessThresholdCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B2839E71E330B8900B217D6 /* DisplayBrightnessThresholdCollectionViewCell.swift */; };
 		7B320FAF1E2EEE9D00189B21 /* BlurAndOverlayAnimatedTransitionController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B320FAE1E2EEE9D00189B21 /* BlurAndOverlayAnimatedTransitionController.swift */; };
 		7B3A86561E1470DB00D55B47 /* PreferenceManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B3A86551E1470DB00D55B47 /* PreferenceManager.swift */; };
 		7B3B99691CC4437E00900838 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B3B99681CC4437E00900838 /* AppDelegate.swift */; };
@@ -98,23 +102,27 @@
 		4643552B41BC957071F398CF /* Pods-UrsusTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-UrsusTests.debug.xcconfig"; path = "Pods/Target Support Files/Pods-UrsusTests/Pods-UrsusTests.debug.xcconfig"; sourceTree = "<group>"; };
 		473F026E9ABAA59BB29D35D9 /* Pods-UrsusUITests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-UrsusUITests.release.xcconfig"; path = "Pods/Target Support Files/Pods-UrsusUITests/Pods-UrsusUITests.release.xcconfig"; sourceTree = "<group>"; };
 		71C360F3A9BA924567BD0BF9 /* Pods-UrsusUITests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-UrsusUITests.debug.xcconfig"; path = "Pods/Target Support Files/Pods-UrsusUITests/Pods-UrsusUITests.debug.xcconfig"; sourceTree = "<group>"; };
-		7B121F7F1E2C3AAA004458DC /* ThemeModeCollectionViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ThemeModeCollectionViewCell.swift; sourceTree = "<group>"; };
+		7B121F7F1E2C3AAA004458DC /* ThemeModeCollectionViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ThemeModeCollectionViewCell.swift; path = "Collection View Components/ThemeModeCollectionViewCell.swift"; sourceTree = "<group>"; };
 		7B150E831DDFDF0800965D2A /* StyleKit.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StyleKit.swift; sourceTree = "<group>"; };
 		7B15CB4C1DDBDF9600CE48C1 /* ArtistViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ArtistViewController.swift; sourceTree = "<group>"; };
 		7B15CB4E1DDBDFC200CE48C1 /* ArtistSearchResultsViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ArtistSearchResultsViewController.swift; sourceTree = "<group>"; };
 		7B179DB11E104CBA000F0DED /* Release.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Release.swift; sourceTree = "<group>"; };
-		7B179DB31E107E82000F0DED /* ReleaseCollectionViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ReleaseCollectionViewCell.swift; sourceTree = "<group>"; };
+		7B179DB31E107E82000F0DED /* ReleaseCollectionViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ReleaseCollectionViewCell.swift; path = "Collection View Components/ReleaseCollectionViewCell.swift"; sourceTree = "<group>"; };
 		7B179DB51E11A113000F0DED /* ReleaseArtView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ReleaseArtView.swift; sourceTree = "<group>"; };
 		7B188E961DDD2F1400C78AE7 /* FrostedBackdrop.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FrostedBackdrop.swift; sourceTree = "<group>"; };
-		7B1E33AF1E298A5E00D5F37B /* HeaderCollectionReusableView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HeaderCollectionReusableView.swift; sourceTree = "<group>"; };
+		7B1912AB1E32DC290027B1D1 /* CheckmarkButton.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = CheckmarkButton.swift; path = Buttons/CheckmarkButton.swift; sourceTree = "<group>"; };
+		7B1912AD1E32F4FC0027B1D1 /* DisplayBrightnessMinButton.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = DisplayBrightnessMinButton.swift; path = Buttons/DisplayBrightnessMinButton.swift; sourceTree = "<group>"; };
+		7B1912B01E32F6100027B1D1 /* DisplayBrightnessMaxButton.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = DisplayBrightnessMaxButton.swift; path = Buttons/DisplayBrightnessMaxButton.swift; sourceTree = "<group>"; };
+		7B1E33AF1E298A5E00D5F37B /* HeaderCollectionReusableView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = HeaderCollectionReusableView.swift; path = "Collection View Components/HeaderCollectionReusableView.swift"; sourceTree = "<group>"; };
 		7B1E33B11E29976F00D5F37B /* ReleaseViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ReleaseViewController.swift; sourceTree = "<group>"; };
-		7B1E33B31E29DEAB00D5F37B /* DownButton.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DownButton.swift; sourceTree = "<group>"; };
-		7B1E33B51E29EAAD00D5F37B /* UrsusCollectionViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UrsusCollectionViewCell.swift; sourceTree = "<group>"; };
+		7B1E33B31E29DEAB00D5F37B /* DownButton.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = DownButton.swift; path = Buttons/DownButton.swift; sourceTree = "<group>"; };
+		7B1E33B51E29EAAD00D5F37B /* UrsusCollectionViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = UrsusCollectionViewCell.swift; path = "Collection View Components/UrsusCollectionViewCell.swift"; sourceTree = "<group>"; };
 		7B1E33B71E29EE8100D5F37B /* ArtistsViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ArtistsViewController.swift; sourceTree = "<group>"; };
-		7B1F26C31E259A82001876E7 /* FooterCollectionReusableView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FooterCollectionReusableView.swift; sourceTree = "<group>"; };
+		7B1F26C31E259A82001876E7 /* FooterCollectionReusableView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = FooterCollectionReusableView.swift; path = "Collection View Components/FooterCollectionReusableView.swift"; sourceTree = "<group>"; };
 		7B1FF6FA1E271A12004F496E /* ArtistArtView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ArtistArtView.swift; sourceTree = "<group>"; };
-		7B1FF6FC1E271ADE004F496E /* ArtistCollectionViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ArtistCollectionViewCell.swift; sourceTree = "<group>"; };
+		7B1FF6FC1E271ADE004F496E /* ArtistCollectionViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ArtistCollectionViewCell.swift; path = "Collection View Components/ArtistCollectionViewCell.swift"; sourceTree = "<group>"; };
 		7B2257801DDE74A900F81E12 /* UIImageColors.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = UIImageColors.swift; path = Extensions/UIImageColors.swift; sourceTree = "<group>"; };
+		7B2839E71E330B8900B217D6 /* DisplayBrightnessThresholdCollectionViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = DisplayBrightnessThresholdCollectionViewCell.swift; path = "Collection View Components/DisplayBrightnessThresholdCollectionViewCell.swift"; sourceTree = "<group>"; };
 		7B320FAE1E2EEE9D00189B21 /* BlurAndOverlayAnimatedTransitionController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = BlurAndOverlayAnimatedTransitionController.swift; path = "Transition Controllers/BlurAndOverlayAnimatedTransitionController.swift"; sourceTree = "<group>"; };
 		7B3A86551E1470DB00D55B47 /* PreferenceManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PreferenceManager.swift; sourceTree = "<group>"; };
 		7B3B99651CC4437E00900838 /* Ursus.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Ursus.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -132,22 +140,22 @@
 		7B3B99961CC443DF00900838 /* Ursus.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = Ursus.entitlements; sourceTree = "<group>"; };
 		7B3B99971CC448B300900838 /* RequestManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RequestManager.swift; sourceTree = "<group>"; };
 		7B53182E1E13518B004FDFC7 /* ScrollFadeView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ScrollFadeView.swift; sourceTree = "<group>"; };
-		7B5609741E1CA5BB0054CB40 /* SettingsButton.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SettingsButton.swift; sourceTree = "<group>"; };
+		7B5609741E1CA5BB0054CB40 /* SettingsButton.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = SettingsButton.swift; path = Buttons/SettingsButton.swift; sourceTree = "<group>"; };
 		7B5FCE871E301866008AC1F7 /* RevealBehindAnimatedTransitionController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = RevealBehindAnimatedTransitionController.swift; path = "Transition Controllers/RevealBehindAnimatedTransitionController.swift"; sourceTree = "<group>"; };
 		7B5FCE891E304A4B008AC1F7 /* UrsusBlurView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UrsusBlurView.swift; sourceTree = "<group>"; };
 		7B5FCE8B1E305224008AC1F7 /* UrsusShadowBackdrop.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UrsusShadowBackdrop.swift; sourceTree = "<group>"; };
 		7B679B4B1E21730800649FD6 /* CoreLocation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreLocation.framework; path = System/Library/Frameworks/CoreLocation.framework; sourceTree = SDKROOT; };
 		7B679B4F1E22AD3B00649FD6 /* SettingsViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SettingsViewController.swift; sourceTree = "<group>"; };
-		7B679B511E22C7F500649FD6 /* ArtistsButton.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ArtistsButton.swift; sourceTree = "<group>"; };
+		7B679B511E22C7F500649FD6 /* ArtistsButton.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ArtistsButton.swift; path = Buttons/ArtistsButton.swift; sourceTree = "<group>"; };
 		7B71CCC11DD7A87200DAE910 /* NewReleasesViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NewReleasesViewController.swift; sourceTree = "<group>"; };
 		7B71CCC31DD7C0D700DAE910 /* ArtistSearchBar.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ArtistSearchBar.swift; sourceTree = "<group>"; };
-		7B740F151DD8D9AA0085F5C8 /* UrsusButton.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UrsusButton.swift; sourceTree = "<group>"; };
-		7B7999191E1DE092003E2F28 /* SearchButton.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SearchButton.swift; sourceTree = "<group>"; };
+		7B740F151DD8D9AA0085F5C8 /* UrsusButton.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = UrsusButton.swift; path = Buttons/UrsusButton.swift; sourceTree = "<group>"; };
+		7B7999191E1DE092003E2F28 /* SearchButton.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = SearchButton.swift; path = Buttons/SearchButton.swift; sourceTree = "<group>"; };
 		7B79991B1E1F3C21003E2F28 /* ArtistSearchViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ArtistSearchViewController.swift; sourceTree = "<group>"; };
 		7B7B88B51E0DD81E0012B8A3 /* Telekinesis.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Telekinesis.framework; path = Frameworks/Telekinesis.framework; sourceTree = "<group>"; };
 		7B8200EC1CDABE9200A99C68 /* Artist.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Artist.swift; sourceTree = "<group>"; };
-		7B8DC4041E31A16D00EBEED0 /* SettingsCollectionViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SettingsCollectionViewCell.swift; sourceTree = "<group>"; };
-		7BB3D5E91DEBDBEB002367C3 /* BackButton.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BackButton.swift; sourceTree = "<group>"; };
+		7B8DC4041E31A16D00EBEED0 /* SettingsCollectionViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = SettingsCollectionViewCell.swift; path = "Collection View Components/SettingsCollectionViewCell.swift"; sourceTree = "<group>"; };
+		7BB3D5E91DEBDBEB002367C3 /* BackButton.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = BackButton.swift; path = Buttons/BackButton.swift; sourceTree = "<group>"; };
 		7BBB6D6E1E2AC2A700C2F466 /* UrsusCountIndicator.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UrsusCountIndicator.swift; sourceTree = "<group>"; };
 		7BC8DE241DED285B0004A7F9 /* RoundedTextField.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RoundedTextField.swift; sourceTree = "<group>"; };
 		7BD89A161E2D74EC00FAF502 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
@@ -189,12 +197,43 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		7B1912AF1E32F5490027B1D1 /* Buttons */ = {
+			isa = PBXGroup;
+			children = (
+				7B679B511E22C7F500649FD6 /* ArtistsButton.swift */,
+				7BB3D5E91DEBDBEB002367C3 /* BackButton.swift */,
+				7B1912AB1E32DC290027B1D1 /* CheckmarkButton.swift */,
+				7B1912B01E32F6100027B1D1 /* DisplayBrightnessMaxButton.swift */,
+				7B1912AD1E32F4FC0027B1D1 /* DisplayBrightnessMinButton.swift */,
+				7B1E33B31E29DEAB00D5F37B /* DownButton.swift */,
+				7B7999191E1DE092003E2F28 /* SearchButton.swift */,
+				7B5609741E1CA5BB0054CB40 /* SettingsButton.swift */,
+				7B740F151DD8D9AA0085F5C8 /* UrsusButton.swift */,
+			);
+			name = Buttons;
+			sourceTree = "<group>";
+		};
 		7B22577F1DDE746700F81E12 /* Extensions */ = {
 			isa = PBXGroup;
 			children = (
 				7B2257801DDE74A900F81E12 /* UIImageColors.swift */,
 			);
 			name = Extensions;
+			sourceTree = "<group>";
+		};
+		7B2839E61E330B2900B217D6 /* Collection View Components */ = {
+			isa = PBXGroup;
+			children = (
+				7B1FF6FC1E271ADE004F496E /* ArtistCollectionViewCell.swift */,
+				7B2839E71E330B8900B217D6 /* DisplayBrightnessThresholdCollectionViewCell.swift */,
+				7B1F26C31E259A82001876E7 /* FooterCollectionReusableView.swift */,
+				7B1E33AF1E298A5E00D5F37B /* HeaderCollectionReusableView.swift */,
+				7B179DB31E107E82000F0DED /* ReleaseCollectionViewCell.swift */,
+				7B8DC4041E31A16D00EBEED0 /* SettingsCollectionViewCell.swift */,
+				7B121F7F1E2C3AAA004458DC /* ThemeModeCollectionViewCell.swift */,
+				7B1E33B51E29EAAD00D5F37B /* UrsusCollectionViewCell.swift */,
+			);
+			name = "Collection View Components";
 			sourceTree = "<group>";
 		};
 		7B320FAD1E2EEE7500189B21 /* Transition Controllers */ = {
@@ -210,11 +249,11 @@
 			isa = PBXGroup;
 			children = (
 				7BD653781DE2B0860069E46E /* Frameworks */,
+				7BBE54AE4B31BDEDC871CDDD /* Pods */,
 				7B3B99661CC4437E00900838 /* Products */,
 				7B3B99671CC4437E00900838 /* Ursus */,
 				7B3B997C1CC4437E00900838 /* UrsusTests */,
 				7B3B99871CC4437E00900838 /* UrsusUITests */,
-				7BBE54AE4B31BDEDC871CDDD /* Pods */,
 			);
 			sourceTree = "<group>";
 		};
@@ -269,7 +308,6 @@
 		7B442A261DDABB3C00F52AB0 /* Controller Components */ = {
 			isa = PBXGroup;
 			children = (
-				7B320FAD1E2EEE7500189B21 /* Transition Controllers */,
 				7B15CB4E1DDBDFC200CE48C1 /* ArtistSearchResultsViewController.swift */,
 				7B79991B1E1F3C21003E2F28 /* ArtistSearchViewController.swift */,
 				7B1E33B71E29EE8100D5F37B /* ArtistsViewController.swift */,
@@ -277,6 +315,7 @@
 				7B71CCC11DD7A87200DAE910 /* NewReleasesViewController.swift */,
 				7B1E33B11E29976F00D5F37B /* ReleaseViewController.swift */,
 				7B679B4F1E22AD3B00649FD6 /* SettingsViewController.swift */,
+				7B320FAD1E2EEE7500189B21 /* Transition Controllers */,
 				7BEB34BE1DF0679800888FF1 /* UrsusStoryboardSegue.swift */,
 				7BEB34BC1DF061E300888FF1 /* UrsusViewController.swift */,
 			);
@@ -287,26 +326,15 @@
 			isa = PBXGroup;
 			children = (
 				7B1FF6FA1E271A12004F496E /* ArtistArtView.swift */,
-				7B1FF6FC1E271ADE004F496E /* ArtistCollectionViewCell.swift */,
-				7B679B511E22C7F500649FD6 /* ArtistsButton.swift */,
 				7B71CCC31DD7C0D700DAE910 /* ArtistSearchBar.swift */,
-				7BB3D5E91DEBDBEB002367C3 /* BackButton.swift */,
-				7B1E33B31E29DEAB00D5F37B /* DownButton.swift */,
-				7B1F26C31E259A82001876E7 /* FooterCollectionReusableView.swift */,
+				7B1912AF1E32F5490027B1D1 /* Buttons */,
+				7B2839E61E330B2900B217D6 /* Collection View Components */,
 				7B188E961DDD2F1400C78AE7 /* FrostedBackdrop.swift */,
-				7B1E33AF1E298A5E00D5F37B /* HeaderCollectionReusableView.swift */,
 				7B179DB51E11A113000F0DED /* ReleaseArtView.swift */,
-				7B179DB31E107E82000F0DED /* ReleaseCollectionViewCell.swift */,
 				7BC8DE241DED285B0004A7F9 /* RoundedTextField.swift */,
 				7B53182E1E13518B004FDFC7 /* ScrollFadeView.swift */,
-				7B7999191E1DE092003E2F28 /* SearchButton.swift */,
-				7B5609741E1CA5BB0054CB40 /* SettingsButton.swift */,
-				7B8DC4041E31A16D00EBEED0 /* SettingsCollectionViewCell.swift */,
 				7B150E831DDFDF0800965D2A /* StyleKit.swift */,
-				7B121F7F1E2C3AAA004458DC /* ThemeModeCollectionViewCell.swift */,
 				7B5FCE891E304A4B008AC1F7 /* UrsusBlurView.swift */,
-				7B740F151DD8D9AA0085F5C8 /* UrsusButton.swift */,
-				7B1E33B51E29EAAD00D5F37B /* UrsusCollectionViewCell.swift */,
 				7BBB6D6E1E2AC2A700C2F466 /* UrsusCountIndicator.swift */,
 				7B5FCE8B1E305224008AC1F7 /* UrsusShadowBackdrop.swift */,
 			);
@@ -316,8 +344,8 @@
 		7B8200EB1CDABE7700A99C68 /* Model Components */ = {
 			isa = PBXGroup;
 			children = (
-				7B179DB11E104CBA000F0DED /* Release.swift */,
 				7B8200EC1CDABE9200A99C68 /* Artist.swift */,
+				7B179DB11E104CBA000F0DED /* Release.swift */,
 			);
 			path = "Model Components";
 			sourceTree = "<group>";
@@ -663,7 +691,9 @@
 				7B15CB4F1DDBDFC200CE48C1 /* ArtistSearchResultsViewController.swift in Sources */,
 				7B5FCE881E301866008AC1F7 /* RevealBehindAnimatedTransitionController.swift in Sources */,
 				7B8200ED1CDABE9200A99C68 /* Artist.swift in Sources */,
+				7B2839E81E330B8900B217D6 /* DisplayBrightnessThresholdCollectionViewCell.swift in Sources */,
 				7B79991C1E1F3C21003E2F28 /* ArtistSearchViewController.swift in Sources */,
+				7B1912AE1E32F4FC0027B1D1 /* DisplayBrightnessMinButton.swift in Sources */,
 				7B179DB21E104CBA000F0DED /* Release.swift in Sources */,
 				7B53182F1E13518B004FDFC7 /* ScrollFadeView.swift in Sources */,
 				7B740F161DD8D9AA0085F5C8 /* UrsusButton.swift in Sources */,
@@ -682,8 +712,10 @@
 				7BBB6D6F1E2AC2A700C2F466 /* UrsusCountIndicator.swift in Sources */,
 				7B5FCE8A1E304A4B008AC1F7 /* UrsusBlurView.swift in Sources */,
 				7B8DC4051E31A16D00EBEED0 /* SettingsCollectionViewCell.swift in Sources */,
+				7B1912B11E32F6100027B1D1 /* DisplayBrightnessMaxButton.swift in Sources */,
 				7B179DB41E107E82000F0DED /* ReleaseCollectionViewCell.swift in Sources */,
 				7B1FF6FD1E271ADE004F496E /* ArtistCollectionViewCell.swift in Sources */,
+				7B1912AC1E32DC290027B1D1 /* CheckmarkButton.swift in Sources */,
 				7B71CCC41DD7C0D700DAE910 /* ArtistSearchBar.swift in Sources */,
 				7B679B521E22C7F500649FD6 /* ArtistsButton.swift in Sources */,
 				7B71CCC21DD7A87200DAE910 /* NewReleasesViewController.swift in Sources */,

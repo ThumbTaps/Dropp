@@ -51,7 +51,7 @@ class UrsusButton: UIButton {
 		self.setNeedsDisplay()
 	}
 	func themeDidChange() {
-		if PreferenceManager.shared.themeMode == .dark {
+		if PreferenceManager.shared.theme == .dark {
 			self.tintColor = StyleKit.darkTintColor
 		} else {
 			self.tintColor = StyleKit.lightTintColor

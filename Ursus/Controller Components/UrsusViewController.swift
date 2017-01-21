@@ -41,7 +41,7 @@ class UrsusViewController: UIViewController {
             
             self.setNeedsStatusBarAppearanceUpdate()
             
-            if PreferenceManager.shared.themeMode == .dark {
+            if PreferenceManager.shared.theme == .dark {
                 self.view.tintColor = StyleKit.darkTintColor
                 self.topScrollFadeView?.tintColor = StyleKit.darkBackdropOverlayColor
                 self.bottomScrollFadeView?.tintColor = StyleKit.darkBackdropOverlayColor
@@ -117,7 +117,7 @@ class UrsusViewController: UIViewController {
 	
 	override var preferredStatusBarStyle: UIStatusBarStyle {
 		get {
-			if PreferenceManager.shared.themeMode == .dark {
+			if PreferenceManager.shared.theme == .dark {
 				return .lightContent
 			} else {
 				return .default
@@ -135,7 +135,7 @@ class UrsusViewController: UIViewController {
 			
 			self.setNeedsStatusBarAppearanceUpdate()
 			
-			if PreferenceManager.shared.themeMode == .dark {
+			if PreferenceManager.shared.theme == .dark {
 				self.view.tintColor = StyleKit.darkTintColor
 				self.topScrollFadeView?.tintColor = StyleKit.darkBackdropOverlayColor
 				self.bottomScrollFadeView?.tintColor = StyleKit.darkBackdropOverlayColor

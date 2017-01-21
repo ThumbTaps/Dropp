@@ -50,13 +50,13 @@ class NewReleasesViewController: UrsusViewController, UICollectionViewDataSource
 	override func viewWillAppear(_ animated: Bool) {
 		super.viewWillAppear(animated)
 		
-		if PreferenceManager.shared.followingArtists.isEmpty {
+		if PreferenceManager.shared.newReleases.isEmpty {
 			self.bottomScrollFadeView?.alpha = 0.5
 		}
 		
 		DispatchQueue.main.async {
 			
-			if PreferenceManager.shared.themeMode == .dark {
+			if PreferenceManager.shared.theme == .dark {
 				self.collectionView?.indicatorStyle = .white
 			} else {
 				self.collectionView?.indicatorStyle = .black
@@ -72,8 +72,8 @@ class NewReleasesViewController: UrsusViewController, UICollectionViewDataSource
 			
 			DispatchQueue.main.async {
 				
-				self.backdrop?.overlay.removeConstraints([self.settingsButtonHidingConstraint, self.searchButtonHidingConstraint])
-				self.backdrop?.overlay.addConstraints([self.settingsButtonShowingConstraint, self.searchButtonShowingConstraint])
+				self.backdrop?.overlay.removeConstraints([self.settingsButtonHidingConstraint, self.searchButtonHidingConstraint, self.artistsButtonShowingConstraint])
+				self.backdrop?.overlay.addConstraints([self.settingsButtonShowingConstraint, self.searchButtonShowingConstraint, self.artistsButtonHidingConstraint])
 				self.searchButton?.removeConstraint(self.searchButtonRestingSizeConstraint)
 				self.searchButton?.addConstraint(self.searchButtonFocusedSizeConstraint)
 			}
@@ -136,7 +136,7 @@ class NewReleasesViewController: UrsusViewController, UICollectionViewDataSource
 		
 		DispatchQueue.main.async {
 			
-			if PreferenceManager.shared.themeMode == .dark {
+			if PreferenceManager.shared.theme == .dark {
 				self.collectionView?.indicatorStyle = .white
 			} else {
 				self.collectionView?.indicatorStyle = .black
@@ -211,7 +211,7 @@ class NewReleasesViewController: UrsusViewController, UICollectionViewDataSource
 			(segue.destination as! ReleaseViewController).currentRelease = PreferenceManager.shared.newReleases[(self.collectionView?.indexPathsForSelectedItems?[0].row)!]
 			
 			// adjust colors
-			if PreferenceManager.shared.themeMode == .dark {
+			if PreferenceManager.shared.theme == .dark {
 				segue.destination.view.tintColor = StyleKit.darkBackgroundColor
 			} else {
 				segue.destination.view.tintColor = StyleKit.lightBackgroundColor

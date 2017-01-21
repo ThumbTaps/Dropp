@@ -30,7 +30,7 @@ class ArtistArtView: UIView {
 	
 	override func draw(_ rect: CGRect) {
 		
-		if PreferenceManager.shared.themeMode == .dark {
+		if PreferenceManager.shared.theme == .dark {
 			StyleKit.drawDarkPlaceholderArtistArtwork(frame: rect, resizing: .aspectFit)
 			self.layer.borderColor = StyleKit.darkStrokeColor.cgColor
 		} else {

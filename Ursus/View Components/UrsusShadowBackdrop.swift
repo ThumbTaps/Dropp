@@ -55,7 +55,7 @@ class UrsusShadowBackdrop: UIView {
 		self.layer.shadowRadius = self.radius
 		self.layer.borderWidth = 1
 		
-		if PreferenceManager.shared.themeMode == .dark {
+		if PreferenceManager.shared.theme == .dark {
 			self.layer.borderColor = StyleKit.darkStrokeColor.cgColor
 			self.layer.shadowOpacity = 0.75
 		} else {

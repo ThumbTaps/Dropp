@@ -29,6 +29,8 @@ class HeaderCollectionReusableView: UICollectionReusableView {
 			
 			self.themeDidChange()
 			Notification.Name.UrsusThemeDidChange.add(self, selector: #selector(self.themeDidChange))
+		} else {
+			self.tintColorDidChange()
 		}
 	}
 	required init?(coder aDecoder: NSCoder) {
@@ -38,11 +40,13 @@ class HeaderCollectionReusableView: UICollectionReusableView {
 			
 			self.themeDidChange()
 			Notification.Name.UrsusThemeDidChange.add(self, selector: #selector(self.themeDidChange))
+		} else {
+			self.tintColorDidChange()
 		}
 	}
 	func themeDidChange() {
 		
-		if PreferenceManager.shared.themeMode == .dark {
+		if PreferenceManager.shared.theme == .dark {
 			self.tintColor = StyleKit.darkBackdropOverlayColor
 		} else {
 			self.tintColor = StyleKit.lightBackdropOverlayColor
@@ -51,14 +55,17 @@ class HeaderCollectionReusableView: UICollectionReusableView {
 	override func tintColorDidChange() {
 		super.tintColorDidChange()
 		
-		if self.tintColor.isDarkColor {
+		DispatchQueue.main.async {
 			
-			self.textLabel?.textColor = StyleKit.darkSecondaryTextColor
-		} else {
-			
-			self.textLabel?.textColor = StyleKit.lightSecondaryTextColor
+			if self.tintColor.isDarkColor {
+				
+				self.textLabel?.textColor = StyleKit.darkTertiaryTextColor
+			} else {
+				
+				self.textLabel?.textColor = StyleKit.lightTertiaryTextColor
+			}
+			self.setNeedsDisplay()
 		}
-		self.setNeedsDisplay()
 	}
 	override func draw(_ rect: CGRect) {
 		
@@ -73,7 +80,7 @@ class HeaderCollectionReusableView: UICollectionReusableView {
 			StyleKit.lightStrokeColor.set()
 		}
 		
-		self.layer.backgroundColor = self.tintColor.cgColor
+		self.layer.backgroundColor = UIColor.clear.cgColor
 		
 		path.stroke()
 		

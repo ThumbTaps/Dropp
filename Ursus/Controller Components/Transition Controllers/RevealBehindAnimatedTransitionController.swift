@@ -17,7 +17,7 @@ class RevealBehindAnimatedTransitionController: NSObject, UIViewControllerAnimat
 		Notification.Name.UrsusThemeDidChange.add(self, selector: #selector(self.themeDidChange))
 	}
 	func themeDidChange() {
-		if PreferenceManager.shared.themeMode == .dark {
+		if PreferenceManager.shared.theme == .dark {
 		} else {
 		}
 	}
@@ -54,7 +54,7 @@ class RevealBehindAnimatedTransitionController: NSObject, UIViewControllerAnimat
 				
 				source.view.transform = CGAffineTransform(scaleX: 0.96, y: 0.96)
 				shadowView.transform = CGAffineTransform(scaleX: 0.96, y: 0.96)
-				darkeningOverlay.alpha = 0.075
+				darkeningOverlay.alpha = 0.05
 			}, completion: { (completed) in
 				
 				UIView.animate(withDuration: duration * 0.8, delay: 0, usingSpringWithDamping: 0.8, initialSpringVelocity: 0.8, options: .curveEaseInOut, animations: {

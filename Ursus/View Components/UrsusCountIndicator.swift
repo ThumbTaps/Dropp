@@ -13,7 +13,7 @@ class UrsusCountIndicator: UrsusButton {
 	override func themeDidChange() {
 		super.themeDidChange()
 		
-		if PreferenceManager.shared.themeMode == .dark {
+		if PreferenceManager.shared.theme == .dark {
 			self.tintColor = StyleKit.darkTertiaryTextColor
 		} else {
 			self.tintColor = StyleKit.lightTertiaryTextColor

@@ -14,14 +14,14 @@ class ReleaseViewController: UrsusViewController {
 	@IBOutlet weak var releaseTitleLabel: UILabel!
 	
 	var currentRelease: Release!
-	var themeMode: ThemeMode?
+	var theme: Theme?
 	
     override func viewDidLoad() {
         super.viewDidLoad()
 
         // Do any additional setup after loading the view.
-		if self.themeMode == nil {
-			self.themeMode = PreferenceManager.shared.themeMode
+		if self.theme == nil {
+			self.theme = PreferenceManager.shared.theme
 		} else {
 			// stop monitoring theme (forced by source view controller)
 			Notification.Name.UrsusThemeDidChange.remove(self)
@@ -68,7 +68,7 @@ class ReleaseViewController: UrsusViewController {
 	
 	override var preferredStatusBarStyle: UIStatusBarStyle {
 		get {
-			if self.themeMode == .dark {
+			if self.theme == .dark {
 				return .lightContent
 			} else {
 				return .default

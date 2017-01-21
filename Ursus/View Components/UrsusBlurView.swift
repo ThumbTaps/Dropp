@@ -31,7 +31,7 @@ class UrsusBlurView: UIVisualEffectView {
 	
 	func themeDidChange() {
 		
-		if PreferenceManager.shared.themeMode == .dark {
+		if PreferenceManager.shared.theme == .dark {
 			self.effect = UIBlurEffect(style: .dark)
 		} else {
 			self.effect = UIBlurEffect(style: .light)

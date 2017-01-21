@@ -109,7 +109,7 @@ class ArtistSearchViewController: UrsusViewController, ArtistSearchBarDelegate, 
 			self.view.removeConstraint(self.searchBarCenteredConstraint)
 			self.view.addConstraint(self.searchBarHidingConstraint)
 			
-			UIView.animate(withDuration: 0.35, delay: 0, options: .curveEaseOut, animations: {
+			UIView.animate(withDuration: 0.3, delay: 0, options: .curveEaseOut, animations: {
 				self.view.layoutIfNeeded()
 			}, completion: { (completed) in
 				completion?()

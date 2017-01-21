@@ -15,41 +15,41 @@ class ThemeModeCollectionViewCell: UrsusCollectionViewCell, UIGestureRecognizerD
 	@IBOutlet weak var lightOption: SettingsThemeModeOption!
 	@IBOutlet weak var darkOption: SettingsThemeModeOption!
 	
+	var delegate: ThemeModeCollectionViewCellDelegate?
+	
 	var tapGestureRecognizer: UITapGestureRecognizer!
 	
 	override func awakeFromNib() {
 		super.awakeFromNib()
 
-		self.lightOption?.themeMode = .light
-		self.darkOption?.themeMode = .dark
+		self.lightOption?.theme = .light
+		self.darkOption?.theme = .dark
 		
 		self.tapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(self.tapRecognized))
 		self.addGestureRecognizer(self.tapGestureRecognizer)
-		self.tapGestureRecognizer.delegate = self
-		self.tapGestureRecognizer.numberOfTapsRequired = 1
-		self.tapGestureRecognizer.numberOfTouchesRequired = 1
 	}
 	
 	func tapRecognized() {
 		let feedbackGenerator = UIImpactFeedbackGenerator(style: .medium)
+		
+		var selectedThemeMode: Theme?
 		if self.autoOption.frame.contains(self.tapGestureRecognizer.location(in: self)) {
 			self.autoOption.selected = true
 			self.lightOption.selected = false
 			self.darkOption.selected = false
-			PreferenceManager.shared.autoThemeMode = true
 		} else if self.lightOption.frame.contains(self.tapGestureRecognizer.location(in: self)) {
 			self.autoOption.selected = false
 			self.lightOption.selected = true
 			self.darkOption.selected = false
-			PreferenceManager.shared.autoThemeMode = false
-			PreferenceManager.shared.themeMode = .light
+			selectedThemeMode = .light
 		} else if self.darkOption.frame.contains(self.tapGestureRecognizer.location(in: self)) {
 			self.autoOption.selected = false
 			self.lightOption.selected = false
 			self.darkOption.selected = true
-			PreferenceManager.shared.autoThemeMode = false
-			PreferenceManager.shared.themeMode = .dark
+			selectedThemeMode = .dark
 		}
+		
+		self.delegate?.didSelectTheme(theme: selectedThemeMode)
 		
 		feedbackGenerator.impactOccurred()
 	}
@@ -64,10 +64,15 @@ class ThemeModeCollectionViewCell: UrsusCollectionViewCell, UIGestureRecognizerD
 }
 
 
+protocol ThemeModeCollectionViewCellDelegate {
+	func didSelectTheme(theme: Theme?)
+}
+
+
 @IBDesignable
 class SettingsThemeModeOption: UIView {
 	
-	var themeMode: ThemeMode?
+	var theme: Theme?
 	
 	@IBOutlet weak var label: UILabel!
 	@IBOutlet weak var selectedOverlay: UIView!
@@ -91,41 +96,44 @@ class SettingsThemeModeOption: UIView {
 		super.init(frame: frame)
 		
 		Notification.Name.UrsusThemeDidChange.add(self, selector: #selector(self.themeDidChange))
-		self.themeModeDeterminerDidChange()
-		Notification.Name.UrsusThemeModeDeterminerDidChange.add(self, selector: #selector(self.themeModeDeterminerDidChange))
+		self.themeDeterminerDidChange()
+		Notification.Name.UrsusThemeDeterminerDidChange.add(self, selector: #selector(self.themeDeterminerDidChange))
 	}
 	required init?(coder aDecoder: NSCoder) {
 		super.init(coder: aDecoder)
 		
 		Notification.Name.UrsusThemeDidChange.add(self, selector: #selector(self.themeDidChange))
-		self.themeModeDeterminerDidChange()
-		Notification.Name.UrsusThemeModeDeterminerDidChange.add(self, selector: #selector(self.themeModeDeterminerDidChange))
+		self.themeDeterminerDidChange()
+		Notification.Name.UrsusThemeDeterminerDidChange.add(self, selector: #selector(self.themeDeterminerDidChange))
 	}
 	
-	func themeModeDeterminerDidChange() {
+	func themeDeterminerDidChange() {
 		
-		if PreferenceManager.shared.themeModeDeterminer == .displayBrightness {
+		if PreferenceManager.shared.themeDeterminer == .displayBrightness {
 			// start monitoring brightness
 			Notification.Name.UIScreenBrightnessDidChange.add(self, selector: #selector(self.themeDidChange))
-		} else if PreferenceManager.shared.themeModeDeterminer == .twilight {
+		} else if PreferenceManager.shared.themeDeterminer == .twilight {
 			// TODO: Set trigger for sunset or sunrise time?
 		}
 	}
 	func themeDidChange() {
 		
-		if self.themeMode == .dark {
-			self.label.backgroundColor = StyleKit.darkBackdropOverlayColor
-			self.label.textColor = StyleKit.darkPrimaryTextColor
-		} else if self.themeMode == .light {
-			self.label.backgroundColor = StyleKit.lightBackdropOverlayColor
-			self.label.textColor = StyleKit.lightPrimaryTextColor
-		} else {
-			if PreferenceManager.shared.determineThemeMode() == .dark {
+		DispatchQueue.main.async {
+			
+			if self.theme == .dark {
 				self.label.backgroundColor = StyleKit.darkBackdropOverlayColor
 				self.label.textColor = StyleKit.darkPrimaryTextColor
-			} else {
+			} else if self.theme == .light {
 				self.label.backgroundColor = StyleKit.lightBackdropOverlayColor
 				self.label.textColor = StyleKit.lightPrimaryTextColor
+			} else {
+				if PreferenceManager.shared.determineThemeMode() == .dark {
+					self.label.backgroundColor = StyleKit.darkBackdropOverlayColor
+					self.label.textColor = StyleKit.darkPrimaryTextColor
+				} else {
+					self.label.backgroundColor = StyleKit.lightBackdropOverlayColor
+					self.label.textColor = StyleKit.lightPrimaryTextColor
+				}
 			}
 		}
 
@@ -135,11 +143,15 @@ class SettingsThemeModeOption: UIView {
 		super.awakeFromNib()
 		
 		if self.selected {
-			self.selectedOverlay.transform = CGAffineTransform(scaleX: 1, y: 1)
-			self.selectedOverlay.alpha = 1
+			UIView.animate(withDuration: 0.5, delay: 0, usingSpringWithDamping: 0.6, initialSpringVelocity: 0.8, options: .curveEaseOut, animations: {
+				self.selectedOverlay.transform = CGAffineTransform(scaleX: 1, y: 1)
+				self.selectedOverlay.alpha = 1
+			})
 		} else {
-			self.selectedOverlay.transform = CGAffineTransform(scaleX: 1.4, y: 1.4)
-			self.selectedOverlay.alpha = 0
+			UIView.animate(withDuration: 0.25, delay: 0, options: .curveEaseOut, animations: {
+				self.selectedOverlay.transform = CGAffineTransform(scaleX: 1.4, y: 1.4)
+				self.selectedOverlay.alpha = 0
+			})
 		}
 		
 		self.themeDidChange()
@@ -154,11 +166,11 @@ class SettingsThemeModeOption: UIView {
 		self.layer.cornerRadius = rect.height / 15
 		self.layer.borderWidth = 1
 		
-		if self.themeMode == .dark {
+		if self.theme == .dark {
 			StyleKit.drawDarkBackdrop(frame: rect, resizing: .aspectFit)
 			self.layer.backgroundColor = StyleKit.darkBackgroundColor.cgColor
 			self.layer.borderColor = StyleKit.darkStrokeColor.cgColor
-		} else if self.themeMode == .light {
+		} else if self.theme == .light {
 			StyleKit.drawLightBackdrop(frame: rect, resizing: .aspectFit)
 			self.layer.backgroundColor = StyleKit.lightBackgroundColor.cgColor
 			self.layer.borderColor = StyleKit.lightStrokeColor.cgColor
@@ -198,7 +210,7 @@ class SettingsThemeModeOptionSelectedOverlay: UIView {
 	}
 	
 	func themeDidChange() {
-		if PreferenceManager.shared.themeMode == .dark {
+		if PreferenceManager.shared.theme == .dark {
 			self.tintColor = StyleKit.darkBackdropOverlayColor
 		} else {
 			self.tintColor = StyleKit.lightBackdropOverlayColor

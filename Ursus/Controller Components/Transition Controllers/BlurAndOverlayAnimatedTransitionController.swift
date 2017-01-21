@@ -43,7 +43,7 @@ class BlurAndOverlayAnimatedTransitionController: NSObject, UIViewControllerAnim
 			
 		else {
 			self.blurView = UrsusBlurView(frame: destination.view.bounds)
-			if PreferenceManager.shared.themeMode == .dark {
+			if PreferenceManager.shared.theme == .dark {
 				self.blurView?.effect = UIBlurEffect(style: .dark)
 			} else {
 				self.blurView?.effect = UIBlurEffect(style: .light)

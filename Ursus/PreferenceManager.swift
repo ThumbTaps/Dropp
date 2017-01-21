@@ -9,6 +9,9 @@
 import UIKit
 
 enum ThemeMode: Int {
+	case manual = 0, auto = 1
+}
+enum Theme: Int {
 	case light = 0, dark = 1
 }
 enum ThemeModeDeterminer: Int {
@@ -27,16 +30,27 @@ extension Notification.Name {
 	}
 
 	static let UrsusThemeDidChange = Notification.Name(rawValue: "UrsusThemeDidChange")
-	static let UrsusThemeModeDeterminerDidChange = Notification.Name(rawValue: "UrsusThemeModeDeterminerDidChange")
+	static let UrsusThemeDeterminerDidChange = Notification.Name(rawValue: "UrsusThemeDeterminerDidChange")
 }
 
 class PreferenceManager: NSObject {
 	
 	static let shared = PreferenceManager()
 	
+	private let firstLaunchKey = "firstLaunch"
+	private let followingArtistsKey = "followingArtists"
+	private let themeModeKey = "themeMode"
+	private let themeKey = "themeKey"
+	private let themeDeterminerKey = "themeDeterminer"
+	private let themeBrightnessThresholdKey = "themeBrightnessThreshold"
+	private let sunriseTimeKey = "sunriseTime"
+	private let sunsetTimeKey = "sunsetTime"
+	private let ignoreSinglesKey = "ignoreSingles"
+	private let ignoreEPsKey = "ignoreEPs"
+	
 	var firstLaunch = true {
 		didSet {
-			UserDefaults.standard.set(self.firstLaunch, forKey: "firstLaunch")
+			UserDefaults.standard.set(self.firstLaunch, forKey: self.firstLaunchKey)
 			UserDefaults.standard.synchronize()
 		}
 	}
@@ -58,7 +72,7 @@ class PreferenceManager: NSObject {
 	}
 	func saveFollowingArtists() {
 		let encodedFollowingArtists = NSKeyedArchiver.archivedData(withRootObject: self.followingArtists)
-		UserDefaults.standard.set(encodedFollowingArtists, forKey: "followingArtists")
+		UserDefaults.standard.set(encodedFollowingArtists, forKey: self.followingArtistsKey)
 		UserDefaults.standard.synchronize()
 	}
 	
@@ -139,46 +153,36 @@ class PreferenceManager: NSObject {
 	
 	
 	
-	private var _autoThemeMode = true
-	var autoThemeMode: Bool {
-		set {
+	var themeMode: ThemeMode = .manual {
+		didSet {
 
-			self._autoThemeMode = newValue
-			if self._autoThemeMode {
-				self.themeMode = self.determineThemeMode()
+			if self.themeMode == .auto {
+				self.theme = self.determineThemeMode()
 			}
-			UserDefaults.standard.set(self._autoThemeMode, forKey: "autoThemeMode")
-			UserDefaults.standard.synchronize()
-		}
-		get {
-			return self._autoThemeMode
+			if self.themeMode != oldValue {
+				
+				UserDefaults.standard.set(self.themeMode.rawValue, forKey: self.themeModeKey)
+			}
 		}
 	}
-	private var _themeMode: ThemeMode = .light
-	var themeMode: ThemeMode {
-		set {
+	var theme: Theme = .light {
+		didSet {
 			
-			let shouldTriggerChange = self._themeMode != newValue
-			self._themeMode = newValue
-			if shouldTriggerChange {
+			if self.theme != oldValue {
 				Notification.Name.UrsusThemeDidChange.post()
+				UserDefaults.standard.set(self.theme.rawValue, forKey: self.themeKey)
 			}
-			UserDefaults.standard.set(self._themeMode.rawValue, forKey: "themeMode")
-			UserDefaults.standard.synchronize()
-		}
-		get {
-			return self._themeMode
 		}
 	}
-	private var _themeModeDeterminer: ThemeModeDeterminer = .displayBrightness
-	var themeModeDeterminer: ThemeModeDeterminer {
-		set {
+	var themeDeterminer: ThemeModeDeterminer = .displayBrightness {
+		didSet {
 			
 			// stop observing display brightness
 			Notification.Name.UIScreenBrightnessDidChange.remove(self)
 			
-			switch newValue {
+			switch self.themeDeterminer {
 			case .twilight:
+				// start monitoring time here
 				break
 				
 			case .displayBrightness:
@@ -189,54 +193,59 @@ class PreferenceManager: NSObject {
 			case .ambientLight:
 				break
 			}
-
-			self._themeModeDeterminer = newValue
-			Notification.Name.UrsusThemeModeDeterminerDidChange.post()
-			UserDefaults.standard.set(self._themeModeDeterminer.rawValue, forKey: "themeModeDeterminer")
-			UserDefaults.standard.synchronize()
-			self.themeMode = self.determineThemeMode()
-		}
-		get {
-			return self._themeModeDeterminer
+			
+			if self.themeDeterminer != oldValue {
+				
+				Notification.Name.UrsusThemeDeterminerDidChange.post()
+				UserDefaults.standard.set(self.themeDeterminer.rawValue, forKey: self.themeDeterminerKey)
+				self.theme = self.determineThemeMode()
+			}
 		}
 	}
 	
-	func determineThemeMode() -> ThemeMode {
-		switch self.themeModeDeterminer {
+	func determineThemeMode() -> Theme {
+		switch self.themeDeterminer {
 			
 		case .ambientLight:
-			return self.themeModeBasedOnAmbientLight()
+			return self.themeBasedOnAmbientLight()
 			
 		case .displayBrightness:
-			return self.themeModeBasedOnDisplayBrightness()
+			return self.themeBasedOnDisplayBrightness()
 			
 		case .twilight:
-			return self.themeModeBasedOnTwilight()
+			return self.themeBasedOnTwilight()
 		}
 	}
 	
-	func themeModeBasedOnAmbientLight() -> ThemeMode {
+	func themeBasedOnAmbientLight() -> Theme {
 		return .light
 	}
 	
-	func themeModeBasedOnDisplayBrightness() -> ThemeMode {
+	func themeBasedOnDisplayBrightness() -> Theme {
 		
-		var themeMode: ThemeMode = .light
-		let brightness = UIScreen.main.brightness
+		var theme: Theme = .light
+		let brightness = Float(UIScreen.main.brightness)
 		
-		if brightness <= self.themeModeBrightnessThreshold {
-			themeMode = .dark
+		if brightness <= self.themeBrightnessThreshold {
+			theme = .dark
 		}
 		
-		return themeMode
+		return theme
 	}
-	var themeModeBrightnessThreshold: CGFloat = 0.5
+	var themeBrightnessThreshold: Float = 0.5 {
+		didSet {
+			UserDefaults.standard.set(self.themeBrightnessThreshold, forKey: self.themeBrightnessThresholdKey)
+			UserDefaults.standard.synchronize()
+			
+			self.theme = self.determineThemeMode()
+		}
+	}
 	func displayBrightnessDidChange() {
-		self.themeMode = self.determineThemeMode()
+		self.theme = self.determineThemeMode()
 	}
 
-	func themeModeBasedOnTwilight() -> ThemeMode {
-		var themeMode: ThemeMode = .light
+	func themeBasedOnTwilight() -> Theme {
+		var theme: Theme = .light
 		
 		// sunrise and sunset haven't been determined or are outdated
 		if self.sunriseTime == nil || self.sunsetTime == nil {
@@ -244,7 +253,7 @@ class PreferenceManager: NSObject {
 			if !self.determiningTwilightTimes {
 				
 				self.determiningTwilightTimes = true
-								
+				
 				RequestManager.shared.getSunriseAndSunset { (sunrise, sunset, error) in
 					
 					if sunrise != nil && sunset != nil && error == nil {
@@ -252,7 +261,7 @@ class PreferenceManager: NSObject {
 						self.sunriseTime = sunrise
 						self.sunsetTime = sunset
 						
-						self.themeMode = self.themeModeBasedOnTwilight()
+						self.theme = self.themeBasedOnTwilight()
 					}
 				}
 			}
@@ -263,7 +272,7 @@ class PreferenceManager: NSObject {
 				
 				self.sunriseTime = nil
 				self.sunsetTime = nil
-				self.themeMode = self.themeModeBasedOnTwilight()
+				self.theme = self.themeBasedOnTwilight()
 				
 			} else {
 				
@@ -273,30 +282,68 @@ class PreferenceManager: NSObject {
 				let now = dateFormatter.date(from: dateFormatter.string(from: Date()))
 
 				if now! < self.sunriseTime! || now! > self.sunsetTime! {
-					themeMode = .dark
+					theme = .dark
 				}
 			}
 			
 		}
 		
-		return themeMode
+		return theme
 	}
-	private var sunriseTime: Date?
-	private var sunsetTime: Date?
+	private var sunriseTime: Date? {
+		didSet {
+			// set trigger
+			if self.sunriseTime != nil {
+				
+				let timer = Timer(fire: self.sunriseTime!, interval: 0, repeats: false) { (timer) in
+					self.theme = self.determineThemeMode()
+				}
+				RunLoop.main.add(timer, forMode: .commonModes)
+				
+			}
+			
+			if self.sunriseTime != oldValue {
+				
+				UserDefaults.standard.set(self.sunriseTime, forKey: self.sunriseTimeKey)
+			}
+		}
+	}
+	private var sunsetTime: Date? {
+		didSet {
+			// set trigger
+			if self.sunriseTime != nil {
+				
+				let timer = Timer(fire: self.sunsetTime!, interval: 0, repeats: false) { (timer) in
+					self.theme = self.determineThemeMode()
+				}
+				RunLoop.main.add(timer, forMode: .commonModes)
+				
+			}
+			
+			if self.sunsetTime != oldValue {
+				
+				UserDefaults.standard.set(self.sunsetTime, forKey: self.sunsetTimeKey)
+			}
+		}
+	}
 	private var determiningTwilightTimes = false
 	
 	var keyboardStyle: UIKeyboardAppearance = .light
 	
 	var ignoreSingles: Bool = true {
 		didSet {
-			UserDefaults.standard.set(self.ignoreSingles, forKey: "ignoreSingles")
-			UserDefaults.standard.synchronize()
+			if self.ignoreSingles != oldValue {
+				
+				UserDefaults.standard.set(self.ignoreSingles, forKey: self.ignoreSinglesKey)
+			}
 		}
 	}
 	var ignoreEPs: Bool = true {
 		didSet {
-			UserDefaults.standard.set(self.ignoreSingles, forKey: "ignoreEPs")
-			UserDefaults.standard.synchronize()
+			if self.ignoreEPs != oldValue {
+				
+				UserDefaults.standard.set(self.ignoreEPs, forKey: self.ignoreEPsKey)
+			}
 		}
 	}
 	
@@ -316,40 +363,48 @@ class PreferenceManager: NSObject {
 	func save(completion: (() -> Void)?=nil) {
 		self.saveFollowingArtists()
 		
-		UserDefaults.standard.set(self.autoThemeMode, forKey: "autoThemeMode")
-		UserDefaults.standard.set(self.themeMode.rawValue, forKey: "themeMode")
-		UserDefaults.standard.set(self._themeModeDeterminer.rawValue, forKey: "themeModeDeterminer")
+		UserDefaults.standard.set(self.firstLaunch, forKey: self.firstLaunchKey)
 		
-		UserDefaults.standard.set(self.ignoreSingles, forKey: "ignoreSingles")
-		UserDefaults.standard.set(self.ignoreEPs, forKey: "ignoreEPs")
+		UserDefaults.standard.set(self.themeMode.rawValue, forKey: self.themeModeKey)
+		UserDefaults.standard.set(self.theme.rawValue, forKey: self.themeKey)
+		UserDefaults.standard.set(self.themeDeterminer.rawValue, forKey: self.themeDeterminerKey)
+		UserDefaults.standard.set(self.themeBrightnessThreshold, forKey: self.themeBrightnessThresholdKey)
+		UserDefaults.standard.set(self.sunriseTime, forKey: self.sunriseTimeKey)
+		UserDefaults.standard.set(self.sunsetTime, forKey: self.sunsetTimeKey)
 		
-		UserDefaults.standard.set(self.firstLaunch, forKey: "firstLaunch")
+		UserDefaults.standard.set(self.ignoreSingles, forKey: self.ignoreSinglesKey)
+		UserDefaults.standard.set(self.ignoreEPs, forKey: self.ignoreEPsKey)
 		
 		UserDefaults.standard.synchronize()
 	}
 	func load(completion: (() -> Void)?=nil) {
-		if let encodedFollowingArtists = UserDefaults.standard.object(forKey: "followingArtists") as? Data {
+		self.firstLaunch = UserDefaults.standard.bool(forKey: self.firstLaunchKey)
+		
+		if let encodedFollowingArtists = UserDefaults.standard.object(forKey: self.followingArtistsKey) as? Data {
 			self.followingArtists = NSKeyedUnarchiver.unarchiveObject(with: encodedFollowingArtists) as! [Artist]
 		}
 		
-		if let themeMode = UserDefaults.standard.value(forKey: "themeMode") as? ThemeMode {
-			self.themeMode = themeMode
-		}
-		self.autoThemeMode = UserDefaults.standard.bool(forKey: "autoThemeMode")
+		self.themeMode = ThemeMode(rawValue: UserDefaults.standard.integer(forKey: self.themeModeKey)) ?? self.themeMode
 		
-		if self.autoThemeMode {
+		if self.themeMode == .auto {
 			
-			if let themeModeDeterminer = UserDefaults.standard.value(forKey: "themeModeDeterminer") as? ThemeModeDeterminer {
-				self.themeModeDeterminer = themeModeDeterminer
-			} else {
-				self.themeModeDeterminer = self._themeModeDeterminer
+			self.themeDeterminer = ThemeModeDeterminer(rawValue: UserDefaults.standard.integer(forKey: self.themeDeterminerKey)) ?? self.themeDeterminer
+			
+			if self.themeDeterminer == .displayBrightness {
+				
+				self.themeBrightnessThreshold = UserDefaults.standard.float(forKey: self.themeBrightnessThresholdKey)
+			} else if self.themeDeterminer == .twilight {
+				
+				self.sunriseTime = UserDefaults.standard.object(forKey: self.sunriseTimeKey) as? Date
+				self.sunsetTime = UserDefaults.standard.object(forKey: self.sunsetTimeKey) as? Date
 			}
+		} else {
+
+			self.theme = Theme(rawValue: UserDefaults.standard.integer(forKey: self.themeKey)) ?? self.theme
 		}
 		
-		self.ignoreSingles = UserDefaults.standard.bool(forKey: "ignoreSingles")
-		self.ignoreEPs = UserDefaults.standard.bool(forKey: "ignoreEPs")
-		
-		self.firstLaunch = UserDefaults.standard.bool(forKey: "firstLaunch")
+		self.ignoreSingles = UserDefaults.standard.bool(forKey: self.ignoreSinglesKey)
+		self.ignoreEPs = UserDefaults.standard.bool(forKey: self.ignoreEPsKey)
 		
 		completion?()
 	}

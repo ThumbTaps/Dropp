@@ -13,7 +13,7 @@ class DownButton: UrsusButton {
 	override func themeDidChange() {
 		super.themeDidChange()
 		
-		if PreferenceManager.shared.themeMode == .dark {
+		if PreferenceManager.shared.theme == .dark {
 			self.tintColor = StyleKit.darkPrimaryTextColor
 		} else {
 			self.tintColor = StyleKit.lightPrimaryTextColor
