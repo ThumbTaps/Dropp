@@ -108,6 +108,7 @@ class UrsusButton: UIButton {
 		return hitFrame.contains(point)
 	}
 	override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
+		super.touchesBegan(touches, with: event)
 		
 		let feedbackGenerator = UISelectionFeedbackGenerator()
 		feedbackGenerator.selectionChanged()
@@ -117,7 +118,17 @@ class UrsusButton: UIButton {
 			self.transform = CGAffineTransform(scaleX: self.tapScale, y: self.tapScale)
 		})
 		
-		super.touchesBegan(touches, with: event)
+	}
+	override func touchesMoved(_ touches: Set<UITouch>, with event: UIEvent?) {
+		super.touchesMoved(touches, with: event)
+		
+		if let touchLocation = touches.first?.location(in: self) {
+			
+			if !self.point(inside: touchLocation, with: event) {
+				self.touchesCancelled(touches, with: event)
+			}
+		}
+		
 	}
 	override func touchesEnded(_ touches: Set<UITouch>, with event: UIEvent?) {
 		

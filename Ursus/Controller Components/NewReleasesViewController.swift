@@ -33,10 +33,8 @@ class NewReleasesViewController: UrsusViewController, UICollectionViewDataSource
 //		let refreshControl = UIRefreshControl(frame: CGRect(x: 0, y: 100, width: 45, height: 45))
 //		self.collectionView.addSubview(refreshControl)
 		
-		UIApplication.shared.isNetworkActivityIndicatorVisible = true
 		PreferenceManager.shared.updateNewReleases {
 			
-			UIApplication.shared.isNetworkActivityIndicatorVisible = false
 			DispatchQueue.main.async {
 				// update new release count
 				self.newReleasesCountIndicator.setTitle(String(PreferenceManager.shared.newReleases.count), for: .normal)
@@ -45,16 +43,11 @@ class NewReleasesViewController: UrsusViewController, UICollectionViewDataSource
 				
 			}
 		}
-	}
-	
-	override func viewWillAppear(_ animated: Bool) {
-		super.viewWillAppear(animated)
-		
-		if PreferenceManager.shared.newReleases.isEmpty {
-			self.bottomScrollFadeView?.alpha = 0.5
-		}
-		
 		DispatchQueue.main.async {
+			
+			if PreferenceManager.shared.newReleases.isEmpty {
+				self.bottomScrollFadeView?.alpha = 0.5
+			}
 			
 			if PreferenceManager.shared.theme == .dark {
 				self.collectionView?.indicatorStyle = .white
@@ -63,8 +56,9 @@ class NewReleasesViewController: UrsusViewController, UICollectionViewDataSource
 			}
 			
 		}
-
+		
 	}
+	
 	override func viewDidAppear(_ animated: Bool) {
 		super.viewDidAppear(animated)
 		
@@ -152,27 +146,33 @@ class NewReleasesViewController: UrsusViewController, UICollectionViewDataSource
 	
 	// MARK: - UICollectionViewDataSource
 	func numberOfSections(in collectionView: UICollectionView) -> Int {
-		return 1
+		var numSections = 1
+		if !PreferenceManager.shared.previousReleases.isEmpty {
+			numSections += 1
+		}
+		return numSections
 	}
 	func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-		return PreferenceManager.shared.newReleases.count
+		return section == 0 ? PreferenceManager.shared.newReleases.count : PreferenceManager.shared.previousReleases.count
 	}
 	func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
 		
-		let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "NewReleaseCell", for: indexPath) as! ReleaseCollectionViewCell
+		let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "ReleaseCell", for: indexPath) as! ReleaseCollectionViewCell
 		
-		cell.releaseTitleLabel.text = PreferenceManager.shared.newReleases[indexPath.row].title
+		let source = indexPath.section == 0 ? PreferenceManager.shared.newReleases : PreferenceManager.shared.previousReleases
+		
+		cell.releaseTitleLabel.text = source[indexPath.row].title
 		
 		// get artist
 		if let artist: Artist = PreferenceManager.shared.followingArtists.first(where: {
 			$0.releases.contains(where: {
-				$0.itunesID == PreferenceManager.shared.newReleases[indexPath.row].itunesID
+				$0.itunesID == source[indexPath.row].itunesID
 			})
 		}) {
 			cell.secondaryLabel.text = artist.name
 		}
 		
-		RequestManager.shared.loadImage(from: PreferenceManager.shared.newReleases[indexPath.row].thumbnailURL!) { (image, error) in
+		RequestManager.shared.loadImage(from: source[indexPath.row].thumbnailURL!) { (image, error) in
 			
 			DispatchQueue.main.async {
 				cell.releaseArtView.imageView.image = image
@@ -182,13 +182,61 @@ class NewReleasesViewController: UrsusViewController, UICollectionViewDataSource
 		
 		return cell
 	}
-	func collectionView(_ collectionView: UICollectionView, viewForSupplementaryElementOfKind kind: String, at indexPath: IndexPath) -> UICollectionReusableView {
-        
-        let reusableView = collectionView.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: "NoNewReleasesFooter", for: indexPath) as! FooterCollectionReusableView
-        return reusableView
+	func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, referenceSizeForHeaderInSection section: Int) -> CGSize {
+		
+		switch section {
+		case 1:
+			return CGSize(width: self.view.bounds.width, height: 60)
+		default:
+			return .zero
+		}
 	}
 	func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
 		return CGSize(width: collectionView.bounds.size.width, height: 100)
+	}
+	func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, referenceSizeForFooterInSection section: Int) -> CGSize {
+		
+		switch section {
+		case 0:
+			return CGSize(width: self.view.bounds.width, height: 80)
+		default:
+			return .zero
+		}
+	}
+	func collectionView(_ collectionView: UICollectionView, viewForSupplementaryElementOfKind kind: String, at indexPath: IndexPath) -> UICollectionReusableView {
+		
+		var reusableView = UICollectionReusableView()
+		
+		if kind == UICollectionElementKindSectionHeader {
+			
+			reusableView = collectionView.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: "NewReleasesCollectionViewHeader", for: indexPath) as! HeaderCollectionReusableView
+			switch indexPath.section {
+				
+			case 1:
+				if !PreferenceManager.shared.newReleases.isEmpty {
+					(reusableView as! HeaderCollectionReusableView).textLabel.text = "IN THE PAST MONTH"
+				}
+				break
+				
+			default: return reusableView
+			}
+			
+			return reusableView
+		}
+			
+		else if kind == UICollectionElementKindSectionFooter {
+			
+			switch indexPath.section {
+			case 0:
+				reusableView = collectionView.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: "NewReleasesCollectionViewFooter", for: indexPath) as! FooterCollectionReusableView
+			default:
+				return reusableView
+			}
+			
+			return reusableView
+		}
+		
+		return reusableView
 	}
 	
 	

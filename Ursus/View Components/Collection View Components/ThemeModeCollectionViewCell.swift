@@ -37,21 +37,24 @@ class ThemeModeCollectionViewCell: UrsusCollectionViewCell, UIGestureRecognizerD
 			self.autoOption.selected = true
 			self.lightOption.selected = false
 			self.darkOption.selected = false
+			feedbackGenerator.impactOccurred()
+			self.delegate?.didSelectTheme(theme: selectedThemeMode)
 		} else if self.lightOption.frame.contains(self.tapGestureRecognizer.location(in: self)) {
 			self.autoOption.selected = false
 			self.lightOption.selected = true
 			self.darkOption.selected = false
 			selectedThemeMode = .light
+			feedbackGenerator.impactOccurred()
+			self.delegate?.didSelectTheme(theme: selectedThemeMode)
 		} else if self.darkOption.frame.contains(self.tapGestureRecognizer.location(in: self)) {
 			self.autoOption.selected = false
 			self.lightOption.selected = false
 			self.darkOption.selected = true
 			selectedThemeMode = .dark
+			feedbackGenerator.impactOccurred()
+			self.delegate?.didSelectTheme(theme: selectedThemeMode)
 		}
 		
-		self.delegate?.didSelectTheme(theme: selectedThemeMode)
-		
-		feedbackGenerator.impactOccurred()
 	}
     /*
     // Only override draw() if you perform custom drawing.

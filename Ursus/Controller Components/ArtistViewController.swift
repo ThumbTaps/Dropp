@@ -28,10 +28,6 @@ class ArtistViewController: UrsusViewController, UICollectionViewDataSource, UIC
 		
 		self.navigationTitle?.text = self.artist?.name
 		self.backdrop?.imageView.image = self.artistArtwork
-    }
-	
-	override func viewWillAppear(_ animated: Bool) {
-		super.viewWillAppear(animated)
 		
 		if self.colorPalette != nil {
 			
@@ -61,8 +57,8 @@ class ArtistViewController: UrsusViewController, UICollectionViewDataSource, UIC
 			}
 			
 		}
-	}
-
+    }
+	
 	override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
 		
@@ -165,6 +161,9 @@ class ArtistViewController: UrsusViewController, UICollectionViewDataSource, UIC
 		reusableView.textLabel.text = "LATEST RELEASE"
 		
 		return reusableView
+	}
+	func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, referenceSizeForHeaderInSection section: Int) -> CGSize {
+		return CGSize(width: self.view.bounds.width, height: 60)
 	}
 	func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
 		return CGSize(width: collectionView.bounds.size.width, height: 100)

@@ -25,7 +25,6 @@ class FrostedBackdrop: UIView {
 		Notification.Name.UrsusThemeDidChange.add(self, selector: #selector(self.themeDidChange))
 	}
 	func themeDidChange() {
-		self.setNeedsDisplay()
 		
 		if PreferenceManager.shared.theme == .dark {
 			self.tintColor = StyleKit.darkTintColor
@@ -33,6 +32,7 @@ class FrostedBackdrop: UIView {
 			self.tintColor = StyleKit.lightTintColor
 		}
 		
+		self.setNeedsDisplay()
 	}
 	
 	// Only override draw() if you perform custom drawing.

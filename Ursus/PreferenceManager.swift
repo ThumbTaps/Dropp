@@ -14,7 +14,7 @@ enum ThemeMode: Int {
 enum Theme: Int {
 	case light = 0, dark = 1
 }
-enum ThemeModeDeterminer: Int {
+enum ThemeDeterminer: Int {
 	case displayBrightness = 0, twilight = 1, ambientLight = 2
 }
 
@@ -77,6 +77,7 @@ class PreferenceManager: NSObject {
 	}
 	
 	
+	var maxReleaseAge: Int = 1
 	private var _newReleases: [Release] = []
 	var newReleases: [Release] {
 		set {
@@ -104,6 +105,29 @@ class PreferenceManager: NSObject {
 			})
 		}
 	}
+	private var _previousReleases: [Release] = []
+	var previousReleases: [Release] {
+		set {
+			self._previousReleases = newValue
+		}
+		get {
+			return self.followingArtists.flatMap({
+				$0.releases.filter({ (release) -> Bool in
+					
+						if self.ignoreEPs && release.type == .EP {
+							return false
+							
+						} else if self.ignoreSingles && release.type == .single {
+							return false
+							
+						} else {
+							return true
+						}
+
+				})
+			})
+		}
+	}
 	var lastUpdate: Date? = nil
 	func updateNewReleases(completion: (() -> Void)?=nil) {
 		
@@ -111,7 +135,9 @@ class PreferenceManager: NSObject {
 			
 			self.followingArtists.forEach { (followed) in
 				
-				RequestManager.shared.getReleases(for: followed.itunesID, completion: { (releases: [Release], error: NSError?) in
+				UIApplication.shared.isNetworkActivityIndicatorVisible = true
+				RequestManager.shared.getReleases(for: followed.itunesID, since: Calendar.current.date(byAdding: .month, value: -maxReleaseAge, to: Date()), completion: { (releases: [Release], error: NSError?) in
+					UIApplication.shared.isNetworkActivityIndicatorVisible = false
 					
 					if error == nil {
 //						let newReleases: [Release] = releases.filter({ (release) -> Bool in
@@ -174,7 +200,8 @@ class PreferenceManager: NSObject {
 			}
 		}
 	}
-	var themeDeterminer: ThemeModeDeterminer = .displayBrightness {
+	var themeTransitionDuration = 0.6
+	var themeDeterminer: ThemeDeterminer = .displayBrightness {
 		didSet {
 			
 			// stop observing display brightness
@@ -254,7 +281,9 @@ class PreferenceManager: NSObject {
 				
 				self.determiningTwilightTimes = true
 				
+				UIApplication.shared.isNetworkActivityIndicatorVisible = true
 				RequestManager.shared.getSunriseAndSunset { (sunrise, sunset, error) in
+					UIApplication.shared.isNetworkActivityIndicatorVisible = false
 					
 					if sunrise != nil && sunset != nil && error == nil {
 						
@@ -293,13 +322,8 @@ class PreferenceManager: NSObject {
 	private var sunriseTime: Date? {
 		didSet {
 			// set trigger
-			if self.sunriseTime != nil {
-				
-				let timer = Timer(fire: self.sunriseTime!, interval: 0, repeats: false) { (timer) in
-					self.theme = self.determineThemeMode()
-				}
-				RunLoop.main.add(timer, forMode: .commonModes)
-				
+			if self.sunriseTime != nil && self.sunsetTime != nil {
+				watchForTwilight()
 			}
 			
 			if self.sunriseTime != oldValue {
@@ -308,16 +332,12 @@ class PreferenceManager: NSObject {
 			}
 		}
 	}
+	private var sunriseTimer: Timer?
 	private var sunsetTime: Date? {
 		didSet {
 			// set trigger
-			if self.sunriseTime != nil {
-				
-				let timer = Timer(fire: self.sunsetTime!, interval: 0, repeats: false) { (timer) in
-					self.theme = self.determineThemeMode()
-				}
-				RunLoop.main.add(timer, forMode: .commonModes)
-				
+			if self.sunsetTime != nil && self.sunriseTime != nil {
+				watchForTwilight()
 			}
 			
 			if self.sunsetTime != oldValue {
@@ -326,7 +346,26 @@ class PreferenceManager: NSObject {
 			}
 		}
 	}
+	private var sunsetTimer: Timer?
 	private var determiningTwilightTimes = false
+	private func watchForTwilight() {
+		if self.sunriseTimer != nil {
+			self.sunriseTimer?.invalidate()
+		}
+		if self.sunsetTimer != nil {
+			self.sunsetTimer?.invalidate()
+		}
+		
+		self.sunriseTimer = Timer(fire: self.sunriseTime!, interval: 0, repeats: false) { (timer) in
+			self.theme = self.determineThemeMode()
+		}
+		self.sunsetTimer = Timer(fire: self.sunsetTime!, interval: 0, repeats: false) { (timer) in
+			self.theme = self.determineThemeMode()
+		}
+
+		RunLoop.main.add(self.sunriseTimer!, forMode: .commonModes)
+		RunLoop.main.add(self.sunsetTimer!, forMode: .commonModes)
+	}
 	
 	var keyboardStyle: UIKeyboardAppearance = .light
 	
@@ -388,16 +427,12 @@ class PreferenceManager: NSObject {
 		
 		if self.themeMode == .auto {
 			
-			self.themeDeterminer = ThemeModeDeterminer(rawValue: UserDefaults.standard.integer(forKey: self.themeDeterminerKey)) ?? self.themeDeterminer
+			self.themeDeterminer = ThemeDeterminer(rawValue: UserDefaults.standard.integer(forKey: self.themeDeterminerKey)) ?? self.themeDeterminer
 			
-			if self.themeDeterminer == .displayBrightness {
-				
-				self.themeBrightnessThreshold = UserDefaults.standard.float(forKey: self.themeBrightnessThresholdKey)
-			} else if self.themeDeterminer == .twilight {
-				
-				self.sunriseTime = UserDefaults.standard.object(forKey: self.sunriseTimeKey) as? Date
-				self.sunsetTime = UserDefaults.standard.object(forKey: self.sunsetTimeKey) as? Date
-			}
+			self.themeBrightnessThreshold = UserDefaults.standard.float(forKey: self.themeBrightnessThresholdKey)
+			self.sunriseTime = UserDefaults.standard.object(forKey: self.sunriseTimeKey) as? Date
+			self.sunsetTime = UserDefaults.standard.object(forKey: self.sunsetTimeKey) as? Date
+			
 		} else {
 
 			self.theme = Theme(rawValue: UserDefaults.standard.integer(forKey: self.themeKey)) ?? self.theme

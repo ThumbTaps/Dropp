@@ -31,31 +31,26 @@ class UrsusViewController: UIViewController {
 		
 		self.collectionView?.contentInset = UIEdgeInsets(top: (self.topScrollFadeView?.frame.height ?? 120) - 40, left: 0, bottom: 80, right: 0)
 
+		// This can't be a direct call to self.themeDidChange because it will trigger on other view controllers that may want to animate in certain properties
+		DispatchQueue.main.async {
+			
+			self.setNeedsStatusBarAppearanceUpdate()
+			
+			if PreferenceManager.shared.theme == .dark {
+				self.view.tintColor = StyleKit.darkTintColor
+				self.topScrollFadeView?.tintColor = StyleKit.darkBackdropOverlayColor
+				self.bottomScrollFadeView?.tintColor = StyleKit.darkBackdropOverlayColor
+				self.navigationTitle?.textColor = StyleKit.darkPrimaryTextColor
+			} else {
+				self.view.tintColor = StyleKit.lightTintColor
+				self.topScrollFadeView?.tintColor = StyleKit.lightBackdropOverlayColor
+				self.bottomScrollFadeView?.tintColor = StyleKit.lightBackdropOverlayColor
+				self.navigationTitle?.textColor = StyleKit.lightPrimaryTextColor
+			}
+			
+		}
+		
     }
-	
-	override func viewWillAppear(_ animated: Bool) {
-		super.viewWillAppear(animated)
-		
-        // This can't be a direct call to self.themeDidChange because it will trigger on other view controllers that may want to animate in certain properties
-        DispatchQueue.main.async {
-            
-            self.setNeedsStatusBarAppearanceUpdate()
-            
-            if PreferenceManager.shared.theme == .dark {
-                self.view.tintColor = StyleKit.darkTintColor
-                self.topScrollFadeView?.tintColor = StyleKit.darkBackdropOverlayColor
-                self.bottomScrollFadeView?.tintColor = StyleKit.darkBackdropOverlayColor
-                self.navigationTitle?.textColor = StyleKit.darkPrimaryTextColor
-            } else {
-                self.view.tintColor = StyleKit.lightTintColor
-                self.topScrollFadeView?.tintColor = StyleKit.lightBackdropOverlayColor
-                self.bottomScrollFadeView?.tintColor = StyleKit.lightBackdropOverlayColor
-                self.navigationTitle?.textColor = StyleKit.lightPrimaryTextColor
-            }
-            
-        }
-		
-	}
 	
 	override func viewDidAppear(_ animated: Bool) {
 		super.viewDidAppear(animated)
@@ -137,11 +132,13 @@ class UrsusViewController: UIViewController {
 			
 			if PreferenceManager.shared.theme == .dark {
 				self.view.tintColor = StyleKit.darkTintColor
+				self.view.backgroundColor = StyleKit.darkBackgroundColor
 				self.topScrollFadeView?.tintColor = StyleKit.darkBackdropOverlayColor
 				self.bottomScrollFadeView?.tintColor = StyleKit.darkBackdropOverlayColor
 				self.navigationTitle?.textColor = StyleKit.darkPrimaryTextColor
 			} else {
 				self.view.tintColor = StyleKit.lightTintColor
+				self.view.backgroundColor = StyleKit.lightBackgroundColor
 				self.topScrollFadeView?.tintColor = StyleKit.lightBackdropOverlayColor
 				self.bottomScrollFadeView?.tintColor = StyleKit.lightBackdropOverlayColor
 				self.navigationTitle?.textColor = StyleKit.lightPrimaryTextColor

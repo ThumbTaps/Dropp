@@ -59,6 +59,7 @@
 		7BB3D5EA1DEBDBEB002367C3 /* BackButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BB3D5E91DEBDBEB002367C3 /* BackButton.swift */; };
 		7BBB6D6F1E2AC2A700C2F466 /* UrsusCountIndicator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BBB6D6E1E2AC2A700C2F466 /* UrsusCountIndicator.swift */; };
 		7BC8DE251DED285B0004A7F9 /* RoundedTextField.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BC8DE241DED285B0004A7F9 /* RoundedTextField.swift */; };
+		7BD499501E35AF1B00C2B7E7 /* UIPickerCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BD4994F1E35AF1B00C2B7E7 /* UIPickerCollectionViewCell.swift */; };
 		7BD89A171E2D74EC00FAF502 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 7BD89A161E2D74EC00FAF502 /* GoogleService-Info.plist */; };
 		7BEB34BD1DF061E300888FF1 /* UrsusViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BEB34BC1DF061E300888FF1 /* UrsusViewController.swift */; };
 		7BEB34BF1DF0679800888FF1 /* UrsusStoryboardSegue.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BEB34BE1DF0679800888FF1 /* UrsusStoryboardSegue.swift */; };
@@ -158,6 +159,7 @@
 		7BB3D5E91DEBDBEB002367C3 /* BackButton.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = BackButton.swift; path = Buttons/BackButton.swift; sourceTree = "<group>"; };
 		7BBB6D6E1E2AC2A700C2F466 /* UrsusCountIndicator.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UrsusCountIndicator.swift; sourceTree = "<group>"; };
 		7BC8DE241DED285B0004A7F9 /* RoundedTextField.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RoundedTextField.swift; sourceTree = "<group>"; };
+		7BD4994F1E35AF1B00C2B7E7 /* UIPickerCollectionViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = UIPickerCollectionViewCell.swift; path = "Collection View Components/UIPickerCollectionViewCell.swift"; sourceTree = "<group>"; };
 		7BD89A161E2D74EC00FAF502 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		7BEB34BC1DF061E300888FF1 /* UrsusViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UrsusViewController.swift; sourceTree = "<group>"; };
 		7BEB34BE1DF0679800888FF1 /* UrsusStoryboardSegue.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UrsusStoryboardSegue.swift; sourceTree = "<group>"; };
@@ -232,6 +234,7 @@
 				7B8DC4041E31A16D00EBEED0 /* SettingsCollectionViewCell.swift */,
 				7B121F7F1E2C3AAA004458DC /* ThemeModeCollectionViewCell.swift */,
 				7B1E33B51E29EAAD00D5F37B /* UrsusCollectionViewCell.swift */,
+				7BD4994F1E35AF1B00C2B7E7 /* UIPickerCollectionViewCell.swift */,
 			);
 			name = "Collection View Components";
 			sourceTree = "<group>";
@@ -689,6 +692,7 @@
 			files = (
 				7B1FF6FB1E271A12004F496E /* ArtistArtView.swift in Sources */,
 				7B15CB4F1DDBDFC200CE48C1 /* ArtistSearchResultsViewController.swift in Sources */,
+				7BD499501E35AF1B00C2B7E7 /* UIPickerCollectionViewCell.swift in Sources */,
 				7B5FCE881E301866008AC1F7 /* RevealBehindAnimatedTransitionController.swift in Sources */,
 				7B8200ED1CDABE9200A99C68 /* Artist.swift in Sources */,
 				7B2839E81E330B8900B217D6 /* DisplayBrightnessThresholdCollectionViewCell.swift in Sources */,

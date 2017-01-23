@@ -15,11 +15,6 @@ class SettingsViewController: UrsusViewController, UICollectionViewDataSource, U
     override func viewDidLoad() {
         super.viewDidLoad()
 		
-    }
-	
-	override func viewWillAppear(_ animated: Bool) {
-		super.viewWillAppear(animated)
-		
 		DispatchQueue.main.async {
 			
 			if PreferenceManager.shared.theme == .dark {
@@ -31,7 +26,12 @@ class SettingsViewController: UrsusViewController, UICollectionViewDataSource, U
 				self.collectionView?.backgroundColor = StyleKit.lightBackdropOverlayColor.withAlphaComponent(0.95)
 			}
 		}
-
+		
+    }
+	
+	override func viewWillAppear(_ animated: Bool) {
+		super.viewWillAppear(animated)
+		
 	}
 
     override func didReceiveMemoryWarning() {
@@ -64,9 +64,6 @@ class SettingsViewController: UrsusViewController, UICollectionViewDataSource, U
 	func numberOfSections(in collectionView: UICollectionView) -> Int {
 		return 2
 	}
-	func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, insetForSectionAt section: Int) -> UIEdgeInsets {
-		return UIEdgeInsets(top: 0, left: 0, bottom: 20, right: 0)
-	}
 	func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
 		switch section {
 		case 0: // THEME OPTIONS
@@ -87,6 +84,9 @@ class SettingsViewController: UrsusViewController, UICollectionViewDataSource, U
 			return 0
 		}
 	}
+	func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, referenceSizeForHeaderInSection section: Int) -> CGSize {
+		return CGSize(width: self.view.bounds.width, height: 60)
+	}
 	func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
 		var size = CGSize(width: collectionView.frame.width, height: 50)
 		
@@ -99,6 +99,18 @@ class SettingsViewController: UrsusViewController, UICollectionViewDataSource, U
 		default: return size
 		}
 		return size
+	}
+	func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, referenceSizeForFooterInSection section: Int) -> CGSize {
+		
+		switch section {
+		case 0: // THEME OPTIONS
+			if PreferenceManager.shared.themeMode == .auto {
+				return CGSize(width: self.view.bounds.width, height: 50)
+			} else {
+				return .zero
+			}
+		default: return .zero
+		}
 	}
 	func collectionView(_ collectionView: UICollectionView, viewForSupplementaryElementOfKind kind: String, at indexPath: IndexPath) -> UICollectionReusableView {
 		
@@ -122,6 +134,20 @@ class SettingsViewController: UrsusViewController, UICollectionViewDataSource, U
 		}
 		
 		else if kind == UICollectionElementKindSectionFooter {
+			
+			reusableView = collectionView.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: "SettingsCollectionViewFooter", for: indexPath) as! FooterCollectionReusableView
+			switch indexPath.section {
+			
+			case 0:
+				if PreferenceManager.shared.themeMode == .auto {
+					if PreferenceManager.shared.themeDeterminer == .displayBrightness {
+						(reusableView as! FooterCollectionReusableView).textLabel.text = "The theme will change according to the display's brightness setting."
+					} else if PreferenceManager.shared.themeDeterminer == .twilight {
+						(reusableView as! FooterCollectionReusableView).textLabel.text = "The theme will change according to the rising and setting of the sun."
+					}
+				}
+			default: return reusableView
+			}
 			return reusableView
 		}
 		
@@ -192,6 +218,10 @@ class SettingsViewController: UrsusViewController, UICollectionViewDataSource, U
 				cell = collectionView.dequeueReusableCell(withReuseIdentifier: "IgnoreEPsCell", for: indexPath) as! SettingsCollectionViewCell
 				(cell as! SettingsCollectionViewCell).textLabel?.text = "Ignore EPs"
 				((cell as! SettingsCollectionViewCell).accessoryView as? UISwitch)?.isOn = PreferenceManager.shared.ignoreEPs
+				break
+				
+			case 2: // MAX RELEASE AGE
+				cell = collectionView.dequeueReusableCell(withReuseIdentifier: "MaxReleaseAgeCell", for: indexPath)
 				break
 				
 			default: return cell

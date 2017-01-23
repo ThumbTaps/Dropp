@@ -10,34 +10,66 @@ import UIKit
 
 class FooterCollectionReusableView: UICollectionReusableView {
 	
+	@IBInspectable var changesWithTheme: Bool = true {
+		didSet {
+			if self.changesWithTheme {
+				Notification.Name.UrsusThemeDidChange.add(self, selector: #selector(self.themeDidChange))
+			} else {
+				Notification.Name.UrsusThemeDidChange.remove(self)
+			}
+		}
+	}
+	
 	@IBOutlet weak var textLabel: UILabel!
 	
 	override init(frame: CGRect) {
 		super.init(frame: frame)
-		self.themeDidChange()
-		Notification.Name.UrsusThemeDidChange.add(self, selector: #selector(self.themeDidChange))
+		
+		if self.changesWithTheme {
+			
+			self.themeDidChange()
+			Notification.Name.UrsusThemeDidChange.add(self, selector: #selector(self.themeDidChange))
+		} else {
+			self.tintColorDidChange()
+		}
 	}
 	required init?(coder aDecoder: NSCoder) {
 		super.init(coder: aDecoder)
-		self.themeDidChange()
-		Notification.Name.UrsusThemeDidChange.add(self, selector: #selector(self.themeDidChange))
+		
+		if self.changesWithTheme {
+			
+			self.themeDidChange()
+			Notification.Name.UrsusThemeDidChange.add(self, selector: #selector(self.themeDidChange))
+		} else {
+			self.tintColorDidChange()
+		}
 	}
 	func themeDidChange() {
-		self.setNeedsDisplay()
 		
 		if PreferenceManager.shared.theme == .dark {
-			self.textLabel?.textColor = StyleKit.darkTertiaryTextColor
+			self.tintColor = StyleKit.darkBackdropOverlayColor
 		} else {
-			self.textLabel?.textColor = StyleKit.lightTertiaryTextColor
+			self.tintColor = StyleKit.lightBackdropOverlayColor
+		}
+	}
+	override func tintColorDidChange() {
+		super.tintColorDidChange()
+		
+		DispatchQueue.main.async {
+			
+			if self.tintColor.isDarkColor {
+				
+				self.textLabel?.textColor = StyleKit.darkTertiaryTextColor
+			} else {
+				
+				self.textLabel?.textColor = StyleKit.lightTertiaryTextColor
+			}
+			self.setNeedsDisplay()
 		}
 	}
 	override func draw(_ rect: CGRect) {
 		
-		if PreferenceManager.shared.theme == .dark {
-			self.layer.backgroundColor = StyleKit.darkBackdropOverlayColor.withAlpha(0.2).cgColor
-		} else {
-			self.layer.backgroundColor = StyleKit.lightBackdropOverlayColor.cgColor
-		}
+		self.layer.backgroundColor = UIColor.clear.cgColor
 		
 	}
 

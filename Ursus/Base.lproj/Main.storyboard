@@ -28,14 +28,14 @@
                                 <rect key="frame" x="0.0" y="0.0" width="414" height="736"/>
                                 <color key="backgroundColor" red="1" green="1" blue="1" alpha="0.94999999999999996" colorSpace="calibratedRGB"/>
                                 <collectionViewFlowLayout key="collectionViewLayout" minimumLineSpacing="0.0" minimumInteritemSpacing="10" id="bIO-Dh-PmT">
-                                    <size key="itemSize" width="414" height="60"/>
-                                    <size key="headerReferenceSize" width="50" height="40"/>
-                                    <size key="footerReferenceSize" width="0.0" height="0.0"/>
+                                    <size key="itemSize" width="414" height="50"/>
+                                    <size key="headerReferenceSize" width="50" height="60"/>
+                                    <size key="footerReferenceSize" width="50" height="60"/>
                                     <inset key="sectionInset" minX="0.0" minY="0.0" maxX="0.0" maxY="0.0"/>
                                 </collectionViewFlowLayout>
                                 <cells>
                                     <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="ThemeModeCell" id="VwV-p6-hBb" customClass="ThemeModeCollectionViewCell" customModule="Ursus" customModuleProvider="target">
-                                        <rect key="frame" x="0.0" y="40" width="414" height="120"/>
+                                        <rect key="frame" x="0.0" y="60" width="414" height="120"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                         <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center">
                                             <rect key="frame" x="0.0" y="0.0" width="414" height="120"/>
@@ -171,20 +171,20 @@
                                         </connections>
                                     </collectionViewCell>
                                     <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="ThemeDeterminerDisplayBrightnessCell" id="GvZ-OK-GWm" customClass="SettingsCollectionViewCell" customModule="Ursus" customModuleProvider="target">
-                                        <rect key="frame" x="0.0" y="160" width="414" height="60"/>
+                                        <rect key="frame" x="0.0" y="180" width="414" height="50"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                         <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center">
-                                            <rect key="frame" x="0.0" y="0.0" width="414" height="60"/>
+                                            <rect key="frame" x="0.0" y="0.0" width="414" height="50"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Display Brightness" textAlignment="natural" lineBreakMode="tailTruncation" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Zs2-Cu-Ja9">
-                                                    <rect key="frame" x="18" y="19" width="151" height="22"/>
+                                                    <rect key="frame" x="18" y="14" width="151" height="22"/>
                                                     <fontDescription key="fontDescription" type="system" pointSize="18"/>
                                                     <color key="textColor" red="0.20000000000000001" green="0.20000000000000001" blue="0.20000000000000001" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                                     <nil key="highlightedColor"/>
                                                 </label>
                                                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="82q-rb-HDh" customClass="CheckmarkButton" customModule="Ursus" customModuleProvider="target">
-                                                    <rect key="frame" x="361" y="13" width="35" height="35"/>
+                                                    <rect key="frame" x="361" y="7.6666666666666679" width="35" height="35"/>
                                                     <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                                     <color key="tintColor" red="0.94901960780000005" green="0.2156862745" blue="0.25882352939999997" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                                     <constraints>
@@ -206,21 +206,20 @@
                                             <constraint firstItem="82q-rb-HDh" firstAttribute="centerY" secondItem="GvZ-OK-GWm" secondAttribute="centerY" id="W0f-dz-HTy"/>
                                             <constraint firstItem="82q-rb-HDh" firstAttribute="trailing" secondItem="GvZ-OK-GWm" secondAttribute="trailingMargin" constant="-10" id="rbj-56-XAf"/>
                                         </constraints>
-                                        <size key="customSize" width="414" height="60"/>
                                         <connections>
                                             <outlet property="accessoryView" destination="82q-rb-HDh" id="WRk-UD-PXk"/>
                                             <outlet property="textLabel" destination="Zs2-Cu-Ja9" id="S3C-aS-qAj"/>
                                         </connections>
                                     </collectionViewCell>
                                     <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="DisplayBrightnessThresholdCell" id="FwW-G5-L0l" customClass="DisplayBrightnessThresholdCollectionViewCell" customModule="Ursus" customModuleProvider="target">
-                                        <rect key="frame" x="0.0" y="220" width="414" height="60"/>
+                                        <rect key="frame" x="0.0" y="230" width="414" height="50"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                         <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center">
-                                            <rect key="frame" x="0.0" y="0.0" width="414" height="60"/>
+                                            <rect key="frame" x="0.0" y="0.0" width="414" height="50"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
                                                 <slider opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" value="0.5" minValue="0.0" maxValue="1" translatesAutoresizingMaskIntoConstraints="NO" id="Q0b-kI-Eu1">
-                                                    <rect key="frame" x="46" y="15" width="322" height="31"/>
+                                                    <rect key="frame" x="46" y="10" width="322" height="31"/>
                                                     <color key="tintColor" red="0.94901960780000005" green="0.2156862745" blue="0.25882352939999997" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                                     <color key="minimumTrackTintColor" red="0.94901960780000005" green="0.2156862745" blue="0.25882352939999997" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                                     <connections>
@@ -228,7 +227,7 @@
                                                     </connections>
                                                 </slider>
                                                 <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Wxk-99-KYf" customClass="DisplayBrightnessMinButton" customModule="Ursus" customModuleProvider="target">
-                                                    <rect key="frame" x="8" y="15" width="30" height="30"/>
+                                                    <rect key="frame" x="8" y="10" width="30" height="30"/>
                                                     <constraints>
                                                         <constraint firstAttribute="width" secondItem="Wxk-99-KYf" secondAttribute="height" multiplier="1:1" id="hrb-Yo-KEH"/>
                                                         <constraint firstAttribute="height" constant="30" id="iNA-Gd-qp5"/>
@@ -243,7 +242,7 @@
                                                     </userDefinedRuntimeAttributes>
                                                 </button>
                                                 <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="aXg-GQ-cCl" customClass="DisplayBrightnessMaxButton" customModule="Ursus" customModuleProvider="target">
-                                                    <rect key="frame" x="376" y="15" width="30" height="30"/>
+                                                    <rect key="frame" x="376" y="10" width="30" height="30"/>
                                                     <constraints>
                                                         <constraint firstAttribute="height" constant="30" id="D3q-Fn-AA3"/>
                                                         <constraint firstAttribute="width" secondItem="aXg-GQ-cCl" secondAttribute="height" multiplier="1:1" id="qhb-sd-hwQ"/>
@@ -270,7 +269,6 @@
                                             <constraint firstItem="Wxk-99-KYf" firstAttribute="leading" secondItem="FwW-G5-L0l" secondAttribute="leadingMargin" id="mYV-Om-Jt2"/>
                                             <constraint firstItem="aXg-GQ-cCl" firstAttribute="trailing" secondItem="FwW-G5-L0l" secondAttribute="trailingMargin" id="w3m-ft-5y7"/>
                                         </constraints>
-                                        <size key="customSize" width="414" height="60"/>
                                         <connections>
                                             <outlet property="maxIcon" destination="aXg-GQ-cCl" id="ADH-ib-g0R"/>
                                             <outlet property="minIcon" destination="Wxk-99-KYf" id="nrd-bC-HTx"/>
@@ -278,20 +276,20 @@
                                         </connections>
                                     </collectionViewCell>
                                     <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="ThemeDeterminerTwilightCell" id="GN0-pJ-tw1" customClass="SettingsCollectionViewCell" customModule="Ursus" customModuleProvider="target">
-                                        <rect key="frame" x="0.0" y="280" width="414" height="60"/>
+                                        <rect key="frame" x="0.0" y="280" width="414" height="50"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                         <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center">
-                                            <rect key="frame" x="0.0" y="0.0" width="414" height="60"/>
+                                            <rect key="frame" x="0.0" y="0.0" width="414" height="50"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Twilight" textAlignment="natural" lineBreakMode="tailTruncation" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="2by-Ip-Bv8">
-                                                    <rect key="frame" x="18" y="19" width="63" height="22"/>
+                                                    <rect key="frame" x="18" y="14" width="63" height="22"/>
                                                     <fontDescription key="fontDescription" type="system" pointSize="18"/>
                                                     <color key="textColor" red="0.20000000000000001" green="0.20000000000000001" blue="0.20000000000000001" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                                     <nil key="highlightedColor"/>
                                                 </label>
                                                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="6Zy-5f-XoQ" customClass="CheckmarkButton" customModule="Ursus" customModuleProvider="target">
-                                                    <rect key="frame" x="361" y="13" width="35" height="35"/>
+                                                    <rect key="frame" x="361" y="7.6666666666666679" width="35" height="35"/>
                                                     <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                                     <color key="tintColor" red="0.94901960780000005" green="0.2156862745" blue="0.25882352939999997" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                                     <constraints>
@@ -313,27 +311,26 @@
                                             <constraint firstItem="2by-Ip-Bv8" firstAttribute="centerY" secondItem="GN0-pJ-tw1" secondAttribute="centerY" id="gdD-gT-41Q"/>
                                             <constraint firstItem="2by-Ip-Bv8" firstAttribute="leading" secondItem="GN0-pJ-tw1" secondAttribute="leadingMargin" constant="10" id="tbz-oo-Qa5"/>
                                         </constraints>
-                                        <size key="customSize" width="414" height="60"/>
                                         <connections>
                                             <outlet property="accessoryView" destination="6Zy-5f-XoQ" id="T92-yP-OTn"/>
                                             <outlet property="textLabel" destination="2by-Ip-Bv8" id="3Oq-tk-4rx"/>
                                         </connections>
                                     </collectionViewCell>
                                     <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="IgnoreSinglesCell" id="qle-yU-QY0" customClass="SettingsCollectionViewCell" customModule="Ursus" customModuleProvider="target">
-                                        <rect key="frame" x="0.0" y="340" width="414" height="60"/>
+                                        <rect key="frame" x="0.0" y="330" width="414" height="50"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                         <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center">
-                                            <rect key="frame" x="0.0" y="0.0" width="414" height="60"/>
+                                            <rect key="frame" x="0.0" y="0.0" width="414" height="50"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Ignore Singles" textAlignment="natural" lineBreakMode="tailTruncation" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="fQh-3R-1io">
-                                                    <rect key="frame" x="18" y="19" width="115" height="22"/>
+                                                    <rect key="frame" x="18" y="14" width="115" height="22"/>
                                                     <fontDescription key="fontDescription" type="system" pointSize="18"/>
                                                     <color key="textColor" red="0.20000000000000001" green="0.20000000000000001" blue="0.20000000000000001" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                                     <nil key="highlightedColor"/>
                                                 </label>
                                                 <switch opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" contentHorizontalAlignment="center" contentVerticalAlignment="center" on="YES" translatesAutoresizingMaskIntoConstraints="NO" id="lFD-Os-OcA">
-                                                    <rect key="frame" x="347" y="15" width="51" height="31"/>
+                                                    <rect key="frame" x="347" y="9.6666666666666643" width="51" height="31"/>
                                                     <color key="tintColor" red="0.94901960780000005" green="0.2156862745" blue="0.25882352939999997" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                                     <color key="onTintColor" red="0.94901960780000005" green="0.2156862745" blue="0.25882352939999997" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                                     <connections>
@@ -350,27 +347,26 @@
                                             <constraint firstItem="lFD-Os-OcA" firstAttribute="trailing" secondItem="qle-yU-QY0" secondAttribute="trailingMargin" constant="-10" id="bWJ-zi-BQZ"/>
                                             <constraint firstItem="fQh-3R-1io" firstAttribute="centerY" secondItem="qle-yU-QY0" secondAttribute="centerY" id="mY4-WF-VVw"/>
                                         </constraints>
-                                        <size key="customSize" width="414" height="60"/>
                                         <connections>
                                             <outlet property="accessoryView" destination="lFD-Os-OcA" id="5vX-gE-06j"/>
                                             <outlet property="textLabel" destination="fQh-3R-1io" id="Qxy-5T-2ol"/>
                                         </connections>
                                     </collectionViewCell>
                                     <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="IgnoreEPsCell" id="qZb-7o-VXl" customClass="SettingsCollectionViewCell" customModule="Ursus" customModuleProvider="target">
-                                        <rect key="frame" x="0.0" y="400" width="414" height="60"/>
+                                        <rect key="frame" x="0.0" y="380" width="414" height="50"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                         <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center">
-                                            <rect key="frame" x="0.0" y="0.0" width="414" height="60"/>
+                                            <rect key="frame" x="0.0" y="0.0" width="414" height="50"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Ignore EPs" textAlignment="natural" lineBreakMode="tailTruncation" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="8J6-jU-Oa1">
-                                                    <rect key="frame" x="18" y="19" width="86" height="22"/>
+                                                    <rect key="frame" x="18" y="14" width="86" height="22"/>
                                                     <fontDescription key="fontDescription" type="system" pointSize="18"/>
                                                     <color key="textColor" red="0.20000000000000001" green="0.20000000000000001" blue="0.20000000000000001" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                                     <nil key="highlightedColor"/>
                                                 </label>
                                                 <switch opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" contentHorizontalAlignment="center" contentVerticalAlignment="center" on="YES" translatesAutoresizingMaskIntoConstraints="NO" id="6v1-ZH-fln">
-                                                    <rect key="frame" x="347" y="15" width="51" height="31"/>
+                                                    <rect key="frame" x="347" y="9.6666666666666643" width="51" height="31"/>
                                                     <color key="tintColor" red="0.94901960780000005" green="0.2156862745" blue="0.25882352939999997" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                                     <color key="onTintColor" red="0.94901960780000005" green="0.2156862745" blue="0.25882352939999997" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                                     <connections>
@@ -387,30 +383,100 @@
                                             <constraint firstItem="8J6-jU-Oa1" firstAttribute="leading" secondItem="qZb-7o-VXl" secondAttribute="leadingMargin" constant="10" id="s1L-df-NLW"/>
                                             <constraint firstItem="8J6-jU-Oa1" firstAttribute="centerY" secondItem="qZb-7o-VXl" secondAttribute="centerY" id="tVv-YR-L1H"/>
                                         </constraints>
-                                        <size key="customSize" width="414" height="60"/>
                                         <connections>
                                             <outlet property="accessoryView" destination="6v1-ZH-fln" id="Kik-Uo-Kmp"/>
                                             <outlet property="textLabel" destination="8J6-jU-Oa1" id="6ht-5g-MVX"/>
                                         </connections>
                                     </collectionViewCell>
+                                    <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="MaxReleaseAgeCell" id="XGL-Xp-dO6" customClass="UIPickerCollectionViewCell" customModule="Ursus" customModuleProvider="target">
+                                        <rect key="frame" x="0.0" y="430" width="414" height="60"/>
+                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                        <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center">
+                                            <rect key="frame" x="0.0" y="0.0" width="414" height="60"/>
+                                            <autoresizingMask key="autoresizingMask"/>
+                                            <subviews>
+                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Only show releases from the past" textAlignment="natural" lineBreakMode="wordWrap" minimumScaleFactor="0.80000000000000004" adjustsLetterSpacingToFitWidth="YES" translatesAutoresizingMaskIntoConstraints="NO" id="89P-TF-knA">
+                                                    <rect key="frame" x="18" y="19" width="270" height="22"/>
+                                                    <fontDescription key="fontDescription" type="system" pointSize="18"/>
+                                                    <color key="textColor" red="0.20000000000000001" green="0.20000000000000001" blue="0.20000000000000001" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                                    <nil key="highlightedColor"/>
+                                                </label>
+                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="months" textAlignment="natural" lineBreakMode="clip" minimumScaleFactor="0.80000000000000004" adjustsLetterSpacingToFitWidth="YES" translatesAutoresizingMaskIntoConstraints="NO" id="u42-4q-rqb">
+                                                    <rect key="frame" x="335" y="19" width="61" height="22"/>
+                                                    <fontDescription key="fontDescription" type="system" pointSize="18"/>
+                                                    <color key="textColor" red="0.20000000000000001" green="0.20000000000000001" blue="0.20000000000000001" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                                    <nil key="highlightedColor"/>
+                                                </label>
+                                                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="clip" translatesAutoresizingMaskIntoConstraints="NO" id="6hr-gD-bTs">
+                                                    <rect key="frame" x="297" y="15" width="30" height="30"/>
+                                                    <color key="backgroundColor" red="0.94901960780000005" green="0.2156862745" blue="0.25882352939999997" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                                    <constraints>
+                                                        <constraint firstAttribute="height" constant="30" id="fpV-oR-Zzn"/>
+                                                        <constraint firstAttribute="width" constant="30" id="v1b-U8-DgK"/>
+                                                    </constraints>
+                                                    <fontDescription key="fontDescription" type="system" weight="medium" pointSize="17"/>
+                                                    <state key="normal" title="1"/>
+                                                    <userDefinedRuntimeAttributes>
+                                                        <userDefinedRuntimeAttribute type="number" keyPath="layer.cornerRadius">
+                                                            <integer key="value" value="6"/>
+                                                        </userDefinedRuntimeAttribute>
+                                                    </userDefinedRuntimeAttributes>
+                                                </button>
+                                            </subviews>
+                                        </view>
+                                        <color key="tintColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                                        <gestureRecognizers/>
+                                        <constraints>
+                                            <constraint firstItem="89P-TF-knA" firstAttribute="leading" secondItem="XGL-Xp-dO6" secondAttribute="leadingMargin" constant="10" id="4qJ-RZ-WKf"/>
+                                            <constraint firstItem="u42-4q-rqb" firstAttribute="trailing" secondItem="XGL-Xp-dO6" secondAttribute="trailingMargin" constant="-10" id="9Te-FB-LZO"/>
+                                            <constraint firstItem="6hr-gD-bTs" firstAttribute="leading" secondItem="89P-TF-knA" secondAttribute="trailing" constant="9" id="KMS-0Q-Qdg"/>
+                                            <constraint firstItem="6hr-gD-bTs" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="89P-TF-knA" secondAttribute="trailing" constant="5" id="Ogb-Q0-3zF"/>
+                                            <constraint firstItem="u42-4q-rqb" firstAttribute="centerY" secondItem="XGL-Xp-dO6" secondAttribute="centerY" id="P8e-xk-c1W"/>
+                                            <constraint firstItem="6hr-gD-bTs" firstAttribute="centerY" secondItem="XGL-Xp-dO6" secondAttribute="centerY" id="UDg-Ff-yxi"/>
+                                            <constraint firstItem="6hr-gD-bTs" firstAttribute="trailing" relation="lessThanOrEqual" secondItem="u42-4q-rqb" secondAttribute="leading" constant="-5" id="jKg-Ed-UiD"/>
+                                            <constraint firstItem="89P-TF-knA" firstAttribute="centerY" secondItem="XGL-Xp-dO6" secondAttribute="centerY" id="zCG-Cz-mom"/>
+                                        </constraints>
+                                        <size key="customSize" width="414" height="60"/>
+                                    </collectionViewCell>
                                 </cells>
                                 <collectionReusableView key="sectionHeaderView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="SettingsCollectionViewHeader" id="ki3-RK-6Jd" customClass="HeaderCollectionReusableView" customModule="Ursus" customModuleProvider="target">
-                                    <rect key="frame" x="0.0" y="0.0" width="414" height="40"/>
+                                    <rect key="frame" x="0.0" y="0.0" width="414" height="60"/>
                                     <autoresizingMask key="autoresizingMask"/>
                                     <subviews>
                                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="THEME OPTIONS" lineBreakMode="tailTruncation" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="M9O-Xx-EnE">
-                                            <rect key="frame" x="18" y="10" width="133" height="20"/>
+                                            <rect key="frame" x="18" y="32" width="133" height="20"/>
                                             <fontDescription key="fontDescription" type="boldSystem" pointSize="16"/>
                                             <color key="textColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
                                             <nil key="highlightedColor"/>
                                         </label>
                                     </subviews>
                                     <constraints>
+                                        <constraint firstAttribute="bottomMargin" secondItem="M9O-Xx-EnE" secondAttribute="bottom" id="EyV-Qm-Upl"/>
                                         <constraint firstItem="M9O-Xx-EnE" firstAttribute="leading" secondItem="ki3-RK-6Jd" secondAttribute="leadingMargin" constant="10" id="uZ1-eY-SdR"/>
-                                        <constraint firstItem="M9O-Xx-EnE" firstAttribute="centerY" secondItem="ki3-RK-6Jd" secondAttribute="centerY" id="ubd-bJ-JYi"/>
                                     </constraints>
                                     <connections>
                                         <outlet property="textLabel" destination="M9O-Xx-EnE" id="iEF-99-8R9"/>
+                                    </connections>
+                                </collectionReusableView>
+                                <collectionReusableView key="sectionFooterView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="SettingsCollectionViewFooter" id="E8L-l8-CEn" customClass="FooterCollectionReusableView" customModule="Ursus" customModuleProvider="target">
+                                    <rect key="frame" x="0.0" y="490" width="414" height="60"/>
+                                    <autoresizingMask key="autoresizingMask"/>
+                                    <subviews>
+                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="The interface will change with the rise and fall of the sun." textAlignment="center" lineBreakMode="wordWrap" numberOfLines="2" minimumScaleFactor="0.84999999999999998" adjustsLetterSpacingToFitWidth="YES" translatesAutoresizingMaskIntoConstraints="NO" id="tZf-hQ-MNt">
+                                            <rect key="frame" x="38" y="22.333333333333329" width="338.66666666666669" height="15.666666666666671"/>
+                                            <fontDescription key="fontDescription" style="UICTFontTextStyleFootnote"/>
+                                            <color key="textColor" white="0.80000000000000004" alpha="1" colorSpace="calibratedWhite"/>
+                                            <nil key="highlightedColor"/>
+                                        </label>
+                                    </subviews>
+                                    <constraints>
+                                        <constraint firstItem="tZf-hQ-MNt" firstAttribute="centerY" secondItem="E8L-l8-CEn" secondAttribute="centerY" id="2F0-nD-gDY"/>
+                                        <constraint firstItem="tZf-hQ-MNt" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="E8L-l8-CEn" secondAttribute="leadingMargin" constant="30" id="9Z9-Bf-6V3"/>
+                                        <constraint firstItem="tZf-hQ-MNt" firstAttribute="centerX" secondItem="E8L-l8-CEn" secondAttribute="centerX" id="Jzc-QD-Ld6"/>
+                                        <constraint firstItem="tZf-hQ-MNt" firstAttribute="trailing" relation="lessThanOrEqual" secondItem="E8L-l8-CEn" secondAttribute="trailingMargin" constant="-30" id="d8P-tU-EV4"/>
+                                    </constraints>
+                                    <connections>
+                                        <outlet property="textLabel" destination="tZf-hQ-MNt" id="erV-qt-V8I"/>
                                     </connections>
                                 </collectionReusableView>
                                 <connections>
@@ -585,13 +651,13 @@
                                         <inset key="scrollIndicatorInsets" minX="0.0" minY="100" maxX="0.0" maxY="80"/>
                                         <collectionViewFlowLayout key="collectionViewLayout" minimumLineSpacing="0.0" minimumInteritemSpacing="0.0" id="mFj-ff-foT">
                                             <size key="itemSize" width="414" height="100"/>
-                                            <size key="headerReferenceSize" width="0.0" height="0.0"/>
-                                            <size key="footerReferenceSize" width="0.0" height="0.0"/>
+                                            <size key="headerReferenceSize" width="50" height="60"/>
+                                            <size key="footerReferenceSize" width="50" height="80"/>
                                             <inset key="sectionInset" minX="0.0" minY="0.0" maxX="0.0" maxY="0.0"/>
                                         </collectionViewFlowLayout>
                                         <cells>
-                                            <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="NewReleaseCell" id="OmI-ep-WJH" customClass="ReleaseCollectionViewCell" customModule="Ursus" customModuleProvider="target">
-                                                <rect key="frame" x="0.0" y="0.0" width="414" height="100"/>
+                                            <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="ReleaseCell" id="OmI-ep-WJH" customClass="ReleaseCollectionViewCell" customModule="Ursus" customModuleProvider="target">
+                                                <rect key="frame" x="0.0" y="60" width="414" height="100"/>
                                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                                 <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center">
                                                     <rect key="frame" x="0.0" y="0.0" width="414" height="100"/>
@@ -652,6 +718,47 @@
                                                 </connections>
                                             </collectionViewCell>
                                         </cells>
+                                        <collectionReusableView key="sectionHeaderView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="NewReleasesCollectionViewHeader" id="8Gv-xi-sjn" customClass="HeaderCollectionReusableView" customModule="Ursus" customModuleProvider="target">
+                                            <rect key="frame" x="0.0" y="0.0" width="414" height="60"/>
+                                            <autoresizingMask key="autoresizingMask"/>
+                                            <subviews>
+                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="IN THE PAST MONTH" lineBreakMode="tailTruncation" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="p5S-Xy-Hg3">
+                                                    <rect key="frame" x="18" y="10" width="163.33333333333334" height="20"/>
+                                                    <fontDescription key="fontDescription" type="boldSystem" pointSize="16"/>
+                                                    <color key="textColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
+                                                    <nil key="highlightedColor"/>
+                                                </label>
+                                            </subviews>
+                                            <constraints>
+                                                <constraint firstAttribute="bottomMargin" secondItem="p5S-Xy-Hg3" secondAttribute="bottom" constant="2" id="bPf-ML-XLg"/>
+                                                <constraint firstItem="p5S-Xy-Hg3" firstAttribute="leading" secondItem="8Gv-xi-sjn" secondAttribute="leadingMargin" constant="10" id="hW0-I0-QqW"/>
+                                            </constraints>
+                                            <connections>
+                                                <outlet property="textLabel" destination="p5S-Xy-Hg3" id="dk8-jx-PrS"/>
+                                            </connections>
+                                        </collectionReusableView>
+                                        <collectionReusableView key="sectionFooterView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="NewReleasesCollectionViewFooter" id="1qx-5D-BWG" customClass="FooterCollectionReusableView" customModule="Ursus" customModuleProvider="target">
+                                            <rect key="frame" x="0.0" y="160" width="414" height="80"/>
+                                            <autoresizingMask key="autoresizingMask"/>
+                                            <subviews>
+                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="No new releases" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="2" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="lG3-rx-Acd">
+                                                    <rect key="frame" x="144" y="30.000000000000004" width="126.33333333333331" height="20.333333333333339"/>
+                                                    <constraints>
+                                                        <constraint firstAttribute="width" relation="lessThanOrEqual" constant="240" id="FIR-Jd-tpJ"/>
+                                                    </constraints>
+                                                    <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                                    <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="0.20000000000000001" colorSpace="calibratedRGB"/>
+                                                    <nil key="highlightedColor"/>
+                                                </label>
+                                            </subviews>
+                                            <constraints>
+                                                <constraint firstItem="lG3-rx-Acd" firstAttribute="centerX" secondItem="1qx-5D-BWG" secondAttribute="centerX" id="eMo-lH-oD3"/>
+                                                <constraint firstItem="lG3-rx-Acd" firstAttribute="centerY" secondItem="1qx-5D-BWG" secondAttribute="centerY" id="jJ2-9h-LBn"/>
+                                            </constraints>
+                                            <connections>
+                                                <outlet property="textLabel" destination="lG3-rx-Acd" id="DbM-Fd-B00"/>
+                                            </connections>
+                                        </collectionReusableView>
                                         <connections>
                                             <outlet property="dataSource" destination="igh-Gg-oBy" id="2ZP-pz-al7"/>
                                             <outlet property="delegate" destination="igh-Gg-oBy" id="TWr-PD-Ke7"/>
@@ -1132,13 +1239,13 @@
                                         <inset key="scrollIndicatorInsets" minX="0.0" minY="100" maxX="0.0" maxY="80"/>
                                         <collectionViewFlowLayout key="collectionViewLayout" minimumLineSpacing="0.0" minimumInteritemSpacing="0.0" id="xXv-2s-DRL">
                                             <size key="itemSize" width="414" height="100"/>
-                                            <size key="headerReferenceSize" width="50" height="30"/>
+                                            <size key="headerReferenceSize" width="50" height="60"/>
                                             <size key="footerReferenceSize" width="0.0" height="0.0"/>
                                             <inset key="sectionInset" minX="0.0" minY="0.0" maxX="0.0" maxY="0.0"/>
                                         </collectionViewFlowLayout>
                                         <cells>
                                             <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="LatestReleaseCell" id="pdB-Tp-kI9" customClass="ReleaseCollectionViewCell" customModule="Ursus" customModuleProvider="target">
-                                                <rect key="frame" x="0.0" y="30" width="414" height="100"/>
+                                                <rect key="frame" x="0.0" y="60" width="414" height="100"/>
                                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                                 <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center">
                                                     <rect key="frame" x="0.0" y="0.0" width="414" height="100"/>
@@ -1203,7 +1310,7 @@
                                                 </connections>
                                             </collectionViewCell>
                                             <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="ArtistSummaryCell" id="HXC-s9-8Kb">
-                                                <rect key="frame" x="0.0" y="130" width="414" height="200"/>
+                                                <rect key="frame" x="0.0" y="160" width="414" height="200"/>
                                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                                 <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center">
                                                     <rect key="frame" x="0.0" y="0.0" width="414" height="200"/>
@@ -1246,18 +1353,18 @@
                                             </collectionViewCell>
                                         </cells>
                                         <collectionReusableView key="sectionHeaderView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="LatestReleaseHeader" id="ry1-lF-W2d" customClass="HeaderCollectionReusableView" customModule="Ursus" customModuleProvider="target">
-                                            <rect key="frame" x="0.0" y="0.0" width="414" height="30"/>
+                                            <rect key="frame" x="0.0" y="0.0" width="414" height="60"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="LATEST RELEASE" lineBreakMode="tailTruncation" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="NwE-Ay-8qD">
-                                                    <rect key="frame" x="18" y="5" width="135" height="20"/>
+                                                    <rect key="frame" x="18" y="2" width="135" height="20"/>
                                                     <fontDescription key="fontDescription" type="boldSystem" pointSize="16"/>
                                                     <color key="textColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
                                                     <nil key="highlightedColor"/>
                                                 </label>
                                             </subviews>
                                             <constraints>
-                                                <constraint firstItem="NwE-Ay-8qD" firstAttribute="centerY" secondItem="ry1-lF-W2d" secondAttribute="centerY" id="Ejy-6d-A9F"/>
+                                                <constraint firstAttribute="bottomMargin" secondItem="NwE-Ay-8qD" secondAttribute="bottom" id="0lQ-gU-kQ5"/>
                                                 <constraint firstItem="NwE-Ay-8qD" firstAttribute="leading" secondItem="ry1-lF-W2d" secondAttribute="leadingMargin" constant="10" id="KMv-Ie-PCf"/>
                                             </constraints>
                                             <userDefinedRuntimeAttributes>
@@ -1383,7 +1490,7 @@
         </scene>
     </scenes>
     <inferredMetricsTieBreakers>
-        <segue reference="kRG-BK-4CJ"/>
+        <segue reference="ts8-HO-27d"/>
         <segue reference="e6B-KM-uuu"/>
     </inferredMetricsTieBreakers>
     <color key="tintColor" red="0.94901960780000005" green="0.2156862745" blue="0.25882352939999997" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>

@@ -135,7 +135,7 @@ class RequestManager: NSObject, URLSessionDataDelegate {
 		}
 		
 	}
-	func getReleases(for artistID: Int, completion: @escaping ((_ releases: [Release], _ error: NSError?) -> Void)) {
+	func getReleases(for artistID: Int, since date: Date?=nil, completion: @escaping ((_ releases: [Release], _ error: NSError?) -> Void)) {
 		
 		// create URL for data request
 		if let url = URL(string: "\(self.itunesLookupURL)?id=\(artistID)&media=music&entity=album&attribute=albumTerm&sort=recent") {
@@ -186,8 +186,11 @@ class RequestManager: NSObject, URLSessionDataDelegate {
 							return release
 						})
 						
+						
 						// trigger completion handler
-						completion(releases, nil)
+						completion(releases.filter({ (release) -> Bool in
+							return release.releaseDate >= date!
+						}), nil)
 						
 					} catch _ {
 						
