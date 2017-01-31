@@ -43,10 +43,10 @@ class UrsusStoryboardSegue: UIStoryboardSegue {
 			
 			
 		else if self.identifier == "NewReleases->Artists" {
-			self.source.present(self.destination, animated: false)
+			self.source.present(self.destination, animated: true)
 			
 		} else if self.identifier == "Artists->NewReleases" {
-			self.source.dismiss(animated: false)
+			self.source.dismiss(animated: true)
 		}
 			
 			
@@ -69,10 +69,10 @@ class UrsusStoryboardSegue: UIStoryboardSegue {
 			
 			
         else if self.identifier == "ArtistSearch->ArtistSearchResults" {
-            self.source.present(self.destination, animated: false)
+            self.source.present(self.destination, animated: true)
 
         } else if self.identifier == "ArtistSearchResults->ArtistSearch" {
-            self.source.dismiss(animated: false)
+            self.source.dismiss(animated: true)
         }
         
         
@@ -80,10 +80,13 @@ class UrsusStoryboardSegue: UIStoryboardSegue {
 			
         
         else if self.identifier == "ArtistSearch->Artist" {
-            self.source.present(self.destination, animated: false)
-            
+			self.animationController = PopInAnimatedTransitionController()
+			self.destination.transitioningDelegate = self.animationController
+            self.source.present(self.destination, animated: true)
         } else if self.identifier == "Artist->ArtistSearch" {
-            self.source.dismiss(animated: false)
+			self.animationController = PopInAnimatedTransitionController()
+			self.source.transitioningDelegate = self.animationController
+            self.source.dismiss(animated: true)
         }
 			
 			
@@ -97,6 +100,19 @@ class UrsusStoryboardSegue: UIStoryboardSegue {
 			
 		} else if self.identifier == "Release->Artist" {
 			self.animationController = BlurAndOverlayAnimatedTransitionController()
+			self.source.transitioningDelegate = self.animationController
+			self.source.dismiss(animated: true)
+		}
+		
+		
+		
+		
+		else if self.identifier == "Artist->Artists" {
+			self.animationController = PopInAnimatedTransitionController()
+			self.destination.transitioningDelegate = self.animationController
+			self.source.present(self.destination, animated: true)
+		} else if self.identifier == "Artists->Artist" {
+			self.animationController = PopInAnimatedTransitionController()
 			self.source.transitioningDelegate = self.animationController
 			self.source.dismiss(animated: true)
 		}

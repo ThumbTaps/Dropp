@@ -98,16 +98,16 @@ class SettingsThemeModeOption: UIView {
 	override init(frame: CGRect) {
 		super.init(frame: frame)
 		
-		Notification.Name.UrsusThemeDidChange.add(self, selector: #selector(self.themeDidChange))
+		PreferenceManager.shared.themeDidChangeNotification.add(self, selector: #selector(self.themeDidChange))
 		self.themeDeterminerDidChange()
-		Notification.Name.UrsusThemeDeterminerDidChange.add(self, selector: #selector(self.themeDeterminerDidChange))
+		PreferenceManager.shared.themeDeterminerDidChangeNotification.add(self, selector: #selector(self.themeDeterminerDidChange))
 	}
 	required init?(coder aDecoder: NSCoder) {
 		super.init(coder: aDecoder)
 		
-		Notification.Name.UrsusThemeDidChange.add(self, selector: #selector(self.themeDidChange))
+		PreferenceManager.shared.themeDidChangeNotification.add(self, selector: #selector(self.themeDidChange))
 		self.themeDeterminerDidChange()
-		Notification.Name.UrsusThemeDeterminerDidChange.add(self, selector: #selector(self.themeDeterminerDidChange))
+		PreferenceManager.shared.themeDeterminerDidChangeNotification.add(self, selector: #selector(self.themeDeterminerDidChange))
 	}
 	
 	func themeDeterminerDidChange() {
@@ -130,7 +130,7 @@ class SettingsThemeModeOption: UIView {
 				self.label.backgroundColor = StyleKit.lightBackdropOverlayColor
 				self.label.textColor = StyleKit.lightPrimaryTextColor
 			} else {
-				if PreferenceManager.shared.determineThemeMode() == .dark {
+				if PreferenceManager.shared.determineTheme() == .dark {
 					self.label.backgroundColor = StyleKit.darkBackdropOverlayColor
 					self.label.textColor = StyleKit.darkPrimaryTextColor
 				} else {
@@ -178,7 +178,7 @@ class SettingsThemeModeOption: UIView {
 			self.layer.backgroundColor = StyleKit.lightBackgroundColor.cgColor
 			self.layer.borderColor = StyleKit.lightStrokeColor.cgColor
 		} else {
-			if PreferenceManager.shared.determineThemeMode() == .dark {
+			if PreferenceManager.shared.determineTheme() == .dark {
 				StyleKit.drawDarkBackdrop(frame: rect, resizing: .aspectFit)
 				self.layer.backgroundColor = StyleKit.darkBackgroundColor.cgColor
 				self.layer.borderColor = StyleKit.darkStrokeColor.cgColor
@@ -202,14 +202,14 @@ class SettingsThemeModeOptionSelectedOverlay: UIView {
 		super.init(frame: frame)
 		
 		self.themeDidChange()
-		Notification.Name.UrsusThemeDidChange.add(self, selector: #selector(self.themeDidChange))
+		PreferenceManager.shared.themeDidChangeNotification.add(self, selector: #selector(self.themeDidChange))
 		
 	}
 	required init?(coder aDecoder: NSCoder) {
 		super.init(coder: aDecoder)
 		
 		self.themeDidChange()
-		Notification.Name.UrsusThemeDidChange.add(self, selector: #selector(self.themeDidChange))
+		PreferenceManager.shared.themeDidChangeNotification.add(self, selector: #selector(self.themeDidChange))
 	}
 	
 	func themeDidChange() {

@@ -24,7 +24,7 @@ class ReleaseViewController: UrsusViewController {
 			self.theme = PreferenceManager.shared.theme
 		} else {
 			// stop monitoring theme (forced by source view controller)
-			Notification.Name.UrsusThemeDidChange.remove(self)
+			PreferenceManager.shared.themeDidChangeNotification.remove(self)
 		}
 		
 		self.releaseTitleLabel.text = self.currentRelease?.title

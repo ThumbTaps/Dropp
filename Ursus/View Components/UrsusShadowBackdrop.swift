@@ -26,7 +26,7 @@ class UrsusShadowBackdrop: UIView {
 		
 		self.backgroundColor = UIColor.clear
 		if self.changesWithTheme {
-			Notification.Name.UrsusThemeDidChange.add(self, selector: #selector(self.themeDidChange))
+			PreferenceManager.shared.themeDidChangeNotification.add(self, selector: #selector(self.themeDidChange))
 		}
 	}
 	
@@ -35,7 +35,7 @@ class UrsusShadowBackdrop: UIView {
 
 		self.backgroundColor = UIColor.clear
 		if self.changesWithTheme {
-			Notification.Name.UrsusThemeDidChange.add(self, selector: #selector(self.themeDidChange))
+			PreferenceManager.shared.themeDidChangeNotification.add(self, selector: #selector(self.themeDidChange))
 		}
 	}
 	

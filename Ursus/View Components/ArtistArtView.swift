@@ -16,12 +16,12 @@ class ArtistArtView: UIView {
 	override init(frame: CGRect) {
 		super.init(frame: frame)
 		self.themeDidChange()
-		Notification.Name.UrsusThemeDidChange.add(self, selector: #selector(self.themeDidChange))
+		PreferenceManager.shared.themeDidChangeNotification.add(self, selector: #selector(self.themeDidChange))
 	}
 	required init?(coder aDecoder: NSCoder) {
 		super.init(coder: aDecoder)
 		self.themeDidChange()
-		Notification.Name.UrsusThemeDidChange.add(self, selector: #selector(self.themeDidChange))
+		PreferenceManager.shared.themeDidChangeNotification.add(self, selector: #selector(self.themeDidChange))
 	}
 	func themeDidChange() {
 		self.setNeedsDisplay()

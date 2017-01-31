@@ -13,9 +13,9 @@ class HeaderCollectionReusableView: UICollectionReusableView {
 	@IBInspectable var changesWithTheme: Bool = true {
 		didSet {
 			if self.changesWithTheme {
-				Notification.Name.UrsusThemeDidChange.add(self, selector: #selector(self.themeDidChange))
+				PreferenceManager.shared.themeDidChangeNotification.add(self, selector: #selector(self.themeDidChange))
 			} else {
-				Notification.Name.UrsusThemeDidChange.remove(self)
+				PreferenceManager.shared.themeDidChangeNotification.remove(self)
 			}
 		}
 	}
@@ -28,7 +28,7 @@ class HeaderCollectionReusableView: UICollectionReusableView {
 		if self.changesWithTheme {
 			
 			self.themeDidChange()
-			Notification.Name.UrsusThemeDidChange.add(self, selector: #selector(self.themeDidChange))
+			PreferenceManager.shared.themeDidChangeNotification.add(self, selector: #selector(self.themeDidChange))
 		} else {
 			self.tintColorDidChange()
 		}
@@ -39,7 +39,7 @@ class HeaderCollectionReusableView: UICollectionReusableView {
 		if self.changesWithTheme {
 			
 			self.themeDidChange()
-			Notification.Name.UrsusThemeDidChange.add(self, selector: #selector(self.themeDidChange))
+			PreferenceManager.shared.themeDidChangeNotification.add(self, selector: #selector(self.themeDidChange))
 		} else {
 			self.tintColorDidChange()
 		}
@@ -59,10 +59,10 @@ class HeaderCollectionReusableView: UICollectionReusableView {
 			
 			if self.tintColor.isDarkColor {
 				
-				self.textLabel?.textColor = StyleKit.darkTertiaryTextColor
+				self.textLabel?.textColor = StyleKit.darkSecondaryTextColor
 			} else {
 				
-				self.textLabel?.textColor = StyleKit.lightTertiaryTextColor
+				self.textLabel?.textColor = StyleKit.lightSecondaryTextColor
 			}
 			self.setNeedsDisplay()
 		}

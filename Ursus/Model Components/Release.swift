@@ -21,7 +21,16 @@ class Release: NSObject, NSCoding {
 	var itunesURL: URL!
 	var artworkURL: URL?
 	var thumbnailURL: URL?
-	var seenByUser: Bool = false
+	private var _seenByUser = false
+	var seenByUser: Bool {
+		get {
+			// check user library + date + manual trigger
+			return false
+		}
+		set {
+			self._seenByUser = newValue
+		}
+	}
 	var type: ReleaseType {
 		get {
 			if self.title.lowercased().hasSuffix("- single") {
@@ -35,7 +44,7 @@ class Release: NSObject, NSCoding {
 	}
 	
 	
-	init(itunesID: Int!, title: String!, releaseDate: Date!, summary: String?, genre: String?, itunesURL: URL!, artworkURL: URL?, thumbnailURL: URL?, seenByUser: Bool) {
+	init(itunesID: Int!, title: String!, releaseDate: Date!, summary: String?, genre: String?, itunesURL: URL!, artworkURL: URL?, thumbnailURL: URL?) {
 		
 		super.init()
 		
@@ -47,7 +56,6 @@ class Release: NSObject, NSCoding {
 		self.itunesURL = itunesURL
 		self.artworkURL = artworkURL
 		self.thumbnailURL = thumbnailURL
-		self.seenByUser = seenByUser
 	}
 	
 	
@@ -70,7 +78,6 @@ class Release: NSObject, NSCoding {
 		if self.thumbnailURL != nil {
 			aCoder.encode(self.artworkURL, forKey: "thumbnailURL")
 		}
-		aCoder.encode(self.seenByUser, forKey: "seenByUser")
 	}
 	required init?(coder aDecoder: NSCoder) {
 		
@@ -82,7 +89,6 @@ class Release: NSObject, NSCoding {
 		self.itunesURL = aDecoder.decodeObject(forKey: "itunesURL") as! URL
 		self.artworkURL = aDecoder.decodeObject(forKey: "artworkURL") as? URL
 		self.thumbnailURL = aDecoder.decodeObject(forKey: "thumbnailURL") as? URL
-		self.seenByUser = aDecoder.decodeBool(forKey: "seenByUser")
 	}
 	
 	

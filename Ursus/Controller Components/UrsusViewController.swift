@@ -27,8 +27,13 @@ class UrsusViewController: UIViewController {
         super.viewDidLoad()
 		
         // Do any additional setup after loading the view.
-		Notification.Name.UrsusThemeDidChange.add(self, selector: #selector(self.themeDidChange))
 		
+		// start listening for theme change
+		PreferenceManager.shared.themeDidChangeNotification.add(self, selector: #selector(self.themeDidChange))
+		
+		// start listening for new releases updates
+		PreferenceManager.shared.didUpdateNewReleasesNotification.add(self, selector: #selector(self.didUpdateNewReleases))
+
 		self.collectionView?.contentInset = UIEdgeInsets(top: (self.topScrollFadeView?.frame.height ?? 120) - 40, left: 0, bottom: 80, right: 0)
 
 		// This can't be a direct call to self.themeDidChange because it will trigger on other view controllers that may want to animate in certain properties
@@ -38,11 +43,15 @@ class UrsusViewController: UIViewController {
 			
 			if PreferenceManager.shared.theme == .dark {
 				self.view.tintColor = StyleKit.darkTintColor
+				self.view.backgroundColor = StyleKit.darkBackgroundColor
+				self.collectionView?.indicatorStyle = .white
 				self.topScrollFadeView?.tintColor = StyleKit.darkBackdropOverlayColor
 				self.bottomScrollFadeView?.tintColor = StyleKit.darkBackdropOverlayColor
 				self.navigationTitle?.textColor = StyleKit.darkPrimaryTextColor
 			} else {
 				self.view.tintColor = StyleKit.lightTintColor
+				self.view.backgroundColor = StyleKit.lightBackgroundColor
+				self.collectionView?.indicatorStyle = .black
 				self.topScrollFadeView?.tintColor = StyleKit.lightBackdropOverlayColor
 				self.bottomScrollFadeView?.tintColor = StyleKit.lightBackdropOverlayColor
 				self.navigationTitle?.textColor = StyleKit.lightPrimaryTextColor
@@ -78,37 +87,6 @@ class UrsusViewController: UIViewController {
     
     
     
-    // MARK: - Custom Methods
-//    func showBackButton() {
-//        
-//        if self.backButtonHidingConstraint != nil {
-//            
-//            self.view.removeConstraint(self.backButtonHidingConstraint!)
-//        }
-//        if self.backButtonVisibleLeadingConstraint != nil && self.backButtonVisibleTrailingConstraint != nil {
-//            
-//            self.view.addConstraints([self.backButtonVisibleLeadingConstraint!, self.backButtonVisibleTrailingConstraint!])
-//        }
-//        
-//        UIView.animate(withDuration: 0.6, delay: 0, usingSpringWithDamping: 0.6, initialSpringVelocity: 0.6, options: .curveEaseOut, animations: { 
-//            self.view.layoutIfNeeded()
-//        })
-//    }
-//    func hideBackButton() {
-//        
-//        if self.backButtonVisibleLeadingConstraint != nil && self.backButtonVisibleTrailingConstraint != nil {
-//            
-//            self.view.removeConstraints([self.backButtonVisibleLeadingConstraint!, self.backButtonVisibleTrailingConstraint!])
-//        }
-//        if self.backButtonHidingConstraint != nil {
-//            
-//            self.view.addConstraint(self.backButtonHidingConstraint!)
-//        }
-//        
-//        UIView.animate(withDuration: 0.6, delay: 0, options: .curveEaseOut, animations: {
-//            self.view.layoutIfNeeded()
-//        })
-//    }
 	
 	override var preferredStatusBarStyle: UIStatusBarStyle {
 		get {
@@ -123,28 +101,34 @@ class UrsusViewController: UIViewController {
 	
 	
 	
-	// MARK: - PreferenceManager Delegate
+	// MARK: - Notifications
 	func themeDidChange() {
 		
 		DispatchQueue.main.async {
 			
 			self.setNeedsStatusBarAppearanceUpdate()
-			
+
 			if PreferenceManager.shared.theme == .dark {
 				self.view.tintColor = StyleKit.darkTintColor
 				self.view.backgroundColor = StyleKit.darkBackgroundColor
+				self.collectionView?.indicatorStyle = .white
 				self.topScrollFadeView?.tintColor = StyleKit.darkBackdropOverlayColor
 				self.bottomScrollFadeView?.tintColor = StyleKit.darkBackdropOverlayColor
 				self.navigationTitle?.textColor = StyleKit.darkPrimaryTextColor
 			} else {
 				self.view.tintColor = StyleKit.lightTintColor
 				self.view.backgroundColor = StyleKit.lightBackgroundColor
+				self.collectionView?.indicatorStyle = .black
 				self.topScrollFadeView?.tintColor = StyleKit.lightBackdropOverlayColor
 				self.bottomScrollFadeView?.tintColor = StyleKit.lightBackdropOverlayColor
 				self.navigationTitle?.textColor = StyleKit.lightPrimaryTextColor
 			}
 			
 		}
+	}
+	func didUpdateNewReleases() {
+		
+		// show banner if not on new releases view somehow... eheh
 	}
 	
 	

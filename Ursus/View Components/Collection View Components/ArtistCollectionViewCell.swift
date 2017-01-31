@@ -22,12 +22,15 @@ class ArtistCollectionViewCell: UrsusCollectionViewCell {
 	override func tintColorDidChange() {
 		super.tintColorDidChange()
 		
-		if self.tintColor.isDarkColor {
-			self.artistNameLabel?.textColor = StyleKit.darkPrimaryTextColor
-		} else {
-			self.artistNameLabel?.textColor = StyleKit.lightPrimaryTextColor
+		DispatchQueue.main.async {
+			
+			if self.tintColor.isDarkColor {
+				self.artistNameLabel?.textColor = StyleKit.darkPrimaryTextColor
+			} else {
+				self.artistNameLabel?.textColor = StyleKit.lightPrimaryTextColor
+			}
+			self.setNeedsDisplay()
 		}
-		self.setNeedsDisplay()
 	}
 
 }

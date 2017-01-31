@@ -17,7 +17,7 @@ class UrsusBlurView: UIVisualEffectView {
 		super.init(effect: effect)
 		
 		if self.changesWithTheme {
-			Notification.Name.UrsusThemeDidChange.add(self, selector: #selector(self.themeDidChange))
+			PreferenceManager.shared.themeDidChangeNotification.add(self, selector: #selector(self.themeDidChange))
 		}
 	}
 	
@@ -25,7 +25,7 @@ class UrsusBlurView: UIVisualEffectView {
 		super.init(coder: aDecoder)
 
 		if self.changesWithTheme {
-			Notification.Name.UrsusThemeDidChange.add(self, selector: #selector(self.themeDidChange))
+			PreferenceManager.shared.themeDidChangeNotification.add(self, selector: #selector(self.themeDidChange))
 		}
 	}
 	

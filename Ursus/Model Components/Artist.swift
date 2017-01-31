@@ -19,24 +19,16 @@ class Artist: NSObject, NSCoding {
 	var itunesURL: URL!
 	var summary: String?
 	var genre: String?
-	var artworkURLs: [String: URL]?
+	var artworkURLs: [ArtworkSize: URL]! = [:]
 	var releases: [Release]! = []
 	var latestRelease: Release? {
 		get {
-			return (self.releases.filter { (release) -> Bool in
-				if PreferenceManager.shared.ignoreSingles && release.type == .single {
-					return false
-				} else if PreferenceManager.shared.ignoreEPs && release.type == .EP {
-					return false
-				} else {
-					return true
-				}
-			}).max(by: { $0.isNewerThan($1) })
+			return self.releases.max(by: { $0.isNewerThan($1) })
 		}
 	}
 	
 	
-	init(itunesID: Int!, name: String!, itunesURL: URL!, summary: String?, genre: String?, artworkURLs: [String: URL]?, releases: [Release]?) {
+	init(itunesID: Int!, name: String!, itunesURL: URL!, summary: String?, genre: String?, artworkURLs: [ArtworkSize: URL]?, releases: [Release]?) {
 		
 		super.init()
 		
@@ -47,6 +39,7 @@ class Artist: NSObject, NSCoding {
 		self.genre = genre
 		self.artworkURLs = artworkURLs
 		self.releases = releases
+		
 	}
 	
 	
@@ -64,7 +57,7 @@ class Artist: NSObject, NSCoding {
 			aCoder.encode(self.genre, forKey: "genre")
 		}
 		if self.artworkURLs != nil {
-			aCoder.encode(self.artworkURLs, forKey: "artworkURLs")
+			aCoder.encode(self.artworkURLs.flatMap({ $0.value }), forKey: "artworkURLs")
 		}
 		if self.releases != nil {
 			aCoder.encode(self.releases, forKey: "releases")
@@ -79,7 +72,11 @@ class Artist: NSObject, NSCoding {
 		self.itunesURL = aDecoder.decodeObject(forKey: "itunesURL") as! URL
 		self.summary = aDecoder.decodeObject(forKey: "summary") as? String
 		self.genre = aDecoder.decodeObject(forKey: "genre") as? String
-		self.artworkURLs = aDecoder.decodeObject(forKey: "artworkURLs") as? [String: URL]
+		if let artworkArray = aDecoder.decodeObject(forKey: "artworkURLs") as? [URL] {
+			for (index, element) in artworkArray.enumerated() {
+				self.artworkURLs[ArtworkSize(rawValue: index)!] = element
+			}
+		}
 		self.releases = aDecoder.decodeObject(forKey: "releases") as! [Release]
 	}
 }

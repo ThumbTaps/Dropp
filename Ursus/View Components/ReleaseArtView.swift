@@ -20,7 +20,7 @@ class ReleaseArtView: UIView {
 		if self.themed {
 			
 			self.themeDidChange()
-			Notification.Name.UrsusThemeDidChange.add(self, selector: #selector(self.themeDidChange))
+			PreferenceManager.shared.themeDidChangeNotification.add(self, selector: #selector(self.themeDidChange))
 		}
 	}
 	required init?(coder aDecoder: NSCoder) {
@@ -29,7 +29,7 @@ class ReleaseArtView: UIView {
 		if self.themed {
 			
 			self.themeDidChange()
-			Notification.Name.UrsusThemeDidChange.add(self, selector: #selector(self.themeDidChange))
+			PreferenceManager.shared.themeDidChangeNotification.add(self, selector: #selector(self.themeDidChange))
 		}
 	}
 	func themeDidChange() {

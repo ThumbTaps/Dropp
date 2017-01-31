@@ -17,22 +17,25 @@ class FrostedBackdrop: UIView {
 	override init(frame: CGRect) {
 		super.init(frame: frame)
 		self.themeDidChange()
-		Notification.Name.UrsusThemeDidChange.add(self, selector: #selector(self.themeDidChange))
+		PreferenceManager.shared.themeDidChangeNotification.add(self, selector: #selector(self.themeDidChange))
 	}
 	required init?(coder aDecoder: NSCoder) {
 		super.init(coder: aDecoder)
 		self.themeDidChange()
-		Notification.Name.UrsusThemeDidChange.add(self, selector: #selector(self.themeDidChange))
+		PreferenceManager.shared.themeDidChangeNotification.add(self, selector: #selector(self.themeDidChange))
 	}
 	func themeDidChange() {
 		
-		if PreferenceManager.shared.theme == .dark {
-			self.tintColor = StyleKit.darkTintColor
-		} else {
-			self.tintColor = StyleKit.lightTintColor
+		DispatchQueue.main.async {
+			
+			if PreferenceManager.shared.theme == .dark {
+				self.tintColor = StyleKit.darkTintColor
+			} else {
+				self.tintColor = StyleKit.lightTintColor
+			}
+			
+			self.setNeedsDisplay()
 		}
-		
-		self.setNeedsDisplay()
 	}
 	
 	// Only override draw() if you perform custom drawing.
@@ -64,18 +67,23 @@ class FrostedBackdropOverlay: UIView {
         
         if self.changesWithTheme {
             self.themeDidChange()
-            Notification.Name.UrsusThemeDidChange.add(self, selector: #selector(self.themeDidChange))
+            PreferenceManager.shared.themeDidChangeNotification.add(self, selector: #selector(self.themeDidChange))
         }
 	}
 	required init?(coder aDecoder: NSCoder) {
 		super.init(coder: aDecoder)
         if self.changesWithTheme {
             self.themeDidChange()
-            Notification.Name.UrsusThemeDidChange.add(self, selector: #selector(self.themeDidChange))
+            PreferenceManager.shared.themeDidChangeNotification.add(self, selector: #selector(self.themeDidChange))
         }
 	}
 	func themeDidChange() {
-		self.setNeedsDisplay()		
+		
+		if PreferenceManager.shared.theme == .dark {
+			self.tintColor = StyleKit.darkBackdropOverlayColor
+		} else {
+			self.tintColor = StyleKit.lightBackdropOverlayColor
+		}
 	}
     override func tintColorDidChange() {
         super.tintColorDidChange()
@@ -83,15 +91,10 @@ class FrostedBackdropOverlay: UIView {
     }
 	override func draw(_ rect: CGRect) {
 		
-        if self.changesWithTheme {
-            if PreferenceManager.shared.theme == .dark {
-                self.layer.backgroundColor = StyleKit.darkBackdropOverlayColor.cgColor
-            } else {
-                self.layer.backgroundColor = StyleKit.lightBackdropOverlayColor.cgColor
-            }
-        } else {
-            self.layer.backgroundColor = self.tintColor.cgColor
+		DispatchQueue.main.async {
+			
+			self.layer.backgroundColor = self.tintColor.cgColor
 			self.backgroundColor = UIColor.clear
-        }
+		}
 	}
 }

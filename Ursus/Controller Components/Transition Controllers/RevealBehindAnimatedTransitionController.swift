@@ -12,15 +12,6 @@ class RevealBehindAnimatedTransitionController: NSObject, UIViewControllerAnimat
 
 	private var presenting = true
 	
-	override init() {
-		super.init()
-		Notification.Name.UrsusThemeDidChange.add(self, selector: #selector(self.themeDidChange))
-	}
-	func themeDidChange() {
-		if PreferenceManager.shared.theme == .dark {
-		} else {
-		}
-	}
 	func transitionDuration(using transitionContext: UIViewControllerContextTransitioning?) -> TimeInterval {
 		return self.presenting ? 0.8 : 0.7
 	}
@@ -57,7 +48,7 @@ class RevealBehindAnimatedTransitionController: NSObject, UIViewControllerAnimat
 				darkeningOverlay.alpha = 0.05
 			}, completion: { (completed) in
 				
-				UIView.animate(withDuration: duration * 0.8, delay: 0, usingSpringWithDamping: 0.8, initialSpringVelocity: 0.8, options: .curveEaseInOut, animations: {
+				UIView.animate(withDuration: duration * 0.8, delay: 0, usingSpringWithDamping: UIAccessibilityIsReduceMotionEnabled() ? 1 : 0.8, initialSpringVelocity: UIAccessibilityIsReduceMotionEnabled() ? 0 : 0.8, options: .curveEaseInOut, animations: {
 					source.view.frame = source.view.frame.offsetBy(dx: 0, dy: destination.view.frame.height - 90)
 					shadowView.frame = shadowView.frame.offsetBy(dx: 0, dy: destination.view.frame.height - 90)
 				}, completion: { (completed) in
@@ -73,7 +64,7 @@ class RevealBehindAnimatedTransitionController: NSObject, UIViewControllerAnimat
 			transitionContext.containerView.addSubview(source.view)
 			transitionContext.containerView.addSubview(destination.view)
 			
-			UIView.animate(withDuration: duration, delay: 0, usingSpringWithDamping: 0.8, initialSpringVelocity: 0.3, options: .curveEaseOut, animations: {
+			UIView.animate(withDuration: duration, delay: 0, usingSpringWithDamping: UIAccessibilityIsReduceMotionEnabled() ? 1 : 0.8, initialSpringVelocity: UIAccessibilityIsReduceMotionEnabled() ? 0 : 0.3, options: .curveEaseOut, animations: {
 				destination.view.transform = CGAffineTransform(scaleX: 1, y: 1)
 				destination.view.frame = transitionContext.finalFrame(for: destination)
 			}, completion: { (completed) in

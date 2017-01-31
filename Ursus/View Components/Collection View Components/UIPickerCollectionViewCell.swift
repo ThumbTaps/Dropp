@@ -9,13 +9,35 @@
 import UIKit
 
 class UIPickerCollectionViewCell: UrsusCollectionViewCell {
+	
+	@IBOutlet weak var leftTextLabel: UILabel!
+	@IBOutlet weak var pickerButton: UrsusButton!
+	@IBOutlet weak var rightTextLabel: UILabel!
 
-    /*
-    // Only override draw() if you perform custom drawing.
-    // An empty implementation adversely affects performance during animation.
-    override func draw(_ rect: CGRect) {
-        // Drawing code
-    }
-    */
-
+	override func layoutSubviews() {
+		super.layoutSubviews()
+		self.pickerButton?.layer.cornerRadius = 6
+	}
+	override func awakeFromNib() {
+		super.awakeFromNib()
+		
+		self.tintColorDidChange()
+	}
+	override func tintColorDidChange() {
+		super.tintColorDidChange()
+		
+		DispatchQueue.main.async {
+			
+			if self.tintColor.isDarkColor {
+				self.leftTextLabel?.textColor = StyleKit.darkPrimaryTextColor
+				self.rightTextLabel?.textColor = StyleKit.darkPrimaryTextColor
+			} else {
+				self.leftTextLabel?.textColor = StyleKit.lightPrimaryTextColor
+				self.rightTextLabel?.tintColor = StyleKit.lightPrimaryTextColor
+			}
+			
+			self.setNeedsDisplay()
+		}
+	}
+	
 }

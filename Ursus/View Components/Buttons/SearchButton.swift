@@ -39,7 +39,7 @@ class SearchButton: UrsusButton {
 			StyleKit.drawSearchIcon(frame: rect, resizing: .aspectFit, iconColor: StyleKit.darkPrimaryTextColor.withAlpha(0.2))
 		} else {
 			if !self.glyphOnly {
-				self.layer.backgroundColor = self.tintColor.withAlpha(0.45).cgColor
+				self.layer.backgroundColor = self.tintColor.withAlpha(0.5).cgColor
 			} else {
 				self.layer.backgroundColor = UIColor.clear.cgColor
 			}

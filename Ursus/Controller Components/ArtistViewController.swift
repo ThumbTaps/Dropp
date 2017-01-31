@@ -10,70 +10,96 @@ import UIKit
 
 class ArtistViewController: UrsusViewController, UICollectionViewDataSource, UICollectionViewDelegate, UICollectionViewDelegateFlowLayout {
 	
+	@IBOutlet weak var navigationTitleCenteredConstraint: NSLayoutConstraint!
+	@IBOutlet weak var closeButton: CloseButton!
 	@IBOutlet weak var followButton: UrsusButton!
     @IBOutlet weak var followButtonRestingConstraint: NSLayoutConstraint!
     @IBOutlet weak var followButtonHidingConstraint: NSLayoutConstraint!
+	@IBOutlet weak var followButtonCenteredConstraint: NSLayoutConstraint!
 	
 	var artist: Artist!
-    var artistArtwork: UIImage?
+	var artistArtworkImage: UIImage?
     private var colorPalette: UIImageColors?
 	
     override func viewDidLoad() {
         super.viewDidLoad()
 		
 		// don't monitor theme changes
-		Notification.Name.UrsusThemeDidChange.remove(self)
-		
-		self.colorPalette = self.artistArtwork?.getColors()
+		PreferenceManager.shared.themeDidChangeNotification.remove(self)
 		
 		self.navigationTitle?.text = self.artist?.name
-		self.backdrop?.imageView.image = self.artistArtwork
-		
-		if self.colorPalette != nil {
 			
-			DispatchQueue.main.async {
-				
+		if PreferenceManager.shared.followingArtists.contains(where: { $0.itunesID == self.artist.itunesID }) {
+			self.followButton.isEnabled = false
+			self.followButton.alpha = 0.5
+		}
+		
+		if PreferenceManager.shared.adaptiveArtistView {
+			
+			self.colorPalette = self.artistArtworkImage?.getColors()
+			self.backdrop?.imageView.image = self.artistArtworkImage
+		}
+		
+		DispatchQueue.main.async {
+			
+			if self.colorPalette != nil {
+			
 				self.view.backgroundColor = self.colorPalette!.backgroundColor
 				
-				self.view.tintColor = self.colorPalette?.primaryColor
+				self.view.tintColor = self.colorPalette!.primaryColor
+				
+				self.setNeedsStatusBarAppearanceUpdate()
 				
 				if self.colorPalette!.backgroundColor.isDarkColor {
 					self.navigationTitle?.textColor = UIColor.white
-					self.collectionView?.backgroundColor = self.colorPalette?.backgroundColor.withBrightness(0.1).withAlpha(0.5)
-					self.backdrop?.overlay.tintColor = self.colorPalette?.backgroundColor.withBrightness(0.1).withAlpha(0.9)
-					self.topScrollFadeView?.tintColor = self.colorPalette?.backgroundColor.withBrightness(0.1)
-					self.bottomScrollFadeView?.tintColor = self.colorPalette?.backgroundColor.withBrightness(0.1)
+					self.collectionView?.backgroundColor = self.colorPalette!.backgroundColor.withBrightness(0.1).withAlpha(0.25)
+					self.collectionView?.indicatorStyle = .white
+					self.backdrop?.overlay.tintColor = self.colorPalette!.backgroundColor.withBrightness(0.1).withAlpha(0.8)
+					self.topScrollFadeView?.tintColor = self.colorPalette!.backgroundColor.withBrightness(0.1)
+					self.bottomScrollFadeView?.tintColor = self.colorPalette!.backgroundColor.withBrightness(0.1)
 					
 				} else {
 					self.navigationTitle?.textColor = UIColor.black
-					self.collectionView?.backgroundColor = self.colorPalette?.backgroundColor.withBrightness(0.9).withAlpha(0.5)
-					self.backdrop?.overlay.tintColor = self.colorPalette?.backgroundColor.withBrightness(0.9).withAlpha(0.9)
-					self.topScrollFadeView?.tintColor = self.colorPalette?.backgroundColor.withBrightness(0.9)
-					self.bottomScrollFadeView?.tintColor = self.colorPalette?.backgroundColor.withBrightness(0.9)
+					self.collectionView?.backgroundColor = self.colorPalette!.backgroundColor.withBrightness(0.9).withAlpha(0.25)
+					self.collectionView?.indicatorStyle = .black
+					self.backdrop?.overlay.tintColor = self.colorPalette!.backgroundColor.withBrightness(0.9).withAlpha(0.8)
+					self.topScrollFadeView?.tintColor = self.colorPalette!.backgroundColor.withBrightness(0.9)
+					self.bottomScrollFadeView?.tintColor = self.colorPalette!.backgroundColor.withBrightness(0.9)
 				}
 				
-				self.followButton.tintColor = self.colorPalette?.primaryColor
+				self.closeButton.tintColor = self.colorPalette!.detailColor
+				self.followButton.tintColor = self.colorPalette!.primaryColor
 				
+			} else {
+				
+				// no color palette, go ahead and monitor theme changes
+				PreferenceManager.shared.themeDidChangeNotification.add(self, selector: #selector(self.themeDidChange))
+				self.themeDidChange()
 			}
 			
 		}
-    }
-	
+		
+	}
+
 	override func viewDidAppear(_ animated: Bool) {
-        super.viewDidAppear(animated)
 		
 		DispatchQueue.main.async {
 		
 			// move follow button in
-			self.backdrop?.overlay.removeConstraint(self.followButtonHidingConstraint)
+			self.backdrop?.overlay.removeConstraint(self.navigationTitleCenteredConstraint)
+			self.backdrop?.overlay.addConstraint(self.navigationTitleRestingConstraint!)
+			
+			UIView.animate(withDuration: 0.7, delay: 0, usingSpringWithDamping: 0.6, initialSpringVelocity: 0.8, options: .curveEaseOut, animations: {
+				self.view.layoutIfNeeded()
+			})
+			
+			self.backdrop?.overlay.removeConstraint(self.followButtonCenteredConstraint)
 			self.backdrop?.overlay.addConstraint(self.followButtonRestingConstraint)
 			
-			UIView.animate(withDuration: 0.4, delay: 0, usingSpringWithDamping: 0.6, initialSpringVelocity: 1, options: .curveEaseOut, animations: {
+			UIView.animate(withDuration: 0.6, delay: 0, usingSpringWithDamping: 0.6, initialSpringVelocity: 1, options: .curveEaseInOut, animations: {
 				self.view.layoutIfNeeded()
-			}, completion: { (finished) in
-				
-				// self.showBackButton()
 			})
+			
 		}
     }
 
@@ -84,13 +110,29 @@ class ArtistViewController: UrsusViewController, UICollectionViewDataSource, UIC
 	
     override var preferredStatusBarStyle: UIStatusBarStyle {
         get {
-            if self.colorPalette?.backgroundColor.isDarkColor ?? false {
+            if self.colorPalette?.backgroundColor.isDarkColor ?? (PreferenceManager.shared.theme == .dark) {
                 return .lightContent
             } else {
                 return .default
             }
         }
     }
+	override func themeDidChange() {
+		super.themeDidChange()
+		
+		DispatchQueue.main.async {
+			
+			self.setNeedsStatusBarAppearanceUpdate()
+			
+			if PreferenceManager.shared.theme == .dark {
+				self.collectionView?.backgroundColor = self.colorPalette?.backgroundColor.withBrightness(0.1).withAlpha(0.25)
+				
+			} else {
+				self.collectionView?.backgroundColor = self.colorPalette?.backgroundColor.withBrightness(0.9).withAlpha(0.25)
+			}
+			
+		}
+	}
 
 
 	
@@ -117,11 +159,11 @@ class ArtistViewController: UrsusViewController, UICollectionViewDataSource, UIC
 		
 		let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "LatestReleaseCell", for: indexPath) as! ReleaseCollectionViewCell
         
-		if self.colorPalette!.backgroundColor.isDarkColor {
-			cell.tintColor = self.colorPalette?.backgroundColor.withBrightness(0.1).withAlpha(0.3)
+		if self.colorPalette?.backgroundColor.isDarkColor ?? (PreferenceManager.shared.theme == .dark) {
+			cell.tintColor = self.colorPalette?.backgroundColor.withAlpha(0.4)
 			
 		} else {
-			cell.tintColor = self.colorPalette?.backgroundColor.withBrightness(0.9).withAlpha(0.3)
+			cell.tintColor = self.colorPalette?.backgroundColor.withAlpha(0.4)
 		}
 		
 		cell.releaseTitleLabel.text = self.artist.latestRelease?.title
@@ -151,12 +193,12 @@ class ArtistViewController: UrsusViewController, UICollectionViewDataSource, UIC
 		
 		let reusableView = collectionView.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: "LatestReleaseHeader", for: indexPath) as! HeaderCollectionReusableView
 		
-		if self.colorPalette!.backgroundColor.isDarkColor {
+		if self.colorPalette?.backgroundColor.isDarkColor ?? (PreferenceManager.shared.theme == .dark) {
 			
-			reusableView.tintColor = self.colorPalette?.backgroundColor.withBrightness(0.1).withAlpha(0.3)
+			reusableView.tintColor = self.colorPalette?.backgroundColor.withBrightness(0.1).withAlpha(0.2)
 		} else {
 			
-			reusableView.tintColor = self.colorPalette?.backgroundColor.withBrightness(0.9).withAlpha(0.3)
+			reusableView.tintColor = self.colorPalette?.backgroundColor.withBrightness(0.9).withAlpha(0.2)
 		}
 		reusableView.textLabel.text = "LATEST RELEASE"
 		
@@ -166,7 +208,7 @@ class ArtistViewController: UrsusViewController, UICollectionViewDataSource, UIC
 		return CGSize(width: self.view.bounds.width, height: 60)
 	}
 	func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
-		return CGSize(width: collectionView.bounds.size.width, height: 100)
+		return CGSize(width: self.view.bounds.size.width, height: 100)
 	}
 
 	
@@ -194,4 +236,11 @@ class ArtistViewController: UrsusViewController, UICollectionViewDataSource, UIC
 			}
 		}
     }
+	override func prepareForUnwind(for segue: UIStoryboardSegue) {
+		
+		self.artist = nil
+		self.colorPalette = nil
+		self.artistArtworkImage = nil
+		super.prepareForUnwind(for: segue)
+	}
 }

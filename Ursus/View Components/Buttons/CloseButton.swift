@@ -1,15 +1,15 @@
 //
-//  DownButton.swift
+//  CloseButton.swift
 //  Ursus
 //
-//  Created by Jeffery Jackson, Jr. on 1/13/17.
+//  Created by Jeffery Jackson, Jr. on 1/26/17.
 //  Copyright © 2017 Jeffery Jackson, Jr. All rights reserved.
 //
 
 import UIKit
 
-class DownButton: UrsusButton {
-
+class CloseButton: UrsusButton {
+	
 	override func themeDidChange() {
 		super.themeDidChange()
 		
@@ -33,14 +33,14 @@ class DownButton: UrsusButton {
 			} else {
 				self.layer.backgroundColor = UIColor.clear.cgColor
 			}
-			StyleKit.drawDownIcon(frame: rect, resizing: .aspectFit, iconColor: self.tintColor)
+			StyleKit.drawCloseIcon(frame: rect, resizing: .aspectFit, iconColor: self.tintColor)
 		} else {
 			if !self.glyphOnly {
 				self.layer.backgroundColor = self.tintColor.withAlpha(0.45).cgColor
 			} else {
 				self.layer.backgroundColor = UIColor.clear.cgColor
 			}
-			StyleKit.drawDownIcon(frame: rect, resizing: .aspectFit, iconColor: self.tintColor)
+			StyleKit.drawCloseIcon(frame: rect, resizing: .aspectFit, iconColor: self.tintColor)
 		}
 		
 	}

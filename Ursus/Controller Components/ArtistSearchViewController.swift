@@ -8,42 +8,18 @@
 
 import UIKit
 
-class ArtistSearchViewController: UrsusViewController, ArtistSearchBarDelegate, UIGestureRecognizerDelegate {
+class ArtistSearchViewController: UrsusViewController, UITextFieldDelegate, UIGestureRecognizerDelegate {
 	
 	@IBOutlet weak var searchBar: ArtistSearchBar!
 	@IBOutlet weak var searchBarHidingConstraint: NSLayoutConstraint!
 	@IBOutlet weak var searchBarCenteredConstraint: NSLayoutConstraint!
-	
-	var transitionData: Any?
-
-	private var _performingArtistSearch: Bool = false
-	var performingArtistSearch: Bool {
-		set {
-			self._performingArtistSearch = newValue
-			self.searchBar.isSearching = self._performingArtistSearch
-		}
-		get {
-			return self._performingArtistSearch
-		}
-	}
-	
-	private var _searchResults: [Any]?
-	var searchResults: Array<Any> {
-		set {
-			self._searchResults = newValue
-			self.handleSearchResults()
-		}
-		get {
-			return self._searchResults!
-		}
-	}
 
     override func viewDidLoad() {
         super.viewDidLoad()
 
 		// Do any additional setup after loading the view.
 		
-		self.searchBar.delegate = self
+		self.searchBar.textField.delegate = self
 		
 		Notification.Name.UIApplicationWillResignActive.add(self, selector: #selector(self.applicationWillResignActive))
 		
@@ -51,7 +27,6 @@ class ArtistSearchViewController: UrsusViewController, ArtistSearchBarDelegate, 
 	
 	override func viewDidAppear(_ animated: Bool) {
 		super.viewDidAppear(animated)
-		
 		
 		self.searchBar.textField.becomeFirstResponder()
 		self.searchBar.textField.selectedTextRange = searchBar.textField.textRange(from: searchBar.textField.beginningOfDocument, to: searchBar.textField.endOfDocument)
@@ -70,17 +45,18 @@ class ArtistSearchViewController: UrsusViewController, ArtistSearchBarDelegate, 
 	// MARK: - Notifications
 	func applicationWillResignActive() {
 		
+		self.searchBar.textField.resignFirstResponder()
+		Notification.Name.UIApplicationWillResignActive.remove(self)
 		// start listening for active notification
 		Notification.Name.UIApplicationDidBecomeActive.add(self, selector: #selector(self.applicationDidBecomeActive))
 		
-		self.searchBar.textField.resignFirstResponder()
 	}
 	func applicationDidBecomeActive() {
 		
+		self.searchBar.textField.becomeFirstResponder()
+		Notification.Name.UIApplicationDidBecomeActive.remove(self)
 		// start listening for inactive notification
 		Notification.Name.UIApplicationWillResignActive.add(self, selector: #selector(self.applicationWillResignActive))
-		
-		self.searchBar.textField.becomeFirstResponder()
 	}
 	
 	
@@ -116,131 +92,97 @@ class ArtistSearchViewController: UrsusViewController, ArtistSearchBarDelegate, 
 			})
 		}
 	}
-	func performSearch(for artist: String!) {
-		self.performingArtistSearch = true
+	func performSearch(for artistName: String!) {
 		
+		self.searchBar.textField.resignFirstResponder()
+
 		UIApplication.shared.isNetworkActivityIndicatorVisible = true
 		
+		self.searchBar.startSearching()
+		
 		// trigger search
-		RequestManager.shared.search(for: artist, on: .iTunes, completion: { (itunesResponse, error) -> Void in
+		RequestManager.shared.search(for: artistName, completion: { (artists, error) -> Void in
+			guard let artists = artists, error == nil else {
+				print(error!)
+				return
+			}
+			
+			if artists.count == 0 { // no results
+				
+				
+			} else if artists.count == 1 { // go directly to artist view
+				
+				let artist = artists[0]
 
-            UIApplication.shared.isNetworkActivityIndicatorVisible = false
-
-            guard error == nil else {
-                
-                print(error!)
-                return
-            }
-            
-            self.searchResults = itunesResponse!
-	
-		})
-	}
-	func handleSearchResults() {
-		if self.searchResults.count == 0 { // no results
-			
-			
-		} else if self.searchResults.count == 1 { // go directly to artist view
-			
-			let itunesArtistInfo = self.searchResults[0] as! [String: Any]
-			
-			UIApplication.shared.isNetworkActivityIndicatorVisible = true
-			
-			// get artist info from last.fm
-			RequestManager.shared.search(for: itunesArtistInfo["artistName"] as! String, on: .LastFM, completion: { (lastFMResponse, error) in
+				UIApplication.shared.isNetworkActivityIndicatorVisible = true
 				
-				UIApplication.shared.isNetworkActivityIndicatorVisible = false
-				
-				let lastFMArtistInfo = (lastFMResponse! as [Any])[0] as! [String: Any]
-				
-				// get artwork URLs
-				if let artistImages = lastFMArtistInfo["image"] as? [[String: Any]] {
-					
-					// construct array
-					var artistArtworkURLs: [String: URL] = [:]
-					artistImages.forEach({ (current) in
-						let url = current["#text"] as! String
-						artistArtworkURLs[current["size"] as! String] = URL(string: url)!
-					})
-					
-					UIApplication.shared.isNetworkActivityIndicatorVisible = true
-					
-					RequestManager.shared.getReleases(for: itunesArtistInfo["artistId"] as! Int, completion: { (releases, error) in
-						
+				// get additional artist info
+				RequestManager.shared.getAdditionalInfo(for: artist, completion: { (artist, error) in
+					guard artist != nil, error == nil else {
+						print(error!)
 						UIApplication.shared.isNetworkActivityIndicatorVisible = false
+
+						return
+					}
+					
+					// get latest releases
+					RequestManager.shared.getReleases(for: artist!, completion: { (releases, error) in
+						guard let releases = releases, artist != nil, error == nil else {
+							print(error!)
+							UIApplication.shared.isNetworkActivityIndicatorVisible = false
+
+							return
+						}
 						
-						// create artist object
-						let artist = Artist(
-							itunesID: itunesArtistInfo["artistId"] as! Int,
-							name: itunesArtistInfo["artistName"] as! String,
-							itunesURL: URL(string: itunesArtistInfo["artistLinkUrl"] as! String),
-							summary: (lastFMArtistInfo["bio"] as? [String: Any])?["summary"] as? String,
-							genre: itunesArtistInfo["primaryGenreName"] as? String,
-							artworkURLs: artistArtworkURLs,
-							releases: releases
-						)
+						artist!.releases = releases
 						
-						UIApplication.shared.isNetworkActivityIndicatorVisible = true
-						
-						// Load artwork
-						RequestManager.shared.loadImage(from: artist.artworkURLs!["mega"]!) { (artworkImage, error) in
+						// load artist artwork
+						RequestManager.shared.loadImage(from: (artist?.artworkURLs[.mega])!, completion: { (image, error) in
+							guard let image = image, artist != nil, error == nil else {
+								print(error!)
+								UIApplication.shared.isNetworkActivityIndicatorVisible = false
+
+								return
+							}
 							
 							UIApplication.shared.isNetworkActivityIndicatorVisible = false
 							
-							let artistViewData: [String: Any] = [
-								"artist": artist,
-								"artistArtwork": artworkImage!
-							]
-							
-							self.transitionData = artistViewData
-							
-							self.performingArtistSearch = false
-							
-							
-						}
+							self.searchBar.endSearching {
+								self.performSegue(withIdentifier: "ArtistSearch->Artist", sender: { (destination: ArtistViewController) in
+									destination.artist = artist
+									destination.artistArtworkImage = image
+								})
+							}
+						})
 						
 					})
-					
-				}
-			})
+				})
+				
+			} else { // go to search results
+				
+				
+			}
 			
-		} else { // go to search results
-			
-			
-		}
+		})
 	}
-	
-	
-	
-	
+
+
+
+
 	// MARK: - ArtistSearchBarDelegate
-	func searchBarTextFieldDidChange(_ searchBar: ArtistSearchBar) {
+	func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
 		
-	}
-	func searchBar(_ searchBar: ArtistSearchBar, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
-		
-		let currentCharacterCount = searchBar.textField.text?.characters.count ?? 0
+		let currentCharacterCount = self.searchBar.textField.text?.characters.count ?? 0
 		if (range.length + range.location > currentCharacterCount){
 			return false
 		}
 		let newLength = currentCharacterCount + string.characters.count - range.length
 		return newLength <= 60
 	}
-	func searchBarShouldReturn(_ searchBar: ArtistSearchBar) -> Bool {
-		
+	func textFieldShouldReturn(_ textField: UITextField) -> Bool {
 		self.performSearch(for: self.searchBar.textField.text)
 		
-		self.searchBar.textField.resignFirstResponder()
-		
 		return true
-	}
-	func searchBarShouldShowCompletedSearch(_ searchBar: ArtistSearchBar) -> Bool {
-		
-		return !self.performingArtistSearch
-	}
-	func searchBarDidShowCompletedSearch(_ searchBar: ArtistSearchBar) {
-		
-		self.performSegue(withIdentifier: "ArtistSearch->Artist", sender: self.transitionData)
 	}
 
 	
@@ -269,12 +211,8 @@ class ArtistSearchViewController: UrsusViewController, ArtistSearchBarDelegate, 
 		} else if segue.identifier == "ArtistSearch->ArtistSearchResults" {
             
         } else if segue.identifier == "ArtistSearch->Artist" {
-            
-            // pass off artist information
-            if let artistData = sender as? [String: Any] {
-                (segue.destination as! ArtistViewController).artist = artistData["artist"] as? Artist
-                (segue.destination as! ArtistViewController).artistArtwork = artistData["artistArtwork"] as? UIImage
-            }
+			
+            (sender as! ((ArtistViewController) -> Void))(segue.destination as! ArtistViewController)
             
         }
 

@@ -10,10 +10,10 @@ import UIKit
 
 class SettingsViewController: UrsusViewController, UICollectionViewDataSource, UICollectionViewDelegate, UICollectionViewDelegateFlowLayout, ThemeModeCollectionViewCellDelegate {
 	
-	var unwindSegueIdentifier = "Settings->NewReleases"
-	
     override func viewDidLoad() {
         super.viewDidLoad()
+		
+		PreferenceManager.shared.didChangeReleaseOptionsNotification.add(self, selector: #selector(self.didChangeReleaseOptions))
 		
 		DispatchQueue.main.async {
 			
@@ -25,15 +25,12 @@ class SettingsViewController: UrsusViewController, UICollectionViewDataSource, U
 				self.view.backgroundColor = StyleKit.lightTintColor
 				self.collectionView?.backgroundColor = StyleKit.lightBackdropOverlayColor.withAlphaComponent(0.95)
 			}
+			
+			self.collectionView?.contentInset = UIEdgeInsets(top: 30, left: 0, bottom: 80, right: 0)
 		}
 		
     }
 	
-	override func viewWillAppear(_ animated: Bool) {
-		super.viewWillAppear(animated)
-		
-	}
-
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
@@ -65,24 +62,33 @@ class SettingsViewController: UrsusViewController, UICollectionViewDataSource, U
 		return 2
 	}
 	func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+		var numRows = 0
+		
 		switch section {
-		case 0: // THEME OPTIONS
-			var numRows = 1
+		case 0: // DISPLAY OPTIONS
+			numRows = 2
 			if PreferenceManager.shared.themeMode == .auto {
 				numRows += 2
 				if PreferenceManager.shared.themeDeterminer == .displayBrightness {
 					numRows += 1
 				}
 			}
-			
-			return numRows
+			break
 			
 		case 1: // RELEASE OPTIONS
-			return 2
+			numRows = 3
+			if PreferenceManager.shared.includeSingles {
+				numRows += 1
+			}
+			if PreferenceManager.shared.showPreviousReleases {
+				numRows += 1
+			}
+			break
 			
-		default:
-			return 0
+		default: return numRows
 		}
+		
+		return numRows
 	}
 	func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, referenceSizeForHeaderInSection section: Int) -> CGSize {
 		return CGSize(width: self.view.bounds.width, height: 60)
@@ -91,7 +97,7 @@ class SettingsViewController: UrsusViewController, UICollectionViewDataSource, U
 		var size = CGSize(width: collectionView.frame.width, height: 50)
 		
 		switch indexPath.section {
-		case 0: // THEME OPTIONS
+		case 0: // DISPLAY OPTIONS
 			switch indexPath.row {
 			case 0: size.height = 120 // THEME MODE
 			default: return size
@@ -102,13 +108,18 @@ class SettingsViewController: UrsusViewController, UICollectionViewDataSource, U
 	}
 	func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, referenceSizeForFooterInSection section: Int) -> CGSize {
 		
+		let standardFooterSize = CGSize(width: self.view.bounds.width, height: 80)
 		switch section {
-		case 0: // THEME OPTIONS
+		case 0: // DISPLAY OPTIONS
 			if PreferenceManager.shared.themeMode == .auto {
-				return CGSize(width: self.view.bounds.width, height: 50)
+				return standardFooterSize
 			} else {
 				return .zero
 			}
+			
+		case 1: // RELEASE OPTIONS
+			return standardFooterSize
+			
 		default: return .zero
 		}
 	}
@@ -121,7 +132,7 @@ class SettingsViewController: UrsusViewController, UICollectionViewDataSource, U
 			reusableView = collectionView.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: "SettingsCollectionViewHeader", for: indexPath) as! HeaderCollectionReusableView
 			switch indexPath.section {
 				
-			case 0: (reusableView as! HeaderCollectionReusableView).textLabel.text = "THEME OPTIONS"
+			case 0: (reusableView as! HeaderCollectionReusableView).textLabel.text = "DISPLAY OPTIONS"
 				break
 				
 			case 1: (reusableView as! HeaderCollectionReusableView).textLabel.text = "RELEASE OPTIONS"
@@ -136,18 +147,58 @@ class SettingsViewController: UrsusViewController, UICollectionViewDataSource, U
 		else if kind == UICollectionElementKindSectionFooter {
 			
 			reusableView = collectionView.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: "SettingsCollectionViewFooter", for: indexPath) as! FooterCollectionReusableView
+			
+			var footerText = ""
+			
 			switch indexPath.section {
 			
-			case 0:
+			case 0: // DISPLAY OPTIONS
 				if PreferenceManager.shared.themeMode == .auto {
 					if PreferenceManager.shared.themeDeterminer == .displayBrightness {
-						(reusableView as! FooterCollectionReusableView).textLabel.text = "The theme will change according to the display's brightness setting."
+						footerText += "The theme will change according to the display's brightness setting. "
 					} else if PreferenceManager.shared.themeDeterminer == .twilight {
-						(reusableView as! FooterCollectionReusableView).textLabel.text = "The theme will change according to the rising and setting of the sun."
+						footerText += "The theme will change according to the rising and setting of the sun. "
 					}
 				}
+				if PreferenceManager.shared.adaptiveArtistView {
+					footerText += "The artist view will adapt to match the color palette of the current artist's artwork. "
+				} else {
+					footerText += "The artist view will match the color palette of the rest of the app. "
+				}
+				break
+				
+			case 1: // RELEASE OPTIONS
+				if PreferenceManager.shared.includeSingles && PreferenceManager.shared.includeEPs {
+					if PreferenceManager.shared.ignoreFeatures {
+						footerText += "New releases will include EPs and exclude singles where the artist is only featuring. "
+					} else {
+						footerText += "New releases will include EPs and singles. "
+					}
+				} else if PreferenceManager.shared.includeSingles && !PreferenceManager.shared.includeEPs {
+					if PreferenceManager.shared.ignoreFeatures {
+						footerText += "New releases will exclude EPs and singles where the artist is only featuring. "
+					} else {
+						footerText += "New releases will exclude EPs. "
+					}
+				} else if !PreferenceManager.shared.includeSingles && PreferenceManager.shared.includeEPs {
+					footerText += "New releases will exclude all singles. "
+				} else {
+					footerText += "New releases will exclude EPs and singles. "
+				}
+				if PreferenceManager.shared.showPreviousReleases {
+					var timeUnit = " months"
+					if PreferenceManager.shared.maxReleaseAge == 1 {
+						timeUnit = " month"
+					}
+					footerText += "Releases from the past \(PreferenceManager.shared.maxReleaseAge == 1 ? timeUnit : String(PreferenceManager.shared.maxReleaseAge) + timeUnit) will be shown. "
+				}
+				break
+				
 			default: return reusableView
 			}
+			
+			(reusableView as! FooterCollectionReusableView).textLabel?.text = footerText
+			
 			return reusableView
 		}
 		
@@ -157,7 +208,7 @@ class SettingsViewController: UrsusViewController, UICollectionViewDataSource, U
 		
 		var cell = UICollectionViewCell()
 		switch indexPath.section {
-		case 0: // THEME OPTIONS
+		case 0: // DISPLAY OPTIONS
 			switch indexPath.row {
 			case 0: // THEME MODE
 				cell = collectionView.dequeueReusableCell(withReuseIdentifier: "ThemeModeCell", for: indexPath) as! ThemeModeCollectionViewCell
@@ -182,26 +233,34 @@ class SettingsViewController: UrsusViewController, UICollectionViewDataSource, U
 				
 			case 1: // THEME MODE DETERMINER
 				cell = collectionView.dequeueReusableCell(withReuseIdentifier: "ThemeDeterminerDisplayBrightnessCell", for: indexPath) as! UrsusCollectionViewCell
-				(cell as! SettingsCollectionViewCell).textLabel?.text = "Display Brightness"
 				(cell as! SettingsCollectionViewCell).accessoryView?.isHidden = PreferenceManager.shared.themeDeterminer != .displayBrightness
 				break
 				
 			case 2: // DISPLAY BRIGHTNESS THRESHOLD OR TWILIGHT
 				if PreferenceManager.shared.themeDeterminer == .displayBrightness {
 					cell = collectionView.dequeueReusableCell(withReuseIdentifier: "DisplayBrightnessThresholdCell", for: indexPath)
-					(cell as! DisplayBrightnessThresholdCollectionViewCell).slider.value = PreferenceManager.shared.themeBrightnessThreshold
+					(cell as! DisplayBrightnessThresholdCollectionViewCell).slider.value = Float(PreferenceManager.shared.themeBrightnessThreshold)
 				} else {
 					cell = collectionView.dequeueReusableCell(withReuseIdentifier: "ThemeDeterminerTwilightCell", for: indexPath)
-					(cell as! SettingsCollectionViewCell).textLabel?.text = "Twilight"
 					(cell as! SettingsCollectionViewCell).accessoryView?.isHidden = PreferenceManager.shared.themeDeterminer != .twilight
 				}
 				break
 				
-			case 3: // TWILIGHT
-				cell = collectionView.dequeueReusableCell(withReuseIdentifier: "ThemeDeterminerTwilightCell", for: indexPath)
-				(cell as! SettingsCollectionViewCell).textLabel?.text = "Twilight"
-				(cell as! SettingsCollectionViewCell).accessoryView?.isHidden = PreferenceManager.shared.themeDeterminer != .twilight
-			
+			case 3: // TWILIGHT OR ADAPTIVE ARTIST VIEW
+				if PreferenceManager.shared.themeDeterminer == .displayBrightness {
+					cell = collectionView.dequeueReusableCell(withReuseIdentifier: "ThemeDeterminerTwilightCell", for: indexPath)
+					(cell as! SettingsCollectionViewCell).accessoryView?.isHidden = PreferenceManager.shared.themeDeterminer != .twilight
+				} else {
+					cell = collectionView.dequeueReusableCell(withReuseIdentifier: "AdaptiveArtistViewCell", for: indexPath)
+					((cell as! SettingsCollectionViewCell).accessoryView as? UISwitch)?.isOn = PreferenceManager.shared.adaptiveArtistView
+				}
+				break
+				
+			case 4:
+				cell = collectionView.dequeueReusableCell(withReuseIdentifier: "AdaptiveArtistViewCell", for: indexPath)
+				((cell as! SettingsCollectionViewCell).accessoryView as? UISwitch)?.isOn = PreferenceManager.shared.adaptiveArtistView
+				break
+				
 			default: return cell
 			}
 			return cell
@@ -209,19 +268,56 @@ class SettingsViewController: UrsusViewController, UICollectionViewDataSource, U
 		case 1: // RELEASE OPTIONS
 			switch indexPath.row {
 			case 0: // IGNORE SINGLES
-				cell = collectionView.dequeueReusableCell(withReuseIdentifier: "IgnoreSinglesCell", for: indexPath) as! SettingsCollectionViewCell
-				(cell as! SettingsCollectionViewCell).textLabel?.text = "Ignore Singles"
-				((cell as! SettingsCollectionViewCell).accessoryView as? UISwitch)?.isOn = PreferenceManager.shared.ignoreSingles
+				cell = collectionView.dequeueReusableCell(withReuseIdentifier: "IncludeSinglesCell", for: indexPath) as! SettingsCollectionViewCell
+				((cell as! SettingsCollectionViewCell).accessoryView as? UISwitch)?.isOn = PreferenceManager.shared.includeSingles
 				break
 				
-			case 1: // IGNORE EPS
-				cell = collectionView.dequeueReusableCell(withReuseIdentifier: "IgnoreEPsCell", for: indexPath) as! SettingsCollectionViewCell
-				(cell as! SettingsCollectionViewCell).textLabel?.text = "Ignore EPs"
-				((cell as! SettingsCollectionViewCell).accessoryView as? UISwitch)?.isOn = PreferenceManager.shared.ignoreEPs
+			case 1: // INCLUDE EPS / IGNORE FEATURES
+				if PreferenceManager.shared.includeSingles {
+					cell = collectionView.dequeueReusableCell(withReuseIdentifier: "IgnoreFeaturesCell", for: indexPath) as! SettingsCollectionViewCell
+					((cell as! SettingsCollectionViewCell).accessoryView as? UISwitch)?.isOn = PreferenceManager.shared.ignoreFeatures
+				} else {
+					cell = collectionView.dequeueReusableCell(withReuseIdentifier: "IncludeEPsCell", for: indexPath) as! SettingsCollectionViewCell
+					((cell as! SettingsCollectionViewCell).accessoryView as? UISwitch)?.isOn = PreferenceManager.shared.includeEPs
+				}
 				break
 				
-			case 2: // MAX RELEASE AGE
+			case 2: // INCLUDE EPS / SHOW PREVIOUS RELEASES
+				if PreferenceManager.shared.includeSingles {
+					cell = collectionView.dequeueReusableCell(withReuseIdentifier: "IncludeEPsCell", for: indexPath) as! SettingsCollectionViewCell
+					((cell as! SettingsCollectionViewCell).accessoryView as? UISwitch)?.isOn = PreferenceManager.shared.includeEPs
+				} else {
+					cell = collectionView.dequeueReusableCell(withReuseIdentifier: "ShowPreviousReleasesCell", for: indexPath)
+					((cell as! SettingsCollectionViewCell).accessoryView as? UISwitch)?.isOn = PreferenceManager.shared.showPreviousReleases
+				}
+				break
+				
+			case 3: // SHOW PREVIOUS RELEASES / MAX RELEASE AGE
+				
+				if PreferenceManager.shared.includeSingles {
+					cell = collectionView.dequeueReusableCell(withReuseIdentifier: "ShowPreviousReleasesCell", for: indexPath)
+					((cell as! SettingsCollectionViewCell).accessoryView as? UISwitch)?.isOn = PreferenceManager.shared.showPreviousReleases
+				} else {
+					cell = collectionView.dequeueReusableCell(withReuseIdentifier: "MaxReleaseAgeCell", for: indexPath)
+					(cell as! UIPickerCollectionViewCell).leftTextLabel.text = "Only show releases from the past"
+					(cell as! UIPickerCollectionViewCell).pickerButton.setTitle(String(PreferenceManager.shared.maxReleaseAge), for: .normal)
+					var timeUnit = "days"
+					if PreferenceManager.shared.maxReleaseAge == 1 {
+						timeUnit = "day"
+					}
+					(cell as! UIPickerCollectionViewCell).rightTextLabel.text = timeUnit
+				}
+				break
+				
+			case 4: // MAX RELEASE AGE
 				cell = collectionView.dequeueReusableCell(withReuseIdentifier: "MaxReleaseAgeCell", for: indexPath)
+				(cell as! UIPickerCollectionViewCell).leftTextLabel.text = "Only show releases from the past"
+				(cell as! UIPickerCollectionViewCell).pickerButton.setTitle(String(PreferenceManager.shared.maxReleaseAge), for: .normal)
+				var timeUnit = "days"
+				if PreferenceManager.shared.maxReleaseAge == 1 {
+					timeUnit = "day"
+				}
+				(cell as! UIPickerCollectionViewCell).rightTextLabel.text = timeUnit
 				break
 				
 			default: return cell
@@ -229,12 +325,13 @@ class SettingsViewController: UrsusViewController, UICollectionViewDataSource, U
 			return cell
 			
 		default: return cell
+			
 		}
 		
 	}
 	func collectionView(_ collectionView: UICollectionView, shouldHighlightItemAt indexPath: IndexPath) -> Bool {
 		switch indexPath.section {
-		case 0: // THEME OPTIONS
+		case 0: // DISPLAY OPTIONS
 			switch indexPath.row {
 			case 1: return true // DISPLAY BRIGHTNESS
 			case 2: return PreferenceManager.shared.themeDeterminer != .displayBrightness // BRIGHTNESS THRESHOLD / TWILIGHT
@@ -250,7 +347,7 @@ class SettingsViewController: UrsusViewController, UICollectionViewDataSource, U
 	func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
 		
 		switch indexPath.section {
-		case 0: // THEME OPTIONS
+		case 0: // DISPLAY OPTIONS
 			switch indexPath.row {
 			case 1: // DISPLAY BRIGHTNESS
 				PreferenceManager.shared.themeDeterminer = .displayBrightness
@@ -277,21 +374,35 @@ class SettingsViewController: UrsusViewController, UICollectionViewDataSource, U
 		} else {
 			PreferenceManager.shared.themeMode = .auto
 		}
-		collectionView?.reloadSections([0])
+		self.collectionView?.reloadSections([0])
+	}
+	func didChangeReleaseOptions() {
+		self.collectionView?.reloadSections([1])
 	}
 
 	
 	
 	
 	
-	@IBAction func toggleIgnoreSingles(_ sender: UISwitch) {
-		PreferenceManager.shared.ignoreSingles = sender.isOn
-	}
-	@IBAction func toggleIgnoreEPs(_ sender: UISwitch) {
-		PreferenceManager.shared.ignoreEPs = sender.isOn
-	}
 	@IBAction func adjustThemeModeDisplayBrightnessThreshold(_ sender: UISlider) {
-		PreferenceManager.shared.themeBrightnessThreshold = sender.value
+		PreferenceManager.shared.themeBrightnessThreshold = Double(sender.value)
+	}
+	@IBAction func toggleAdaptiveArtistView(_ sender: UISwitch) {
+		PreferenceManager.shared.adaptiveArtistView = sender.isOn
+		self.collectionView?.reloadSections([0])
+	}
+
+	@IBAction func toggleIncludeSingles(_ sender: UISwitch) {
+		PreferenceManager.shared.includeSingles = sender.isOn
+	}
+	@IBAction func toggleIgnoreFeatures(_ sender: UISwitch) {
+		PreferenceManager.shared.ignoreFeatures = sender.isOn
+	}
+	@IBAction func toggleIncludeEPs(_ sender: UISwitch) {
+		PreferenceManager.shared.includeEPs = sender.isOn
+	}
+	@IBAction func toggleShowPreviousReleases(_ sender: UISwitch) {
+		PreferenceManager.shared.showPreviousReleases = sender.isOn
 	}
 	
 	

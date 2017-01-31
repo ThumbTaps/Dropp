@@ -14,9 +14,9 @@ class UrsusCollectionViewCell: UICollectionViewCell {
 	@IBInspectable var changesWithTheme: Bool = true {
 		didSet {
 			if self.changesWithTheme {
-				Notification.Name.UrsusThemeDidChange.add(self, selector: #selector(self.themeDidChange))
+				PreferenceManager.shared.themeDidChangeNotification.add(self, selector: #selector(self.themeDidChange))
 			} else {
-				Notification.Name.UrsusThemeDidChange.remove(self)
+				PreferenceManager.shared.themeDidChangeNotification.remove(self)
 			}
 		}
 	}
@@ -26,7 +26,7 @@ class UrsusCollectionViewCell: UICollectionViewCell {
 		
 		if self.changesWithTheme {
 			self.themeDidChange()
-			Notification.Name.UrsusThemeDidChange.add(self, selector: #selector(self.themeDidChange))
+			PreferenceManager.shared.themeDidChangeNotification.add(self, selector: #selector(self.themeDidChange))
 		}
 		self.selectedBackgroundView = UIView(frame: self.bounds)
 	}
@@ -35,7 +35,7 @@ class UrsusCollectionViewCell: UICollectionViewCell {
 		
 		if self.changesWithTheme {
 			self.themeDidChange()
-			Notification.Name.UrsusThemeDidChange.add(self, selector: #selector(self.themeDidChange))
+			PreferenceManager.shared.themeDidChangeNotification.add(self, selector: #selector(self.themeDidChange))
 		}
 		self.selectedBackgroundView = UIView(frame: self.bounds)
 	}

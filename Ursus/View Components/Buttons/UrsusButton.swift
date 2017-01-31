@@ -14,9 +14,9 @@ class UrsusButton: UIButton {
 	@IBInspectable var changesWithTheme: Bool = true {
 		didSet {
 			if self.changesWithTheme {
-				Notification.Name.UrsusThemeDidChange.add(self, selector: #selector(self.themeDidChange))
+				PreferenceManager.shared.themeDidChangeNotification.add(self, selector: #selector(self.themeDidChange))
 			} else {
-				Notification.Name.UrsusThemeDidChange.remove(self)
+				PreferenceManager.shared.themeDidChangeNotification.remove(self)
 			}
 		}
 	}
@@ -31,7 +31,7 @@ class UrsusButton: UIButton {
 		if self.changesWithTheme {
 			
 			self.themeDidChange()
-			Notification.Name.UrsusThemeDidChange.add(self, selector: #selector(self.themeDidChange))
+			PreferenceManager.shared.themeDidChangeNotification.add(self, selector: #selector(self.themeDidChange))
 		}
         
 	}
@@ -42,7 +42,7 @@ class UrsusButton: UIButton {
 		if self.changesWithTheme {
 			
 			self.themeDidChange()
-			Notification.Name.UrsusThemeDidChange.add(self, selector: #selector(self.themeDidChange))
+			PreferenceManager.shared.themeDidChangeNotification.add(self, selector: #selector(self.themeDidChange))
 		}
 		
 	}
@@ -91,12 +91,6 @@ class UrsusButton: UIButton {
 		}
 		
     }
-	func radiate() {
-		
-	}
-	func collapse() {
-		
-	}
 	
 	
 	
