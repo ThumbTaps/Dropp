@@ -32,9 +32,9 @@ class UrsusViewController: UIViewController {
 		PreferenceManager.shared.themeDidChangeNotification.add(self, selector: #selector(self.themeDidChange))
 		
 		// start listening for new releases updates
-		PreferenceManager.shared.didUpdateNewReleasesNotification.add(self, selector: #selector(self.didUpdateNewReleases))
+		PreferenceManager.shared.didUpdateReleasesNotification.add(self, selector: #selector(self.didUpdateNewReleases))
 
-		self.collectionView?.contentInset = UIEdgeInsets(top: (self.topScrollFadeView?.frame.height ?? 120) - 40, left: 0, bottom: 80, right: 0)
+		self.collectionView?.contentInset = UIEdgeInsets(top: (self.topScrollFadeView?.frame.height ?? 120) - 40, left: 0, bottom: (self.bottomScrollFadeView?.frame.height ?? 120) - 40, right: 0)
 
 		// This can't be a direct call to self.themeDidChange because it will trigger on other view controllers that may want to animate in certain properties
 		DispatchQueue.main.async {
@@ -43,14 +43,12 @@ class UrsusViewController: UIViewController {
 			
 			if PreferenceManager.shared.theme == .dark {
 				self.view.tintColor = StyleKit.darkTintColor
-				self.view.backgroundColor = StyleKit.darkBackgroundColor
 				self.collectionView?.indicatorStyle = .white
 				self.topScrollFadeView?.tintColor = StyleKit.darkBackdropOverlayColor
 				self.bottomScrollFadeView?.tintColor = StyleKit.darkBackdropOverlayColor
 				self.navigationTitle?.textColor = StyleKit.darkPrimaryTextColor
 			} else {
 				self.view.tintColor = StyleKit.lightTintColor
-				self.view.backgroundColor = StyleKit.lightBackgroundColor
 				self.collectionView?.indicatorStyle = .black
 				self.topScrollFadeView?.tintColor = StyleKit.lightBackdropOverlayColor
 				self.bottomScrollFadeView?.tintColor = StyleKit.lightBackdropOverlayColor
@@ -64,20 +62,19 @@ class UrsusViewController: UIViewController {
 	override func viewDidAppear(_ animated: Bool) {
 		super.viewDidAppear(animated)
 		
-		if self.navigationTitle != nil {
-			// move navigation title in
-			self.backdrop?.overlay.removeConstraint(self.navigationTitleHidingConstraint!)
-			self.backdrop?.overlay.addConstraint(self.navigationTitleRestingConstraint!)
-			
-			DispatchQueue.main.async {
-				UIView.animate(withDuration: 0.5, delay: 0, usingSpringWithDamping: 0.6, initialSpringVelocity: 0.8, options: .curveEaseOut, animations: {
-					self.view.layoutIfNeeded()
-				})
-			}
+		guard self.navigationTitle != nil, navigationTitleHidingConstraint != nil, navigationTitleRestingConstraint != nil else {
+			return
 		}
 		
+		DispatchQueue.main.async {
+			// move navigation title in
+			(self.backdrop?.overlay ?? self.view).removeConstraint(self.navigationTitleHidingConstraint!)
+			(self.backdrop?.overlay ?? self.view).addConstraint(self.navigationTitleRestingConstraint!)
 		
-
+			UIView.animate(withDuration: 0.5, delay: 0, usingSpringWithDamping: 0.6, initialSpringVelocity: 0.8, options: .curveEaseOut, animations: {
+				(self.backdrop?.overlay ?? self.view).layoutIfNeeded()
+			})
+		}
 	}
 
     override func didReceiveMemoryWarning() {

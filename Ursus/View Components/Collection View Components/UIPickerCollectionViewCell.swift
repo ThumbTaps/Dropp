@@ -11,13 +11,9 @@ import UIKit
 class UIPickerCollectionViewCell: UrsusCollectionViewCell {
 	
 	@IBOutlet weak var leftTextLabel: UILabel!
-	@IBOutlet weak var pickerButton: UrsusButton!
+	@IBOutlet weak var pickerButton: UIPickerCollectionViewCellButton!
 	@IBOutlet weak var rightTextLabel: UILabel!
 
-	override func layoutSubviews() {
-		super.layoutSubviews()
-		self.pickerButton?.layer.cornerRadius = 6
-	}
 	override func awakeFromNib() {
 		super.awakeFromNib()
 		
@@ -33,11 +29,22 @@ class UIPickerCollectionViewCell: UrsusCollectionViewCell {
 				self.rightTextLabel?.textColor = StyleKit.darkPrimaryTextColor
 			} else {
 				self.leftTextLabel?.textColor = StyleKit.lightPrimaryTextColor
-				self.rightTextLabel?.tintColor = StyleKit.lightPrimaryTextColor
+				self.rightTextLabel?.textColor = StyleKit.lightPrimaryTextColor
 			}
 			
 			self.setNeedsDisplay()
+			self.setNeedsLayout()
 		}
 	}
 	
+}
+
+
+class UIPickerCollectionViewCellButton: UrsusButton {
+	
+	override func draw(_ rect: CGRect) {
+		super.draw(rect)
+		
+		self.layer.cornerRadius = 4
+	}
 }

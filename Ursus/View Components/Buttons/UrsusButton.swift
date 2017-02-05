@@ -104,11 +104,10 @@ class UrsusButton: UIButton {
 	override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
 		super.touchesBegan(touches, with: event)
 		
-		let feedbackGenerator = UISelectionFeedbackGenerator()
-		feedbackGenerator.selectionChanged()
+		let feedbackGenerator = UIImpactFeedbackGenerator(style: .light)
+		feedbackGenerator.impactOccurred()
 		
 		UIView.animate(withDuration: 0.4, delay: 0, usingSpringWithDamping: 0.5, initialSpringVelocity: 0.8, options: .curveEaseOut, animations: {
-			self.alpha = 0.75
 			self.transform = CGAffineTransform(scaleX: self.tapScale, y: self.tapScale)
 		})
 		
@@ -127,7 +126,6 @@ class UrsusButton: UIButton {
 	override func touchesEnded(_ touches: Set<UITouch>, with event: UIEvent?) {
 		
 		UIView.animate(withDuration: 0.5, delay: 0, usingSpringWithDamping: 0.6, initialSpringVelocity: 0.8, options: .curveEaseOut, animations: {
-			self.alpha = 1
 			self.transform = CGAffineTransform(scaleX: 1, y: 1)
 		})
 		

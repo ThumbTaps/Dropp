@@ -25,7 +25,6 @@ class BlurAndOverlayAnimatedTransitionController: NSObject, UIViewControllerAnim
 		
 		let duration = self.transitionDuration(using: transitionContext)
 		
-		
 		if self.presenting {
 			self.blurView = UrsusBlurView(frame: source.view.bounds)
 			transitionContext.containerView.addSubview(self.blurView!)

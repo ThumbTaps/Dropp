@@ -10,7 +10,7 @@ import UIKit
 import CoreLocation
 
 enum RequestManagerError: Error {
-	case artistSearchUnavailable, additionalArtistInfoUnavailable, artistReleasesUnavailable, artistArtworkUnavailable, sunriseSunsetUnavailable
+	case artistSearchUnavailable, additionalArtistInfoUnavailable, artistReleasesUnavailable, sunriseSunsetUnavailable
 }
 
 class RequestManager: NSObject, URLSessionDataDelegate {
@@ -30,14 +30,14 @@ class RequestManager: NSObject, URLSessionDataDelegate {
     	
 	
 	// MARK: Methods
-	func search(for artist: String, completion: @escaping ((_ response: [Artist]?, _ error: Error?) -> Void)) {
+	func search(for artist: String, completion: @escaping ((_ response: [Artist]?, _ error: Error?) -> Void)) -> URLSessionDataTask? {
 		
 		let parsedArtistName = artist.replacingOccurrences(of: " ", with: "+").trimmingCharacters(in: .whitespacesAndNewlines).lowercased()
 		
 		// create URL for data request
-		guard let url = URL(string: "\(self.itunesSearchURL)?term=\(parsedArtistName)&media=music&entity=musicArtist&attributeType=aritstTerm") else {
+		guard let url = URL(string: "\(self.itunesSearchURL)?term=\(parsedArtistName)&media=music&entity=musicArtist&attribute=artistTerm") else {
 			completion(nil, RequestManagerError.artistSearchUnavailable)
-			return
+			return nil
 		}
 		
 		let task = self.session.dataTask(with: url, completionHandler: { (data, response, error) in
@@ -58,6 +58,7 @@ class RequestManager: NSObject, URLSessionDataDelegate {
 					return
 				}
 				
+				print(actualResults)
 				let parsedToArtists = actualResults.map({ (artist) -> Artist in
 					return Artist(
 						itunesID: artist["artistId"] as! Int,
@@ -83,14 +84,15 @@ class RequestManager: NSObject, URLSessionDataDelegate {
 		})
 
 		task.resume()
+		return task
 	}
-	func getAdditionalInfo(for artist: Artist, completion: @escaping ((_ completedArtist: Artist?, _ error: Error?) -> Void)) {
+	func getAdditionalInfo(for artist: Artist, completion: @escaping ((_ completedArtist: Artist?, _ error: Error?) -> Void)) -> URLSessionDataTask? {
 		
 		let parsedArtistName = artist.name!.replacingOccurrences(of: " ", with: "+").trimmingCharacters(in: .whitespacesAndNewlines).lowercased()
 		
 		guard let url = URL(string: "\(self.lastFMLookupURL)?method=artist.getinfo&artist=\(parsedArtistName)&api_key=\(self.lastFMAPIKey)&format=json") else {
 			completion(nil, RequestManagerError.additionalArtistInfoUnavailable)
-			return
+			return nil
 		}
 		
 		let task = self.session.dataTask(with: url, completionHandler: { (data, response, error) in
@@ -147,14 +149,15 @@ class RequestManager: NSObject, URLSessionDataDelegate {
 		})
 		
 		task.resume()
+		return task
 		
 	}
-	func getReleases(for artist: Artist, since date: Date?=nil, completion: @escaping ((_ releases: [Release]?, _ error: Error?) -> Void)) {
+	func getReleases(for artist: Artist, since date: Date?=nil, completion: @escaping ((_ releases: [Release]?, _ error: Error?) -> Void)) -> URLSessionDataTask? {
 
 		// create URL for data request
 		guard let url = URL(string: "\(self.itunesLookupURL)?id=\(artist.itunesID!)&media=music&entity=album&attribute=albumTerm&sort=recent") else {
 			completion(nil, RequestManagerError.artistReleasesUnavailable)
-			return
+			return nil
 		}
 		
 		let task = self.session.dataTask(with: url, completionHandler: { (data, response, error) in
@@ -220,69 +223,12 @@ class RequestManager: NSObject, URLSessionDataDelegate {
 		})
 		
 		task.resume()
-	}
-	func getArtworkURLs(for artist: Artist, completion: @escaping ((_ response: [ArtworkSize: URL]?, _ error: Error?) -> Void)) {
-		
-		guard let url = URL(string: "\(self.lastFMLookupURL)?method=artist.getinfo&artist=\(artist.name.replacingOccurrences(of: " ", with: "+"))&api_key=\(self.lastFMAPIKey)&format=json") else {
-			completion(nil, RequestManagerError.artistArtworkUnavailable)
-			return
-		}
-		
-		let task = self.session.dataTask(with: url, completionHandler: { (data, response, error) in
-			
-			guard let data = data, error == nil else {
-				completion(nil, RequestManagerError.artistArtworkUnavailable)
-				return
-				
-			}
-			
-			do {
-				
-				// convert data into dictionary
-				let results = try JSONSerialization.jsonObject(with: data, options: .mutableContainers) as? [String: Any]
-				
-				guard let artistObject = results?["artist"] as? [String: Any],
-					let artistImages = artistObject["image"] as? [[String: Any]] else {
-					completion(nil, RequestManagerError.artistArtworkUnavailable)
-					return
-				}
-				
-				var artistArtworkURLs: [ArtworkSize: URL] = [:]
-				
-				artistImages.forEach({ (current) in
-					let url = current["#text"] as! String
-					switch current["size"] as! String {
-					case "small": artistArtworkURLs[.small] = URL(string: url)!
-						break
-					case "medium": artistArtworkURLs[.medium] = URL(string: url)!
-						break
-					case "large": artistArtworkURLs[.large] = URL(string: url)!
-						break
-					case "extralarge": artistArtworkURLs[.extraLarge] = URL(string: url)!
-						break
-					case "mega": artistArtworkURLs[.mega] = URL(string: url)!
-						break
-					default: artistArtworkURLs[.thumbnail] = URL(string: url)!
-					}
-				})
-				
-				// trigger completion handler
-				completion(artistArtworkURLs, nil)
-				
-			} catch _ {
-				
-				// trigger completion handler
-				completion(nil, RequestManagerError.artistArtworkUnavailable)
-			}
-		})
-		
-		task.resume()
-	
-	}
-	func loadImage(from url: URL, completion: @escaping ((_ image: UIImage?, _ error: Error?) -> Void)) {
+		return task
+	}	
+	func loadImage(from url: URL, completion: @escaping ((_ image: UIImage?, _ error: Error?) -> Void)) -> URLSessionDataTask? {
 		
 		let task = self.session.dataTask(with: url) { (data, response, error) in
-			
+
 			guard let data = data, let image = UIImage(data: data), error == nil else {
 				completion(nil, error)
 				return
@@ -292,12 +238,14 @@ class RequestManager: NSObject, URLSessionDataDelegate {
 		}
 		
 		task.resume()
+		return task
 	}
-	func getSunriseAndSunset(for date: Date?=nil, completion: @escaping ((_ sunrise: Date?, _ sunset: Date?, _ error: Error?) -> Void)) {
+	func getSunriseAndSunset(for date: Date?=nil, completion: @escaping ((_ sunrise: Date?, _ sunset: Date?, _ error: Error?) -> Void)) -> URLSessionDataTask? {
 		
 		let dateFormatter = DateFormatter()
 		dateFormatter.dateFormat = "YYYY-MM-DD"
 		let dateString = dateFormatter.string(from: date ?? Date())
+		var task: URLSessionDataTask?
 		
 		DispatchQueue.main.async {
 			
@@ -327,7 +275,7 @@ class RequestManager: NSObject, URLSessionDataDelegate {
 					return
 				}
 				
-				let task = self.session.dataTask(with: url) { (data, response, error) in
+				task = self.session.dataTask(with: url) { (data, response, error) in
 					
 					guard let data = data, error == nil else {
 						completion(nil, nil, RequestManagerError.sunriseSunsetUnavailable)
@@ -381,8 +329,10 @@ class RequestManager: NSObject, URLSessionDataDelegate {
 					
 				}
 				
-				task.resume()
+				task?.resume()
 			}
 		}
+		
+		return task
 	}
 }

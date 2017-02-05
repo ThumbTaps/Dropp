@@ -52,7 +52,8 @@ class PreferenceManager: NSObject {
 	
 	public let themeDidChangeNotification = Notification.Name(rawValue: "themeDidChangeNotification")
 	public let themeDeterminerDidChangeNotification = Notification.Name(rawValue: "themeDeterminerDidChangeNotification")
-	public let didUpdateNewReleasesNotification = Notification.Name(rawValue: "didUpdateReleasesNotification")
+	public let didUpdateReleasesNotification = Notification.Name(rawValue: "didUpdateReleasesNotification")
+	public let failedToUpdateReleasesNotification = Notification.Name(rawValue: "failedToUpdateReleasesNotification")
 	public let didChangeReleaseOptionsNotification = Notification.Name(rawValue: "didChangeReleaseOptionsNotification")
 	
 	var firstLaunch = true {
@@ -316,9 +317,6 @@ class PreferenceManager: NSObject {
 						} else if !self.includeSingles && release.type == .single {
 							return false
 							
-							//						} else if self.ignoreFeatures && release.type == .feature {
-							//							return false
-							//
 						} else {
 							return true
 						}
@@ -347,9 +345,6 @@ class PreferenceManager: NSObject {
 						} else if !self.includeSingles && release.type == .single {
 							return false
 							
-							//						} else if self.ignoreFeatures && release.type == .feature {
-							//							return false
-							//
 						} else {
 							return true
 						}
@@ -361,15 +356,15 @@ class PreferenceManager: NSObject {
 		}
 	}
 	var lastUpdate: Date? = nil
-	func updateNewReleases(completion: (() -> Void)?=nil) {
+	func updateNewReleases() {
 		
-		if self.followingArtists.count > 0 {
+		if !self.followingArtists.isEmpty {
 			
 			self.followingArtists.forEach { (followed) in
 				
 				UIApplication.shared.isNetworkActivityIndicatorVisible = true
 				
-				RequestManager.shared.getReleases(for: followed, since: Calendar.current.date(byAdding: .day, value: -Int(self.maxReleaseAge), to: Date()), completion: { (releases: [Release]?, error: Error?) in
+				guard let getReleasesTask = RequestManager.shared.getReleases(for: followed, since: Calendar.current.date(byAdding: .day, value: -Int(self.maxReleaseAge), to: Date()), completion: { (releases: [Release]?, error: Error?) in
 					UIApplication.shared.isNetworkActivityIndicatorVisible = false
 					
 					guard let releases = releases, error == nil else {
@@ -400,15 +395,16 @@ class PreferenceManager: NSObject {
 						self.iCloudKeyStore.set(encodedFollowingArtists, forKey: self.followingArtistsKey)
 						
 						self.lastUpdate = Date()
-						completion?()
-						self.didUpdateNewReleasesNotification.post()
+						self.didUpdateReleasesNotification.post()
 						
 					}
-				})
+				}) else {
+					
+					return
+				}
 			}
 		} else {
 			self.lastUpdate = Date()
-			completion?()
 		}
 		
 	}
@@ -480,6 +476,7 @@ class PreferenceManager: NSObject {
 	
 	
 	// MARK: - DATA MANAGEMENT
+	var lastSync: Date?
 	let iCloudKeyStore = NSUbiquitousKeyValueStore.default()
 	override init() {
 		
@@ -534,7 +531,9 @@ class PreferenceManager: NSObject {
 		
 		self.adaptiveArtistView = self.iCloudKeyStore.bool(forKey: self.adaptiveArtistViewKey)
 		
-		self.save()
+		self.save {
+			self.lastSync = Date()
+		}
 	}
 	func syncToiCloud() {
 		
@@ -590,6 +589,7 @@ class PreferenceManager: NSObject {
 			UserDefaults.standard.synchronize()
 		}
 		
+		completion?()
 		self.syncToiCloud()
 	}
 	func load(completion: (() -> Void)?=nil) {

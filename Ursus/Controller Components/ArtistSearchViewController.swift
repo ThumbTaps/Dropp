@@ -13,6 +13,9 @@ class ArtistSearchViewController: UrsusViewController, UITextFieldDelegate, UIGe
 	@IBOutlet weak var searchBar: ArtistSearchBar!
 	@IBOutlet weak var searchBarHidingConstraint: NSLayoutConstraint!
 	@IBOutlet weak var searchBarCenteredConstraint: NSLayoutConstraint!
+	@IBOutlet weak var searchBarRestingConstraint: NSLayoutConstraint!
+	
+	var searching = false
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -22,6 +25,8 @@ class ArtistSearchViewController: UrsusViewController, UITextFieldDelegate, UIGe
 		self.searchBar.textField.delegate = self
 		
 		Notification.Name.UIApplicationWillResignActive.add(self, selector: #selector(self.applicationWillResignActive))
+		
+		self.themeDidChange()
 		
     }
 	
@@ -43,6 +48,14 @@ class ArtistSearchViewController: UrsusViewController, UITextFieldDelegate, UIGe
 	
 	
 	// MARK: - Notifications
+	override func themeDidChange() {
+		super.themeDidChange()
+		
+		DispatchQueue.main.async {
+			
+			self.view.backgroundColor = UIColor.clear
+		}
+	}
 	func applicationWillResignActive() {
 		
 		self.searchBar.textField.resignFirstResponder()
@@ -53,7 +66,10 @@ class ArtistSearchViewController: UrsusViewController, UITextFieldDelegate, UIGe
 	}
 	func applicationDidBecomeActive() {
 		
-		self.searchBar.textField.becomeFirstResponder()
+		if !self.searching {
+			self.searchBar.textField.becomeFirstResponder()
+		}
+			
 		Notification.Name.UIApplicationDidBecomeActive.remove(self)
 		// start listening for inactive notification
 		Notification.Name.UIApplicationWillResignActive.add(self, selector: #selector(self.applicationWillResignActive))
@@ -94,6 +110,8 @@ class ArtistSearchViewController: UrsusViewController, UITextFieldDelegate, UIGe
 	}
 	func performSearch(for artistName: String!) {
 		
+		self.searching = true
+		
 		self.searchBar.textField.resignFirstResponder()
 
 		UIApplication.shared.isNetworkActivityIndicatorVisible = true
@@ -101,7 +119,10 @@ class ArtistSearchViewController: UrsusViewController, UITextFieldDelegate, UIGe
 		self.searchBar.startSearching()
 		
 		// trigger search
-		RequestManager.shared.search(for: artistName, completion: { (artists, error) -> Void in
+		guard let searchTask = RequestManager.shared.search(for: artistName, completion: { (artists, error) -> Void in
+			
+			UIApplication.shared.isNetworkActivityIndicatorVisible = false
+			
 			guard let artists = artists, error == nil else {
 				print(error!)
 				return
@@ -112,12 +133,12 @@ class ArtistSearchViewController: UrsusViewController, UITextFieldDelegate, UIGe
 				
 			} else if artists.count == 1 { // go directly to artist view
 				
-				let artist = artists[0]
+				let finalArtist = artists[0]
 
 				UIApplication.shared.isNetworkActivityIndicatorVisible = true
 				
 				// get additional artist info
-				RequestManager.shared.getAdditionalInfo(for: artist, completion: { (artist, error) in
+				guard let additionalInfoTask = RequestManager.shared.getAdditionalInfo(for: finalArtist, completion: { (artist, error) in
 					guard artist != nil, error == nil else {
 						print(error!)
 						UIApplication.shared.isNetworkActivityIndicatorVisible = false
@@ -125,20 +146,27 @@ class ArtistSearchViewController: UrsusViewController, UITextFieldDelegate, UIGe
 						return
 					}
 					
+					finalArtist.summary = artist?.summary
+					finalArtist.artworkURLs = artist?.artworkURLs
+					
 					// get latest releases
-					RequestManager.shared.getReleases(for: artist!, completion: { (releases, error) in
-						guard let releases = releases, artist != nil, error == nil else {
+					guard let getReleasesTask = RequestManager.shared.getReleases(for: finalArtist, completion: { (releases, error) in
+						guard let releases = releases, error == nil else {
 							print(error!)
 							UIApplication.shared.isNetworkActivityIndicatorVisible = false
 
 							return
 						}
 						
-						artist!.releases = releases
+						finalArtist.releases = releases
 						
 						// load artist artwork
-						RequestManager.shared.loadImage(from: (artist?.artworkURLs[.mega])!, completion: { (image, error) in
-							guard let image = image, artist != nil, error == nil else {
+						guard let urlForArtwork = finalArtist.artworkURLs[.mega] else {
+							print("Could not construct artwork URL", finalArtist.artworkURLs)
+							return
+						}
+						guard let loadImageTask = RequestManager.shared.loadImage(from: urlForArtwork, completion: { (image, error) in
+							guard error == nil else {
 								print(error!)
 								UIApplication.shared.isNetworkActivityIndicatorVisible = false
 
@@ -149,21 +177,49 @@ class ArtistSearchViewController: UrsusViewController, UITextFieldDelegate, UIGe
 							
 							self.searchBar.endSearching {
 								self.performSegue(withIdentifier: "ArtistSearch->Artist", sender: { (destination: ArtistViewController) in
-									destination.artist = artist
+									destination.artist = finalArtist
 									destination.artistArtworkImage = image
 								})
 							}
-						})
+						}) else {
+							return
+						}
 						
-					})
-				})
+					}) else {
+						return
+					}
+				}) else {
+					return
+				}
 				
 			} else { // go to search results
 				
+				self.searchBar.endSearching {
+					self.searchBar.becomeButton()
+					
+					DispatchQueue.main.async {
+						self.view.removeConstraint(self.searchBarCenteredConstraint)
+						self.view.addConstraint(self.searchBarRestingConstraint)
+						
+						UIView.animate(withDuration: 0.7, delay: 0, usingSpringWithDamping: 0.6, initialSpringVelocity: 0.8, options: .curveEaseOut, animations: {
+							
+							self.view.layoutIfNeeded()
+						}, completion: nil)
+					}
+					
+					self.performSegue(withIdentifier: "ArtistSearch->ArtistSearchResults", sender: artists)
+
+				}
 				
 			}
 			
-		})
+		}) else {
+			
+			self.searching = false
+			self.searchBar.endSearching()
+			
+			return
+		}
 	}
 
 
@@ -209,6 +265,8 @@ class ArtistSearchViewController: UrsusViewController, UITextFieldDelegate, UIGe
 		if segue.identifier == "ArtistSearch->NewReleases" {
 			
 		} else if segue.identifier == "ArtistSearch->ArtistSearchResults" {
+			
+			(segue.destination as! ArtistSearchResultsViewController).artistSearchResults = sender as! [Artist]
             
         } else if segue.identifier == "ArtistSearch->Artist" {
 			

@@ -69,11 +69,29 @@ class UrsusStoryboardSegue: UIStoryboardSegue {
 			
 			
         else if self.identifier == "ArtistSearch->ArtistSearchResults" {
+			self.animationController = SlideDownAnimatedTransitionController()
+			self.destination.transitioningDelegate = self.animationController
             self.source.present(self.destination, animated: true)
 
         } else if self.identifier == "ArtistSearchResults->ArtistSearch" {
+			self.animationController = SlideDownAnimatedTransitionController()
+			self.source.transitioningDelegate = self.animationController
             self.source.dismiss(animated: true)
         }
+			
+			
+			
+			
+			
+		else if self.identifier == "ArtistSearchResults->Artist" {
+			self.animationController = PopInFromFrameAnimatedTransitionController()
+			self.destination.transitioningDelegate = self.animationController
+			self.source.present(self.destination, animated: true)
+		} else if self.identifier == "Artist->ArtistSearchResults" {
+			self.animationController = PopInFromFrameAnimatedTransitionController()
+			self.source.transitioningDelegate = self.animationController
+			self.source.dismiss(animated: true)
+		}
         
         
 			

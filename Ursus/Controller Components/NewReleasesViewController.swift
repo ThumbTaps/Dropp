@@ -108,13 +108,6 @@ class NewReleasesViewController: UrsusViewController, UICollectionViewDataSource
 	
 	
 	
-	// MARK: - Custom Functions
-	
-	
-	
-	
-	
-	
 	// MARK: - Notifications
 	override func didUpdateNewReleases() {
 		

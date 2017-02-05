@@ -26,7 +26,6 @@ class SettingsViewController: UrsusViewController, UICollectionViewDataSource, U
 				self.collectionView?.backgroundColor = StyleKit.lightBackdropOverlayColor.withAlphaComponent(0.95)
 			}
 			
-			self.collectionView?.contentInset = UIEdgeInsets(top: 30, left: 0, bottom: 80, right: 0)
 		}
 		
     }
@@ -91,7 +90,7 @@ class SettingsViewController: UrsusViewController, UICollectionViewDataSource, U
 		return numRows
 	}
 	func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, referenceSizeForHeaderInSection section: Int) -> CGSize {
-		return CGSize(width: self.view.bounds.width, height: 60)
+		return CGSize(width: self.view.bounds.width, height: section > 0 ? 60 : 30)
 	}
 	func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
 		var size = CGSize(width: collectionView.frame.width, height: 50)
@@ -231,9 +230,14 @@ class SettingsViewController: UrsusViewController, UICollectionViewDataSource, U
 				(cell as! ThemeModeCollectionViewCell).delegate = self
 				break
 				
-			case 1: // THEME MODE DETERMINER
-				cell = collectionView.dequeueReusableCell(withReuseIdentifier: "ThemeDeterminerDisplayBrightnessCell", for: indexPath) as! UrsusCollectionViewCell
-				(cell as! SettingsCollectionViewCell).accessoryView?.isHidden = PreferenceManager.shared.themeDeterminer != .displayBrightness
+			case 1: // THEME MODE DETERMINER OR ADAPTIVE ARTIST VIEW
+				if PreferenceManager.shared.themeMode == .auto {
+					cell = collectionView.dequeueReusableCell(withReuseIdentifier: "ThemeDeterminerDisplayBrightnessCell", for: indexPath) as! UrsusCollectionViewCell
+					(cell as! SettingsCollectionViewCell).accessoryView?.isHidden = PreferenceManager.shared.themeDeterminer != .displayBrightness
+				} else {
+					cell = collectionView.dequeueReusableCell(withReuseIdentifier: "AdaptiveArtistViewCell", for: indexPath)
+					((cell as! SettingsCollectionViewCell).accessoryView as? UISwitch)?.isOn = PreferenceManager.shared.adaptiveArtistView
+				}
 				break
 				
 			case 2: // DISPLAY BRIGHTNESS THRESHOLD OR TWILIGHT

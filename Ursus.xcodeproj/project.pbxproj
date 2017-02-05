@@ -26,8 +26,6 @@
 		7B1E33B61E29EAAD00D5F37B /* UrsusCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B1E33B51E29EAAD00D5F37B /* UrsusCollectionViewCell.swift */; };
 		7B1E33B81E29EE8100D5F37B /* ArtistsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B1E33B71E29EE8100D5F37B /* ArtistsViewController.swift */; };
 		7B1F26C41E259A82001876E7 /* FooterCollectionReusableView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B1F26C31E259A82001876E7 /* FooterCollectionReusableView.swift */; };
-		7B1FF6F31E26D801004F496E /* Telekinesis.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7B7B88B51E0DD81E0012B8A3 /* Telekinesis.framework */; };
-		7B1FF6F41E26D801004F496E /* Telekinesis.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 7B7B88B51E0DD81E0012B8A3 /* Telekinesis.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		7B1FF6FB1E271A12004F496E /* ArtistArtView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B1FF6FA1E271A12004F496E /* ArtistArtView.swift */; };
 		7B1FF6FD1E271ADE004F496E /* ArtistCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B1FF6FC1E271ADE004F496E /* ArtistCollectionViewCell.swift */; };
 		7B2257811DDE74A900F81E12 /* UIImageColors.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B2257801DDE74A900F81E12 /* UIImageColors.swift */; };
@@ -66,6 +64,7 @@
 		7BE387A21E3AD038000F85F2 /* PopInFromFrameAnimatedTransitionController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BE387A11E3AD038000F85F2 /* PopInFromFrameAnimatedTransitionController.swift */; };
 		7BEB34BD1DF061E300888FF1 /* UrsusViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BEB34BC1DF061E300888FF1 /* UrsusViewController.swift */; };
 		7BEB34BF1DF0679800888FF1 /* UrsusStoryboardSegue.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BEB34BE1DF0679800888FF1 /* UrsusStoryboardSegue.swift */; };
+		7BEE31EE1E4406C2001BB019 /* SlideDownAnimatedTransitionController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BEE31ED1E4406C2001BB019 /* SlideDownAnimatedTransitionController.swift */; };
 		DC9BC1081C914DAB67480E0B /* Pods_Ursus.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 161B513C4B4A6044F64D9C1A /* Pods_Ursus.framework */; };
 /* End PBXBuildFile section */
 
@@ -85,20 +84,6 @@
 			remoteInfo = Ursus;
 		};
 /* End PBXContainerItemProxy section */
-
-/* Begin PBXCopyFilesBuildPhase section */
-		7B1FF6F51E26D801004F496E /* Embed Frameworks */ = {
-			isa = PBXCopyFilesBuildPhase;
-			buildActionMask = 2147483647;
-			dstPath = "";
-			dstSubfolderSpec = 10;
-			files = (
-				7B1FF6F41E26D801004F496E /* Telekinesis.framework in Embed Frameworks */,
-			);
-			name = "Embed Frameworks";
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-/* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
 		161B513C4B4A6044F64D9C1A /* Pods_Ursus.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Ursus.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -169,6 +154,7 @@
 		7BE387A11E3AD038000F85F2 /* PopInFromFrameAnimatedTransitionController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = PopInFromFrameAnimatedTransitionController.swift; path = "Transition Controllers/PopInFromFrameAnimatedTransitionController.swift"; sourceTree = "<group>"; };
 		7BEB34BC1DF061E300888FF1 /* UrsusViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UrsusViewController.swift; sourceTree = "<group>"; };
 		7BEB34BE1DF0679800888FF1 /* UrsusStoryboardSegue.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UrsusStoryboardSegue.swift; sourceTree = "<group>"; };
+		7BEE31ED1E4406C2001BB019 /* SlideDownAnimatedTransitionController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = SlideDownAnimatedTransitionController.swift; path = "Transition Controllers/SlideDownAnimatedTransitionController.swift"; sourceTree = "<group>"; };
 		A9AE32A717C7271F3F5B41C8 /* Pods-Ursus.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Ursus.release.xcconfig"; path = "Pods/Target Support Files/Pods-Ursus/Pods-Ursus.release.xcconfig"; sourceTree = "<group>"; };
 		C4271E9964D26860660C1774 /* Pods_UrsusTests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_UrsusTests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		E8C3E14020C2F526B042C182 /* Pods-UrsusTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-UrsusTests.release.xcconfig"; path = "Pods/Target Support Files/Pods-UrsusTests/Pods-UrsusTests.release.xcconfig"; sourceTree = "<group>"; };
@@ -181,7 +167,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				7B679B4C1E21730800649FD6 /* CoreLocation.framework in Frameworks */,
-				7B1FF6F31E26D801004F496E /* Telekinesis.framework in Frameworks */,
 				DC9BC1081C914DAB67480E0B /* Pods_Ursus.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -211,13 +196,13 @@
 				7B679B511E22C7F500649FD6 /* ArtistsButton.swift */,
 				7BB3D5E91DEBDBEB002367C3 /* BackButton.swift */,
 				7B1912AB1E32DC290027B1D1 /* CheckmarkButton.swift */,
+				7BE3879F1E3AC7DB000F85F2 /* CloseButton.swift */,
 				7B1912B01E32F6100027B1D1 /* DisplayBrightnessMaxButton.swift */,
 				7B1912AD1E32F4FC0027B1D1 /* DisplayBrightnessMinButton.swift */,
 				7B1E33B31E29DEAB00D5F37B /* DownButton.swift */,
 				7B7999191E1DE092003E2F28 /* SearchButton.swift */,
 				7B5609741E1CA5BB0054CB40 /* SettingsButton.swift */,
 				7B740F151DD8D9AA0085F5C8 /* UrsusButton.swift */,
-				7BE3879F1E3AC7DB000F85F2 /* CloseButton.swift */,
 			);
 			name = Buttons;
 			sourceTree = "<group>";
@@ -240,8 +225,8 @@
 				7B179DB31E107E82000F0DED /* ReleaseCollectionViewCell.swift */,
 				7B8DC4041E31A16D00EBEED0 /* SettingsCollectionViewCell.swift */,
 				7B121F7F1E2C3AAA004458DC /* ThemeModeCollectionViewCell.swift */,
-				7B1E33B51E29EAAD00D5F37B /* UrsusCollectionViewCell.swift */,
 				7BD4994F1E35AF1B00C2B7E7 /* UIPickerCollectionViewCell.swift */,
+				7B1E33B51E29EAAD00D5F37B /* UrsusCollectionViewCell.swift */,
 			);
 			name = "Collection View Components";
 			sourceTree = "<group>";
@@ -253,6 +238,7 @@
 				7B5FCE871E301866008AC1F7 /* RevealBehindAnimatedTransitionController.swift */,
 				7BBE86291E36E06100952328 /* PopInAnimatedTransitionController.swift */,
 				7BE387A11E3AD038000F85F2 /* PopInFromFrameAnimatedTransitionController.swift */,
+				7BEE31ED1E4406C2001BB019 /* SlideDownAnimatedTransitionController.swift */,
 			);
 			name = "Transition Controllers";
 			sourceTree = "<group>";
@@ -399,7 +385,6 @@
 				7B3B99621CC4437E00900838 /* Frameworks */,
 				7B3B99631CC4437E00900838 /* Resources */,
 				7BB6699A1CD6DF870035DFCD /* ShellScript */,
-				7B1FF6F51E26D801004F496E /* Embed Frameworks */,
 				11BF025DF091E010030A699F /* [CP] Embed Pods Frameworks */,
 				6D50DF186C048982A6FF4B07 /* [CP] Copy Pods Resources */,
 			);
@@ -735,6 +720,7 @@
 				7B71CCC41DD7C0D700DAE910 /* ArtistSearchBar.swift in Sources */,
 				7B679B521E22C7F500649FD6 /* ArtistsButton.swift in Sources */,
 				7B71CCC21DD7A87200DAE910 /* NewReleasesViewController.swift in Sources */,
+				7BEE31EE1E4406C2001BB019 /* SlideDownAnimatedTransitionController.swift in Sources */,
 				7B1E33B21E29976F00D5F37B /* ReleaseViewController.swift in Sources */,
 				7B121F801E2C3AAA004458DC /* ThemeModeCollectionViewCell.swift in Sources */,
 				7B188E971DDD2F1400C78AE7 /* FrostedBackdrop.swift in Sources */,

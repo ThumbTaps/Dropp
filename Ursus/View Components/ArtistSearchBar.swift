@@ -12,12 +12,11 @@ import UIKit
 class ArtistSearchBar: UIView {
 	
 	@IBOutlet weak var searchIcon: SearchButton!
-	@IBOutlet weak var searchTermLabel: UILabel!
 	@IBOutlet weak var textField: ArtistSearchBarTextField!
 	@IBOutlet weak var searchIconVisibleConstraint: NSLayoutConstraint!
 	@IBOutlet weak var searchIconHiddenConstraint: NSLayoutConstraint!
 	@IBOutlet weak var textFieldFullWidthConstraint: NSLayoutConstraint!
-	var textFieldShrunkenConstraint: NSLayoutConstraint?
+	@IBOutlet weak var buttonSizeConstraint: NSLayoutConstraint!
 	
 	
 	override init(frame: CGRect) {
@@ -86,6 +85,36 @@ class ArtistSearchBar: UIView {
 	func endSearching(completion: (() -> Void)?=nil) {
 		self.searchCompletion = completion
 		self.shouldEndSearching = true
+	}
+	func becomeButton() {
+		
+		DispatchQueue.main.async {
+			
+			self.addConstraint(self.buttonSizeConstraint)
+			self.searchIcon.glyphOnly = false
+			self.searchIcon.bordered = true
+			
+			UIView.animate(withDuration: 0.5, delay: 0, usingSpringWithDamping: 0.8, initialSpringVelocity: 1, options: .curveEaseOut, animations: {
+				self.textField.alpha = 0
+				self.searchIcon.setNeedsDisplay()
+				self.layoutIfNeeded()
+			})
+		}
+	}
+	func becomeSearchBar() {
+		
+		DispatchQueue.main.async {
+			
+			self.removeConstraint(self.buttonSizeConstraint)
+			self.searchIcon.glyphOnly = true
+			self.searchIcon.bordered = false
+			
+			UIView.animate(withDuration: 0.5, delay: 0, usingSpringWithDamping: 0.8, initialSpringVelocity: 0.8, options: .curveEaseOut, animations: {
+				self.textField.alpha = 1
+				self.searchIcon.setNeedsDisplay()
+				self.layoutIfNeeded()
+			})
+		}
 	}
 }
 
