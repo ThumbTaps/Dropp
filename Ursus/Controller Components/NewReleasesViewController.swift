@@ -32,9 +32,7 @@ class NewReleasesViewController: UrsusViewController, UICollectionViewDataSource
 		
 //		let refreshControl = UIRefreshControl(frame: CGRect(x: 0, y: 100, width: 45, height: 45))
 //		self.collectionView.addSubview(refreshControl)
-		
-		PreferenceManager.shared.didChangeReleaseOptionsNotification.add(self, selector: #selector(self.didChangeReleaseOptions))
-		
+				
 		DispatchQueue.main.async {
 			
 			if PreferenceManager.shared.newReleases.isEmpty && PreferenceManager.shared.previousReleases.isEmpty {
@@ -56,45 +54,40 @@ class NewReleasesViewController: UrsusViewController, UICollectionViewDataSource
 	override func viewDidAppear(_ animated: Bool) {
 		super.viewDidAppear(animated)
 		
-		if PreferenceManager.shared.followingArtists.isEmpty {
+		DispatchQueue.main.async {
 			
-			DispatchQueue.main.async {
+			if PreferenceManager.shared.followingArtists.isEmpty {
+				
 				
 				self.backdrop?.overlay.removeConstraints([self.settingsButtonHidingConstraint, self.searchButtonHidingConstraint, self.artistsButtonShowingConstraint])
 				self.backdrop?.overlay.addConstraints([self.settingsButtonShowingConstraint, self.searchButtonShowingConstraint, self.artistsButtonHidingConstraint])
 				self.searchButton?.removeConstraint(self.searchButtonRestingSizeConstraint)
 				self.searchButton?.addConstraint(self.searchButtonFocusedSizeConstraint)
-			}
-			
-			// show search bar
-			if PreferenceManager.shared.firstLaunch {
-				self.performSegue(withIdentifier: "NewReleases->ArtistSearch", sender: nil)
-				PreferenceManager.shared.firstLaunch = false
-			}
-			
-		} else {
-			
-			DispatchQueue.main.async {
+				
+				// show search bar
+				if PreferenceManager.shared.firstLaunch {
+					self.performSegue(withIdentifier: "NewReleases->ArtistSearch", sender: nil)
+					PreferenceManager.shared.firstLaunch = false
+				}
+				
+			} else {
 				
 				self.backdrop?.overlay.removeConstraints([self.settingsButtonHidingConstraint, self.artistsButtonHidingConstraint, self.searchButtonHidingConstraint])
 				self.backdrop?.overlay.addConstraints([self.settingsButtonShowingConstraint, self.artistsButtonShowingConstraint, self.searchButtonShowingConstraint])
 				
 				if !PreferenceManager.shared.newReleases.isEmpty {
-				
+					
 					self.backdrop?.overlay.removeConstraint(self.newReleasesCountIndicatorHidingConstraint)
 					self.backdrop?.overlay.addConstraint(self.newReleasesCountIndicatorRestingConstraint)
 				}
-			}
-		}
-		
-		DispatchQueue.main.async {
-			
-			UIView.animate(withDuration: 0.5, delay: 0, usingSpringWithDamping: 0.6, initialSpringVelocity: 1, options: .curveEaseOut, animations: {
 				
-				self.backdrop?.overlay.layoutIfNeeded()
-				self.searchButton?.layoutIfNeeded()
-				self.searchButton?.setNeedsDisplay()
-			})
+				UIView.animate(withDuration: 0.5, delay: 0, usingSpringWithDamping: 0.6, initialSpringVelocity: 1, options: .curveEaseOut, animations: {
+					
+					self.backdrop?.overlay.layoutIfNeeded()
+					self.searchButton?.layoutIfNeeded()
+					self.searchButton?.setNeedsDisplay()
+				})
+			}
 		}
 		
 	}
@@ -127,11 +120,12 @@ class NewReleasesViewController: UrsusViewController, UICollectionViewDataSource
 				self.backdrop?.overlay.addConstraint(self.newReleasesCountIndicatorRestingConstraint)
 			}
 			
+			UIView.animate(withDuration: 0.5, delay: 0, usingSpringWithDamping: 0.6, initialSpringVelocity: 1, options: .curveEaseOut, animations: {
+				
+				self.backdrop?.overlay.layoutIfNeeded()
+			})
+			
 		}
-	}
-	func didChangeReleaseOptions() {
-		
-		self.collectionView?.reloadData()
 	}
 	
 	
@@ -255,9 +249,9 @@ class NewReleasesViewController: UrsusViewController, UICollectionViewDataSource
 			case 0:
 				if PreferenceManager.shared.newReleases.isEmpty {
 					if !PreferenceManager.shared.previousReleases.isEmpty {
-						var timeUnit = "DAYS"
+						var timeUnit = "MONTHS"
 						if PreferenceManager.shared.maxReleaseAge == 1 {
-							timeUnit = "DAY"
+							timeUnit = "MONTH"
 						}
 						(reusableView as! HeaderCollectionReusableView).textLabel.text = "IN THE PAST\(PreferenceManager.shared.maxReleaseAge == 1 ? "" : String(PreferenceManager.shared.maxReleaseAge)) \(timeUnit)"
 					}
@@ -266,9 +260,9 @@ class NewReleasesViewController: UrsusViewController, UICollectionViewDataSource
 				
 			case 1:
 				if !PreferenceManager.shared.previousReleases.isEmpty {
-					var timeUnit = "DAYS"
+					var timeUnit = "MONTHS"
 					if PreferenceManager.shared.maxReleaseAge == 1 {
-						timeUnit = "DAY"
+						timeUnit = "MONTH"
 					}
 					(reusableView as! HeaderCollectionReusableView).textLabel.text = "IN THE PAST\(PreferenceManager.shared.maxReleaseAge == 1 ? "" : String(PreferenceManager.shared.maxReleaseAge)) \(timeUnit)"
 				}

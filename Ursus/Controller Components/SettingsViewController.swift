@@ -8,13 +8,11 @@
 
 import UIKit
 
-class SettingsViewController: UrsusViewController, UICollectionViewDataSource, UICollectionViewDelegate, UICollectionViewDelegateFlowLayout, ThemeModeCollectionViewCellDelegate {
+class SettingsViewController: UrsusViewController, UICollectionViewDataSource, UICollectionViewDelegate, UICollectionViewDelegateFlowLayout, ThemeModeCollectionViewCellDelegate, UIPickerCollectionViewCellDelegate {
 	
     override func viewDidLoad() {
         super.viewDidLoad()
-		
-		PreferenceManager.shared.didChangeReleaseOptionsNotification.add(self, selector: #selector(self.didChangeReleaseOptions))
-		
+				
 		DispatchQueue.main.async {
 			
 			if PreferenceManager.shared.theme == .dark {
@@ -305,11 +303,12 @@ class SettingsViewController: UrsusViewController, UICollectionViewDataSource, U
 					cell = collectionView.dequeueReusableCell(withReuseIdentifier: "MaxReleaseAgeCell", for: indexPath)
 					(cell as! UIPickerCollectionViewCell).leftTextLabel.text = "Only show releases from the past"
 					(cell as! UIPickerCollectionViewCell).pickerButton.setTitle(String(PreferenceManager.shared.maxReleaseAge), for: .normal)
-					var timeUnit = "days"
+					var timeUnit = "months"
 					if PreferenceManager.shared.maxReleaseAge == 1 {
-						timeUnit = "day"
+						timeUnit = "month"
 					}
 					(cell as! UIPickerCollectionViewCell).rightTextLabel.text = timeUnit
+					(cell as! UIPickerCollectionViewCell).delegate = self
 				}
 				break
 				
@@ -317,11 +316,12 @@ class SettingsViewController: UrsusViewController, UICollectionViewDataSource, U
 				cell = collectionView.dequeueReusableCell(withReuseIdentifier: "MaxReleaseAgeCell", for: indexPath)
 				(cell as! UIPickerCollectionViewCell).leftTextLabel.text = "Only show releases from the past"
 				(cell as! UIPickerCollectionViewCell).pickerButton.setTitle(String(PreferenceManager.shared.maxReleaseAge), for: .normal)
-				var timeUnit = "days"
+				var timeUnit = "months"
 				if PreferenceManager.shared.maxReleaseAge == 1 {
-					timeUnit = "day"
+					timeUnit = "month"
 				}
 				(cell as! UIPickerCollectionViewCell).rightTextLabel.text = timeUnit
+				(cell as! UIPickerCollectionViewCell).delegate = self
 				break
 				
 			default: return cell
@@ -380,9 +380,6 @@ class SettingsViewController: UrsusViewController, UICollectionViewDataSource, U
 		}
 		self.collectionView?.reloadSections([0])
 	}
-	func didChangeReleaseOptions() {
-		self.collectionView?.reloadSections([1])
-	}
 
 	
 	
@@ -398,6 +395,7 @@ class SettingsViewController: UrsusViewController, UICollectionViewDataSource, U
 
 	@IBAction func toggleIncludeSingles(_ sender: UISwitch) {
 		PreferenceManager.shared.includeSingles = sender.isOn
+		self.collectionView?.reloadSections([1])
 	}
 	@IBAction func toggleIgnoreFeatures(_ sender: UISwitch) {
 		PreferenceManager.shared.ignoreFeatures = sender.isOn
@@ -407,6 +405,11 @@ class SettingsViewController: UrsusViewController, UICollectionViewDataSource, U
 	}
 	@IBAction func toggleShowPreviousReleases(_ sender: UISwitch) {
 		PreferenceManager.shared.showPreviousReleases = sender.isOn
+		self.collectionView?.reloadSections([1])
+	}
+	func pickerCell(_ pickerCell: UIPickerCollectionViewCell, didSelectItemAt indexPath: IndexPath) {
+		PreferenceManager.shared.maxReleaseAge = Int64(indexPath.row)+1
+		self.collectionView?.reloadSections([1])
 	}
 	
 	

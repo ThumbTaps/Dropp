@@ -180,15 +180,16 @@ class PreferenceManager: NSObject {
 				UIApplication.shared.isNetworkActivityIndicatorVisible = true
 				RequestManager.shared.getSunriseAndSunset { (sunrise, sunset, error) in
 					UIApplication.shared.isNetworkActivityIndicatorVisible = false
-					
-					if sunrise != nil && sunset != nil && error == nil {
-						
-						self.sunriseTime = sunrise
-						self.sunsetTime = sunset
-						
-						self.theme = self.themeBasedOnTwilight()
-						self.determiningTwilightTimes = false
+					guard let sunrise = sunrise, let sunset = sunset, error == nil else {
+						print("Couldn't get sunrise and sunset", error)
+						return
 					}
+					
+					self.sunriseTime = sunrise
+					self.sunsetTime = sunset
+					
+					self.theme = self.themeBasedOnTwilight()
+					self.determiningTwilightTimes = false
 				}
 			}
 		} else {
@@ -221,8 +222,6 @@ class PreferenceManager: NSObject {
 			}
 			
 			if self.sunriseTime != oldValue {
-				
-				self.iCloudKeyStore.set(self.sunriseTime, forKey: self.sunriseTimeKey)
 				UserDefaults.standard.set(self.sunriseTime, forKey: self.sunriseTimeKey)
 			}
 		}
@@ -236,7 +235,6 @@ class PreferenceManager: NSObject {
 			}
 			
 			if self.sunsetTime != oldValue {
-				self.iCloudKeyStore.set(self.sunsetTime, forKey: self.sunsetTimeKey)
 				UserDefaults.standard.set(self.sunsetTime, forKey: self.sunsetTimeKey)
 			}
 		}
@@ -271,7 +269,15 @@ class PreferenceManager: NSObject {
 		self.sunriseTimer?.invalidate()
 		self.sunsetTimer?.invalidate()
 	}
-	
+	var adaptiveArtistView: Bool = true {
+		didSet {
+			if self.adaptiveArtistView != oldValue {
+				self.iCloudKeyStore.set(self.adaptiveArtistView, forKey: self.adaptiveArtistViewKey)
+				UserDefaults.standard.set(self.adaptiveArtistView, forKey: self.adaptiveArtistViewKey)
+			}
+		}
+	}
+
 
 	
 	
@@ -337,19 +343,26 @@ class PreferenceManager: NSObject {
 			return self.followingArtists.flatMap({
 				$0.releases.filter({ (release) -> Bool in
 					
-					if release.seenByUser {
+					if self.showPreviousReleases && release.releaseDate < Calendar.current.date(byAdding: .month, value: -Int(self.maxReleaseAge), to: Date())! {
 						
-						if !self.includeEPs && release.type == .EP {
-							return false
-							
-						} else if !self.includeSingles && release.type == .single {
-							return false
-							
-						} else {
-							return true
-						}
-					} else {
 						return false
+						
+					} else {
+					
+						if release.seenByUser {
+							
+							if !self.includeEPs && release.type == .EP {
+								return false
+								
+							} else if !self.includeSingles && release.type == .single {
+								return false
+								
+							} else {
+								return true
+							}
+						} else {
+							return false
+						}
 					}
 				})
 			})
@@ -360,11 +373,11 @@ class PreferenceManager: NSObject {
 		
 		if !self.followingArtists.isEmpty {
 			
+			UIApplication.shared.isNetworkActivityIndicatorVisible = true
+				
 			self.followingArtists.forEach { (followed) in
 				
-				UIApplication.shared.isNetworkActivityIndicatorVisible = true
-				
-				guard let getReleasesTask = RequestManager.shared.getReleases(for: followed, since: Calendar.current.date(byAdding: .day, value: -Int(self.maxReleaseAge), to: Date()), completion: { (releases: [Release]?, error: Error?) in
+				guard let getReleasesTask = RequestManager.shared.getReleases(for: followed, since: Calendar.current.date(byAdding: .month, value: -Int(self.maxReleaseAge), to: Date()), completion: { (releases: [Release]?, error: Error?) in
 					UIApplication.shared.isNetworkActivityIndicatorVisible = false
 					
 					guard let releases = releases, error == nil else {
@@ -374,10 +387,7 @@ class PreferenceManager: NSObject {
 					
 					releases.forEach({ (release) in
 						print(release.title)
-					})
-
-					releases.forEach({ (release) in
-						if followed.releases.filter({ $0.seenByUser }).contains(where: { (existingRelease) -> Bool in
+						if followed.releases.contains(where: { (existingRelease) -> Bool in
 							return release.itunesID == existingRelease.itunesID
 						}) {
 							release.seenByUser = true
@@ -415,7 +425,7 @@ class PreferenceManager: NSObject {
 				
 				self.iCloudKeyStore.set(self.showPreviousReleases, forKey: self.showPreviousReleasesKey)
 				UserDefaults.standard.set(self.showPreviousReleases, forKey: self.showPreviousReleasesKey)
-				self.didChangeReleaseOptionsNotification.post()
+				self.updateNewReleases()
 			}
 		}
 	}
@@ -425,7 +435,7 @@ class PreferenceManager: NSObject {
 				
 				self.iCloudKeyStore.set(self.includeSingles, forKey: self.includeSinglesKey)
 				UserDefaults.standard.set(self.includeSingles, forKey: self.includeSinglesKey)
-				self.didChangeReleaseOptionsNotification.post()
+				self.updateNewReleases()
 			}
 		}
 	}
@@ -434,7 +444,7 @@ class PreferenceManager: NSObject {
 			if self.ignoreFeatures != oldValue {
 				self.iCloudKeyStore.set(self.ignoreFeatures, forKey: self.ignoreFeaturesKey)
 				UserDefaults.standard.set(self.ignoreFeatures, forKey: self.ignoreFeaturesKey)
-				self.didChangeReleaseOptionsNotification.post()
+				self.updateNewReleases()
 			}
 		}
 	}
@@ -444,28 +454,19 @@ class PreferenceManager: NSObject {
 				
 				self.iCloudKeyStore.set(self.includeEPs, forKey: self.includeEPsKey)
 				UserDefaults.standard.set(self.includeEPs, forKey: self.includeEPsKey)
-				self.didChangeReleaseOptionsNotification.post()
+				self.updateNewReleases()
 			}
 		}
 	}
-	var adaptiveArtistView: Bool = true {
+	var maxReleaseAge: Int64 = 3 { // in months
 		didSet {
-			if self.adaptiveArtistView != oldValue {
-				self.iCloudKeyStore.set(self.adaptiveArtistView, forKey: self.adaptiveArtistViewKey)
-				UserDefaults.standard.set(self.adaptiveArtistView, forKey: self.adaptiveArtistViewKey)
-			}
-		}
-	}
-	var maxReleaseAge: Int64 = 1 { // in months
-		didSet {
-			if self.maxReleaseAge > 0 {
-				if self.maxReleaseAge != oldValue {
-					self.iCloudKeyStore.set(self.maxReleaseAge, forKey: self.maxReleaseAgeKey)
-					UserDefaults.standard.set(self.maxReleaseAge, forKey: self.maxReleaseAgeKey)
-				
+			if self.maxReleaseAge != oldValue {
+				if self.maxReleaseAge <= 0 {
+					self.maxReleaseAge = 1
 				}
-			} else {
-				self.maxReleaseAge = 1
+				self.iCloudKeyStore.set(self.maxReleaseAge, forKey: self.maxReleaseAgeKey)
+				UserDefaults.standard.set(self.maxReleaseAge, forKey: self.maxReleaseAgeKey)
+				self.updateNewReleases()
 			}
 		}
 	}
@@ -483,7 +484,7 @@ class PreferenceManager: NSObject {
 		super.init()
 		
 		UserDefaults.standard.register(defaults: [
-			self.firstLaunchKey: false,
+			self.firstLaunchKey: true,
 			self.themeModeKey: ThemeMode.manual.rawValue,
 			self.themeKey: Theme.light.rawValue,
 			self.themeDeterminerKey: ThemeDeterminer.displayBrightness.rawValue,
@@ -493,16 +494,15 @@ class PreferenceManager: NSObject {
 			self.ignoreFeaturesKey: true,
 			self.includeEPsKey: true,
 			self.showPreviousReleasesKey: true,
-			self.maxReleaseAgeKey: 1
+			self.maxReleaseAgeKey: 3
 		])
 		
 		NSUbiquitousKeyValueStore.didChangeExternallyNotification.add(self, selector: #selector(self.load))
-		self.syncFromiCloud()
-
+		
 		self.load()
+
 	}
 	func syncFromiCloud() {
-		self.firstLaunch = self.iCloudKeyStore.bool(forKey: self.firstLaunchKey)
 		
 		if let encodedFollowingArtists = self.iCloudKeyStore.object(forKey: self.followingArtistsKey) as? Data {
 			self.followingArtists = NSKeyedUnarchiver.unarchiveObject(with: encodedFollowingArtists) as! [Artist]
@@ -513,8 +513,6 @@ class PreferenceManager: NSObject {
 		if self.themeMode == .auto {
 			
 			self.themeBrightnessThreshold = self.iCloudKeyStore.double(forKey: self.themeBrightnessThresholdKey)
-			self.sunriseTime = self.iCloudKeyStore.object(forKey: self.sunriseTimeKey) as? Date
-			self.sunsetTime = self.iCloudKeyStore.object(forKey: self.sunsetTimeKey) as? Date
 			
 			self.themeDeterminer = ThemeDeterminer(rawValue: self.iCloudKeyStore.longLong(forKey: self.themeDeterminerKey)) ?? self.themeDeterminer
 			
@@ -538,15 +536,11 @@ class PreferenceManager: NSObject {
 	func syncToiCloud() {
 		
 		DispatchQueue.global().async {
-			
-			self.iCloudKeyStore.set(self.firstLaunch, forKey: self.firstLaunchKey)
-			
+						
 			self.iCloudKeyStore.set(self.themeMode.rawValue, forKey: self.themeModeKey)
 			self.iCloudKeyStore.set(self.theme.rawValue, forKey: self.themeKey)
 			self.iCloudKeyStore.set(self.themeDeterminer.rawValue, forKey: self.themeDeterminerKey)
 			self.iCloudKeyStore.set(self.themeBrightnessThreshold, forKey: self.themeBrightnessThresholdKey)
-			self.iCloudKeyStore.set(self.sunriseTime, forKey: self.sunriseTimeKey)
-			self.iCloudKeyStore.set(self.sunsetTime, forKey: self.sunsetTimeKey)
 			
 			self.iCloudKeyStore.set(self.includeSingles, forKey: self.includeSinglesKey)
 			self.iCloudKeyStore.set(self.ignoreFeatures, forKey: self.ignoreFeaturesKey)
@@ -594,9 +588,11 @@ class PreferenceManager: NSObject {
 	}
 	func load(completion: (() -> Void)?=nil) {
 		
-		self.syncFromiCloud()
-		
 		self.firstLaunch = UserDefaults.standard.bool(forKey: self.firstLaunchKey)
+		
+		if !self.firstLaunch {
+			self.syncFromiCloud()
+		}
 		
 		if let encodedFollowingArtists = UserDefaults.standard.object(forKey: self.followingArtistsKey) as? Data {
 			self.followingArtists = NSKeyedUnarchiver.unarchiveObject(with: encodedFollowingArtists) as! [Artist]

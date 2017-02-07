@@ -8,7 +8,7 @@
 
 import UIKit
 
-class ArtistSearchResultsViewController: UrsusViewController, UICollectionViewDataSource, UICollectionViewDelegate {
+class ArtistSearchResultsViewController: UrsusViewController, UICollectionViewDataSource, UICollectionViewDelegate, UICollectionViewDelegateFlowLayout {
 	
 	var artistSearchResults: [Artist] = []
 	
@@ -53,6 +53,9 @@ class ArtistSearchResultsViewController: UrsusViewController, UICollectionViewDa
 	// MARK: - UICollectionView
 	func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
 		return self.artistSearchResults.count
+	}
+	func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
+		return CGSize(width: self.view.bounds.width, height: 50)
 	}
 	func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
 		

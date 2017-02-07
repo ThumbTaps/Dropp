@@ -177,7 +177,15 @@ class RequestManager: NSObject, URLSessionDataDelegate {
 					return
 				}
 				
-				let finalResults = Array(intermediateResults[1..<intermediateResults.count])
+				var finalResults = Array(intermediateResults[1..<intermediateResults.count])
+				finalResults = finalResults.filter({ (result) -> Bool in
+					
+					guard let explicitness = result["collectionExplicitness"] as? String else {
+						return false
+					}
+					
+					return explicitness != "cleaned"
+				})
 				let dateFormatter = DateFormatter()
 				dateFormatter.dateFormat = "YYYY-MM-dd"
 				
@@ -255,13 +263,14 @@ class RequestManager: NSObject, URLSessionDataDelegate {
 				self.locationManager?.requestWhenInUseAuthorization()
 				self.locationManager?.desiredAccuracy = kCLLocationAccuracyThreeKilometers
 			} else {
-				
+				print("Couldn't get sunrise and sunset because location services are not enabled.")
 				completion(nil, nil, RequestManagerError.sunriseSunsetUnavailable)
 				return
 			}
 			
 			guard let latitude = self.locationManager?.location?.coordinate.latitude,
 				let longitude = self.locationManager?.location?.coordinate.longitude else {
+					print("Couldn't get sunrise and sunset because the user's location could not be determined.")
 					completion(nil, nil, RequestManagerError.sunriseSunsetUnavailable)
 					return
 			}

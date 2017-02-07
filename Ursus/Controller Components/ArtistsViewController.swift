@@ -36,9 +36,14 @@ class ArtistsViewController: UrsusViewController, UICollectionViewDataSource, UI
 		
 		let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "ArtistCell", for: indexPath) as! ArtistCollectionViewCell
 		
-		cell.artistNameLabel.text = PreferenceManager.shared.followingArtists[indexPath.row].name
+		cell.artistNameLabel.text = PreferenceManager.shared.followingArtists.sorted(by: { (first, second) -> Bool in
+			return first.name < second.name
+		})[indexPath.row].name
 		
 		return cell
+	}
+	func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
+		return CGSize(width: self.view.bounds.width, height: 100)
 	}
 
 	
