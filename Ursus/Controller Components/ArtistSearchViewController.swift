@@ -11,6 +11,7 @@ import UIKit
 class ArtistSearchViewController: UrsusViewController, UITextFieldDelegate, UIGestureRecognizerDelegate {
 	
 	@IBOutlet weak var searchBar: ArtistSearchBar!
+	@IBOutlet var dismissGestureRecognizer: UITapGestureRecognizer!
 	@IBOutlet weak var searchBarHidingConstraint: NSLayoutConstraint!
 	@IBOutlet weak var searchBarCenteredConstraint: NSLayoutConstraint!
 	@IBOutlet weak var searchBarRestingConstraint: NSLayoutConstraint!
@@ -23,6 +24,7 @@ class ArtistSearchViewController: UrsusViewController, UITextFieldDelegate, UIGe
 		// Do any additional setup after loading the view.
 		
 		self.searchBar.textField.delegate = self
+		self.dismissGestureRecognizer.isEnabled = false
 		
 		Notification.Name.UIApplicationWillResignActive.add(self, selector: #selector(self.applicationWillResignActive))
 		
@@ -33,9 +35,18 @@ class ArtistSearchViewController: UrsusViewController, UITextFieldDelegate, UIGe
 	override func viewDidAppear(_ animated: Bool) {
 		super.viewDidAppear(animated)
 		
-		self.searchBar.textField.becomeFirstResponder()
-		self.searchBar.textField.selectedTextRange = searchBar.textField.textRange(from: searchBar.textField.beginningOfDocument, to: searchBar.textField.endOfDocument)
-		self.showSearchBar()
+
+		self.searchBar.becomeSearchBar()
+		self.showSearchBar {
+			
+			self.dismissGestureRecognizer.isEnabled = true
+			self.searchBar.textField.selectedTextRange = self.searchBar.textField.textRange(from: self.searchBar.textField.beginningOfDocument, to: self.searchBar.textField.endOfDocument)
+		}
+		let deadlineTime = DispatchTime.now() + .milliseconds(150)
+		DispatchQueue.main.asyncAfter(deadline: deadlineTime) {
+			self.searchBar.textField.becomeFirstResponder()
+		}
+		
 	}
 
     override func didReceiveMemoryWarning() {
@@ -84,10 +95,10 @@ class ArtistSearchViewController: UrsusViewController, UITextFieldDelegate, UIGe
 			
 		DispatchQueue.main.async {
 			// update auto layout constraints
-			self.view.removeConstraint(self.searchBarHidingConstraint)
+			self.view.removeConstraints([self.searchBarHidingConstraint, self.searchBarRestingConstraint])
 			self.view.addConstraint(self.searchBarCenteredConstraint)
 			
-			UIView.animate(withDuration: 0.7, delay: 0, usingSpringWithDamping: 0.8, initialSpringVelocity: 0.8, options: .curveEaseOut, animations: {
+			UIView.animate(withDuration: ANIMATION_SPEED_MODIFIER*0.8, delay: 0, usingSpringWithDamping: 0.8, initialSpringVelocity: 0.8, options: .curveEaseInOut, animations: {
 				self.view.layoutIfNeeded()
 			}, completion: { (completed) in
 				completion?()
@@ -98,10 +109,23 @@ class ArtistSearchViewController: UrsusViewController, UITextFieldDelegate, UIGe
 		
 		DispatchQueue.main.async {
 			// update auto layout constraints
-			self.view.removeConstraint(self.searchBarCenteredConstraint)
+			self.view.removeConstraints([self.searchBarCenteredConstraint, self.searchBarRestingConstraint])
 			self.view.addConstraint(self.searchBarHidingConstraint)
 			
-			UIView.animate(withDuration: 0.3, delay: 0, options: .curveEaseOut, animations: {
+			UIView.animate(withDuration: ANIMATION_SPEED_MODIFIER*0.45, delay: 0, options: .curveEaseOut, animations: {
+				self.view.layoutIfNeeded()
+			}, completion: { (completed) in
+				completion?()
+			})
+		}
+	}
+	func settleSearchBar(completion: (() -> Void)?=nil) {
+		DispatchQueue.main.async {
+			self.view.removeConstraints([self.searchBarCenteredConstraint, self.searchBarHidingConstraint])
+			self.view.addConstraint(self.searchBarRestingConstraint)
+			
+			UIView.animate(withDuration: ANIMATION_SPEED_MODIFIER*0.85, delay: 0, usingSpringWithDamping: 0.7, initialSpringVelocity: 0.7, options: .curveEaseOut, animations: {
+				
 				self.view.layoutIfNeeded()
 			}, completion: { (completed) in
 				completion?()
@@ -196,17 +220,7 @@ class ArtistSearchViewController: UrsusViewController, UITextFieldDelegate, UIGe
 				
 				self.searchBar.endSearching {
 					self.searchBar.becomeButton()
-					
-					DispatchQueue.main.async {
-						self.view.removeConstraint(self.searchBarCenteredConstraint)
-						self.view.addConstraint(self.searchBarRestingConstraint)
-						
-						UIView.animate(withDuration: 0.7, delay: 0, usingSpringWithDamping: 0.6, initialSpringVelocity: 0.8, options: .curveEaseOut, animations: {
-							
-							self.view.layoutIfNeeded()
-						}, completion: nil)
-					}
-					
+					self.settleSearchBar()
 					self.performSegue(withIdentifier: "ArtistSearch->ArtistSearchResults", sender: artists)
 
 				}
@@ -250,14 +264,14 @@ class ArtistSearchViewController: UrsusViewController, UITextFieldDelegate, UIGe
 	// MARK: - Navigation
 	@IBAction func dismissSearch(_ sender: Any) {
 		
-		if self.searchBar.textField.text!.characters.count > 0 {
-			
-		} else {
-			
+		if self.searchBar.textField.text!.characters.count == 0 {
+			self.view.isUserInteractionEnabled = false
+			self.dismissGestureRecognizer.isEnabled = false
 			self.searchBar.textField.resignFirstResponder()
-			self.hideSearchBar {
-				self.performSegue(withIdentifier: "ArtistSearch->NewReleases", sender: nil)
-			}
+			self.searchBar.becomeButton()
+			self.settleSearchBar()
+				
+			self.performSegue(withIdentifier: "ArtistSearch->NewReleases", sender: nil)
 		}
 	}
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
@@ -271,8 +285,17 @@ class ArtistSearchViewController: UrsusViewController, UITextFieldDelegate, UIGe
         } else if segue.identifier == "ArtistSearch->Artist" {
 			
             (sender as! ((ArtistViewController) -> Void))(segue.destination as! ArtistViewController)
-            
+			
         }
 
     }
+	override func prepareForUnwind(for segue: UIStoryboardSegue) {
+		super.prepareForUnwind(for: segue)
+		
+		self.searching = false
+		
+		if segue.identifier == "ArtistSearchResults->ArtistSearch" {
+			self.viewDidAppear(true)
+		}
+	}
 }

@@ -10,18 +10,32 @@ import UIKit
 
 class ArtistSearchResultsViewController: UrsusViewController, UICollectionViewDataSource, UICollectionViewDelegate, UICollectionViewDelegateFlowLayout {
 	
+	@IBOutlet weak var searchButton: SearchButton!
+	
 	var artistSearchResults: [Artist] = []
 	
     override func viewDidLoad() {
         super.viewDidLoad()
 
         // Do any additional setup after loading the view.
-		self.collectionView?.contentInset = UIEdgeInsets(top: 80, left: 0, bottom: 80, right: 0)
+		self.collectionView?.contentInset = UIEdgeInsets(top: 60, left: 0, bottom: 120, right: 0)
 		
 		self.navigationTitle?.text = "\(self.artistSearchResults.count) Result\(self.artistSearchResults.count > 1 ? "s" : "")"
 		self.themeDidChange()
 
     }
+	
+	override func viewDidAppear(_ animated: Bool) {
+		super.viewDidAppear(animated)
+		
+		DispatchQueue.main.async {
+			
+			UIView.animate(withDuration: 0.3) {
+				self.bottomScrollFadeView?.alpha = 1
+				self.searchButton.alpha = 1
+			}
+		}
+	}
 
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
@@ -45,6 +59,7 @@ class ArtistSearchResultsViewController: UrsusViewController, UICollectionViewDa
 			}
 		}
 	}
+	
 	
 	
 	
@@ -166,6 +181,16 @@ class ArtistSearchResultsViewController: UrsusViewController, UICollectionViewDa
 		
 		if segue.identifier == "ArtistSearchResults->Artist" {
 			(sender as! ((ArtistViewController) -> Void))(segue.destination as! ArtistViewController)
+		}
+		
+		else if segue.identifier == "ArtistSearchResults->ArtistSearch" {
+			DispatchQueue.main.async {
+				
+				UIView.animate(withDuration: 0.2) {
+					self.bottomScrollFadeView?.alpha = 0
+					self.searchButton.alpha = 0
+				}
+			}
 		}
     }
 

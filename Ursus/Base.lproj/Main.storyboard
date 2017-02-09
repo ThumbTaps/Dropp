@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="12106.1" systemVersion="16E144f" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES" initialViewController="igh-Gg-oBy">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="12106.1" systemVersion="16E154a" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES" initialViewController="igh-Gg-oBy">
     <device id="retina5_5" orientation="portrait">
         <adaptation id="fullscreen"/>
     </device>
@@ -698,28 +698,28 @@
                         <rect key="frame" x="0.0" y="0.0" width="414" height="736"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <view clipsSubviews="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="7TU-SM-TI1" customClass="ArtistSearchBar" customModule="Ursus" customModuleProvider="target">
-                                <rect key="frame" x="67" y="736" width="280" height="50"/>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="7TU-SM-TI1" customClass="ArtistSearchBar" customModule="Ursus" customModuleProvider="target">
+                                <rect key="frame" x="182" y="666" width="50" height="50"/>
                                 <subviews>
-                                    <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" placeholder="Search for an artist" textAlignment="center" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="JnG-Tf-vdC" customClass="ArtistSearchBarTextField" customModule="Ursus" customModuleProvider="target">
-                                        <rect key="frame" x="0.66666666666668561" y="0.0" width="280" height="50"/>
+                                    <textField opaque="NO" clipsSubviews="YES" alpha="0.0" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" placeholder="Search for artist" textAlignment="center" minimumFontSize="15" translatesAutoresizingMaskIntoConstraints="NO" id="JnG-Tf-vdC" customClass="ArtistSearchBarTextField" customModule="Ursus" customModuleProvider="target">
+                                        <rect key="frame" x="0.66666666666665719" y="0.0" width="50" height="50"/>
                                         <color key="textColor" red="0.20000000000000001" green="0.20000000000000001" blue="0.20000000000000001" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                                        <fontDescription key="fontDescription" type="system" weight="medium" pointSize="19"/>
-                                        <textInputTraits key="textInputTraits" autocapitalizationType="words" autocorrectionType="no" spellCheckingType="no" returnKeyType="search" enablesReturnKeyAutomatically="YES"/>
+                                        <fontDescription key="fontDescription" type="system" weight="medium" pointSize="18"/>
+                                        <textInputTraits key="textInputTraits" autocapitalizationType="words" spellCheckingType="no" returnKeyType="search" enablesReturnKeyAutomatically="YES"/>
                                         <connections>
                                             <outlet property="delegate" destination="exg-Xr-PvW" id="2yS-t1-Xbs"/>
                                         </connections>
                                     </textField>
                                     <view opaque="NO" userInteractionEnabled="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="MO9-L4-GxX" customClass="SearchButton" customModule="Ursus" customModuleProvider="target">
-                                        <rect key="frame" x="0.6666666666666714" y="3" width="45" height="45"/>
+                                        <rect key="frame" x="0.66666666666665719" y="0.0" width="50" height="50"/>
                                         <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                         <color key="tintColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                         <constraints>
                                             <constraint firstAttribute="width" secondItem="MO9-L4-GxX" secondAttribute="height" multiplier="1:1" id="c4V-h2-buh"/>
                                         </constraints>
                                         <userDefinedRuntimeAttributes>
-                                            <userDefinedRuntimeAttribute type="boolean" keyPath="bordered" value="NO"/>
-                                            <userDefinedRuntimeAttribute type="boolean" keyPath="glyphOnly" value="YES"/>
+                                            <userDefinedRuntimeAttribute type="boolean" keyPath="bordered" value="YES"/>
+                                            <userDefinedRuntimeAttribute type="boolean" keyPath="glyphOnly" value="NO"/>
                                         </userDefinedRuntimeAttributes>
                                     </view>
                                 </subviews>
@@ -727,28 +727,34 @@
                                 <color key="tintColor" red="0.20000000000000001" green="0.20000000000000001" blue="0.20000000000000001" alpha="1" colorSpace="calibratedRGB"/>
                                 <constraints>
                                     <constraint firstAttribute="bottom" secondItem="JnG-Tf-vdC" secondAttribute="bottom" id="4rK-Vz-sqi"/>
-                                    <constraint firstAttribute="height" constant="50" id="4rY-Nj-FQ7"/>
+                                    <constraint firstAttribute="height" relation="lessThanOrEqual" constant="50" id="90N-bu-c18"/>
                                     <constraint firstAttribute="width" secondItem="7TU-SM-TI1" secondAttribute="height" multiplier="1:1" id="Fkg-qN-ThY"/>
                                     <constraint firstItem="MO9-L4-GxX" firstAttribute="centerY" secondItem="JnG-Tf-vdC" secondAttribute="centerY" id="IuQ-Cd-N8G"/>
+                                    <constraint firstItem="MO9-L4-GxX" firstAttribute="height" secondItem="7TU-SM-TI1" secondAttribute="height" id="KOF-BJ-NVB"/>
                                     <constraint firstItem="JnG-Tf-vdC" firstAttribute="centerX" secondItem="7TU-SM-TI1" secondAttribute="centerX" id="KQI-Dt-P2n"/>
-                                    <constraint firstItem="MO9-L4-GxX" firstAttribute="trailing" secondItem="JnG-Tf-vdC" secondAttribute="leading" constant="-10" id="NHx-zm-Hyc"/>
-                                    <constraint firstItem="MO9-L4-GxX" firstAttribute="height" secondItem="JnG-Tf-vdC" secondAttribute="height" constant="-5" id="jbE-Y8-EKK"/>
+                                    <constraint firstItem="MO9-L4-GxX" firstAttribute="leading" secondItem="JnG-Tf-vdC" secondAttribute="leading" id="NHx-zm-Hyc"/>
+                                    <constraint firstAttribute="width" secondItem="7TU-SM-TI1" secondAttribute="height" multiplier="28:5" id="jQr-4Y-IjE"/>
                                     <constraint firstItem="JnG-Tf-vdC" firstAttribute="top" secondItem="7TU-SM-TI1" secondAttribute="top" id="mTJ-s6-gHJ"/>
                                     <constraint firstAttribute="width" relation="lessThanOrEqual" constant="280" id="oym-vZ-LDh"/>
                                     <constraint firstItem="JnG-Tf-vdC" firstAttribute="width" secondItem="7TU-SM-TI1" secondAttribute="width" id="qoa-9H-Xob"/>
-                                    <constraint firstItem="MO9-L4-GxX" firstAttribute="leading" secondItem="JnG-Tf-vdC" secondAttribute="leading" id="vVb-uf-Jlx"/>
+                                    <constraint firstItem="MO9-L4-GxX" firstAttribute="leading" secondItem="JnG-Tf-vdC" secondAttribute="leading" constant="5" id="vVb-uf-Jlx"/>
+                                    <constraint firstItem="MO9-L4-GxX" firstAttribute="height" secondItem="7TU-SM-TI1" secondAttribute="height" constant="-5" id="zQ2-AQ-X95"/>
                                 </constraints>
                                 <variation key="default">
                                     <mask key="constraints">
-                                        <exclude reference="Fkg-qN-ThY"/>
-                                        <exclude reference="NHx-zm-Hyc"/>
+                                        <exclude reference="jQr-4Y-IjE"/>
+                                        <exclude reference="vVb-uf-Jlx"/>
+                                        <exclude reference="zQ2-AQ-X95"/>
                                     </mask>
                                 </variation>
                                 <connections>
-                                    <outlet property="buttonSizeConstraint" destination="Fkg-qN-ThY" id="mjy-tF-TyA"/>
+                                    <outlet property="searchBarSizeForButtonConstraint" destination="Fkg-qN-ThY" id="hld-dv-e23"/>
+                                    <outlet property="searchBarSizeForSearchBarConstraint" destination="jQr-4Y-IjE" id="NcP-7O-bd0"/>
                                     <outlet property="searchIcon" destination="MO9-L4-GxX" id="upL-0v-aIB"/>
-                                    <outlet property="searchIconHiddenConstraint" destination="NHx-zm-Hyc" id="m3a-P8-pSs"/>
-                                    <outlet property="searchIconVisibleConstraint" destination="vVb-uf-Jlx" id="4wR-8g-cl5"/>
+                                    <outlet property="searchIconLeadingForButtonConstraint" destination="NHx-zm-Hyc" id="pUF-dO-UE9"/>
+                                    <outlet property="searchIconLeadingForSearchBarConstraint" destination="vVb-uf-Jlx" id="UfK-Ud-g18"/>
+                                    <outlet property="searchIconSizeForButtonConstraint" destination="KOF-BJ-NVB" id="lNy-tm-4mH"/>
+                                    <outlet property="searchIconSizeForSearchBarConstraint" destination="zQ2-AQ-X95" id="nOg-Qv-S9v"/>
                                     <outlet property="textField" destination="JnG-Tf-vdC" id="oJY-pM-c2d"/>
                                     <outlet property="textFieldFullWidthConstraint" destination="qoa-9H-Xob" id="yU0-uC-aYq"/>
                                 </connections>
@@ -759,14 +765,16 @@
                         <constraints>
                             <constraint firstItem="7TU-SM-TI1" firstAttribute="centerY" secondItem="LEf-zx-oO1" secondAttribute="centerY" id="4to-X8-R76"/>
                             <constraint firstItem="7TU-SM-TI1" firstAttribute="width" secondItem="LEf-zx-oO1" secondAttribute="width" priority="750" id="5s2-0C-Z4N"/>
+                            <constraint firstItem="7TU-SM-TI1" firstAttribute="trailing" relation="lessThanOrEqual" secondItem="LEf-zx-oO1" secondAttribute="trailingMargin" constant="-40" id="SX5-2u-Rlj"/>
                             <constraint firstItem="7TU-SM-TI1" firstAttribute="bottom" secondItem="vyF-8P-k86" secondAttribute="top" constant="-20" id="UOE-XM-roy"/>
                             <constraint firstItem="vyF-8P-k86" firstAttribute="top" secondItem="7TU-SM-TI1" secondAttribute="top" id="Zqk-Xr-WWm"/>
                             <constraint firstItem="7TU-SM-TI1" firstAttribute="centerX" secondItem="LEf-zx-oO1" secondAttribute="centerX" id="tX7-wa-VLs"/>
+                            <constraint firstItem="7TU-SM-TI1" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="LEf-zx-oO1" secondAttribute="leadingMargin" constant="40" id="wzh-gd-wqA"/>
                         </constraints>
                         <variation key="default">
                             <mask key="constraints">
                                 <exclude reference="4to-X8-R76"/>
-                                <exclude reference="UOE-XM-roy"/>
+                                <exclude reference="Zqk-Xr-WWm"/>
                             </mask>
                         </variation>
                         <connections>
@@ -774,6 +782,7 @@
                         </connections>
                     </view>
                     <connections>
+                        <outlet property="dismissGestureRecognizer" destination="KK7-0p-vFP" id="fY6-cy-2JF"/>
                         <outlet property="searchBar" destination="7TU-SM-TI1" id="Fbw-X8-mOp"/>
                         <outlet property="searchBarCenteredConstraint" destination="4to-X8-R76" id="kM2-j3-i7q"/>
                         <outlet property="searchBarHidingConstraint" destination="Zqk-Xr-WWm" id="720-cx-UqL"/>
@@ -951,26 +960,20 @@
                                         <constraints>
                                             <constraint firstAttribute="width" secondItem="3Qu-ZD-RnC" secondAttribute="height" multiplier="1:1" id="7Xn-JE-flW"/>
                                             <constraint firstAttribute="height" constant="50" id="Dep-8x-EpB"/>
-                                            <constraint firstAttribute="height" constant="60" id="Qi4-xP-p9g"/>
                                         </constraints>
                                         <color key="tintColor" red="1" green="1" blue="1" alpha="0.90000000000000002" colorSpace="calibratedRGB"/>
-                                        <variation key="default">
-                                            <mask key="constraints">
-                                                <exclude reference="Qi4-xP-p9g"/>
-                                            </mask>
-                                        </variation>
                                         <connections>
-                                            <segue destination="exg-Xr-PvW" kind="custom" identifier="NewReleases-&gt;ArtistSearch" customClass="UrsusStoryboardSegue" customModule="Ursus" customModuleProvider="target" id="WLt-g6-SgG"/>
+                                            <action selector="showSearch:" destination="igh-Gg-oBy" eventType="touchUpInside" id="8Gs-h7-Ac9"/>
                                         </connections>
                                     </button>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="New Releases" textAlignment="center" lineBreakMode="wordWrap" minimumScaleFactor="0.80000000000000004" adjustsLetterSpacingToFitWidth="YES" translatesAutoresizingMaskIntoConstraints="NO" id="mEf-hi-SXp">
-                                        <rect key="frame" x="140" y="30" width="135" height="24"/>
+                                        <rect key="frame" x="140" y="-34" width="135" height="24"/>
                                         <fontDescription key="fontDescription" type="boldSystem" pointSize="20"/>
                                         <color key="textColor" red="0.20000000000000001" green="0.20000000000000001" blue="0.20000000000000001" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                         <nil key="highlightedColor"/>
                                     </label>
                                     <button opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="1000" verticalHuggingPriority="1000" horizontalCompressionResistancePriority="250" verticalCompressionResistancePriority="1000" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="tailTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="zNO-xx-eEi" customClass="UrsusCountIndicator" customModule="Ursus" customModuleProvider="target">
-                                        <rect key="frame" x="376" y="28" width="28" height="28"/>
+                                        <rect key="frame" x="414" y="-36" width="28" height="28"/>
                                         <constraints>
                                             <constraint firstAttribute="height" constant="28" id="YBr-TJ-bEn"/>
                                             <constraint firstAttribute="width" secondItem="zNO-xx-eEi" secondAttribute="height" multiplier="1:1" priority="750" id="jc0-HG-gjg"/>
@@ -993,7 +996,7 @@
                                     <constraint firstAttribute="trailing" secondItem="Cab-Gj-3U5" secondAttribute="trailing" id="0qA-dY-05R"/>
                                     <constraint firstItem="nrJ-fe-wG3" firstAttribute="top" secondItem="W0L-hh-39d" secondAttribute="bottom" priority="750" id="4GY-wv-eOy"/>
                                     <constraint firstItem="lXh-cc-Zs0" firstAttribute="leading" secondItem="W0L-hh-39d" secondAttribute="leading" id="54v-Yi-WwY"/>
-                                    <constraint firstItem="zNO-xx-eEi" firstAttribute="trailing" secondItem="W0L-hh-39d" secondAttribute="trailing" constant="-10" id="5df-Js-6GE"/>
+                                    <constraint firstItem="zNO-xx-eEi" firstAttribute="trailing" secondItem="W0L-hh-39d" secondAttribute="trailing" constant="-20" id="5df-Js-6GE"/>
                                     <constraint firstItem="wp9-6I-nbw" firstAttribute="leading" secondItem="W0L-hh-39d" secondAttribute="leading" id="6OQ-ZB-dHU"/>
                                     <constraint firstItem="Cab-Gj-3U5" firstAttribute="leading" secondItem="W0L-hh-39d" secondAttribute="leading" id="F5L-QQ-ryw"/>
                                     <constraint firstItem="wp9-6I-nbw" firstAttribute="trailing" secondItem="W0L-hh-39d" secondAttribute="trailing" id="JQD-r7-Bnn"/>
@@ -1018,8 +1021,8 @@
                                 </constraints>
                                 <variation key="default">
                                     <mask key="constraints">
-                                        <exclude reference="jND-UK-fTW"/>
-                                        <exclude reference="K8p-45-hQd"/>
+                                        <exclude reference="OAp-M4-X29"/>
+                                        <exclude reference="5df-Js-6GE"/>
                                         <exclude reference="k48-gX-dFU"/>
                                     </mask>
                                 </variation>
@@ -1052,14 +1055,13 @@
                         <outlet property="newReleasesCountIndicatorHidingConstraint" destination="K8p-45-hQd" id="Vz8-rl-NfF"/>
                         <outlet property="newReleasesCountIndicatorRestingConstraint" destination="5df-Js-6GE" id="pT5-XD-8Q8"/>
                         <outlet property="searchButton" destination="3Qu-ZD-RnC" id="3eJ-vg-on3"/>
-                        <outlet property="searchButtonFocusedSizeConstraint" destination="Qi4-xP-p9g" id="bzR-MV-9Vl"/>
                         <outlet property="searchButtonHidingConstraint" destination="Plf-ri-JqR" id="knY-gX-YgW"/>
-                        <outlet property="searchButtonRestingSizeConstraint" destination="Dep-8x-EpB" id="rzS-vv-9MJ"/>
                         <outlet property="searchButtonShowingConstraint" destination="k48-gX-dFU" id="way-YZ-sYb"/>
                         <outlet property="settingsButton" destination="nzW-n9-0kI" id="TLa-i1-R2h"/>
                         <outlet property="settingsButtonHidingConstraint" destination="oUL-Eu-Fca" id="5YT-Ai-N4r"/>
                         <outlet property="settingsButtonShowingConstraint" destination="uyX-EX-fF1" id="3pG-Ti-21a"/>
                         <outlet property="topScrollFadeView" destination="lXh-cc-Zs0" id="EhT-PY-4tp"/>
+                        <segue destination="exg-Xr-PvW" kind="custom" identifier="NewReleases-&gt;ArtistSearch" customClass="UrsusStoryboardSegue" customModule="Ursus" customModuleProvider="target" id="ksI-Oy-xBb"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="tI2-kc-gZW" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -1283,19 +1285,19 @@
                                 </connections>
                             </collectionView>
                             <view opaque="NO" userInteractionEnabled="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="CCs-Xy-viH" customClass="ScrollFadeView" customModule="Ursus" customModuleProvider="target">
-                                <rect key="frame" x="0.0" y="0.0" width="414" height="80"/>
+                                <rect key="frame" x="0.0" y="0.0" width="414" height="100"/>
                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                 <color key="tintColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 <constraints>
-                                    <constraint firstAttribute="height" constant="80" id="a64-y8-Tjk"/>
+                                    <constraint firstAttribute="height" constant="100" id="a64-y8-Tjk"/>
                                 </constraints>
                             </view>
-                            <view opaque="NO" userInteractionEnabled="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="jwg-v2-NQw" customClass="ScrollFadeView" customModule="Ursus" customModuleProvider="target">
-                                <rect key="frame" x="0.0" y="656" width="414" height="80"/>
+                            <view opaque="NO" userInteractionEnabled="NO" alpha="0.0" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="jwg-v2-NQw" customClass="ScrollFadeView" customModule="Ursus" customModuleProvider="target">
+                                <rect key="frame" x="0.0" y="616" width="414" height="120"/>
                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                 <color key="tintColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 <constraints>
-                                    <constraint firstAttribute="height" constant="80" id="GhE-Uf-c3v"/>
+                                    <constraint firstAttribute="height" constant="120" id="GhE-Uf-c3v"/>
                                 </constraints>
                             </view>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="10 Results" textAlignment="center" lineBreakMode="wordWrap" minimumScaleFactor="0.80000000000000004" adjustsLetterSpacingToFitWidth="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Ayi-xb-clx">
@@ -1304,13 +1306,28 @@
                                 <color key="textColor" red="0.20000000000000001" green="0.20000000000000001" blue="0.20000000000000001" alpha="0.20000000000000001" colorSpace="custom" customColorSpace="sRGB"/>
                                 <nil key="highlightedColor"/>
                             </label>
+                            <button opaque="NO" alpha="0.0" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="GUJ-Ck-o7X" userLabel="Search Button" customClass="SearchButton" customModule="Ursus" customModuleProvider="target">
+                                <rect key="frame" x="182" y="666" width="50" height="50"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="50" id="gxp-KX-dqL"/>
+                                    <constraint firstAttribute="width" secondItem="GUJ-Ck-o7X" secondAttribute="height" multiplier="1:1" id="hGt-0Y-6xe"/>
+                                    <constraint firstAttribute="height" constant="60" id="sCY-Og-LpC"/>
+                                </constraints>
+                                <color key="tintColor" red="1" green="1" blue="1" alpha="0.90000000000000002" colorSpace="calibratedRGB"/>
+                                <variation key="default">
+                                    <mask key="constraints">
+                                        <exclude reference="sCY-Og-LpC"/>
+                                    </mask>
+                                </variation>
+                                <connections>
+                                    <segue destination="crX-Jb-gtt" kind="unwind" identifier="ArtistSearchResults-&gt;ArtistSearch" customClass="UrsusStoryboardSegue" customModule="Ursus" customModuleProvider="target" unwindAction="prepareForUnwindFor:" id="SxX-g5-oAC"/>
+                                </connections>
+                            </button>
                         </subviews>
                         <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                         <constraints>
                             <constraint firstItem="jwg-v2-NQw" firstAttribute="bottom" secondItem="Cwn-1B-Gqe" secondAttribute="bottom" id="0NM-gr-Qfs"/>
-                            <constraint firstItem="Ayi-xb-clx" firstAttribute="top" secondItem="JT9-Q7-UsE" secondAttribute="bottom" constant="10" id="1vr-e2-sDx"/>
                             <constraint firstItem="CCs-Xy-viH" firstAttribute="trailing" secondItem="Cwn-1B-Gqe" secondAttribute="trailing" id="3TO-sA-KPS"/>
-                            <constraint firstItem="Ayi-xb-clx" firstAttribute="bottom" secondItem="JT9-Q7-UsE" secondAttribute="bottom" constant="-20" id="4gC-yl-bvP"/>
                             <constraint firstItem="Cwn-1B-Gqe" firstAttribute="centerX" secondItem="anH-Cv-Cr8" secondAttribute="centerX" id="58b-7j-NIf"/>
                             <constraint firstAttribute="trailing" secondItem="CCs-Xy-viH" secondAttribute="trailing" id="9iy-bW-bLV"/>
                             <constraint firstItem="CCs-Xy-viH" firstAttribute="leading" secondItem="Cwn-1B-Gqe" secondAttribute="leading" id="KFf-9j-tiU"/>
@@ -1318,28 +1335,27 @@
                             <constraint firstItem="CCs-Xy-viH" firstAttribute="leading" secondItem="anH-Cv-Cr8" secondAttribute="leading" id="OGG-41-Nf3"/>
                             <constraint firstItem="Cwn-1B-Gqe" firstAttribute="centerY" secondItem="anH-Cv-Cr8" secondAttribute="centerY" id="OSp-v2-CZi"/>
                             <constraint firstItem="Ayi-xb-clx" firstAttribute="centerX" secondItem="anH-Cv-Cr8" secondAttribute="centerX" id="StK-B9-47i"/>
+                            <constraint firstItem="Ayi-xb-clx" firstAttribute="top" secondItem="Cwn-1B-Gqe" secondAttribute="top" constant="30" id="XFn-4F-Vzi"/>
                             <constraint firstItem="jwg-v2-NQw" firstAttribute="trailing" secondItem="Cwn-1B-Gqe" secondAttribute="trailing" id="aLb-x7-MCf"/>
+                            <constraint firstItem="iUg-Uh-EQL" firstAttribute="top" secondItem="GUJ-Ck-o7X" secondAttribute="bottom" constant="20" id="fGV-RF-fjc"/>
+                            <constraint firstItem="GUJ-Ck-o7X" firstAttribute="width" secondItem="GUJ-Ck-o7X" secondAttribute="height" multiplier="1:1" id="fpJ-O4-g89"/>
                             <constraint firstItem="Cwn-1B-Gqe" firstAttribute="height" secondItem="anH-Cv-Cr8" secondAttribute="height" id="nmK-BC-gXe"/>
+                            <constraint firstItem="GUJ-Ck-o7X" firstAttribute="centerX" secondItem="anH-Cv-Cr8" secondAttribute="centerX" id="oo2-WA-Wil"/>
                             <constraint firstItem="CCs-Xy-viH" firstAttribute="top" secondItem="Cwn-1B-Gqe" secondAttribute="top" id="urr-sP-Inh"/>
                             <constraint firstItem="jwg-v2-NQw" firstAttribute="leading" secondItem="Cwn-1B-Gqe" secondAttribute="leading" id="uyW-4l-YwW"/>
                         </constraints>
-                        <variation key="default">
-                            <mask key="constraints">
-                                <exclude reference="4gC-yl-bvP"/>
-                            </mask>
-                        </variation>
                     </view>
                     <connections>
                         <outlet property="bottomScrollFadeView" destination="jwg-v2-NQw" id="NfX-Rx-ufm"/>
                         <outlet property="collectionView" destination="Cwn-1B-Gqe" id="aXE-eO-wln"/>
                         <outlet property="navigationTitle" destination="Ayi-xb-clx" id="GBK-ej-49l"/>
-                        <outlet property="navigationTitleHidingConstraint" destination="4gC-yl-bvP" id="I20-uL-5Be"/>
-                        <outlet property="navigationTitleRestingConstraint" destination="1vr-e2-sDx" id="xva-m3-Pab"/>
+                        <outlet property="searchButton" destination="GUJ-Ck-o7X" id="0OS-gl-Chm"/>
                         <outlet property="topScrollFadeView" destination="CCs-Xy-viH" id="18d-wd-vkF"/>
                         <segue destination="YBR-9N-AHs" kind="custom" identifier="ArtistSearchResults-&gt;Artist" customClass="UrsusStoryboardSegue" customModule="Ursus" customModuleProvider="target" id="Ygw-SB-yfN"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="BNc-Sd-N24" userLabel="First Responder" sceneMemberID="firstResponder"/>
+                <exit id="crX-Jb-gtt" userLabel="Exit" sceneMemberID="exit"/>
             </objects>
             <point key="canvasLocation" x="-1378" y="1139"/>
         </scene>
@@ -1418,9 +1434,8 @@
                             <view opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="xr9-8J-QUD" customClass="FrostedBackdropOverlay" customModule="Ursus" customModuleProvider="target">
                                 <rect key="frame" x="0.0" y="0.0" width="414" height="736"/>
                                 <subviews>
-                                    <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" fixedFrame="YES" directionalLockEnabled="YES" alwaysBounceVertical="YES" showsHorizontalScrollIndicator="NO" delaysContentTouches="NO" dataMode="prototypes" prefetchingEnabled="NO" translatesAutoresizingMaskIntoConstraints="NO" id="l7W-Fs-Phj">
+                                    <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" directionalLockEnabled="YES" alwaysBounceVertical="YES" showsHorizontalScrollIndicator="NO" delaysContentTouches="NO" dataMode="prototypes" prefetchingEnabled="NO" translatesAutoresizingMaskIntoConstraints="NO" id="l7W-Fs-Phj">
                                         <rect key="frame" x="0.0" y="0.0" width="414" height="736"/>
-                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                         <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                         <inset key="scrollIndicatorInsets" minX="0.0" minY="100" maxX="0.0" maxY="80"/>
                                         <collectionViewFlowLayout key="collectionViewLayout" minimumLineSpacing="0.0" minimumInteritemSpacing="0.0" id="xXv-2s-DRL">
@@ -1613,7 +1628,7 @@
                                         <rect key="frame" x="107.66666666666669" y="671" width="200" height="50"/>
                                         <constraints>
                                             <constraint firstAttribute="width" relation="lessThanOrEqual" constant="200" id="28W-E8-eK0"/>
-                                            <constraint firstAttribute="height" constant="50" id="LKg-oM-08i"/>
+                                            <constraint firstAttribute="width" secondItem="C4E-GX-90Y" secondAttribute="height" multiplier="4:1" id="tgx-kc-2lJ"/>
                                         </constraints>
                                         <fontDescription key="fontDescription" type="system" weight="medium" pointSize="20"/>
                                         <color key="tintColor" red="0.94901960780000005" green="0.2156862745" blue="0.25882352939999997" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
@@ -1648,6 +1663,10 @@
                                     <constraint firstItem="C4E-GX-90Y" firstAttribute="centerX" secondItem="xr9-8J-QUD" secondAttribute="centerX" id="Ic2-3t-uyx"/>
                                     <constraint firstItem="C4E-GX-90Y" firstAttribute="centerY" secondItem="xr9-8J-QUD" secondAttribute="centerY" id="Mpo-5P-hTh"/>
                                     <constraint firstAttribute="bottom" secondItem="ksJ-Sm-aVZ" secondAttribute="bottom" id="SsF-sD-MH9"/>
+                                    <constraint firstItem="l7W-Fs-Phj" firstAttribute="leading" secondItem="xr9-8J-QUD" secondAttribute="leading" id="TKG-Sp-l4J"/>
+                                    <constraint firstItem="l7W-Fs-Phj" firstAttribute="top" secondItem="xr9-8J-QUD" secondAttribute="top" id="X2G-eg-Skg"/>
+                                    <constraint firstAttribute="trailing" secondItem="l7W-Fs-Phj" secondAttribute="trailing" id="Y0d-oR-gIR"/>
+                                    <constraint firstAttribute="bottom" secondItem="l7W-Fs-Phj" secondAttribute="bottom" id="cac-CA-KJH"/>
                                     <constraint firstItem="wOj-u9-I2u" firstAttribute="centerY" secondItem="D94-Lj-K1G" secondAttribute="centerY" id="cmW-vW-eFl"/>
                                     <constraint firstItem="wOj-u9-I2u" firstAttribute="leading" secondItem="xr9-8J-QUD" secondAttribute="leadingMargin" id="hSs-vD-54S"/>
                                     <constraint firstAttribute="trailing" secondItem="ksJ-Sm-aVZ" secondAttribute="trailing" id="jp2-tE-Mr0"/>
@@ -1709,7 +1728,7 @@
     <inferredMetricsTieBreakers>
         <segue reference="sTC-nE-yKX"/>
         <segue reference="sgU-aW-9BD"/>
-        <segue reference="e6B-KM-uuu"/>
+        <segue reference="Ygw-SB-yfN"/>
     </inferredMetricsTieBreakers>
     <color key="tintColor" red="0.94901960780000005" green="0.2156862745" blue="0.25882352939999997" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
 </document>

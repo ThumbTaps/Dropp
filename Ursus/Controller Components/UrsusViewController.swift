@@ -71,7 +71,7 @@ class UrsusViewController: UIViewController {
 			(self.backdrop?.overlay ?? self.view).removeConstraint(self.navigationTitleHidingConstraint!)
 			(self.backdrop?.overlay ?? self.view).addConstraint(self.navigationTitleRestingConstraint!)
 		
-			UIView.animate(withDuration: 0.5, delay: 0, usingSpringWithDamping: 0.6, initialSpringVelocity: 0.8, options: .curveEaseOut, animations: {
+			UIView.animate(withDuration: ANIMATION_SPEED_MODIFIER*0.5, delay: 0, usingSpringWithDamping: 0.6, initialSpringVelocity: 0.8, options: .curveEaseOut, animations: {
 				(self.backdrop?.overlay ?? self.view).layoutIfNeeded()
 			})
 		}
@@ -126,6 +126,7 @@ class UrsusViewController: UIViewController {
 	func didUpdateNewReleases() {
 		
 		// show banner if not on new releases view somehow... eheh
+		
 	}
 	
 	

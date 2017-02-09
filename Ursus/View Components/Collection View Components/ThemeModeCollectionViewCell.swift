@@ -82,12 +82,12 @@ class SettingsThemeModeOption: UIView {
 	@IBInspectable var selected: Bool = false {
 		didSet {
 			if self.selected {
-				UIView.animate(withDuration: 0.5, delay: 0, usingSpringWithDamping: 0.6, initialSpringVelocity: 0.8, options: .curveEaseOut, animations: {
+				UIView.animate(withDuration: ANIMATION_SPEED_MODIFIER*0.5, delay: 0, usingSpringWithDamping: 0.6, initialSpringVelocity: 0.8, options: .curveEaseOut, animations: {
 					self.selectedOverlay.transform = CGAffineTransform(scaleX: 1, y: 1)
 					self.selectedOverlay.alpha = 1
 				})
 			} else {
-				UIView.animate(withDuration: 0.25, delay: 0, options: .curveEaseOut, animations: {
+				UIView.animate(withDuration: ANIMATION_SPEED_MODIFIER*0.25, delay: 0, options: .curveEaseOut, animations: {
 					self.selectedOverlay.transform = CGAffineTransform(scaleX: 1.4, y: 1.4)
 					self.selectedOverlay.alpha = 0
 				})
@@ -146,12 +146,12 @@ class SettingsThemeModeOption: UIView {
 		super.awakeFromNib()
 		
 		if self.selected {
-			UIView.animate(withDuration: 0.5, delay: 0, usingSpringWithDamping: 0.6, initialSpringVelocity: 0.8, options: .curveEaseOut, animations: {
+			UIView.animate(withDuration: ANIMATION_SPEED_MODIFIER*0.5, delay: 0, usingSpringWithDamping: 0.6, initialSpringVelocity: 0.8, options: .curveEaseOut, animations: {
 				self.selectedOverlay.transform = CGAffineTransform(scaleX: 1, y: 1)
 				self.selectedOverlay.alpha = 1
 			})
 		} else {
-			UIView.animate(withDuration: 0.25, delay: 0, options: .curveEaseOut, animations: {
+			UIView.animate(withDuration: ANIMATION_SPEED_MODIFIER*0.25, delay: 0, options: .curveEaseOut, animations: {
 				self.selectedOverlay.transform = CGAffineTransform(scaleX: 1.4, y: 1.4)
 				self.selectedOverlay.alpha = 0
 			})

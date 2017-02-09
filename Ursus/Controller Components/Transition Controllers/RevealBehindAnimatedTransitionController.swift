@@ -41,14 +41,14 @@ class RevealBehindAnimatedTransitionController: NSObject, UIViewControllerAnimat
 			transitionContext.containerView.addSubview(destination.view)
 			transitionContext.containerView.addSubview(source.view)
 			
-			UIView.animate(withDuration: duration * 0.2, delay: 0, options: .curveEaseOut, animations: {
+			UIView.animate(withDuration: ANIMATION_SPEED_MODIFIER*duration * 0.2, delay: 0, options: .curveEaseOut, animations: {
 				
 				source.view.transform = CGAffineTransform(scaleX: 0.96, y: 0.96)
 				shadowView.transform = CGAffineTransform(scaleX: 0.96, y: 0.96)
 				darkeningOverlay.alpha = 0.05
 			}, completion: { (completed) in
 				
-				UIView.animate(withDuration: duration * 0.8, delay: 0, usingSpringWithDamping: UIAccessibilityIsReduceMotionEnabled() ? 1 : 0.8, initialSpringVelocity: UIAccessibilityIsReduceMotionEnabled() ? 0 : 0.8, options: .curveEaseInOut, animations: {
+				UIView.animate(withDuration: ANIMATION_SPEED_MODIFIER*duration * 0.8, delay: 0, usingSpringWithDamping: UIAccessibilityIsReduceMotionEnabled() ? 1 : 0.8, initialSpringVelocity: UIAccessibilityIsReduceMotionEnabled() ? 0 : 0.8, options: .curveEaseInOut, animations: {
 					source.view.frame = source.view.frame.offsetBy(dx: 0, dy: destination.view.frame.height - 90)
 					shadowView.frame = shadowView.frame.offsetBy(dx: 0, dy: destination.view.frame.height - 90)
 				}, completion: { (completed) in
@@ -64,7 +64,7 @@ class RevealBehindAnimatedTransitionController: NSObject, UIViewControllerAnimat
 			transitionContext.containerView.addSubview(source.view)
 			transitionContext.containerView.addSubview(destination.view)
 			
-			UIView.animate(withDuration: duration, delay: 0, usingSpringWithDamping: UIAccessibilityIsReduceMotionEnabled() ? 1 : 0.8, initialSpringVelocity: UIAccessibilityIsReduceMotionEnabled() ? 0 : 0.3, options: .curveEaseOut, animations: {
+			UIView.animate(withDuration: ANIMATION_SPEED_MODIFIER*duration, delay: 0, usingSpringWithDamping: UIAccessibilityIsReduceMotionEnabled() ? 1 : 0.8, initialSpringVelocity: UIAccessibilityIsReduceMotionEnabled() ? 0 : 0.3, options: .curveEaseOut, animations: {
 				destination.view.transform = CGAffineTransform(scaleX: 1, y: 1)
 				destination.view.frame = transitionContext.finalFrame(for: destination)
 			}, completion: { (completed) in

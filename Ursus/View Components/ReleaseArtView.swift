@@ -56,7 +56,7 @@ class ReleaseArtView: UIView {
 	
 	func showArtwork() {
 		
-		UIView.animate(withDuration: 0.5, delay: 0, usingSpringWithDamping: 0.6, initialSpringVelocity: 0.85, options: .curveEaseOut, animations: {
+		UIView.animate(withDuration: ANIMATION_SPEED_MODIFIER*0.5, delay: 0, usingSpringWithDamping: 0.6, initialSpringVelocity: 0.85, options: .curveEaseOut, animations: {
 			self.imageView.alpha = 1
 			self.imageView.transform = CGAffineTransform(scaleX: 1, y: 1)
 		})

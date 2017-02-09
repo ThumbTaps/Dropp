@@ -378,7 +378,9 @@ class SettingsViewController: UrsusViewController, UICollectionViewDataSource, U
 		} else {
 			PreferenceManager.shared.themeMode = .auto
 		}
-		self.collectionView?.reloadSections([0])
+		self.collectionView?.performBatchUpdates({
+			self.collectionView?.reloadSections([0])
+		})
 	}
 
 	
@@ -390,12 +392,16 @@ class SettingsViewController: UrsusViewController, UICollectionViewDataSource, U
 	}
 	@IBAction func toggleAdaptiveArtistView(_ sender: UISwitch) {
 		PreferenceManager.shared.adaptiveArtistView = sender.isOn
-		self.collectionView?.reloadSections([0])
+		self.collectionView?.performBatchUpdates({
+			self.collectionView?.reloadSections([0])
+		})
 	}
 
 	@IBAction func toggleIncludeSingles(_ sender: UISwitch) {
 		PreferenceManager.shared.includeSingles = sender.isOn
-		self.collectionView?.reloadSections([1])
+		self.collectionView?.performBatchUpdates({
+			self.collectionView?.reloadSections([1])
+		})
 	}
 	@IBAction func toggleIgnoreFeatures(_ sender: UISwitch) {
 		PreferenceManager.shared.ignoreFeatures = sender.isOn
@@ -405,11 +411,15 @@ class SettingsViewController: UrsusViewController, UICollectionViewDataSource, U
 	}
 	@IBAction func toggleShowPreviousReleases(_ sender: UISwitch) {
 		PreferenceManager.shared.showPreviousReleases = sender.isOn
-		self.collectionView?.reloadSections([1])
+		self.collectionView?.performBatchUpdates({
+			self.collectionView?.reloadSections([1])
+		})
 	}
 	func pickerCell(_ pickerCell: UIPickerCollectionViewCell, didSelectItemAt indexPath: IndexPath) {
 		PreferenceManager.shared.maxReleaseAge = Int64(indexPath.row)+1
-		self.collectionView?.reloadSections([1])
+		self.collectionView?.performBatchUpdates({
+			self.collectionView?.reloadSections([1])
+		})
 	}
 	
 	

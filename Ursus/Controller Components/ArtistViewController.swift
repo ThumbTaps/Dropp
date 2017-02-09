@@ -89,14 +89,14 @@ class ArtistViewController: UrsusViewController, UICollectionViewDataSource, UIC
 			self.backdrop?.overlay.removeConstraint(self.navigationTitleCenteredConstraint)
 			self.backdrop?.overlay.addConstraint(self.navigationTitleRestingConstraint!)
 			
-			UIView.animate(withDuration: 0.7, delay: 0, usingSpringWithDamping: 0.6, initialSpringVelocity: 0.8, options: .curveEaseOut, animations: {
+			UIView.animate(withDuration: ANIMATION_SPEED_MODIFIER*0.7, delay: 0, usingSpringWithDamping: 0.6, initialSpringVelocity: 0.8, options: .curveEaseOut, animations: {
 				self.view.layoutIfNeeded()
 			})
 			
 			self.backdrop?.overlay.removeConstraint(self.followButtonCenteredConstraint)
 			self.backdrop?.overlay.addConstraint(self.followButtonRestingConstraint)
 			
-			UIView.animate(withDuration: 0.6, delay: 0, usingSpringWithDamping: 0.6, initialSpringVelocity: 1, options: .curveEaseInOut, animations: {
+			UIView.animate(withDuration: ANIMATION_SPEED_MODIFIER*0.6, delay: 0, usingSpringWithDamping: 0.6, initialSpringVelocity: 1, options: .curveEaseInOut, animations: {
 				self.view.layoutIfNeeded()
 			})
 			

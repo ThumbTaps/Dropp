@@ -13,7 +13,7 @@ class SlideDownAnimatedTransitionController: NSObject, UIViewControllerAnimatedT
 	private var presenting = true
 	
 	func transitionDuration(using transitionContext: UIViewControllerContextTransitioning?) -> TimeInterval {
-		return self.presenting ? 0.8 : 0.1
+		return self.presenting ? 0.8 : 0.5
 	}
 	func animateTransition(using transitionContext: UIViewControllerContextTransitioning) {
 		guard let source = transitionContext.viewController(forKey: .from),
@@ -27,12 +27,11 @@ class SlideDownAnimatedTransitionController: NSObject, UIViewControllerAnimatedT
 			
 			destination.view.transform = CGAffineTransform(translationX: 0, y: -source.view.bounds.height)
 			
-			transitionContext.containerView.addSubview(source.view)
 			transitionContext.containerView.addSubview(destination.view)
 			
 			DispatchQueue.main.async {
 				
-				UIView.animate(withDuration: duration, delay: 0, usingSpringWithDamping: 0.75, initialSpringVelocity: 0.6, options: .curveEaseOut, animations: {
+				UIView.animate(withDuration: ANIMATION_SPEED_MODIFIER*duration, delay: 0, usingSpringWithDamping: 0.75, initialSpringVelocity: 0.6, options: .curveEaseOut, animations: {
 					
 					destination.view.transform = CGAffineTransform(translationX: 0, y: 0)
 					
@@ -45,14 +44,13 @@ class SlideDownAnimatedTransitionController: NSObject, UIViewControllerAnimatedT
 			
 		else {
 			
-			transitionContext.containerView.addSubview(destination.view)
 			transitionContext.containerView.addSubview(source.view)
 			
 			DispatchQueue.main.async {
 				
-				UIView.animate(withDuration: duration, delay: 0, options: .curveEaseOut, animations: {
+				UIView.animate(withDuration: ANIMATION_SPEED_MODIFIER*duration, delay: 0, options: .curveEaseInOut, animations: {
 					
-					source.view.frame = CGRect(x: 0, y: -destination.view.bounds.height, width: destination.view.bounds.width, height: destination.view.bounds.height)
+					source.view.transform = CGAffineTransform(translationX: 0, y: -destination.view.bounds.height)
 					
 				}, completion: { (completed) in
 					

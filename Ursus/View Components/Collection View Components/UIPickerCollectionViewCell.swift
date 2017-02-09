@@ -77,7 +77,9 @@ class UIPickerCollectionViewCell: UrsusCollectionViewCell, UICollectionViewDataS
 		let feedbackGenerator = UISelectionFeedbackGenerator()
 		feedbackGenerator.selectionChanged()
 		
-		self.collectionView.reloadData()
+		self.collectionView.performBatchUpdates({ 
+			self.collectionView.reloadData()
+		})
 		self.disableSelection()
 		self.pickerButton.setTitle(String(indexPath.row+1), for: .normal)
 		self.delegate?.pickerCell(self, didSelectItemAt: indexPath)

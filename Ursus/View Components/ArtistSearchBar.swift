@@ -13,10 +13,13 @@ class ArtistSearchBar: UIView {
 	
 	@IBOutlet weak var searchIcon: SearchButton!
 	@IBOutlet weak var textField: ArtistSearchBarTextField!
-	@IBOutlet weak var searchIconVisibleConstraint: NSLayoutConstraint!
-	@IBOutlet weak var searchIconHiddenConstraint: NSLayoutConstraint!
+	@IBOutlet weak var searchIconLeadingForSearchBarConstraint: NSLayoutConstraint!
+	@IBOutlet weak var searchIconLeadingForButtonConstraint: NSLayoutConstraint!
 	@IBOutlet weak var textFieldFullWidthConstraint: NSLayoutConstraint!
-	@IBOutlet weak var buttonSizeConstraint: NSLayoutConstraint!
+	@IBOutlet weak var searchBarSizeForButtonConstraint: NSLayoutConstraint!
+	@IBOutlet weak var searchBarSizeForSearchBarConstraint: NSLayoutConstraint!
+	@IBOutlet weak var searchIconSizeForButtonConstraint: NSLayoutConstraint!
+	@IBOutlet weak var searchIconSizeForSearchBarConstraint: NSLayoutConstraint!
 	
 	
 	override init(frame: CGRect) {
@@ -57,11 +60,11 @@ class ArtistSearchBar: UIView {
 	private func heartbeat(completion: (() -> Void)?=nil) {
 	
 		DispatchQueue.main.async {
-			UIView.animate(withDuration: 0.3, delay: 0, options: .curveEaseIn, animations: {
+			UIView.animate(withDuration: ANIMATION_SPEED_MODIFIER*0.3, delay: 0, options: .curveEaseIn, animations: {
 				self.transform = CGAffineTransform(scaleX: 0.9, y: 0.9)
 			}, completion: { (completed) in
 				
-				UIView.animate(withDuration: 0.4, delay: 0, options: .curveEaseInOut, animations: {
+				UIView.animate(withDuration: ANIMATION_SPEED_MODIFIER*0.4, delay: 0, options: .curveEaseInOut, animations: {
 					self.transform = CGAffineTransform(scaleX: 1, y: 1)
 				}, completion: { (completed) in
 					
@@ -86,33 +89,61 @@ class ArtistSearchBar: UIView {
 		self.searchCompletion = completion
 		self.shouldEndSearching = true
 	}
-	func becomeButton() {
+	func becomeButton(_ completion: (() -> Void)?=nil) {
 		
 		DispatchQueue.main.async {
 			
-			self.addConstraint(self.buttonSizeConstraint)
-			self.searchIcon.glyphOnly = false
-			self.searchIcon.bordered = true
+			self.removeConstraints([self.searchIconSizeForSearchBarConstraint, self.searchIconLeadingForSearchBarConstraint])
+			self.addConstraints([self.searchIconSizeForButtonConstraint, self.searchIconLeadingForButtonConstraint])
 			
-			UIView.animate(withDuration: 0.5, delay: 0, usingSpringWithDamping: 0.8, initialSpringVelocity: 1, options: .curveEaseOut, animations: {
-				self.textField.alpha = 0
-				self.searchIcon.setNeedsDisplay()
+			UIView.animate(withDuration: ANIMATION_SPEED_MODIFIER*0.1, animations: {
+				self.textField.textColor = self.textField.textColor?.withAlpha(0)
+				self.textField.attributedPlaceholder = NSAttributedString(string: self.textField.attributedPlaceholder!.string,
+				                                                       attributes: [NSForegroundColorAttributeName: UIColor.clear])
 				self.layoutIfNeeded()
+			})
+			
+			self.removeConstraints([self.searchBarSizeForSearchBarConstraint])
+			self.addConstraints([self.searchBarSizeForButtonConstraint])
+
+			UIView.animate(withDuration: ANIMATION_SPEED_MODIFIER*0.25, delay: 0, options: .curveEaseOut, animations: {
+				self.layoutIfNeeded()
+			}, completion: { (finished) in
+				
+				self.searchIcon.glyphOnly = false
+				self.searchIcon.bordered = true
+				self.searchIcon.setNeedsDisplay()
+				self.textField.alpha = 0
+				
+				completion?()
 			})
 		}
 	}
-	func becomeSearchBar() {
+	func becomeSearchBar(_ completion: (() -> Void)?=nil) {
 		
 		DispatchQueue.main.async {
 			
-			self.removeConstraint(self.buttonSizeConstraint)
-			self.searchIcon.glyphOnly = true
-			self.searchIcon.bordered = false
+			self.removeConstraints([self.searchIconSizeForButtonConstraint, self.searchIconLeadingForButtonConstraint])
+			self.addConstraints([self.searchIconSizeForSearchBarConstraint, self.searchIconLeadingForSearchBarConstraint])
 			
-			UIView.animate(withDuration: 0.5, delay: 0, usingSpringWithDamping: 0.8, initialSpringVelocity: 0.8, options: .curveEaseOut, animations: {
+			UIView.animate(withDuration: ANIMATION_SPEED_MODIFIER*0.15, animations: {
+				self.searchIcon.glyphOnly = true
+				self.searchIcon.bordered = false
+				self.textField.textColor = self.textField.textColor?.withAlpha(1)
 				self.textField.alpha = 1
 				self.searchIcon.setNeedsDisplay()
 				self.layoutIfNeeded()
+			})
+			
+			self.removeConstraints([self.searchBarSizeForButtonConstraint])
+			self.addConstraints([self.searchBarSizeForSearchBarConstraint])
+
+			UIView.animate(withDuration: ANIMATION_SPEED_MODIFIER*0.8, delay: 0, usingSpringWithDamping: 0.8, initialSpringVelocity: 1, options: .curveEaseInOut, animations: {
+				self.layoutIfNeeded()
+				
+			}, completion: { (finished) in
+				
+				completion?()
 			})
 		}
 	}

@@ -35,7 +35,7 @@ class RequestManager: NSObject, URLSessionDataDelegate {
 		let parsedArtistName = artist.replacingOccurrences(of: " ", with: "+").trimmingCharacters(in: .whitespacesAndNewlines).lowercased()
 		
 		// create URL for data request
-		guard let url = URL(string: "\(self.itunesSearchURL)?term=\(parsedArtistName)&media=music&entity=musicArtist&attribute=artistTerm") else {
+		guard let url = URL(string: "\(self.itunesSearchURL)?term=\(parsedArtistName)&media=music&entity=musicArtist&attribute=artistTerm&limit=10") else {
 			completion(nil, RequestManagerError.artistSearchUnavailable)
 			return nil
 		}
@@ -58,7 +58,6 @@ class RequestManager: NSObject, URLSessionDataDelegate {
 					return
 				}
 				
-				print(actualResults)
 				let parsedToArtists = actualResults.map({ (artist) -> Artist in
 					return Artist(
 						itunesID: artist["artistId"] as! Int,

@@ -15,7 +15,7 @@ class BlurAndOverlayAnimatedTransitionController: NSObject, UIViewControllerAnim
 	var blurView: UrsusBlurView?
 	
 	func transitionDuration(using transitionContext: UIViewControllerContextTransitioning?) -> TimeInterval {
-		return self.presenting ? 0.4 : 0.3
+		return self.presenting ? 0.4 : 0.6
 	}
 	func animateTransition(using transitionContext: UIViewControllerContextTransitioning) {
 		guard let source = transitionContext.viewController(forKey: .from),
@@ -26,21 +26,25 @@ class BlurAndOverlayAnimatedTransitionController: NSObject, UIViewControllerAnim
 		let duration = self.transitionDuration(using: transitionContext)
 		
 		if self.presenting {
+			
 			self.blurView = UrsusBlurView(frame: source.view.bounds)
 			transitionContext.containerView.addSubview(self.blurView!)
 			transitionContext.containerView.addSubview(destination.view)
 			
-			UIView.animate(withDuration: duration, delay: 0, options: .curveEaseOut, animations: {
+			UIView.animate(withDuration: ANIMATION_SPEED_MODIFIER*duration, delay: 0, options: .curveEaseOut, animations: {
 				if self.blurView?.changesWithTheme ?? false {
 					self.blurView?.themeDidChange()
 				}
+				
 			}) { (completed) in
-				transitionContext.completeTransition(!transitionContext.transitionWasCancelled)
 			}
+			transitionContext.completeTransition(!transitionContext.transitionWasCancelled)
 		}
-		
 			
 		else {
+			
+			source.view.alpha = 1
+			
 			self.blurView = UrsusBlurView(frame: destination.view.bounds)
 			if PreferenceManager.shared.theme == .dark {
 				self.blurView?.effect = UIBlurEffect(style: .dark)
@@ -49,11 +53,19 @@ class BlurAndOverlayAnimatedTransitionController: NSObject, UIViewControllerAnim
 			}
 			transitionContext.containerView.addSubview(destination.view.snapshotView(afterScreenUpdates: true)!)
 			transitionContext.containerView.addSubview(self.blurView!)
+			transitionContext.containerView.addSubview(source.view)
 			
-			UIView.animate(withDuration: duration, delay: 0, options: .curveEaseOut, animations: {
+			UIView.animate(withDuration: ANIMATION_SPEED_MODIFIER*duration, delay: 0, options: .curveEaseIn, animations: {
 				self.blurView?.effect = nil
+				
 			}) { (completed) in
-				transitionContext.completeTransition(!transitionContext.transitionWasCancelled)
+				
+				UIView.animate(withDuration: ANIMATION_SPEED_MODIFIER*0.1, animations: { 
+					
+					source.view.alpha = 0
+				}, completion: { (finished) in
+					transitionContext.completeTransition(!transitionContext.transitionWasCancelled)
+				})
 			}
 		}
 

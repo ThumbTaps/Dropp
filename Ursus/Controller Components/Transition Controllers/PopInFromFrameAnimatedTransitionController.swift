@@ -33,7 +33,7 @@ class PopInFromFrameAnimatedTransitionController: NSObject, UIViewControllerAnim
 			transitionContext.containerView.addSubview(source.view)
 			transitionContext.containerView.addSubview(destination.view)
 			
-			UIView.animate(withDuration: duration*0.4, delay: 0, options: .curveEaseOut, animations: {
+			UIView.animate(withDuration: ANIMATION_SPEED_MODIFIER*duration*0.4, delay: 0, options: .curveEaseOut, animations: {
 				
 				destination.view.transform = CGAffineTransform(scaleX: 1.1, y: 1.1)
 				destination.view.alpha = 1
@@ -41,7 +41,7 @@ class PopInFromFrameAnimatedTransitionController: NSObject, UIViewControllerAnim
 			}, completion: { (completed) in
 				
 				destination.view.clipsToBounds = false
-				UIView.animate(withDuration: duration*0.6, delay: 0, usingSpringWithDamping: 1, initialSpringVelocity: 1, options: .curveEaseIn, animations: {
+				UIView.animate(withDuration: ANIMATION_SPEED_MODIFIER*duration*0.6, delay: 0, usingSpringWithDamping: 1, initialSpringVelocity: 1, options: .curveEaseIn, animations: {
 					
 					destination.view.transform = CGAffineTransform(scaleX: 1, y: 1)
 					
@@ -60,7 +60,7 @@ class PopInFromFrameAnimatedTransitionController: NSObject, UIViewControllerAnim
 			transitionContext.containerView.addSubview(destination.view)
 			transitionContext.containerView.addSubview(source.view)
 			
-			UIView.animate(withDuration: duration, delay: 0, options: .curveEaseOut, animations: {
+			UIView.animate(withDuration: ANIMATION_SPEED_MODIFIER*duration, delay: 0, options: .curveEaseOut, animations: {
 				
 				source.view.transform = CGAffineTransform(scaleX: 1.2, y: 1.2)
 				source.view.alpha = 0

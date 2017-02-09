@@ -18,6 +18,8 @@ enum ThemeDeterminer: Int64 {
 	case displayBrightness = 0, twilight = 1, ambientLight = 2
 }
 
+public let ANIMATION_SPEED_MODIFIER = 1.0
+
 extension Notification.Name {
 	func post(object:Any? = nil, userInfo:[AnyHashable: Any]? = nil) {
 		NotificationCenter.default.post(name: self, object: object, userInfo: userInfo)
@@ -386,7 +388,6 @@ class PreferenceManager: NSObject {
 					}
 					
 					releases.forEach({ (release) in
-						print(release.title)
 						if followed.releases.contains(where: { (existingRelease) -> Bool in
 							return release.itunesID == existingRelease.itunesID
 						}) {
