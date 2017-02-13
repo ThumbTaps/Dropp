@@ -184,10 +184,10 @@ class SettingsViewController: UrsusViewController, UICollectionViewDataSource, U
 				}
 				if PreferenceManager.shared.showPreviousReleases {
 					var timeUnit = " months"
-					if PreferenceManager.shared.maxReleaseAge == 1 {
+					if PreferenceManager.shared.maxPreviousReleaseAge == 1 {
 						timeUnit = " month"
 					}
-					footerText += "Releases from the past \(PreferenceManager.shared.maxReleaseAge == 1 ? timeUnit : String(PreferenceManager.shared.maxReleaseAge) + timeUnit) will be shown. "
+					footerText += "Releases from the past \(PreferenceManager.shared.maxPreviousReleaseAge == 1 ? timeUnit : String(PreferenceManager.shared.maxPreviousReleaseAge) + timeUnit) will be shown. "
 				}
 				break
 				
@@ -302,9 +302,9 @@ class SettingsViewController: UrsusViewController, UICollectionViewDataSource, U
 				} else {
 					cell = collectionView.dequeueReusableCell(withReuseIdentifier: "MaxReleaseAgeCell", for: indexPath)
 					(cell as! UIPickerCollectionViewCell).leftTextLabel.text = "Only show releases from the past"
-					(cell as! UIPickerCollectionViewCell).pickerButton.setTitle(String(PreferenceManager.shared.maxReleaseAge), for: .normal)
+					(cell as! UIPickerCollectionViewCell).pickerButton.setTitle(String(PreferenceManager.shared.maxPreviousReleaseAge), for: .normal)
 					var timeUnit = "months"
-					if PreferenceManager.shared.maxReleaseAge == 1 {
+					if PreferenceManager.shared.maxPreviousReleaseAge == 1 {
 						timeUnit = "month"
 					}
 					(cell as! UIPickerCollectionViewCell).rightTextLabel.text = timeUnit
@@ -315,9 +315,9 @@ class SettingsViewController: UrsusViewController, UICollectionViewDataSource, U
 			case 4: // MAX RELEASE AGE
 				cell = collectionView.dequeueReusableCell(withReuseIdentifier: "MaxReleaseAgeCell", for: indexPath)
 				(cell as! UIPickerCollectionViewCell).leftTextLabel.text = "Only show releases from the past"
-				(cell as! UIPickerCollectionViewCell).pickerButton.setTitle(String(PreferenceManager.shared.maxReleaseAge), for: .normal)
+				(cell as! UIPickerCollectionViewCell).pickerButton.setTitle(String(PreferenceManager.shared.maxPreviousReleaseAge), for: .normal)
 				var timeUnit = "months"
-				if PreferenceManager.shared.maxReleaseAge == 1 {
+				if PreferenceManager.shared.maxPreviousReleaseAge == 1 {
 					timeUnit = "month"
 				}
 				(cell as! UIPickerCollectionViewCell).rightTextLabel.text = timeUnit
@@ -416,7 +416,7 @@ class SettingsViewController: UrsusViewController, UICollectionViewDataSource, U
 		})
 	}
 	func pickerCell(_ pickerCell: UIPickerCollectionViewCell, didSelectItemAt indexPath: IndexPath) {
-		PreferenceManager.shared.maxReleaseAge = Int64(indexPath.row)+1
+		PreferenceManager.shared.maxPreviousReleaseAge = Int64(indexPath.row)+1
 		self.collectionView?.performBatchUpdates({
 			self.collectionView?.reloadSections([1])
 		})

@@ -16,9 +16,9 @@ class Release: NSObject, NSCoding {
 	var itunesID: Int!
 	var title: String!
 	var releaseDate: Date!
+	var itunesURL: URL!
 	var summary: String?
 	var genre: String?
-	var itunesURL: URL!
 	var artworkURL: URL?
 	var thumbnailURL: URL?
 	private var _seenByUser = false
@@ -44,18 +44,14 @@ class Release: NSObject, NSCoding {
 	}
 	
 	
-	init(itunesID: Int!, title: String!, releaseDate: Date!, summary: String?, genre: String?, itunesURL: URL!, artworkURL: URL?, thumbnailURL: URL?) {
+	init(itunesID: Int!, title: String!, releaseDate: Date!, itunesURL: URL!) {
 		
 		super.init()
 		
 		self.itunesID = itunesID
 		self.title = title
 		self.releaseDate = releaseDate
-		self.summary = summary
-		self.genre = genre
 		self.itunesURL = itunesURL
-		self.artworkURL = artworkURL
-		self.thumbnailURL = thumbnailURL
 	}
 	
 	

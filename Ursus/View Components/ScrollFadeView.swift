@@ -19,6 +19,7 @@ class ScrollFadeView: UIView {
 		didSet {
 			if self.changesWithTheme {
 				PreferenceManager.shared.themeDidChangeNotification.add(self, selector: #selector(self.themeDidChange))
+				self.themeDidChange()
 			} else {
 				PreferenceManager.shared.themeDidChangeNotification.remove(self)
 			}

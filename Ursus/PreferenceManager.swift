@@ -49,8 +49,9 @@ class PreferenceManager: NSObject {
 	private let includeSinglesKey = "includeSingles"
 	private let ignoreFeaturesKey = "ignoreFeatures"
 	private let includeEPsKey = "includeEPs"
+	private let maxNewReleaseAgeKey = "maxNewReleaseAgeKey"
 	private let showPreviousReleasesKey = "showPreviousReleases"
-	private let maxReleaseAgeKey = "maxReleaseAgeKey"
+	private let maxPreviousReleaseAgeKey = "maxPreviousReleaseAgeKey"
 	
 	public let themeDidChangeNotification = Notification.Name(rawValue: "themeDidChangeNotification")
 	public let themeDeterminerDidChangeNotification = Notification.Name(rawValue: "themeDeterminerDidChangeNotification")
@@ -180,10 +181,10 @@ class PreferenceManager: NSObject {
 				self.determiningTwilightTimes = true
 				
 				UIApplication.shared.isNetworkActivityIndicatorVisible = true
-				RequestManager.shared.getSunriseAndSunset { (sunrise, sunset, error) in
+				let sunriseSunsetTask = RequestManager.shared.getSunriseAndSunset { (sunrise, sunset, error) in
 					UIApplication.shared.isNetworkActivityIndicatorVisible = false
 					guard let sunrise = sunrise, let sunset = sunset, error == nil else {
-						print("Couldn't get sunrise and sunset", error)
+						print("Couldn't get sunrise and sunset", error!)
 						return
 					}
 					
@@ -290,7 +291,7 @@ class PreferenceManager: NSObject {
 	// MARK: - RELEASE OPTIONS
 	var followingArtists: [Artist] = []
 	func follow(artist: Artist) {
-		if self.followingArtists.index(where: { $0.itunesID == artist.itunesID }) == nil {
+		if self.followingArtists.contains(where: { $0.itunesID == artist.itunesID }) {
 			self.followingArtists.append(artist)
 		}
 		
@@ -314,15 +315,16 @@ class PreferenceManager: NSObject {
 			self._newReleases = newValue
 		}
 		get {
-			return self.followingArtists.flatMap({
-				$0.releases.filter({ (release) -> Bool in
+			return self.followingArtists.flatMap({ (artist) -> [Release] in
+
+				artist.releases.filter({ (release) -> Bool in
 					
 					if !release.seenByUser {
 						
-						if !self.includeEPs && release.type == .EP {
+						if !artist.includeEPs && release.type == .EP {
 							return false
 							
-						} else if !self.includeSingles && release.type == .single {
+						} else if !artist.includeSingles && release.type == .single {
 							return false
 							
 						} else {
@@ -342,10 +344,11 @@ class PreferenceManager: NSObject {
 			self._previousReleases = newValue
 		}
 		get {
-			return self.followingArtists.flatMap({
-				$0.releases.filter({ (release) -> Bool in
+			return self.followingArtists.flatMap({ (artist) -> [Release] in
+				
+				artist.releases.filter({ (release) -> Bool in
 					
-					if self.showPreviousReleases && release.releaseDate < Calendar.current.date(byAdding: .month, value: -Int(self.maxReleaseAge), to: Date())! {
+					if self.showPreviousReleases && release.releaseDate < Calendar.current.date(byAdding: .month, value: -Int(self.maxPreviousReleaseAge), to: Date())! {
 						
 						return false
 						
@@ -353,10 +356,10 @@ class PreferenceManager: NSObject {
 					
 						if release.seenByUser {
 							
-							if !self.includeEPs && release.type == .EP {
+							if !artist.includeEPs && release.type == .EP {
 								return false
 								
-							} else if !self.includeSingles && release.type == .single {
+							} else if !artist.includeSingles && release.type == .single {
 								return false
 								
 							} else {
@@ -379,7 +382,7 @@ class PreferenceManager: NSObject {
 				
 			self.followingArtists.forEach { (followed) in
 				
-				guard let getReleasesTask = RequestManager.shared.getReleases(for: followed, since: Calendar.current.date(byAdding: .month, value: -Int(self.maxReleaseAge), to: Date()), completion: { (releases: [Release]?, error: Error?) in
+				guard let getReleasesTask = RequestManager.shared.getReleases(for: followed, since: Calendar.current.date(byAdding: .month, value: -Int(self.maxPreviousReleaseAge), to: Date()), completion: { (releases: [Release]?, error: Error?) in
 					UIApplication.shared.isNetworkActivityIndicatorVisible = false
 					
 					guard let releases = releases, error == nil else {
@@ -419,17 +422,6 @@ class PreferenceManager: NSObject {
 		}
 		
 	}
-	
-	var showPreviousReleases: Bool = false {
-		didSet {
-			if self.showPreviousReleases != oldValue {
-				
-				self.iCloudKeyStore.set(self.showPreviousReleases, forKey: self.showPreviousReleasesKey)
-				UserDefaults.standard.set(self.showPreviousReleases, forKey: self.showPreviousReleasesKey)
-				self.updateNewReleases()
-			}
-		}
-	}
 	var includeSingles: Bool = false {
 		didSet {
 			if self.includeSingles != oldValue {
@@ -459,14 +451,36 @@ class PreferenceManager: NSObject {
 			}
 		}
 	}
-	var maxReleaseAge: Int64 = 3 { // in months
+	var maxNewReleaseAge: Int64 = 4 { // in days
 		didSet {
-			if self.maxReleaseAge != oldValue {
-				if self.maxReleaseAge <= 0 {
-					self.maxReleaseAge = 1
+			if self.maxNewReleaseAge != oldValue {
+				if self.maxNewReleaseAge <= 0 {
+					self.maxNewReleaseAge = 1
 				}
-				self.iCloudKeyStore.set(self.maxReleaseAge, forKey: self.maxReleaseAgeKey)
-				UserDefaults.standard.set(self.maxReleaseAge, forKey: self.maxReleaseAgeKey)
+				self.iCloudKeyStore.set(self.maxNewReleaseAge, forKey: self.maxNewReleaseAgeKey)
+				UserDefaults.standard.set(self.maxNewReleaseAge, forKey: self.maxNewReleaseAgeKey)
+				self.updateNewReleases()
+			}
+		}
+	}
+	var showPreviousReleases: Bool = false {
+		didSet {
+			if self.showPreviousReleases != oldValue {
+				
+				self.iCloudKeyStore.set(self.showPreviousReleases, forKey: self.showPreviousReleasesKey)
+				UserDefaults.standard.set(self.showPreviousReleases, forKey: self.showPreviousReleasesKey)
+				self.updateNewReleases()
+			}
+		}
+	}
+	var maxPreviousReleaseAge: Int64 = 3 { // in months
+		didSet {
+			if self.maxPreviousReleaseAge != oldValue {
+				if self.maxPreviousReleaseAge <= 0 {
+					self.maxPreviousReleaseAge = 1
+				}
+				self.iCloudKeyStore.set(self.maxPreviousReleaseAge, forKey: self.maxPreviousReleaseAgeKey)
+				UserDefaults.standard.set(self.maxPreviousReleaseAge, forKey: self.maxPreviousReleaseAgeKey)
 				self.updateNewReleases()
 			}
 		}
@@ -494,8 +508,9 @@ class PreferenceManager: NSObject {
 			self.includeSinglesKey: false,
 			self.ignoreFeaturesKey: true,
 			self.includeEPsKey: true,
+			self.maxNewReleaseAgeKey: 4,
 			self.showPreviousReleasesKey: true,
-			self.maxReleaseAgeKey: 3
+			self.maxPreviousReleaseAgeKey: 3
 		])
 		
 		NSUbiquitousKeyValueStore.didChangeExternallyNotification.add(self, selector: #selector(self.load))
@@ -525,8 +540,9 @@ class PreferenceManager: NSObject {
 		self.includeSingles = self.iCloudKeyStore.bool(forKey: self.includeSinglesKey)
 		self.ignoreFeatures = self.iCloudKeyStore.bool(forKey: self.ignoreFeaturesKey)
 		self.includeEPs = self.iCloudKeyStore.bool(forKey: self.includeEPsKey)
+		self.maxNewReleaseAge = self.iCloudKeyStore.longLong(forKey: self.maxNewReleaseAgeKey)
 		self.showPreviousReleases = self.iCloudKeyStore.bool(forKey: self.showPreviousReleasesKey)
-		self.maxReleaseAge = self.iCloudKeyStore.longLong(forKey: self.maxReleaseAgeKey)
+		self.maxPreviousReleaseAge = self.iCloudKeyStore.longLong(forKey: self.maxPreviousReleaseAgeKey)
 		
 		self.adaptiveArtistView = self.iCloudKeyStore.bool(forKey: self.adaptiveArtistViewKey)
 		
@@ -546,8 +562,9 @@ class PreferenceManager: NSObject {
 			self.iCloudKeyStore.set(self.includeSingles, forKey: self.includeSinglesKey)
 			self.iCloudKeyStore.set(self.ignoreFeatures, forKey: self.ignoreFeaturesKey)
 			self.iCloudKeyStore.set(self.includeEPs, forKey: self.includeEPsKey)
+			self.iCloudKeyStore.set(self.maxNewReleaseAge, forKey: self.maxNewReleaseAgeKey)
 			self.iCloudKeyStore.set(self.showPreviousReleases, forKey: self.showPreviousReleasesKey)
-			self.iCloudKeyStore.set(self.maxReleaseAge, forKey: self.maxReleaseAgeKey)
+			self.iCloudKeyStore.set(self.maxPreviousReleaseAge, forKey: self.maxPreviousReleaseAgeKey)
 			
 			self.iCloudKeyStore.set(self.adaptiveArtistView, forKey: self.adaptiveArtistViewKey)
 			
@@ -573,8 +590,9 @@ class PreferenceManager: NSObject {
 			UserDefaults.standard.set(self.includeSingles, forKey: self.includeSinglesKey)
 			UserDefaults.standard.set(self.ignoreFeatures, forKey: self.ignoreFeaturesKey)
 			UserDefaults.standard.set(self.includeEPs, forKey: self.includeEPsKey)
+			UserDefaults.standard.set(NSNumber(value: self.maxNewReleaseAge), forKey: self.maxNewReleaseAgeKey)
 			UserDefaults.standard.set(self.showPreviousReleases, forKey: self.showPreviousReleasesKey)
-			UserDefaults.standard.set(NSNumber(value: self.maxReleaseAge), forKey: self.maxReleaseAgeKey)
+			UserDefaults.standard.set(NSNumber(value: self.maxPreviousReleaseAge), forKey: self.maxPreviousReleaseAgeKey)
 			
 			UserDefaults.standard.set(self.adaptiveArtistView, forKey: self.adaptiveArtistViewKey)
 			
@@ -617,8 +635,9 @@ class PreferenceManager: NSObject {
 		self.includeSingles = UserDefaults.standard.bool(forKey: self.includeSinglesKey)
 		self.ignoreFeatures = UserDefaults.standard.bool(forKey: self.ignoreFeaturesKey)
 		self.includeEPs = UserDefaults.standard.bool(forKey: self.includeEPsKey)
+		self.maxNewReleaseAge = (UserDefaults.standard.object(forKey: self.maxNewReleaseAgeKey) as! NSNumber).int64Value
 		self.showPreviousReleases = UserDefaults.standard.bool(forKey: self.showPreviousReleasesKey)
-		self.maxReleaseAge = (UserDefaults.standard.object(forKey: self.maxReleaseAgeKey) as! NSNumber).int64Value
+		self.maxPreviousReleaseAge = (UserDefaults.standard.object(forKey: self.maxPreviousReleaseAgeKey) as! NSNumber).int64Value
 		
 		self.adaptiveArtistView = UserDefaults.standard.bool(forKey: self.adaptiveArtistViewKey)
 		

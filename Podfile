@@ -7,6 +7,7 @@ target 'Ursus' do
 
   # Pods for Ursus
   pod 'Firebase/Core'
+  pod 'Firebase/CrashReporter'
 
   target 'UrsusTests' do
     inherit! :search_paths

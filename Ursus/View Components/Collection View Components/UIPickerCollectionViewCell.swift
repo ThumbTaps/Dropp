@@ -64,7 +64,7 @@ class UIPickerCollectionViewCell: UrsusCollectionViewCell, UICollectionViewDataS
 		
 		(cell as! UIPickerCollectionViewCellPickerCell).textLabel?.text = String(indexPath.row+1)
 		
-		if PreferenceManager.shared.maxReleaseAge == Int64(indexPath.row)+1 {
+		if PreferenceManager.shared.maxPreviousReleaseAge == Int64(indexPath.row)+1 {
 			(cell as! UIPickerCollectionViewCellPickerCell).isSelected = true
 		}
 		

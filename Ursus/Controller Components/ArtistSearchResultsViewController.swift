@@ -82,7 +82,7 @@ class ArtistSearchResultsViewController: UrsusViewController, UICollectionViewDa
 	}
 	func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
 		
-		let selectedArtist: Artist? = self.artistSearchResults[indexPath.row]
+		let selectedArtist = PreferenceManager.shared.followingArtists.first(where: { $0.itunesID == self.artistSearchResults[indexPath.row].itunesID }) ?? self.artistSearchResults[indexPath.row]
 		var artistArtworkImage: UIImage?
 		
 		guard selectedArtist != nil else {
@@ -105,19 +105,21 @@ class ArtistSearchResultsViewController: UrsusViewController, UICollectionViewDa
 		
 		UIApplication.shared.isNetworkActivityIndicatorVisible = true
 		// load additional info for artist
-		guard let additionalInfoTask = RequestManager.shared.getAdditionalInfo(for: selectedArtist!, completion: { (artist, error) in
+		guard let additionalInfoTask = RequestManager.shared.getAdditionalInfo(for: selectedArtist, completion: { (artist, error) in
 			
 			guard let artist = artist, error == nil else {
 				print(error!)
 				return
 			}
 			
-			selectedArtist?.summary = artist.summary
-			selectedArtist?.artworkURLs = artist.artworkURLs
+			selectedArtist.summary = artist.summary
+			selectedArtist.artworkURLs = artist.artworkURLs
 
 			// load artist artwork
-			guard let urlForArtwork = selectedArtist?.artworkURLs[.mega] else {
-				print("Could not construct artwork URL", selectedArtist?.artworkURLs)
+			guard let urlForArtwork = selectedArtist.artworkURLs[.mega] else {
+				print("Could not construct artwork URL", selectedArtist.artworkURLs)
+				completedRequests += 1
+				UIApplication.shared.isNetworkActivityIndicatorVisible = false
 				return
 			}
 
@@ -152,14 +154,14 @@ class ArtistSearchResultsViewController: UrsusViewController, UICollectionViewDa
 		
 		UIApplication.shared.isNetworkActivityIndicatorVisible = true
 		// load releases
-		guard let releasesTask = RequestManager.shared.getReleases(for: selectedArtist!, completion: { (releases, error) in
+		guard let releasesTask = RequestManager.shared.getReleases(for: selectedArtist, completion: { (releases, error) in
 			
 			guard let releases = releases, error == nil else {
 				print(error!)
 				return
 			}
 			
-			selectedArtist?.releases = releases
+			selectedArtist.releases = releases
 			
 			completedRequests += 1
 			UIApplication.shared.isNetworkActivityIndicatorVisible = false

@@ -35,7 +35,6 @@ class ArtistSearchViewController: UrsusViewController, UITextFieldDelegate, UIGe
 	override func viewDidAppear(_ animated: Bool) {
 		super.viewDidAppear(animated)
 		
-
 		self.searchBar.becomeSearchBar()
 		self.showSearchBar {
 			
@@ -154,15 +153,22 @@ class ArtistSearchViewController: UrsusViewController, UITextFieldDelegate, UIGe
 			
 			if artists.count == 0 { // no results
 				
+				self.searching = false
+				self.searchBar.endSearching {
+					
+					self.searchBar.textField.becomeFirstResponder()
+					self.searchBar.textField.selectedTextRange = self.searchBar.textField.textRange(from: self.searchBar.textField.beginningOfDocument, to: self.searchBar.textField.endOfDocument)
+
+				}
 				
 			} else if artists.count == 1 { // go directly to artist view
 				
-				let finalArtist = artists[0]
+				let finalArtist = PreferenceManager.shared.followingArtists.first(where: { $0.itunesID == artists[0].itunesID }) ?? artists[0]
 
 				UIApplication.shared.isNetworkActivityIndicatorVisible = true
 				
 				// get additional artist info
-				guard let additionalInfoTask = RequestManager.shared.getAdditionalInfo(for: finalArtist, completion: { (artist, error) in
+				guard let additionalInfoTask = RequestManager.shared.getAdditionalInfo(for: finalArtist!, completion: { (artist, error) in
 					guard artist != nil, error == nil else {
 						print(error!)
 						UIApplication.shared.isNetworkActivityIndicatorVisible = false
@@ -170,11 +176,11 @@ class ArtistSearchViewController: UrsusViewController, UITextFieldDelegate, UIGe
 						return
 					}
 					
-					finalArtist.summary = artist?.summary
-					finalArtist.artworkURLs = artist?.artworkURLs
+					finalArtist?.summary = artist?.summary
+					finalArtist?.artworkURLs = artist?.artworkURLs
 					
 					// get latest releases
-					guard let getReleasesTask = RequestManager.shared.getReleases(for: finalArtist, completion: { (releases, error) in
+					guard let getReleasesTask = RequestManager.shared.getReleases(for: finalArtist!, completion: { (releases, error) in
 						guard let releases = releases, error == nil else {
 							print(error!)
 							UIApplication.shared.isNetworkActivityIndicatorVisible = false
@@ -182,11 +188,11 @@ class ArtistSearchViewController: UrsusViewController, UITextFieldDelegate, UIGe
 							return
 						}
 						
-						finalArtist.releases = releases
+						finalArtist?.releases = releases
 						
 						// load artist artwork
-						guard let urlForArtwork = finalArtist.artworkURLs[.mega] else {
-							print("Could not construct artwork URL", finalArtist.artworkURLs)
+						guard let urlForArtwork = finalArtist?.artworkURLs[.mega] else {
+							print("Could not construct artwork URL", finalArtist!.artworkURLs)
 							return
 						}
 						guard let loadImageTask = RequestManager.shared.loadImage(from: urlForArtwork, completion: { (image, error) in

@@ -11,13 +11,22 @@ import UIKit
 @IBDesignable
 class ReleaseArtView: UIView {
 	
-	@IBInspectable var themed: Bool = true
+	@IBInspectable var changesWithTheme: Bool = true {
+		didSet {
+			if self.changesWithTheme {
+				PreferenceManager.shared.themeDidChangeNotification.add(self, selector: #selector(self.themeDidChange))
+				self.themeDidChange()
+			} else {
+				PreferenceManager.shared.themeDidChangeNotification.remove(self)
+			}
+		}
+	}
 	@IBOutlet weak var imageView: ReleaseArtViewImageView!
 
 	override init(frame: CGRect) {
 		super.init(frame: frame)
 		
-		if self.themed {
+		if self.changesWithTheme {
 			
 			self.themeDidChange()
 			PreferenceManager.shared.themeDidChangeNotification.add(self, selector: #selector(self.themeDidChange))
@@ -26,7 +35,7 @@ class ReleaseArtView: UIView {
 	required init?(coder aDecoder: NSCoder) {
 		super.init(coder: aDecoder)
 		
-		if self.themed {
+		if self.changesWithTheme {
 			
 			self.themeDidChange()
 			PreferenceManager.shared.themeDidChangeNotification.add(self, selector: #selector(self.themeDidChange))
@@ -49,7 +58,7 @@ class ReleaseArtView: UIView {
 		
 		self.layer.backgroundColor = UIColor.clear.cgColor
 		self.layer.borderWidth = min(rect.width / 70, 3)
-		self.layer.cornerRadius = rect.width / 24
+		self.layer.cornerRadius = rect.width / 30
 		self.layer.masksToBounds = true
 	}
 	

@@ -20,25 +20,48 @@ class Artist: NSObject, NSCoding {
 	var summary: String?
 	var genre: String?
 	var artworkURLs: [ArtworkSize: URL]! = [:]
-	var releases: [Release]! = []
+	var releases: [Release] = []
 	var latestRelease: Release? {
 		get {
 			return self.releases.max(by: { $0.isNewerThan($1) })
 		}
 	}
+	private var _includeSingles: Bool?
+	var includeSingles: Bool {
+		get {
+			return self._includeSingles ?? PreferenceManager.shared.includeSingles
+		}
+		set {
+			self._includeSingles = newValue
+		}
+	}
+	private var _ignoreFeatures: Bool?
+	var ignoreFeatures: Bool {
+		get {
+			return self._ignoreFeatures ?? PreferenceManager.shared.ignoreFeatures
+		}
+		set {
+			self._ignoreFeatures = newValue
+		}
+	}
+	private var _includeEPs: Bool?
+	var includeEPs: Bool {
+		get {
+			return self._includeEPs ?? PreferenceManager.shared.includeEPs
+		}
+		set {
+			self._includeEPs = newValue
+		}
+	}
 	
 	
-	init(itunesID: Int!, name: String!, itunesURL: URL!, summary: String?, genre: String?, artworkURLs: [ArtworkSize: URL]?, releases: [Release]?) {
+	init(itunesID: Int!, name: String!, itunesURL: URL!) {
 		
 		super.init()
 		
 		self.itunesID = itunesID
 		self.name = name
 		self.itunesURL = itunesURL
-		self.summary = summary
-		self.genre = genre
-		self.artworkURLs = artworkURLs
-		self.releases = releases
 		
 	}
 	
@@ -59,8 +82,15 @@ class Artist: NSObject, NSCoding {
 		if self.artworkURLs != nil {
 			aCoder.encode(self.artworkURLs.flatMap({ $0.value }), forKey: "artworkURLs")
 		}
-		if self.releases != nil {
-			aCoder.encode(self.releases, forKey: "releases")
+		aCoder.encode(self.releases, forKey: "releases")
+		if self._includeSingles != nil {
+			aCoder.encode(self._includeSingles, forKey: "includeSingles")
+		}
+		if self._ignoreFeatures != nil {
+			aCoder.encode(self._ignoreFeatures, forKey: "ignoreFeatures")
+		}
+		if self._includeEPs != nil {
+			aCoder.encode(self._includeEPs, forKey: "includeEPs")
 		}
 	}
 	required init?(coder aDecoder: NSCoder) {
@@ -78,5 +108,8 @@ class Artist: NSObject, NSCoding {
 			}
 		}
 		self.releases = aDecoder.decodeObject(forKey: "releases") as! [Release]
+		self._includeSingles = aDecoder.decodeObject(forKey: "includeSingles") as? Bool
+		self._ignoreFeatures = aDecoder.decodeObject(forKey: "ignoreFeatures") as? Bool
+		self._includeEPs = aDecoder.decodeObject(forKey: "includeEPs") as? Bool
 	}
 }

@@ -32,10 +32,10 @@ class RequestManager: NSObject, URLSessionDataDelegate {
 	// MARK: Methods
 	func search(for artist: String, completion: @escaping ((_ response: [Artist]?, _ error: Error?) -> Void)) -> URLSessionDataTask? {
 		
-		let parsedArtistName = artist.replacingOccurrences(of: " ", with: "+").trimmingCharacters(in: .whitespacesAndNewlines).lowercased()
+		let parsedArtistName = artist.replacingOccurrences(of: " ", with: "+").trimmingCharacters(in: .whitespacesAndNewlines).addingPercentEncoding(withAllowedCharacters: .urlHostAllowed)?.lowercased()
 		
 		// create URL for data request
-		guard let url = URL(string: "\(self.itunesSearchURL)?term=\(parsedArtistName)&media=music&entity=musicArtist&attribute=artistTerm&limit=10") else {
+		guard let url = URL(string: "\(self.itunesSearchURL)?term=\(parsedArtistName!)&media=music&entity=musicArtist&attribute=artistTerm&limit=10") else {
 			completion(nil, RequestManagerError.artistSearchUnavailable)
 			return nil
 		}
@@ -52,26 +52,25 @@ class RequestManager: NSObject, URLSessionDataDelegate {
 				
 				// convert data into dictionary
 				let results = try JSONSerialization.jsonObject(with: data, options: .mutableContainers) as? [String: Any]
-				
+
 				guard let actualResults = results?["results"] as? [[String: Any]] else {
 					completion(nil, RequestManagerError.artistSearchUnavailable)
 					return
 				}
 				
-				let parsedToArtists = actualResults.map({ (artist) -> Artist in
-					return Artist(
-						itunesID: artist["artistId"] as! Int,
-						name: artist["artistName"] as! String,
-						itunesURL: URL(string: artist["artistLinkUrl"] as! String),
-						summary: nil,
-						genre: artist["primaryGenreName"] as? String,
-						artworkURLs: nil,
-						releases: nil
-					)
+				let parsedToArtists = actualResults.map({ (parsedArtist) -> Artist? in
+					
+					let itunesID = parsedArtist["artistId"] as? Int
+						let name = parsedArtist["artistName"] as? String
+						let itunesURLString = parsedArtist["artistLinkUrl"] as? String
+					let artist = Artist(itunesID: itunesID, name: name, itunesURL: URL(string: itunesURLString!))
+					artist.genre = parsedArtist["primaryGenreName"] as? String
+					
+					return artist
 				})
 				
 				// trigger completion handler
-				completion(parsedToArtists, nil)
+				completion(parsedToArtists.filter({ $0 != nil }) as? [Artist], nil)
 				
 			} catch _ {
 			
@@ -87,9 +86,9 @@ class RequestManager: NSObject, URLSessionDataDelegate {
 	}
 	func getAdditionalInfo(for artist: Artist, completion: @escaping ((_ completedArtist: Artist?, _ error: Error?) -> Void)) -> URLSessionDataTask? {
 		
-		let parsedArtistName = artist.name!.replacingOccurrences(of: " ", with: "+").trimmingCharacters(in: .whitespacesAndNewlines).lowercased()
+		let parsedArtistName = artist.name.replacingOccurrences(of: " ", with: "+").trimmingCharacters(in: .whitespacesAndNewlines).addingPercentEncoding(withAllowedCharacters: .urlHostAllowed)?.lowercased()
 		
-		guard let url = URL(string: "\(self.lastFMLookupURL)?method=artist.getinfo&artist=\(parsedArtistName)&api_key=\(self.lastFMAPIKey)&format=json") else {
+		guard let url = URL(string: "\(self.lastFMLookupURL)?method=artist.getinfo&artist=\(parsedArtistName!)&api_key=\(self.lastFMAPIKey)&format=json") else {
 			completion(nil, RequestManagerError.additionalArtistInfoUnavailable)
 			return nil
 		}
@@ -110,6 +109,10 @@ class RequestManager: NSObject, URLSessionDataDelegate {
 					completion(nil, RequestManagerError.additionalArtistInfoUnavailable)
 					return
 				}
+								
+				if let summary = (artistInfo["bio"] as? [String: Any])?["content"] as? String {
+					artist.summary = summary
+				}
 				
 				guard let artistImages = artistInfo["image"] as? [[String: Any]] else {
 					completion(nil, RequestManagerError.additionalArtistInfoUnavailable)
@@ -119,24 +122,29 @@ class RequestManager: NSObject, URLSessionDataDelegate {
 				// construct array
 				var artistArtworkURLs: [ArtworkSize: URL] = [:]
 				artistImages.forEach({ (current) in
-					let url = current["#text"] as! String
-					switch current["size"] as! String {
-					case "small": artistArtworkURLs[.small] = URL(string: url)!
-						break
-					case "medium": artistArtworkURLs[.medium] = URL(string: url)!
-						break
-					case "large": artistArtworkURLs[.large] = URL(string: url)!
-						break
-					case "extralarge": artistArtworkURLs[.extraLarge] = URL(string: url)!
-						break
-					case "mega": artistArtworkURLs[.mega] = URL(string: url)!
-						break
-					default: artistArtworkURLs[.thumbnail] = URL(string: url)!
+					
+					if let urlString = current["#text"] as? String {
+						
+						if let currentSize = current["size"] as? String {
+							
+							switch currentSize {
+							case "small": artistArtworkURLs[.small] = URL(string: urlString)
+								break
+							case "medium": artistArtworkURLs[.medium] = URL(string: urlString)
+								break
+							case "large": artistArtworkURLs[.large] = URL(string: urlString)
+								break
+							case "extralarge": artistArtworkURLs[.extraLarge] = URL(string: urlString)
+								break
+							case "mega": artistArtworkURLs[.mega] = URL(string: urlString)
+								break
+							default: artistArtworkURLs[.thumbnail] = URL(string: urlString)
+							}
+						}
 					}
 				})
 				
 				artist.artworkURLs = artistArtworkURLs
-				artist.summary = (artistInfo["bio"] as? [String: Any])?["content"] as? String
 				
 				// trigger completion handler
 				completion(artist, nil)
@@ -188,25 +196,20 @@ class RequestManager: NSObject, URLSessionDataDelegate {
 				let dateFormatter = DateFormatter()
 				dateFormatter.dateFormat = "YYYY-MM-dd"
 				
-				let releases = finalResults.map({ ( result ) -> Release in
+				let releases = finalResults.map({ ( parsedRelease ) -> Release? in
 					
-					let itunesID = result["collectionId"] as! Int
-					let title = result["collectionName"] as! String
-					let releaseDate = dateFormatter.date(from: (result["releaseDate"] as! String).components(separatedBy: "T")[0])
-					let genre = result["primaryGenreName"] as? String
-					let itunesURL = URL(string: result["collectionViewUrl"] as! String)
-					let artworkURL = URL(string: (result["artworkUrl100"] as! String).replacingOccurrences(of: "100x100bb", with: "1000x1000"))
-					let thumbnailURL = URL(string: (result["artworkUrl100"] as! String).replacingOccurrences(of: "100x100bb", with: "132x132"))
-					let release = Release(
-						itunesID: itunesID,
-						title: title,
-						releaseDate: releaseDate,
-						summary: nil,
-						genre: genre,
-						itunesURL: itunesURL,
-						artworkURL: artworkURL,
-						thumbnailURL: thumbnailURL
-					)
+					guard let itunesID = parsedRelease["collectionId"] as? Int,
+						let title = parsedRelease["collectionName"] as? String,
+						let releaseDateString = parsedRelease["releaseDate"] as? String,
+						let itunesURLString = parsedRelease["collectionViewUrl"] as? String else {
+							return nil
+					}
+					
+					let releaseDate = dateFormatter.date(from: releaseDateString.components(separatedBy: "T")[0])
+					let release = Release(itunesID: itunesID, title: title, releaseDate: releaseDate, itunesURL: URL(string: itunesURLString))
+					release.genre = parsedRelease["primaryGenreName"] as? String
+					release.artworkURL = URL(string: (parsedRelease["artworkUrl100"] as! String).replacingOccurrences(of: "100x100bb", with: "1000x1000"))
+					release.thumbnailURL = URL(string: (parsedRelease["artworkUrl100"] as! String).replacingOccurrences(of: "100x100bb", with: "132x132"))
 					
 					return release
 				})
@@ -215,10 +218,10 @@ class RequestManager: NSObject, URLSessionDataDelegate {
 				// trigger completion handler
 				if date != nil {
 					completion(releases.filter({ (release) -> Bool in
-						return release.releaseDate >= date!
-					}), nil)
+						return release != nil && release!.releaseDate >= date!
+					}) as? [Release], nil)
 				} else {
-					completion(releases, nil)
+					completion(releases.filter({ $0 != nil }) as? [Release], nil)
 				}
 				
 			} catch _ {

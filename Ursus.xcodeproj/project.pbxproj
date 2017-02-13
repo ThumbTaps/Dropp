@@ -39,6 +39,8 @@
 		7B3B997E1CC4437E00900838 /* UrsusTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B3B997D1CC4437E00900838 /* UrsusTests.swift */; };
 		7B3B99891CC4437E00900838 /* UrsusUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B3B99881CC4437E00900838 /* UrsusUITests.swift */; };
 		7B3B99981CC448B300900838 /* RequestManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B3B99971CC448B300900838 /* RequestManager.swift */; };
+		7B3FB47A1E4EB3BF0036A167 /* MoreButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B3FB4791E4EB3BF0036A167 /* MoreButton.swift */; };
+		7B49D7CC1E51376900C04A8C /* TextAreaCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B49D7CB1E51376900C04A8C /* TextAreaCollectionViewCell.swift */; };
 		7B53182F1E13518B004FDFC7 /* ScrollFadeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B53182E1E13518B004FDFC7 /* ScrollFadeView.swift */; };
 		7B5609751E1CA5BB0054CB40 /* SettingsButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B5609741E1CA5BB0054CB40 /* SettingsButton.swift */; };
 		7B5FCE881E301866008AC1F7 /* RevealBehindAnimatedTransitionController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B5FCE871E301866008AC1F7 /* RevealBehindAnimatedTransitionController.swift */; };
@@ -62,6 +64,7 @@
 		7BD89A171E2D74EC00FAF502 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 7BD89A161E2D74EC00FAF502 /* GoogleService-Info.plist */; };
 		7BE387A01E3AC7DB000F85F2 /* CloseButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BE3879F1E3AC7DB000F85F2 /* CloseButton.swift */; };
 		7BE387A21E3AD038000F85F2 /* PopInFromFrameAnimatedTransitionController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BE387A11E3AD038000F85F2 /* PopInFromFrameAnimatedTransitionController.swift */; };
+		7BE90EA61E4D5E8600A74E94 /* SortButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BE90EA51E4D5E8600A74E94 /* SortButton.swift */; };
 		7BEB34BD1DF061E300888FF1 /* UrsusViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BEB34BC1DF061E300888FF1 /* UrsusViewController.swift */; };
 		7BEB34BF1DF0679800888FF1 /* UrsusStoryboardSegue.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BEB34BE1DF0679800888FF1 /* UrsusStoryboardSegue.swift */; };
 		7BEE31EE1E4406C2001BB019 /* SlideDownAnimatedTransitionController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BEE31ED1E4406C2001BB019 /* SlideDownAnimatedTransitionController.swift */; };
@@ -128,6 +131,8 @@
 		7B3B998A1CC4437E00900838 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		7B3B99961CC443DF00900838 /* Ursus.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = Ursus.entitlements; sourceTree = "<group>"; };
 		7B3B99971CC448B300900838 /* RequestManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RequestManager.swift; sourceTree = "<group>"; };
+		7B3FB4791E4EB3BF0036A167 /* MoreButton.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = MoreButton.swift; path = Buttons/MoreButton.swift; sourceTree = "<group>"; };
+		7B49D7CB1E51376900C04A8C /* TextAreaCollectionViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = TextAreaCollectionViewCell.swift; path = "Collection View Components/TextAreaCollectionViewCell.swift"; sourceTree = "<group>"; };
 		7B53182E1E13518B004FDFC7 /* ScrollFadeView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ScrollFadeView.swift; sourceTree = "<group>"; };
 		7B5609741E1CA5BB0054CB40 /* SettingsButton.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = SettingsButton.swift; path = Buttons/SettingsButton.swift; sourceTree = "<group>"; };
 		7B5FCE871E301866008AC1F7 /* RevealBehindAnimatedTransitionController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = RevealBehindAnimatedTransitionController.swift; path = "Transition Controllers/RevealBehindAnimatedTransitionController.swift"; sourceTree = "<group>"; };
@@ -152,6 +157,7 @@
 		7BD89A161E2D74EC00FAF502 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		7BE3879F1E3AC7DB000F85F2 /* CloseButton.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = CloseButton.swift; path = Buttons/CloseButton.swift; sourceTree = "<group>"; };
 		7BE387A11E3AD038000F85F2 /* PopInFromFrameAnimatedTransitionController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = PopInFromFrameAnimatedTransitionController.swift; path = "Transition Controllers/PopInFromFrameAnimatedTransitionController.swift"; sourceTree = "<group>"; };
+		7BE90EA51E4D5E8600A74E94 /* SortButton.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = SortButton.swift; path = Buttons/SortButton.swift; sourceTree = "<group>"; };
 		7BEB34BC1DF061E300888FF1 /* UrsusViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UrsusViewController.swift; sourceTree = "<group>"; };
 		7BEB34BE1DF0679800888FF1 /* UrsusStoryboardSegue.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UrsusStoryboardSegue.swift; sourceTree = "<group>"; };
 		7BEE31ED1E4406C2001BB019 /* SlideDownAnimatedTransitionController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = SlideDownAnimatedTransitionController.swift; path = "Transition Controllers/SlideDownAnimatedTransitionController.swift"; sourceTree = "<group>"; };
@@ -200,8 +206,10 @@
 				7B1912B01E32F6100027B1D1 /* DisplayBrightnessMaxButton.swift */,
 				7B1912AD1E32F4FC0027B1D1 /* DisplayBrightnessMinButton.swift */,
 				7B1E33B31E29DEAB00D5F37B /* DownButton.swift */,
+				7B3FB4791E4EB3BF0036A167 /* MoreButton.swift */,
 				7B7999191E1DE092003E2F28 /* SearchButton.swift */,
 				7B5609741E1CA5BB0054CB40 /* SettingsButton.swift */,
+				7BE90EA51E4D5E8600A74E94 /* SortButton.swift */,
 				7B740F151DD8D9AA0085F5C8 /* UrsusButton.swift */,
 			);
 			name = Buttons;
@@ -227,6 +235,7 @@
 				7B121F7F1E2C3AAA004458DC /* ThemeModeCollectionViewCell.swift */,
 				7BD4994F1E35AF1B00C2B7E7 /* UIPickerCollectionViewCell.swift */,
 				7B1E33B51E29EAAD00D5F37B /* UrsusCollectionViewCell.swift */,
+				7B49D7CB1E51376900C04A8C /* TextAreaCollectionViewCell.swift */,
 			);
 			name = "Collection View Components";
 			sourceTree = "<group>";
@@ -691,6 +700,7 @@
 				7B5FCE881E301866008AC1F7 /* RevealBehindAnimatedTransitionController.swift in Sources */,
 				7B8200ED1CDABE9200A99C68 /* Artist.swift in Sources */,
 				7B2839E81E330B8900B217D6 /* DisplayBrightnessThresholdCollectionViewCell.swift in Sources */,
+				7BE90EA61E4D5E8600A74E94 /* SortButton.swift in Sources */,
 				7B79991C1E1F3C21003E2F28 /* ArtistSearchViewController.swift in Sources */,
 				7B1912AE1E32F4FC0027B1D1 /* DisplayBrightnessMinButton.swift in Sources */,
 				7B179DB21E104CBA000F0DED /* Release.swift in Sources */,
@@ -699,6 +709,7 @@
 				7B1E33B41E29DEAB00D5F37B /* DownButton.swift in Sources */,
 				7BBE862A1E36E06100952328 /* PopInAnimatedTransitionController.swift in Sources */,
 				7B150E841DDFDF0800965D2A /* StyleKit.swift in Sources */,
+				7B3FB47A1E4EB3BF0036A167 /* MoreButton.swift in Sources */,
 				7BE387A01E3AC7DB000F85F2 /* CloseButton.swift in Sources */,
 				7B3A86561E1470DB00D55B47 /* PreferenceManager.swift in Sources */,
 				7B1F26C41E259A82001876E7 /* FooterCollectionReusableView.swift in Sources */,
@@ -722,6 +733,7 @@
 				7B71CCC21DD7A87200DAE910 /* NewReleasesViewController.swift in Sources */,
 				7BEE31EE1E4406C2001BB019 /* SlideDownAnimatedTransitionController.swift in Sources */,
 				7B1E33B21E29976F00D5F37B /* ReleaseViewController.swift in Sources */,
+				7B49D7CC1E51376900C04A8C /* TextAreaCollectionViewCell.swift in Sources */,
 				7B121F801E2C3AAA004458DC /* ThemeModeCollectionViewCell.swift in Sources */,
 				7B188E971DDD2F1400C78AE7 /* FrostedBackdrop.swift in Sources */,
 				7B5609751E1CA5BB0054CB40 /* SettingsButton.swift in Sources */,

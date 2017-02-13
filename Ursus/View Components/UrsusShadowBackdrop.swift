@@ -10,7 +10,16 @@ import UIKit
 
 class UrsusShadowBackdrop: UIView {
 	
-	@IBInspectable var changesWithTheme: Bool = true
+	@IBInspectable var changesWithTheme: Bool = true {
+		didSet {
+			if self.changesWithTheme {
+				PreferenceManager.shared.themeDidChangeNotification.add(self, selector: #selector(self.themeDidChange))
+				self.themeDidChange()
+			} else {
+				PreferenceManager.shared.themeDidChangeNotification.remove(self)
+			}
+		}
+	}
 	var offset: CGSize = CGSize(width: 0, height: 0)
 	var radius: CGFloat = 10
 	

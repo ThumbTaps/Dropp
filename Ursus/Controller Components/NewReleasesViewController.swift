@@ -8,24 +8,32 @@
 
 import UIKit
 
-class NewReleasesViewController: UrsusViewController, UICollectionViewDataSource, UICollectionViewDelegate, UICollectionViewDelegateFlowLayout {
+class NewReleasesViewController: UrsusViewController, UICollectionViewDataSource, UICollectionViewDataSourcePrefetching, UICollectionViewDelegate, UICollectionViewDelegateFlowLayout {
 		
 	@IBOutlet weak var settingsButton: SettingsButton!
-	@IBOutlet weak var artistsButton: ArtistsButton!
-	@IBOutlet weak var searchButton: SearchButton!
-	
-	@IBOutlet weak var newReleasesCountIndicator: UrsusCountIndicator!
-	
 	@IBOutlet weak var settingsButtonShowingConstraint: NSLayoutConstraint!
 	@IBOutlet weak var settingsButtonHidingConstraint: NSLayoutConstraint!
+
+	@IBOutlet weak var artistsButton: ArtistsButton!
 	@IBOutlet weak var artistsButtonShowingConstraint: NSLayoutConstraint!
 	@IBOutlet weak var artistsButtonHidingConstraint: NSLayoutConstraint!
+	
+	@IBOutlet weak var searchButton: SearchButton!
 	@IBOutlet weak var searchButtonShowingConstraint: NSLayoutConstraint!
 	@IBOutlet weak var searchButtonHidingConstraint: NSLayoutConstraint!
-    @IBOutlet weak var newReleasesCountIndicatorHidingConstraint: NSLayoutConstraint!
-    @IBOutlet weak var newReleasesCountIndicatorRestingConstraint: NSLayoutConstraint!
+	
+	@IBOutlet weak var newReleasesSortButton: SortButton!
+	@IBOutlet weak var newReleasesSortButtonHidingConstraint: NSLayoutConstraint!
+	@IBOutlet weak var newReleasesSortButtonRestingConstraint: NSLayoutConstraint!
+	
+	@IBOutlet weak var newReleasesCountIndicator: UrsusCountIndicator!
+	@IBOutlet weak var newReleasesCountIndicatorHidingConstraint: NSLayoutConstraint!
+	@IBOutlet weak var newReleasesCountIndicatorRestingConstraint: NSLayoutConstraint!
 	
 	var isCurrentlyVisible = true
+	
+	var newReleasesArtwork = [UIImage?](repeating: nil, count: PreferenceManager.shared.newReleases.count)
+	var previousReleasesArtwork = [UIImage?](repeating: nil, count: PreferenceManager.shared.previousReleases.count)
 			
 	override func viewDidLoad() {
 		super.viewDidLoad()
@@ -46,8 +54,6 @@ class NewReleasesViewController: UrsusViewController, UICollectionViewDataSource
 			
 		}
 		
-		PreferenceManager.shared.updateNewReleases()
-		
 	}
 	
 	override func viewDidAppear(_ animated: Bool) {
@@ -55,10 +61,13 @@ class NewReleasesViewController: UrsusViewController, UICollectionViewDataSource
 		
 		DispatchQueue.main.async {
 			
+			self.backdrop?.overlay.removeConstraints([self.settingsButtonHidingConstraint, self.searchButtonHidingConstraint])
+			self.backdrop?.overlay.addConstraints([self.settingsButtonShowingConstraint, self.searchButtonShowingConstraint])
+			
 			if PreferenceManager.shared.followingArtists.isEmpty {
 				
-				self.backdrop?.overlay.removeConstraints([self.settingsButtonHidingConstraint, self.searchButtonHidingConstraint, self.artistsButtonShowingConstraint])
-				self.backdrop?.overlay.addConstraints([self.settingsButtonShowingConstraint, self.searchButtonShowingConstraint, self.artistsButtonHidingConstraint])
+				self.backdrop?.overlay.removeConstraint(self.artistsButtonShowingConstraint)
+				self.backdrop?.overlay.addConstraint(self.artistsButtonHidingConstraint)
 				
 				// show search bar
 				if PreferenceManager.shared.firstLaunch {
@@ -68,23 +77,18 @@ class NewReleasesViewController: UrsusViewController, UICollectionViewDataSource
 				
 			} else {
 				
-				self.backdrop?.overlay.removeConstraints([self.settingsButtonHidingConstraint, self.artistsButtonHidingConstraint, self.searchButtonHidingConstraint])
-				self.backdrop?.overlay.addConstraints([self.settingsButtonShowingConstraint, self.artistsButtonShowingConstraint, self.searchButtonShowingConstraint])
+				self.backdrop?.overlay.removeConstraint(self.artistsButtonHidingConstraint)
+				self.backdrop?.overlay.addConstraint(self.artistsButtonShowingConstraint)
 				
-				if !PreferenceManager.shared.newReleases.isEmpty {
-					
-					self.backdrop?.overlay.removeConstraint(self.newReleasesCountIndicatorHidingConstraint)
-					self.backdrop?.overlay.addConstraint(self.newReleasesCountIndicatorRestingConstraint)
-				}
-				
-				UIView.animate(withDuration: ANIMATION_SPEED_MODIFIER*0.5, delay: 0, usingSpringWithDamping: 0.6, initialSpringVelocity: 1, options: .curveEaseOut, animations: {
-					
-					self.backdrop?.overlay.layoutIfNeeded()
-					self.searchButton?.layoutIfNeeded()
-					self.searchButton?.setNeedsDisplay()
-				})
 			}
 			
+			UIView.animate(withDuration: ANIMATION_SPEED_MODIFIER*0.5, delay: 0, usingSpringWithDamping: 0.6, initialSpringVelocity: 1, options: .curveEaseOut, animations: {
+				
+				self.backdrop?.overlay.layoutIfNeeded()
+			}, completion: { (finished) in
+				
+				PreferenceManager.shared.updateNewReleases()
+			})
 		}
 		
 	}
@@ -92,6 +96,8 @@ class NewReleasesViewController: UrsusViewController, UICollectionViewDataSource
 	override func didReceiveMemoryWarning() {
 		super.didReceiveMemoryWarning()
 		// Dispose of any resources that can be recreated.
+		
+		print("There was a memory warning.")
 	}
 	
 	
@@ -100,8 +106,9 @@ class NewReleasesViewController: UrsusViewController, UICollectionViewDataSource
 	
 	// MARK: - Notifications
 	override func didUpdateNewReleases() {
-		
-		super.didUpdateNewReleases()
+				
+		self.newReleasesArtwork = [UIImage?](repeating: nil, count: PreferenceManager.shared.newReleases.count)
+		self.previousReleasesArtwork = [UIImage?](repeating: nil, count: PreferenceManager.shared.previousReleases.count)
 		
 		DispatchQueue.main.async {
 			// update new release count
@@ -120,13 +127,13 @@ class NewReleasesViewController: UrsusViewController, UICollectionViewDataSource
 				self.collectionView?.refreshControl?.endRefreshing()
 			}
 			
-			if PreferenceManager.shared.newReleases.isEmpty {
+			if PreferenceManager.shared.newReleases.isEmpty && PreferenceManager.shared.previousReleases.isEmpty {
 				
-				self.backdrop?.overlay.removeConstraint(self.newReleasesCountIndicatorRestingConstraint)
-				self.backdrop?.overlay.addConstraint(self.newReleasesCountIndicatorHidingConstraint)
+				self.backdrop?.overlay.removeConstraints([self.newReleasesCountIndicatorRestingConstraint, self.newReleasesSortButtonRestingConstraint])
+				self.backdrop?.overlay.addConstraints([self.newReleasesCountIndicatorHidingConstraint, self.newReleasesSortButtonHidingConstraint])
 			} else {
-				self.backdrop?.overlay.removeConstraint(self.newReleasesCountIndicatorHidingConstraint)
-				self.backdrop?.overlay.addConstraint(self.newReleasesCountIndicatorRestingConstraint)
+				self.backdrop?.overlay.removeConstraints([self.newReleasesCountIndicatorHidingConstraint, self.newReleasesSortButtonHidingConstraint])
+				self.backdrop?.overlay.addConstraints([self.newReleasesCountIndicatorRestingConstraint, self.newReleasesSortButtonRestingConstraint])
 			}
 			
 			UIView.animate(withDuration: ANIMATION_SPEED_MODIFIER*0.5, delay: 0, usingSpringWithDamping: 0.6, initialSpringVelocity: 1, options: .curveEaseOut, animations: {
@@ -147,6 +154,43 @@ class NewReleasesViewController: UrsusViewController, UICollectionViewDataSource
 	
 	
 	
+	// MARK: UICollectionviewDataSourcePrefetching
+	func collectionView(_ collectionView: UICollectionView, prefetchItemsAt indexPaths: [IndexPath]) {
+		
+		indexPaths.forEach { (indexPath) in
+			
+			var source = PreferenceManager.shared.newReleases
+			var destination = self.newReleasesArtwork
+			
+			if PreferenceManager.shared.newReleases.isEmpty || indexPath.section == 1 {
+				
+				source = PreferenceManager.shared.previousReleases
+				destination = self.previousReleasesArtwork
+			}
+			
+			guard let artworkURL = source[indexPath.row].artworkURL else {
+				return
+			}
+			
+			DispatchQueue.global().async {
+				
+				let artworkTask = RequestManager.shared.loadImage(from: artworkURL, completion: { (image, error) in
+					
+					guard let image = image, error == nil else {
+						return
+					}
+					
+					destination[indexPath.row] = image
+				})
+			}
+		}
+	}
+	
+	
+	
+	
+	
+	
 	// MARK: - UICollectionViewDataSource
 	func numberOfSections(in collectionView: UICollectionView) -> Int {
 		var numSections = 0
@@ -160,25 +204,52 @@ class NewReleasesViewController: UrsusViewController, UICollectionViewDataSource
 		return numSections
 	}
 	func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-		var numItems = 0
+		var numItems = PreferenceManager.shared.newReleases.count
 		
-		switch section {
-		case 0:
-			if !PreferenceManager.shared.newReleases.isEmpty {
-				numItems = PreferenceManager.shared.newReleases.count
-			} else {
-				numItems = PreferenceManager.shared.previousReleases.count
-			}
-			break
+		if PreferenceManager.shared.newReleases.isEmpty || section == 1 {
 			
-		case 1:
 			numItems = PreferenceManager.shared.previousReleases.count
-			break
-			
-		default: return numItems
 		}
 		
 		return numItems
+	}
+	func collectionView(_ collectionView: UICollectionView, viewForSupplementaryElementOfKind kind: String, at indexPath: IndexPath) -> UICollectionReusableView {
+		
+		var reusableView = UICollectionReusableView()
+		
+		if kind == UICollectionElementKindSectionHeader {
+			reusableView = collectionView.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: "NewReleasesCollectionViewHeader", for: indexPath) as! HeaderCollectionReusableView
+			
+			switch indexPath.section {
+			case 0:
+				if PreferenceManager.shared.newReleases.isEmpty {
+					if !PreferenceManager.shared.previousReleases.isEmpty {
+						var timeUnit = "MONTHS"
+						if PreferenceManager.shared.maxPreviousReleaseAge == 1 {
+							timeUnit = "MONTH"
+						}
+						(reusableView as! HeaderCollectionReusableView).textLabel.text = "IN THE PAST\(PreferenceManager.shared.maxPreviousReleaseAge == 1 ? "" : String(PreferenceManager.shared.maxPreviousReleaseAge)) \(timeUnit)"
+					}
+				}
+				break
+				
+			case 1:
+				if !PreferenceManager.shared.previousReleases.isEmpty {
+					var timeUnit = "MONTHS"
+					if PreferenceManager.shared.maxPreviousReleaseAge == 1 {
+						timeUnit = "MONTH"
+					}
+					(reusableView as! HeaderCollectionReusableView).textLabel.text = "IN THE PAST\(PreferenceManager.shared.maxPreviousReleaseAge == 1 ? "" : String(PreferenceManager.shared.maxPreviousReleaseAge)) \(timeUnit)"
+				}
+				break
+				
+			default: return reusableView
+			}
+			
+			return reusableView
+		}
+		
+		return reusableView
 	}
 	func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
 
@@ -187,17 +258,12 @@ class NewReleasesViewController: UrsusViewController, UICollectionViewDataSource
 		}
 		
 		var source = PreferenceManager.shared.newReleases
+		var artworkSource = self.newReleasesArtwork
 		
-		if indexPath.section == 0 {
-			if PreferenceManager.shared.newReleases.isEmpty {
-				source = PreferenceManager.shared.previousReleases
-			} else {
-				source = PreferenceManager.shared.newReleases
-			}
-			
-		} else if indexPath.section == 1 {
+		if PreferenceManager.shared.newReleases.isEmpty || indexPath.section == 1 {
 			
 			source = PreferenceManager.shared.previousReleases
+			artworkSource = self.previousReleasesArtwork
 		}
 		
 		cell.releaseTitleLabel.text = source[indexPath.row].title
@@ -213,23 +279,48 @@ class NewReleasesViewController: UrsusViewController, UICollectionViewDataSource
 		
 		cell.secondaryLabel.text = artist.name
 		
-		DispatchQueue.global().async {
+		guard let artworkImage = artworkSource[indexPath.row] else {
 			
-			RequestManager.shared.loadImage(from: source[indexPath.row].thumbnailURL!) { (image, error) in
-				guard let image = image, error == nil else {
-					print(error!)
-					return
-				}
-				
-				DispatchQueue.main.async {
-					cell.releaseArtView.imageView.image = image
-					cell.releaseArtView.showArtwork()
-				}
+			guard let url = source[indexPath.row].thumbnailURL else {
+				return cell
 			}
 			
+			DispatchQueue.global().async {
+				
+				let artworkTask = RequestManager.shared.loadImage(from: url, completion: { (image, error) in
+					
+					guard let image = image, error == nil else {
+						print(error!)
+						return
+					}
+					
+					// add loaded image to prefetch source
+					artworkSource[indexPath.row] = image
+					
+					DispatchQueue.main.async {
+						cell.releaseArtView.imageView.image = artworkSource[indexPath.row]
+						cell.releaseArtView.showArtwork()
+					}
+				})
+			}
+			
+			return cell
 		}
+		
+		DispatchQueue.main.async {
+			cell.releaseArtView.imageView.image = artworkImage
+			cell.releaseArtView.showArtwork()
+		}
+		
 		return cell
 	}
+
+	
+	
+	
+	
+	
+	// MARK: - UICollectionViewDelegate
 	func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, referenceSizeForHeaderInSection section: Int) -> CGSize {
 		
 		if section == 0 {
@@ -253,44 +344,13 @@ class NewReleasesViewController: UrsusViewController, UICollectionViewDataSource
 	func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
 		return CGSize(width: collectionView.bounds.size.width, height: 100)
 	}
-	func collectionView(_ collectionView: UICollectionView, viewForSupplementaryElementOfKind kind: String, at indexPath: IndexPath) -> UICollectionReusableView {
-		
-		var reusableView = UICollectionReusableView()
-		
-		if kind == UICollectionElementKindSectionHeader {
-			reusableView = collectionView.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: "NewReleasesCollectionViewHeader", for: indexPath) as! HeaderCollectionReusableView
-			
-			switch indexPath.section {
-			case 0:
-				if PreferenceManager.shared.newReleases.isEmpty {
-					if !PreferenceManager.shared.previousReleases.isEmpty {
-						var timeUnit = "MONTHS"
-						if PreferenceManager.shared.maxReleaseAge == 1 {
-							timeUnit = "MONTH"
-						}
-						(reusableView as! HeaderCollectionReusableView).textLabel.text = "IN THE PAST\(PreferenceManager.shared.maxReleaseAge == 1 ? "" : String(PreferenceManager.shared.maxReleaseAge)) \(timeUnit)"
-					}
-				}
-				break
-				
-			case 1:
-				if !PreferenceManager.shared.previousReleases.isEmpty {
-					var timeUnit = "MONTHS"
-					if PreferenceManager.shared.maxReleaseAge == 1 {
-						timeUnit = "MONTH"
-					}
-					(reusableView as! HeaderCollectionReusableView).textLabel.text = "IN THE PAST\(PreferenceManager.shared.maxReleaseAge == 1 ? "" : String(PreferenceManager.shared.maxReleaseAge)) \(timeUnit)"
-				}
-				break
-				
-			default: return reusableView
-			}
-			
-			return reusableView
-		}
-		
-		return reusableView
-	}
+	
+	
+	
+	
+	
+	
+	// MARK: - UIScrollViewDelegate
 	func scrollViewDidEndDragging(_ scrollView: UIScrollView, willDecelerate decelerate: Bool) {
 		
 		if scrollView == self.collectionView {
