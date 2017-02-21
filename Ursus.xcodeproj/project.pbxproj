@@ -13,6 +13,8 @@
 		7B150E841DDFDF0800965D2A /* StyleKit.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B150E831DDFDF0800965D2A /* StyleKit.swift */; };
 		7B15CB4D1DDBDF9600CE48C1 /* ArtistViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B15CB4C1DDBDF9600CE48C1 /* ArtistViewController.swift */; };
 		7B15CB4F1DDBDFC200CE48C1 /* ArtistSearchResultsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B15CB4E1DDBDFC200CE48C1 /* ArtistSearchResultsViewController.swift */; };
+		7B173AEB1E52AE370011C0BB /* RightButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B173AEA1E52AE370011C0BB /* RightButton.swift */; };
+		7B173AED1E52AE890011C0BB /* UpButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B173AEC1E52AE890011C0BB /* UpButton.swift */; };
 		7B179DB21E104CBA000F0DED /* Release.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B179DB11E104CBA000F0DED /* Release.swift */; };
 		7B179DB41E107E82000F0DED /* ReleaseCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B179DB31E107E82000F0DED /* ReleaseCollectionViewCell.swift */; };
 		7B179DB61E11A113000F0DED /* ReleaseArtView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B179DB51E11A113000F0DED /* ReleaseArtView.swift */; };
@@ -43,6 +45,7 @@
 		7B49D7CC1E51376900C04A8C /* TextAreaCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B49D7CB1E51376900C04A8C /* TextAreaCollectionViewCell.swift */; };
 		7B53182F1E13518B004FDFC7 /* ScrollFadeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B53182E1E13518B004FDFC7 /* ScrollFadeView.swift */; };
 		7B5609751E1CA5BB0054CB40 /* SettingsButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B5609741E1CA5BB0054CB40 /* SettingsButton.swift */; };
+		7B5E50661E591B36003B08AA /* ReleaseSortingViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B5E50651E591B36003B08AA /* ReleaseSortingViewController.swift */; };
 		7B5FCE881E301866008AC1F7 /* RevealBehindAnimatedTransitionController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B5FCE871E301866008AC1F7 /* RevealBehindAnimatedTransitionController.swift */; };
 		7B5FCE8A1E304A4B008AC1F7 /* UrsusBlurView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B5FCE891E304A4B008AC1F7 /* UrsusBlurView.swift */; };
 		7B5FCE8C1E305224008AC1F7 /* UrsusShadowBackdrop.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B5FCE8B1E305224008AC1F7 /* UrsusShadowBackdrop.swift */; };
@@ -56,7 +59,7 @@
 		7B79991C1E1F3C21003E2F28 /* ArtistSearchViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B79991B1E1F3C21003E2F28 /* ArtistSearchViewController.swift */; };
 		7B8200ED1CDABE9200A99C68 /* Artist.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B8200EC1CDABE9200A99C68 /* Artist.swift */; };
 		7B8DC4051E31A16D00EBEED0 /* SettingsCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B8DC4041E31A16D00EBEED0 /* SettingsCollectionViewCell.swift */; };
-		7BB3D5EA1DEBDBEB002367C3 /* BackButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BB3D5E91DEBDBEB002367C3 /* BackButton.swift */; };
+		7BB3D5EA1DEBDBEB002367C3 /* LeftButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BB3D5E91DEBDBEB002367C3 /* LeftButton.swift */; };
 		7BBB6D6F1E2AC2A700C2F466 /* UrsusCountIndicator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BBB6D6E1E2AC2A700C2F466 /* UrsusCountIndicator.swift */; };
 		7BBE862A1E36E06100952328 /* PopInAnimatedTransitionController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BBE86291E36E06100952328 /* PopInAnimatedTransitionController.swift */; };
 		7BC8DE251DED285B0004A7F9 /* RoundedTextField.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BC8DE241DED285B0004A7F9 /* RoundedTextField.swift */; };
@@ -98,6 +101,8 @@
 		7B150E831DDFDF0800965D2A /* StyleKit.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StyleKit.swift; sourceTree = "<group>"; };
 		7B15CB4C1DDBDF9600CE48C1 /* ArtistViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ArtistViewController.swift; sourceTree = "<group>"; };
 		7B15CB4E1DDBDFC200CE48C1 /* ArtistSearchResultsViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ArtistSearchResultsViewController.swift; sourceTree = "<group>"; };
+		7B173AEA1E52AE370011C0BB /* RightButton.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = RightButton.swift; path = Buttons/RightButton.swift; sourceTree = "<group>"; };
+		7B173AEC1E52AE890011C0BB /* UpButton.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = UpButton.swift; path = Buttons/UpButton.swift; sourceTree = "<group>"; };
 		7B179DB11E104CBA000F0DED /* Release.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Release.swift; sourceTree = "<group>"; };
 		7B179DB31E107E82000F0DED /* ReleaseCollectionViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ReleaseCollectionViewCell.swift; path = "Collection View Components/ReleaseCollectionViewCell.swift"; sourceTree = "<group>"; };
 		7B179DB51E11A113000F0DED /* ReleaseArtView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ReleaseArtView.swift; sourceTree = "<group>"; };
@@ -135,6 +140,7 @@
 		7B49D7CB1E51376900C04A8C /* TextAreaCollectionViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = TextAreaCollectionViewCell.swift; path = "Collection View Components/TextAreaCollectionViewCell.swift"; sourceTree = "<group>"; };
 		7B53182E1E13518B004FDFC7 /* ScrollFadeView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ScrollFadeView.swift; sourceTree = "<group>"; };
 		7B5609741E1CA5BB0054CB40 /* SettingsButton.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = SettingsButton.swift; path = Buttons/SettingsButton.swift; sourceTree = "<group>"; };
+		7B5E50651E591B36003B08AA /* ReleaseSortingViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ReleaseSortingViewController.swift; sourceTree = "<group>"; };
 		7B5FCE871E301866008AC1F7 /* RevealBehindAnimatedTransitionController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = RevealBehindAnimatedTransitionController.swift; path = "Transition Controllers/RevealBehindAnimatedTransitionController.swift"; sourceTree = "<group>"; };
 		7B5FCE891E304A4B008AC1F7 /* UrsusBlurView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UrsusBlurView.swift; sourceTree = "<group>"; };
 		7B5FCE8B1E305224008AC1F7 /* UrsusShadowBackdrop.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UrsusShadowBackdrop.swift; sourceTree = "<group>"; };
@@ -149,7 +155,7 @@
 		7B7B88B51E0DD81E0012B8A3 /* Telekinesis.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Telekinesis.framework; path = Frameworks/Telekinesis.framework; sourceTree = "<group>"; };
 		7B8200EC1CDABE9200A99C68 /* Artist.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Artist.swift; sourceTree = "<group>"; };
 		7B8DC4041E31A16D00EBEED0 /* SettingsCollectionViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = SettingsCollectionViewCell.swift; path = "Collection View Components/SettingsCollectionViewCell.swift"; sourceTree = "<group>"; };
-		7BB3D5E91DEBDBEB002367C3 /* BackButton.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = BackButton.swift; path = Buttons/BackButton.swift; sourceTree = "<group>"; };
+		7BB3D5E91DEBDBEB002367C3 /* LeftButton.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = LeftButton.swift; path = Buttons/LeftButton.swift; sourceTree = "<group>"; };
 		7BBB6D6E1E2AC2A700C2F466 /* UrsusCountIndicator.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UrsusCountIndicator.swift; sourceTree = "<group>"; };
 		7BBE86291E36E06100952328 /* PopInAnimatedTransitionController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = PopInAnimatedTransitionController.swift; path = "Transition Controllers/PopInAnimatedTransitionController.swift"; sourceTree = "<group>"; };
 		7BC8DE241DED285B0004A7F9 /* RoundedTextField.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RoundedTextField.swift; sourceTree = "<group>"; };
@@ -200,7 +206,7 @@
 			isa = PBXGroup;
 			children = (
 				7B679B511E22C7F500649FD6 /* ArtistsButton.swift */,
-				7BB3D5E91DEBDBEB002367C3 /* BackButton.swift */,
+				7BB3D5E91DEBDBEB002367C3 /* LeftButton.swift */,
 				7B1912AB1E32DC290027B1D1 /* CheckmarkButton.swift */,
 				7BE3879F1E3AC7DB000F85F2 /* CloseButton.swift */,
 				7B1912B01E32F6100027B1D1 /* DisplayBrightnessMaxButton.swift */,
@@ -211,6 +217,9 @@
 				7B5609741E1CA5BB0054CB40 /* SettingsButton.swift */,
 				7BE90EA51E4D5E8600A74E94 /* SortButton.swift */,
 				7B740F151DD8D9AA0085F5C8 /* UrsusButton.swift */,
+				7B173AEA1E52AE370011C0BB /* RightButton.swift */,
+				7BBB6D6E1E2AC2A700C2F466 /* UrsusCountIndicator.swift */,
+				7B173AEC1E52AE890011C0BB /* UpButton.swift */,
 			);
 			name = Buttons;
 			sourceTree = "<group>";
@@ -320,6 +329,7 @@
 				7B1E33B71E29EE8100D5F37B /* ArtistsViewController.swift */,
 				7B15CB4C1DDBDF9600CE48C1 /* ArtistViewController.swift */,
 				7B71CCC11DD7A87200DAE910 /* NewReleasesViewController.swift */,
+				7B5E50651E591B36003B08AA /* ReleaseSortingViewController.swift */,
 				7B1E33B11E29976F00D5F37B /* ReleaseViewController.swift */,
 				7B679B4F1E22AD3B00649FD6 /* SettingsViewController.swift */,
 				7B320FAD1E2EEE7500189B21 /* Transition Controllers */,
@@ -342,7 +352,6 @@
 				7B53182E1E13518B004FDFC7 /* ScrollFadeView.swift */,
 				7B150E831DDFDF0800965D2A /* StyleKit.swift */,
 				7B5FCE891E304A4B008AC1F7 /* UrsusBlurView.swift */,
-				7BBB6D6E1E2AC2A700C2F466 /* UrsusCountIndicator.swift */,
 				7B5FCE8B1E305224008AC1F7 /* UrsusShadowBackdrop.swift */,
 			);
 			path = "View Components";
@@ -696,6 +705,7 @@
 				7B1FF6FB1E271A12004F496E /* ArtistArtView.swift in Sources */,
 				7B15CB4F1DDBDFC200CE48C1 /* ArtistSearchResultsViewController.swift in Sources */,
 				7BE387A21E3AD038000F85F2 /* PopInFromFrameAnimatedTransitionController.swift in Sources */,
+				7B5E50661E591B36003B08AA /* ReleaseSortingViewController.swift in Sources */,
 				7BD499501E35AF1B00C2B7E7 /* UIPickerCollectionViewCell.swift in Sources */,
 				7B5FCE881E301866008AC1F7 /* RevealBehindAnimatedTransitionController.swift in Sources */,
 				7B8200ED1CDABE9200A99C68 /* Artist.swift in Sources */,
@@ -726,8 +736,10 @@
 				7B8DC4051E31A16D00EBEED0 /* SettingsCollectionViewCell.swift in Sources */,
 				7B1912B11E32F6100027B1D1 /* DisplayBrightnessMaxButton.swift in Sources */,
 				7B179DB41E107E82000F0DED /* ReleaseCollectionViewCell.swift in Sources */,
+				7B173AEB1E52AE370011C0BB /* RightButton.swift in Sources */,
 				7B1FF6FD1E271ADE004F496E /* ArtistCollectionViewCell.swift in Sources */,
 				7B1912AC1E32DC290027B1D1 /* CheckmarkButton.swift in Sources */,
+				7B173AED1E52AE890011C0BB /* UpButton.swift in Sources */,
 				7B71CCC41DD7C0D700DAE910 /* ArtistSearchBar.swift in Sources */,
 				7B679B521E22C7F500649FD6 /* ArtistsButton.swift in Sources */,
 				7B71CCC21DD7A87200DAE910 /* NewReleasesViewController.swift in Sources */,
@@ -740,7 +752,7 @@
 				7BC8DE251DED285B0004A7F9 /* RoundedTextField.swift in Sources */,
 				7B3B99691CC4437E00900838 /* AppDelegate.swift in Sources */,
 				7B1E33B81E29EE8100D5F37B /* ArtistsViewController.swift in Sources */,
-				7BB3D5EA1DEBDBEB002367C3 /* BackButton.swift in Sources */,
+				7BB3D5EA1DEBDBEB002367C3 /* LeftButton.swift in Sources */,
 				7B1E33B61E29EAAD00D5F37B /* UrsusCollectionViewCell.swift in Sources */,
 				7B2257811DDE74A900F81E12 /* UIImageColors.swift in Sources */,
 				7BEB34BF1DF0679800888FF1 /* UrsusStoryboardSegue.swift in Sources */,

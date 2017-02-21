@@ -53,6 +53,7 @@ class SettingsViewController: UrsusViewController, UICollectionViewDataSource, U
 	}
 	
 	
+	
 
 	// MARK: - UICollectionViewDataSource
 	func numberOfSections(in collectionView: UICollectionView) -> Int {
@@ -73,8 +74,11 @@ class SettingsViewController: UrsusViewController, UICollectionViewDataSource, U
 			break
 			
 		case 1: // RELEASE OPTIONS
-			numRows = 3
+			numRows = 4
 			if PreferenceManager.shared.includeSingles {
+				numRows += 1
+			}
+			if PreferenceManager.shared.autoMarkAsSeen {
 				numRows += 1
 			}
 			if PreferenceManager.shared.showPreviousReleases {
@@ -263,9 +267,8 @@ class SettingsViewController: UrsusViewController, UICollectionViewDataSource, U
 				((cell as! SettingsCollectionViewCell).accessoryView as? UISwitch)?.isOn = PreferenceManager.shared.adaptiveArtistView
 				break
 				
-			default: return cell
+			default: break
 			}
-			return cell
 			
 		case 1: // RELEASE OPTIONS
 			switch indexPath.row {
@@ -274,7 +277,7 @@ class SettingsViewController: UrsusViewController, UICollectionViewDataSource, U
 				((cell as! SettingsCollectionViewCell).accessoryView as? UISwitch)?.isOn = PreferenceManager.shared.includeSingles
 				break
 				
-			case 1: // INCLUDE EPS / IGNORE FEATURES
+			case 1: // IGNORE FEATURES / INCLUDE EPS
 				if PreferenceManager.shared.includeSingles {
 					cell = collectionView.dequeueReusableCell(withReuseIdentifier: "IgnoreFeaturesCell", for: indexPath) as! SettingsCollectionViewCell
 					((cell as! SettingsCollectionViewCell).accessoryView as? UISwitch)?.isOn = PreferenceManager.shared.ignoreFeatures
@@ -284,36 +287,133 @@ class SettingsViewController: UrsusViewController, UICollectionViewDataSource, U
 				}
 				break
 				
-			case 2: // INCLUDE EPS / SHOW PREVIOUS RELEASES
+			case 2: // INCLUDE EPS / AUTO MARK AS SEEN
 				if PreferenceManager.shared.includeSingles {
 					cell = collectionView.dequeueReusableCell(withReuseIdentifier: "IncludeEPsCell", for: indexPath) as! SettingsCollectionViewCell
 					((cell as! SettingsCollectionViewCell).accessoryView as? UISwitch)?.isOn = PreferenceManager.shared.includeEPs
 				} else {
-					cell = collectionView.dequeueReusableCell(withReuseIdentifier: "ShowPreviousReleasesCell", for: indexPath)
-					((cell as! SettingsCollectionViewCell).accessoryView as? UISwitch)?.isOn = PreferenceManager.shared.showPreviousReleases
+					cell = collectionView.dequeueReusableCell(withReuseIdentifier: "AutoMarkAsSeenCell", for: indexPath) as! SettingsCollectionViewCell
+					((cell as! SettingsCollectionViewCell).accessoryView as? UISwitch)?.isOn = PreferenceManager.shared.autoMarkAsSeen
 				}
 				break
 				
-			case 3: // SHOW PREVIOUS RELEASES / MAX RELEASE AGE
-				
+			case 3: // AUTO MARK AS SEEN / MAX NEW RELEASE AGE / SHOW PREVIOUS RELEASES
 				if PreferenceManager.shared.includeSingles {
-					cell = collectionView.dequeueReusableCell(withReuseIdentifier: "ShowPreviousReleasesCell", for: indexPath)
-					((cell as! SettingsCollectionViewCell).accessoryView as? UISwitch)?.isOn = PreferenceManager.shared.showPreviousReleases
+					cell = collectionView.dequeueReusableCell(withReuseIdentifier: "AutoMarkAsSeenCell", for: indexPath) as! SettingsCollectionViewCell
+					((cell as! SettingsCollectionViewCell).accessoryView as? UISwitch)?.isOn = PreferenceManager.shared.autoMarkAsSeen
 				} else {
-					cell = collectionView.dequeueReusableCell(withReuseIdentifier: "MaxReleaseAgeCell", for: indexPath)
-					(cell as! UIPickerCollectionViewCell).leftTextLabel.text = "Only show releases from the past"
-					(cell as! UIPickerCollectionViewCell).pickerButton.setTitle(String(PreferenceManager.shared.maxPreviousReleaseAge), for: .normal)
-					var timeUnit = "months"
-					if PreferenceManager.shared.maxPreviousReleaseAge == 1 {
-						timeUnit = "month"
+					if PreferenceManager.shared.autoMarkAsSeen {
+						cell = collectionView.dequeueReusableCell(withReuseIdentifier: "MaxNewReleaseAgeCell", for: indexPath)
+						(cell as! UIPickerCollectionViewCell).leftTextLabel.text = "Automatically mark as seen after"
+						(cell as! UIPickerCollectionViewCell).pickerButton.setTitle(String(PreferenceManager.shared.maxNewReleaseAge), for: .normal)
+						var timeUnit = "days"
+						if PreferenceManager.shared.maxNewReleaseAge == 1 {
+							timeUnit = "day"
+						}
+						(cell as! UIPickerCollectionViewCell).rightTextLabel.text = timeUnit
+						(cell as! UIPickerCollectionViewCell).delegate = self
+						(cell as! UIPickerCollectionViewCell).options = [1, 2, 3, 4, 5, 6, 7]
+						(cell as! UIPickerCollectionViewCell).selectedIndex = (cell as! UIPickerCollectionViewCell).options.index(where: {
+							Int64($0 as! Int) == PreferenceManager.shared.maxNewReleaseAge
+						}) ?? 0
+
+					} else {
+						cell = collectionView.dequeueReusableCell(withReuseIdentifier: "ShowPreviousReleasesCell", for: indexPath)
+						((cell as! SettingsCollectionViewCell).accessoryView as? UISwitch)?.isOn = PreferenceManager.shared.showPreviousReleases
 					}
-					(cell as! UIPickerCollectionViewCell).rightTextLabel.text = timeUnit
-					(cell as! UIPickerCollectionViewCell).delegate = self
+				}
+				break
+			
+			case 4: // MAX NEW RELEASE AGE / SHOW PREVIOUS RELEASES / MAX PREVIOUS RELEASE AGE
+				if PreferenceManager.shared.includeSingles {
+					if PreferenceManager.shared.autoMarkAsSeen {
+						cell = collectionView.dequeueReusableCell(withReuseIdentifier: "MaxNewReleaseAgeCell", for: indexPath)
+						(cell as! UIPickerCollectionViewCell).leftTextLabel.text = "Automatically mark as seen after"
+						(cell as! UIPickerCollectionViewCell).pickerButton.setTitle(String(PreferenceManager.shared.maxNewReleaseAge), for: .normal)
+						var timeUnit = "days"
+						if PreferenceManager.shared.maxNewReleaseAge == 1 {
+							timeUnit = "day"
+						}
+						(cell as! UIPickerCollectionViewCell).rightTextLabel.text = timeUnit
+						(cell as! UIPickerCollectionViewCell).delegate = self
+						(cell as! UIPickerCollectionViewCell).options = [1, 2, 3, 4, 5, 6, 7]
+						(cell as! UIPickerCollectionViewCell).selectedIndex = (cell as! UIPickerCollectionViewCell).options.index(where: {
+							Int64($0 as! Int) == PreferenceManager.shared.maxNewReleaseAge
+						}) ?? 0
+
+					} else {
+						cell = collectionView.dequeueReusableCell(withReuseIdentifier: "ShowPreviousReleasesCell", for: indexPath)
+						((cell as! SettingsCollectionViewCell).accessoryView as? UISwitch)?.isOn = PreferenceManager.shared.showPreviousReleases
+					}
+				} else {
+					if PreferenceManager.shared.autoMarkAsSeen {
+						cell = collectionView.dequeueReusableCell(withReuseIdentifier: "ShowPreviousReleasesCell", for: indexPath)
+						((cell as! SettingsCollectionViewCell).accessoryView as? UISwitch)?.isOn = PreferenceManager.shared.showPreviousReleases
+					} else {
+						if PreferenceManager.shared.showPreviousReleases {
+							cell = collectionView.dequeueReusableCell(withReuseIdentifier: "MaxPreviousReleaseAgeCell", for: indexPath)
+							(cell as! UIPickerCollectionViewCell).leftTextLabel.text = "Only show releases from the past"
+							(cell as! UIPickerCollectionViewCell).pickerButton.setTitle(String(PreferenceManager.shared.maxPreviousReleaseAge), for: .normal)
+							var timeUnit = "months"
+							if PreferenceManager.shared.maxPreviousReleaseAge == 1 {
+								timeUnit = "month"
+							}
+							(cell as! UIPickerCollectionViewCell).rightTextLabel.text = timeUnit
+							(cell as! UIPickerCollectionViewCell).delegate = self
+							(cell as! UIPickerCollectionViewCell).options = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]
+							(cell as! UIPickerCollectionViewCell).selectedIndex = (cell as! UIPickerCollectionViewCell).options.index(where: {
+								Int64($0 as! Int) == PreferenceManager.shared.maxPreviousReleaseAge
+							}) ?? 0
+						}
+					}
 				}
 				break
 				
-			case 4: // MAX RELEASE AGE
-				cell = collectionView.dequeueReusableCell(withReuseIdentifier: "MaxReleaseAgeCell", for: indexPath)
+			case 5: // SHOW PREVIOUS RELEASES / MAX PREVIOUS RELEASE AGE
+				if PreferenceManager.shared.includeSingles {
+					if PreferenceManager.shared.autoMarkAsSeen {
+						cell = collectionView.dequeueReusableCell(withReuseIdentifier: "ShowPreviousReleasesCell", for: indexPath)
+						((cell as! SettingsCollectionViewCell).accessoryView as? UISwitch)?.isOn = PreferenceManager.shared.showPreviousReleases
+					} else {
+						if PreferenceManager.shared.showPreviousReleases {
+							cell = collectionView.dequeueReusableCell(withReuseIdentifier: "MaxPreviousReleaseAgeCell", for: indexPath)
+							(cell as! UIPickerCollectionViewCell).leftTextLabel.text = "Only show releases from the past"
+							(cell as! UIPickerCollectionViewCell).pickerButton.setTitle(String(PreferenceManager.shared.maxPreviousReleaseAge), for: .normal)
+							var timeUnit = "months"
+							if PreferenceManager.shared.maxPreviousReleaseAge == 1 {
+								timeUnit = "month"
+							}
+							(cell as! UIPickerCollectionViewCell).rightTextLabel.text = timeUnit
+							(cell as! UIPickerCollectionViewCell).delegate = self
+							(cell as! UIPickerCollectionViewCell).options = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]
+							(cell as! UIPickerCollectionViewCell).selectedIndex = (cell as! UIPickerCollectionViewCell).options.index(where: {
+								Int64($0 as! Int) == PreferenceManager.shared.maxPreviousReleaseAge
+							}) ?? 0
+						}
+					}
+				} else {
+					if PreferenceManager.shared.autoMarkAsSeen {
+						if PreferenceManager.shared.showPreviousReleases {
+							cell = collectionView.dequeueReusableCell(withReuseIdentifier: "MaxPreviousReleaseAgeCell", for: indexPath)
+							(cell as! UIPickerCollectionViewCell).leftTextLabel.text = "Only show releases from the past"
+							(cell as! UIPickerCollectionViewCell).pickerButton.setTitle(String(PreferenceManager.shared.maxPreviousReleaseAge), for: .normal)
+							var timeUnit = "months"
+							if PreferenceManager.shared.maxPreviousReleaseAge == 1 {
+								timeUnit = "month"
+							}
+							(cell as! UIPickerCollectionViewCell).rightTextLabel.text = timeUnit
+							(cell as! UIPickerCollectionViewCell).delegate = self
+							(cell as! UIPickerCollectionViewCell).options = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]
+							(cell as! UIPickerCollectionViewCell).selectedIndex = (cell as! UIPickerCollectionViewCell).options.index(where: {
+								Int64($0 as! Int) == PreferenceManager.shared.maxPreviousReleaseAge
+							}) ?? 0
+						}
+					}
+				}
+				break
+				
+			case 6: // MAX PREVIOUS RELEASE AGE
+				cell = collectionView.dequeueReusableCell(withReuseIdentifier: "MaxPreviousReleaseAgeCell", for: indexPath)
 				(cell as! UIPickerCollectionViewCell).leftTextLabel.text = "Only show releases from the past"
 				(cell as! UIPickerCollectionViewCell).pickerButton.setTitle(String(PreferenceManager.shared.maxPreviousReleaseAge), for: .normal)
 				var timeUnit = "months"
@@ -322,15 +422,30 @@ class SettingsViewController: UrsusViewController, UICollectionViewDataSource, U
 				}
 				(cell as! UIPickerCollectionViewCell).rightTextLabel.text = timeUnit
 				(cell as! UIPickerCollectionViewCell).delegate = self
+				(cell as! UIPickerCollectionViewCell).options = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]
+				(cell as! UIPickerCollectionViewCell).selectedIndex = (cell as! UIPickerCollectionViewCell).options.index(where: {
+					Int64($0 as! Int) == PreferenceManager.shared.maxPreviousReleaseAge
+				}) ?? 0
 				break
 				
-			default: return cell
+			default: break
 			}
-			return cell
 			
-		default: return cell
+			break
 			
+		default: break
+		
 		}
+		
+		if PreferenceManager.shared.theme == .dark {
+			((cell as? SettingsCollectionViewCell)?.accessoryView as? UISwitch)?.tintColor = StyleKit.darkTintColor
+			((cell as? SettingsCollectionViewCell)?.accessoryView as? UISwitch)?.onTintColor = StyleKit.darkTintColor
+		} else {
+			((cell as? SettingsCollectionViewCell)?.accessoryView as? UISwitch)?.tintColor = StyleKit.lightTintColor
+			((cell as? SettingsCollectionViewCell)?.accessoryView as? UISwitch)?.onTintColor = StyleKit.lightTintColor
+		}
+		
+		return cell
 		
 	}
 	func collectionView(_ collectionView: UICollectionView, shouldHighlightItemAt indexPath: IndexPath) -> Bool {
@@ -360,6 +475,7 @@ class SettingsViewController: UrsusViewController, UICollectionViewDataSource, U
 				
 			case 2, 3: // TWILIGHT
 				PreferenceManager.shared.themeDeterminer = .twilight
+				PreferenceManager.shared.themeDeterminerDidChangeNotification.add(self, selector: #selector(self.themeDeterminerChangeFailed))
 				collectionView.reloadSections([0])
 				break
 				
@@ -370,6 +486,14 @@ class SettingsViewController: UrsusViewController, UICollectionViewDataSource, U
 			
 		default: return
 		}
+	}
+	func themeDeterminerChangeFailed() {
+		PreferenceManager.shared.themeDeterminerDidChangeNotification.remove(self)
+		self.collectionView?.reloadSections([0])
+		let alertView = UIAlertController(title: "Could Not Determine Theme", message: "There was an issue determining the theme based on the twilight times for your location. Please make sure location services are enabled and allowed.", preferredStyle: .alert)
+		alertView.view.tintColor = self.view.tintColor
+		alertView.addAction(UIAlertAction(title: "OK", style: .default))
+		self.present(alertView, animated: true, completion: nil)
 	}
 	func didSelectTheme(theme: Theme?) {
 		if theme != nil {
@@ -386,7 +510,7 @@ class SettingsViewController: UrsusViewController, UICollectionViewDataSource, U
 	
 	
 	
-	
+	// MARK: - Settings Triggers
 	@IBAction func adjustThemeModeDisplayBrightnessThreshold(_ sender: UISlider) {
 		PreferenceManager.shared.themeBrightnessThreshold = Double(sender.value)
 	}
@@ -409,6 +533,12 @@ class SettingsViewController: UrsusViewController, UICollectionViewDataSource, U
 	@IBAction func toggleIncludeEPs(_ sender: UISwitch) {
 		PreferenceManager.shared.includeEPs = sender.isOn
 	}
+	@IBAction func toggleAutoMarkAsSeen(_ sender: UISwitch) {
+		PreferenceManager.shared.autoMarkAsSeen = sender.isOn
+		self.collectionView?.performBatchUpdates({
+			self.collectionView?.reloadSections([1])
+		})
+	}
 	@IBAction func toggleShowPreviousReleases(_ sender: UISwitch) {
 		PreferenceManager.shared.showPreviousReleases = sender.isOn
 		self.collectionView?.performBatchUpdates({
@@ -416,7 +546,11 @@ class SettingsViewController: UrsusViewController, UICollectionViewDataSource, U
 		})
 	}
 	func pickerCell(_ pickerCell: UIPickerCollectionViewCell, didSelectItemAt indexPath: IndexPath) {
-		PreferenceManager.shared.maxPreviousReleaseAge = Int64(indexPath.row)+1
+		if pickerCell.reuseIdentifier == "MaxNewReleaseAgeCell" {
+			PreferenceManager.shared.maxNewReleaseAge = Int64(pickerCell.options[indexPath.row] as! Int)
+		} else if pickerCell.reuseIdentifier == "MaxPreviousReleaseAgeCell" {
+			PreferenceManager.shared.maxPreviousReleaseAge = Int64(pickerCell.options[indexPath.row] as! Int)
+		}
 		self.collectionView?.performBatchUpdates({
 			self.collectionView?.reloadSections([1])
 		})

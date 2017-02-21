@@ -20,14 +20,14 @@ class MoreButton: UrsusButton {
 		if !self.glyphOnly && self.changesWithTheme {
 			if PreferenceManager.shared.theme == .dark {
 				
-				StyleKit.drawMoreIcon(frame: rect, resizing: .aspectFit, iconColor: StyleKit.darkIconGlyphColor)
+				StyleKit.drawMoreIcon(frame: rect, resizing: self.resizingBehavior, iconColor: StyleKit.darkIconGlyphColor)
 			} else {
 				
-				StyleKit.drawMoreIcon(frame: rect, resizing: .aspectFit, iconColor: StyleKit.lightIconGlyphColor)
+				StyleKit.drawMoreIcon(frame: rect, resizing: self.resizingBehavior, iconColor: StyleKit.lightIconGlyphColor)
 			}
 		} else {
 			
-			StyleKit.drawMoreIcon(frame: rect, resizing: .aspectFit, iconColor: self.tintColor)
+			StyleKit.drawMoreIcon(frame: rect, resizing: self.resizingBehavior, iconColor: self.tintColor)
 		}
 	}
 	

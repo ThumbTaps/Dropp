@@ -9,14 +9,20 @@
 import UIKit
 
 class UrsusCountIndicator: UrsusButton {
-		
+	
+	@IBInspectable var tinted: Bool = true {
+		didSet {
+			self.themeDidChange()
+		}
+	}
+	
 	override func themeDidChange() {
 		super.themeDidChange()
 		
 		if PreferenceManager.shared.theme == .dark {
-			self.tintColor = StyleKit.darkTertiaryTextColor
+			self.tintColor = self.tinted ? StyleKit.darkTintColor : StyleKit.darkTertiaryTextColor
 		} else {
-			self.tintColor = StyleKit.lightTertiaryTextColor
+			self.tintColor = self.tinted ? StyleKit.lightTintColor : StyleKit.lightTertiaryTextColor
 		}
 	}
 	

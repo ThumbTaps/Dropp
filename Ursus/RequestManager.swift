@@ -111,7 +111,9 @@ class RequestManager: NSObject, URLSessionDataDelegate {
 				}
 								
 				if let summary = (artistInfo["bio"] as? [String: Any])?["content"] as? String {
-					artist.summary = summary
+					if !summary.isEmpty {
+						artist.summary = summary
+					}
 				}
 				
 				guard let artistImages = artistInfo["image"] as? [[String: Any]] else {
@@ -162,7 +164,7 @@ class RequestManager: NSObject, URLSessionDataDelegate {
 	func getReleases(for artist: Artist, since date: Date?=nil, completion: @escaping ((_ releases: [Release]?, _ error: Error?) -> Void)) -> URLSessionDataTask? {
 
 		// create URL for data request
-		guard let url = URL(string: "\(self.itunesLookupURL)?id=\(artist.itunesID!)&media=music&entity=album&attribute=albumTerm&sort=recent") else {
+		guard let url = URL(string: "\(self.itunesLookupURL)?id=\(artist.itunesID!)&media=music&entity=album&attribute=artistTerm&sort=recent") else {
 			completion(nil, RequestManagerError.artistReleasesUnavailable)
 			return nil
 		}
@@ -193,6 +195,7 @@ class RequestManager: NSObject, URLSessionDataDelegate {
 					
 					return explicitness != "cleaned"
 				})
+
 				let dateFormatter = DateFormatter()
 				dateFormatter.dateFormat = "YYYY-MM-dd"
 				
@@ -207,9 +210,24 @@ class RequestManager: NSObject, URLSessionDataDelegate {
 					
 					let releaseDate = dateFormatter.date(from: releaseDateString.components(separatedBy: "T")[0])
 					let release = Release(itunesID: itunesID, title: title, releaseDate: releaseDate, itunesURL: URL(string: itunesURLString))
-					release.genre = parsedRelease["primaryGenreName"] as? String
-					release.artworkURL = URL(string: (parsedRelease["artworkUrl100"] as! String).replacingOccurrences(of: "100x100bb", with: "1000x1000"))
-					release.thumbnailURL = URL(string: (parsedRelease["artworkUrl100"] as! String).replacingOccurrences(of: "100x100bb", with: "132x132"))
+					
+					if let genre = parsedRelease["primaryGenreName"] as? String {
+						release.genre = genre
+					}
+					
+					if let artworkURLString = parsedRelease["artworkUrl100"] as? String {
+						release.artworkURL = URL(string: artworkURLString.replacingOccurrences(of: "100x100bb", with: "1000x1000"))
+					}
+					
+					if let thumbnailURLString = parsedRelease["artworkUrl100"] as? String {
+						release.thumbnailURL = URL(string: thumbnailURLString.replacingOccurrences(of: "100x100bb", with: "132x132"))
+					}
+					
+					if let trackCount = parsedRelease["trackCount"] as? Int {
+						release.trackCount = trackCount
+					}
+					
+					release.isFeature = (parsedRelease["artistId"] as? Int) != artist.itunesID
 					
 					return release
 				})
@@ -260,7 +278,7 @@ class RequestManager: NSObject, URLSessionDataDelegate {
 		DispatchQueue.main.async {
 			
 			self.locationManager = CLLocationManager()
-			
+			print(CLLocationManager.authorizationStatus())
 			if CLLocationManager.authorizationStatus() != .authorizedWhenInUse && CLLocationManager.authorizationStatus() != .authorizedAlways {
 				self.locationManager?.requestWhenInUseAuthorization()
 				self.locationManager?.desiredAccuracy = kCLLocationAccuracyThreeKilometers

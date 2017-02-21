@@ -21,11 +21,25 @@ class Release: NSObject, NSCoding {
 	var genre: String?
 	var artworkURL: URL?
 	var thumbnailURL: URL?
-	private var _seenByUser = false
+	var trackCount: Int?
+	var isFeature = false
+	private var _seenByUser: Bool?
 	var seenByUser: Bool {
 		get {
-			// check user library + date + manual trigger
-			return false
+			
+			if self._seenByUser == nil {
+				
+				// check user library + date + manual trigger
+				if self.releaseDate < Calendar.current.date(byAdding: .day, value: -Int(PreferenceManager.shared.maxNewReleaseAge), to: Date())! {
+					return true
+				}
+				
+				return false
+				
+			} else {
+				
+				return self._seenByUser!
+			}
 		}
 		set {
 			self._seenByUser = newValue
@@ -33,13 +47,22 @@ class Release: NSObject, NSCoding {
 	}
 	var type: ReleaseType {
 		get {
-			if self.title.lowercased().hasSuffix("- single") {
+			if self.title.lowercased().hasSuffix("- single") || self.trackCount == 1 {
 				return .single
 			} else if self.title.lowercased().hasSuffix(" ep") {
 				return .EP
 			} else {
 				return .album
 			}
+		}
+	}
+	var artist: Artist {
+		get {
+			return PreferenceManager.shared.followingArtists.first(where: {
+				$0.releases.contains(where: {
+					$0.itunesID == itunesID
+				})
+			})! // this can't return nil because the release literally don't exist without the artists
 		}
 	}
 	
@@ -74,6 +97,10 @@ class Release: NSObject, NSCoding {
 		if self.thumbnailURL != nil {
 			aCoder.encode(self.artworkURL, forKey: "thumbnailURL")
 		}
+		if self.trackCount != nil {
+			aCoder.encode(self.trackCount, forKey: "trackCount")
+		}
+		aCoder.encode(self.isFeature, forKey: "isFeature")
 	}
 	required init?(coder aDecoder: NSCoder) {
 		
@@ -85,6 +112,8 @@ class Release: NSObject, NSCoding {
 		self.itunesURL = aDecoder.decodeObject(forKey: "itunesURL") as! URL
 		self.artworkURL = aDecoder.decodeObject(forKey: "artworkURL") as? URL
 		self.thumbnailURL = aDecoder.decodeObject(forKey: "thumbnailURL") as? URL
+		self.trackCount = aDecoder.decodeObject(forKey: "trackCount") as? Int
+		self.isFeature = (aDecoder.decodeObject(forKey: "isFeature") as? Bool) ?? false
 	}
 	
 	

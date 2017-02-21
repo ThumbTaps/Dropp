@@ -28,6 +28,20 @@ class UrsusStoryboardSegue: UIStoryboardSegue {
 			
 			
 			
+		else if self.identifier == "NewReleases->ReleaseSorting" {
+			self.animationController = SlideDownAnimatedTransitionController()
+			self.destination.transitioningDelegate = self.animationController
+			self.source.present(self.destination, animated: true)
+			
+		} else if self.identifier == "ReleaseSorting->NewReleases" {
+			self.animationController = SlideDownAnimatedTransitionController()
+			self.source.transitioningDelegate = self.animationController
+			self.source.dismiss(animated: true)
+		}
+			
+			
+			
+			
 		else if self.identifier == "NewReleases->Settings" {
 			self.animationController = RevealBehindAnimatedTransitionController()
 			self.destination.transitioningDelegate = self.animationController
@@ -38,7 +52,7 @@ class UrsusStoryboardSegue: UIStoryboardSegue {
 			self.source.transitioningDelegate = self.animationController
 			self.source.dismiss(animated: true)
 		}
-		
+			
 			
 			
 			

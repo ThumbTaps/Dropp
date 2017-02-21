@@ -45,7 +45,7 @@ class ReleaseViewController: UrsusViewController {
 					DispatchQueue.main.async {
 						
 						self.releaseArtworkView.imageView.image = image
-						self.releaseArtworkView.showArtwork()
+						self.releaseArtworkView.showArtwork(true)
 					}
 					
 				} else {
@@ -61,16 +61,6 @@ class ReleaseViewController: UrsusViewController {
         // Dispose of any resources that can be recreated.
     }
 	
-	override var preferredStatusBarStyle: UIStatusBarStyle {
-		get {
-			if self.theme == .dark {
-				return .lightContent
-			} else {
-				return .default
-			}
-		}
-	}
-
 	override func themeDidChange() {
 		super.themeDidChange()
 		

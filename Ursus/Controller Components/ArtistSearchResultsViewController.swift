@@ -82,6 +82,7 @@ class ArtistSearchResultsViewController: UrsusViewController, UICollectionViewDa
 	}
 	func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
 		
+		// show existing following artist or from search results
 		let selectedArtist = PreferenceManager.shared.followingArtists.first(where: { $0.itunesID == self.artistSearchResults[indexPath.row].itunesID }) ?? self.artistSearchResults[indexPath.row]
 		var artistArtworkImage: UIImage?
 		
@@ -172,10 +173,12 @@ class ArtistSearchResultsViewController: UrsusViewController, UICollectionViewDa
 			return
 		}
 	}
-    
+	
+	
+	
 
-    // MARK: - Navigation
-
+	
+	// MARK: - Navigation
     // In a storyboard-based application, you will often want to do a little preparation before navigation
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         // Get the new view controller using segue.destinationViewController.
@@ -195,5 +198,16 @@ class ArtistSearchResultsViewController: UrsusViewController, UICollectionViewDa
 			}
 		}
     }
+	override func prepareForUnwind(for segue: UIStoryboardSegue) {
+		super.prepareForUnwind(for: segue)
+		
+		if segue.identifier == "Artist->ArtistSearchResults" {
+			if let selectedIndex = self.collectionView?.indexPathsForSelectedItems?[0] {
+				self.collectionView?.deselectItem(at: selectedIndex, animated: false)
+			}
+			self.themeDidChange()
+		}
+		
+	}
 
 }

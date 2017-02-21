@@ -12,8 +12,37 @@ import UserNotifications
 
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {
+	
+	enum ShortcutIdentifier: String {
+		case search = "com.arcyn1c.Ursus.search"
+	}
 
 	var window: UIWindow?
+	
+	var shortcutItem: UIApplicationShortcutItem?
+	
+	func handleShortcutItem(_ shortcutItem: UIApplicationShortcutItem) -> Bool {
+		
+		var succeeded = false
+		
+		guard let shortcutIdentifier = ShortcutIdentifier(rawValue: shortcutItem.type) else {
+			return succeeded
+		}
+		
+		if shortcutIdentifier == .search {
+			self.window?.rootViewController?.dismiss(animated: false)
+			(self.window?.rootViewController as? NewReleasesViewController)?.showSearch(self)
+			succeeded = true
+		}
+		
+		return succeeded
+	}
+	
+	func application(_ application: UIApplication, performActionFor shortcutItem: UIApplicationShortcutItem, completionHandler: @escaping (Bool) -> Void) {
+		
+		completionHandler(self.handleShortcutItem(shortcutItem))
+		
+	}
 	
 	func application(_ application: UIApplication, willFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey : Any]? = nil) -> Bool {
 		
@@ -46,7 +75,17 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 		
 		application.registerForRemoteNotifications()
 		
-		return true
+		var performShortcutDelegate = true
+		
+		if let shortcutItem = launchOptions?[UIApplicationLaunchOptionsKey.shortcutItem] as? UIApplicationShortcutItem {
+			
+			self.shortcutItem = shortcutItem
+			
+			performShortcutDelegate = false
+		}
+		
+		return performShortcutDelegate
+		
 	}
 
 	func applicationWillResignActive(_ application: UIApplication) {
@@ -66,7 +105,12 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
 	func applicationDidBecomeActive(_ application: UIApplication) {
 		// Restart any tasks that were paused (or not yet started) while the application was inactive. If the application was previously in the background, optionally refresh the user interface.
-
+		
+		guard let shortcut = shortcutItem else { return }
+		
+		self.handleShortcutItem(shortcut)
+		
+		self.shortcutItem = nil
 	}
 
 	func applicationWillTerminate(_ application: UIApplication) {

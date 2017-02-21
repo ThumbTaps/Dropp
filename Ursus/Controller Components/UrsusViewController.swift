@@ -12,7 +12,7 @@ class UrsusViewController: UIViewController {
 	
     @IBOutlet weak var backdrop: FrostedBackdrop?
 
-//    @IBOutlet weak var backButton: BackButton?
+//    @IBOutlet weak var backButton: LeftButton?
 //    @IBOutlet weak var backButtonHidingConstraint: NSLayoutConstraint?
 //    @IBOutlet weak var backButtonVisibleLeadingConstraint: NSLayoutConstraint?
 //    @IBOutlet weak var backButtonVisibleTrailingConstraint: NSLayoutConstraint?
@@ -39,17 +39,17 @@ class UrsusViewController: UIViewController {
 		// This can't be a direct call to self.themeDidChange because it will trigger on other view controllers that may want to animate in certain properties
 		DispatchQueue.main.async {
 			
-			self.setNeedsStatusBarAppearanceUpdate()
-			
 			if PreferenceManager.shared.theme == .dark {
+				UIApplication.shared.statusBarStyle = .lightContent
 				self.view.tintColor = StyleKit.darkTintColor
 				self.collectionView?.indicatorStyle = .white
 				self.topScrollFadeView?.tintColor = StyleKit.darkBackdropOverlayColor
 				self.bottomScrollFadeView?.tintColor = StyleKit.darkBackdropOverlayColor
 				self.navigationTitle?.textColor = StyleKit.darkPrimaryTextColor
 			} else {
+				UIApplication.shared.statusBarStyle = .default
 				self.view.tintColor = StyleKit.lightTintColor
-				self.collectionView?.indicatorStyle = .black
+				self.collectionView?.indicatorStyle = .default
 				self.topScrollFadeView?.tintColor = StyleKit.lightBackdropOverlayColor
 				self.bottomScrollFadeView?.tintColor = StyleKit.lightBackdropOverlayColor
 				self.navigationTitle?.textColor = StyleKit.lightPrimaryTextColor
@@ -83,18 +83,7 @@ class UrsusViewController: UIViewController {
     }
     
     
-    
 	
-	override var preferredStatusBarStyle: UIStatusBarStyle {
-		get {
-			if PreferenceManager.shared.theme == .dark {
-				return .lightContent
-			} else {
-				return .default
-			}
-		}
-	}
-
 	
 	
 	
@@ -103,9 +92,8 @@ class UrsusViewController: UIViewController {
 		
 		DispatchQueue.main.async {
 			
-			self.setNeedsStatusBarAppearanceUpdate()
-
 			if PreferenceManager.shared.theme == .dark {
+				UIApplication.shared.statusBarStyle = .lightContent
 				self.view.tintColor = StyleKit.darkTintColor
 				self.view.backgroundColor = StyleKit.darkBackgroundColor
 				self.collectionView?.indicatorStyle = .white
@@ -113,9 +101,10 @@ class UrsusViewController: UIViewController {
 				self.bottomScrollFadeView?.tintColor = StyleKit.darkBackdropOverlayColor
 				self.navigationTitle?.textColor = StyleKit.darkPrimaryTextColor
 			} else {
+				UIApplication.shared.statusBarStyle = .default
 				self.view.tintColor = StyleKit.lightTintColor
 				self.view.backgroundColor = StyleKit.lightBackgroundColor
-				self.collectionView?.indicatorStyle = .black
+				self.collectionView?.indicatorStyle = .default
 				self.topScrollFadeView?.tintColor = StyleKit.lightBackdropOverlayColor
 				self.bottomScrollFadeView?.tintColor = StyleKit.lightBackdropOverlayColor
 				self.navigationTitle?.textColor = StyleKit.lightPrimaryTextColor

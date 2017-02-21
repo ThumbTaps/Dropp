@@ -20,14 +20,14 @@ class ArtistsButton: UrsusButton {
 		if !self.glyphOnly && self.changesWithTheme {
 			if PreferenceManager.shared.theme == .dark {
 				
-				StyleKit.drawArtistsIcon(frame: rect, resizing: .aspectFit, iconColor: StyleKit.darkIconGlyphColor)
+				StyleKit.drawArtistsIcon(frame: rect, resizing: self.resizingBehavior, iconColor: StyleKit.darkIconGlyphColor)
 			} else {
 				
-				StyleKit.drawArtistsIcon(frame: rect, resizing: .aspectFit, iconColor: StyleKit.lightIconGlyphColor)
+				StyleKit.drawArtistsIcon(frame: rect, resizing: self.resizingBehavior, iconColor: StyleKit.lightIconGlyphColor)
 			}
 		} else {
 			
-			StyleKit.drawArtistsIcon(frame: rect, resizing: .aspectFit, iconColor: self.tintColor)
+			StyleKit.drawArtistsIcon(frame: rect, resizing: self.resizingBehavior, iconColor: self.tintColor)
 		}
 	}
 	

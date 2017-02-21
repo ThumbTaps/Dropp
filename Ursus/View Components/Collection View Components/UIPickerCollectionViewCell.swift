@@ -21,6 +21,9 @@ class UIPickerCollectionViewCell: UrsusCollectionViewCell, UICollectionViewDataS
 	
 	var delegate: UIPickerCollectionViewCellDelegate?
 	
+	var options = Array<Any>()
+	var selectedIndex = 0
+	
 	override func awakeFromNib() {
 		super.awakeFromNib()
 		
@@ -56,15 +59,15 @@ class UIPickerCollectionViewCell: UrsusCollectionViewCell, UICollectionViewDataS
 	
 	// MARK: UICollectionViewDataSource
 	func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-		return 12
+		return self.options.count
 	}
 	func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
 		
 		let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "MaxReleaseAgePickerCell", for: indexPath)
 		
-		(cell as! UIPickerCollectionViewCellPickerCell).textLabel?.text = String(indexPath.row+1)
+		(cell as! UIPickerCollectionViewCellPickerCell).textLabel?.text = String(describing: self.options[indexPath.row])
 		
-		if PreferenceManager.shared.maxPreviousReleaseAge == Int64(indexPath.row)+1 {
+		if indexPath.row == selectedIndex {
 			(cell as! UIPickerCollectionViewCellPickerCell).isSelected = true
 		}
 		

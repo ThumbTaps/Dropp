@@ -18,6 +18,19 @@ class SettingsCollectionViewCell: UrsusCollectionViewCell {
 		
 		self.tintColorDidChange()
 	}
+	override func themeDidChange() {
+		super.themeDidChange()
+		
+		DispatchQueue.main.async {
+			
+			if PreferenceManager.shared.theme == .dark {
+				(self.accessoryView as? UISwitch)?.tintColor = StyleKit.darkTintColor
+			} else {
+				(self.accessoryView as? UISwitch)?.tintColor = StyleKit.lightTintColor
+			}
+			(self.accessoryView as? UISwitch)?.onTintColor = (self.accessoryView as? UISwitch)?.tintColor
+		}
+	}
 	override func tintColorDidChange() {
 		super.tintColorDidChange()
 		
@@ -25,17 +38,8 @@ class SettingsCollectionViewCell: UrsusCollectionViewCell {
 			
 			if self.tintColor.isDarkColor {
 				self.textLabel?.textColor = StyleKit.darkPrimaryTextColor
-				self.accessoryView?.tintColor = StyleKit.darkTintColor
 			} else {
 				self.textLabel?.textColor = StyleKit.lightPrimaryTextColor
-				self.accessoryView?.tintColor = StyleKit.lightTintColor
-			}
-			
-			if self.accessoryView != nil {
-				
-				if self.accessoryView!.isKind(of: UISwitch.self) {
-					(self.accessoryView as! UISwitch).onTintColor = self.accessoryView?.tintColor
-				}
 			}
 			
 			self.setNeedsDisplay()

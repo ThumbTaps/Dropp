@@ -30,10 +30,17 @@ class NewReleasesViewController: UrsusViewController, UICollectionViewDataSource
 	@IBOutlet weak var newReleasesCountIndicatorHidingConstraint: NSLayoutConstraint!
 	@IBOutlet weak var newReleasesCountIndicatorRestingConstraint: NSLayoutConstraint!
 	
+	@IBOutlet weak var previousReleasesCountIndicator: UrsusCountIndicator!
+	
+	var blurView: UIVisualEffectView?
+	
 	var isCurrentlyVisible = true
 	
 	var newReleasesArtwork = [UIImage?](repeating: nil, count: PreferenceManager.shared.newReleases.count)
 	var previousReleasesArtwork = [UIImage?](repeating: nil, count: PreferenceManager.shared.previousReleases.count)
+	
+	var newReleasesArtworkDownloadTasks = [URLSessionDataTask?](repeating: nil, count: PreferenceManager.shared.newReleases.count)
+	var previousReleasesArtworkDownloadTasks = [URLSessionDataTask?](repeating: nil, count: PreferenceManager.shared.previousReleases.count)
 			
 	override func viewDidLoad() {
 		super.viewDidLoad()
@@ -49,11 +56,10 @@ class NewReleasesViewController: UrsusViewController, UICollectionViewDataSource
 			if PreferenceManager.shared.theme == .dark {
 				self.collectionView?.indicatorStyle = .white
 			} else {
-				self.collectionView?.indicatorStyle = .black
+				self.collectionView?.indicatorStyle = .default
 			}
 			
-		}
-		
+		}		
 	}
 	
 	override func viewDidAppear(_ animated: Bool) {
@@ -106,26 +112,41 @@ class NewReleasesViewController: UrsusViewController, UICollectionViewDataSource
 	
 	// MARK: - Notifications
 	override func didUpdateNewReleases() {
-				
+		
+		self.collectionView?.prefetchDataSource = self
+		self.collectionView?.dataSource = self
+		self.collectionView?.delegate = self
+		
 		self.newReleasesArtwork = [UIImage?](repeating: nil, count: PreferenceManager.shared.newReleases.count)
 		self.previousReleasesArtwork = [UIImage?](repeating: nil, count: PreferenceManager.shared.previousReleases.count)
 		
+		self.newReleasesArtworkDownloadTasks = [URLSessionDataTask?](repeating: nil, count: PreferenceManager.shared.newReleases.count)
+		self.previousReleasesArtworkDownloadTasks = [URLSessionDataTask?](repeating: nil, count: PreferenceManager.shared.previousReleases.count)
+		
 		DispatchQueue.main.async {
+			
 			// update new release count
 			self.newReleasesCountIndicator.setTitle(String(PreferenceManager.shared.newReleases.count), for: .normal)
+			self.previousReleasesCountIndicator.setTitle(String(PreferenceManager.shared.previousReleases.count), for: .normal)
 			
 			if self.isCurrentlyVisible {
 				
 				self.collectionView?.performBatchUpdates({
-					self.collectionView?.reloadData()
+					
+					if !PreferenceManager.shared.newReleases.isEmpty {
+						self.collectionView?.reloadSections([0])
+					}
+					
+					if !PreferenceManager.shared.previousReleases.isEmpty {
+						self.collectionView?.reloadSections([1])
+					}
 				})
+				
 			} else {
 				self.collectionView?.reloadData()
 			}
 			
-			if (self.collectionView?.refreshControl?.isRefreshing)! {
-				self.collectionView?.refreshControl?.endRefreshing()
-			}
+			self.collectionView?.refreshControl?.endRefreshing()
 			
 			if PreferenceManager.shared.newReleases.isEmpty && PreferenceManager.shared.previousReleases.isEmpty {
 				
@@ -138,11 +159,35 @@ class NewReleasesViewController: UrsusViewController, UICollectionViewDataSource
 			
 			UIView.animate(withDuration: ANIMATION_SPEED_MODIFIER*0.5, delay: 0, usingSpringWithDamping: 0.6, initialSpringVelocity: 1, options: .curveEaseOut, animations: {
 				
+				// hide new releases count indicator if there are no new releases
+				if PreferenceManager.shared.newReleases.isEmpty {
+					self.newReleasesCountIndicator.transform = CGAffineTransform(scaleX: 0.1, y: 0.1)
+					self.newReleasesCountIndicator.alpha = 0
+				} else { // otherwise, show it
+					self.newReleasesCountIndicator.transform = CGAffineTransform(scaleX: 1, y: 1)
+					self.newReleasesCountIndicator.alpha = 1
+				}
+				
+				// hide previous releases count indicator if there are no previous releases (this likely won't happen often)
+				if PreferenceManager.shared.previousReleases.isEmpty {
+					self.previousReleasesCountIndicator.transform = CGAffineTransform(scaleX: 0.1, y: 0.1)
+					self.previousReleasesCountIndicator.alpha = 0
+				} else { // otherwise, show it
+					self.previousReleasesCountIndicator.transform = CGAffineTransform(scaleX: 1, y: 1)
+					self.previousReleasesCountIndicator.alpha = 1
+				}
+				
 				self.backdrop?.overlay.layoutIfNeeded()
 			})
 			
 		}
 	}
+
+	
+	
+	
+	
+	// MARK: - IBActions
 	@IBAction func showSearch(_ sender: Any) {
 		let deadlineTime = DispatchTime.now() + .milliseconds(50)
 		DispatchQueue.main.asyncAfter(deadline: deadlineTime) {
@@ -154,7 +199,7 @@ class NewReleasesViewController: UrsusViewController, UICollectionViewDataSource
 	
 	
 	
-	// MARK: UICollectionviewDataSourcePrefetching
+	// MARK: UICollectionViewDataSourcePrefetching
 	func collectionView(_ collectionView: UICollectionView, prefetchItemsAt indexPaths: [IndexPath]) {
 		
 		indexPaths.forEach { (indexPath) in
@@ -162,30 +207,51 @@ class NewReleasesViewController: UrsusViewController, UICollectionViewDataSource
 			var source = PreferenceManager.shared.newReleases
 			var destination = self.newReleasesArtwork
 			
-			if PreferenceManager.shared.newReleases.isEmpty || indexPath.section == 1 {
+			if indexPath.section == 1 {
 				
 				source = PreferenceManager.shared.previousReleases
 				destination = self.previousReleasesArtwork
 			}
 			
-			guard let artworkURL = source[indexPath.row].artworkURL else {
-				return
-			}
-			
-			DispatchQueue.global().async {
+			if destination[indexPath.row] == nil {
 				
-				let artworkTask = RequestManager.shared.loadImage(from: artworkURL, completion: { (image, error) in
-					
-					guard let image = image, error == nil else {
-						return
+				if let artworkURL = source[indexPath.row].artworkURL {
+					DispatchQueue.global().async {
+						
+						UIApplication.shared.isNetworkActivityIndicatorVisible = true
+						if let artworkTask = RequestManager.shared.loadImage(from: artworkURL, completion: { (image, error) in
+							
+							UIApplication.shared.isNetworkActivityIndicatorVisible = false
+							if let image = image, error == nil {
+								destination[indexPath.row] = image
+							}
+							
+						}) {
+							
+							if indexPath.section == 0 {
+								self.newReleasesArtworkDownloadTasks[indexPath.row] = artworkTask
+							} else {
+								self.previousReleasesArtworkDownloadTasks[indexPath.row] = artworkTask
+							}
+						}
 					}
-					
-					destination[indexPath.row] = image
-				})
+				}
 			}
+
 		}
 	}
-	
+	func collectionView(_ collectionView: UICollectionView, cancelPrefetchingForItemsAt indexPaths: [IndexPath]) {
+		
+		indexPaths.forEach { (indexPath) in
+			
+			if indexPath.section == 0 {
+				self.newReleasesArtworkDownloadTasks[indexPath.row]?.cancel()
+			} else {
+				self.previousReleasesArtworkDownloadTasks[indexPath.row]?.cancel()
+			}
+			
+		}
+	}
 	
 	
 	
@@ -193,20 +259,12 @@ class NewReleasesViewController: UrsusViewController, UICollectionViewDataSource
 	
 	// MARK: - UICollectionViewDataSource
 	func numberOfSections(in collectionView: UICollectionView) -> Int {
-		var numSections = 0
-
-		if !PreferenceManager.shared.newReleases.isEmpty {
-			numSections += 1
-		}
-		if PreferenceManager.shared.showPreviousReleases && !PreferenceManager.shared.previousReleases.isEmpty {
-			numSections += 1
-		}
-		return numSections
+        return 2
 	}
 	func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
 		var numItems = PreferenceManager.shared.newReleases.count
 		
-		if PreferenceManager.shared.newReleases.isEmpty || section == 1 {
+		if section == 1 {
 			
 			numItems = PreferenceManager.shared.previousReleases.count
 		}
@@ -222,25 +280,14 @@ class NewReleasesViewController: UrsusViewController, UICollectionViewDataSource
 			
 			switch indexPath.section {
 			case 0:
-				if PreferenceManager.shared.newReleases.isEmpty {
-					if !PreferenceManager.shared.previousReleases.isEmpty {
-						var timeUnit = "MONTHS"
-						if PreferenceManager.shared.maxPreviousReleaseAge == 1 {
-							timeUnit = "MONTH"
-						}
-						(reusableView as! HeaderCollectionReusableView).textLabel.text = "IN THE PAST\(PreferenceManager.shared.maxPreviousReleaseAge == 1 ? "" : String(PreferenceManager.shared.maxPreviousReleaseAge)) \(timeUnit)"
-					}
-				}
 				break
 				
 			case 1:
-				if !PreferenceManager.shared.previousReleases.isEmpty {
-					var timeUnit = "MONTHS"
-					if PreferenceManager.shared.maxPreviousReleaseAge == 1 {
-						timeUnit = "MONTH"
-					}
-					(reusableView as! HeaderCollectionReusableView).textLabel.text = "IN THE PAST\(PreferenceManager.shared.maxPreviousReleaseAge == 1 ? "" : String(PreferenceManager.shared.maxPreviousReleaseAge)) \(timeUnit)"
+				var timeUnit = " MONTHS"
+				if PreferenceManager.shared.maxPreviousReleaseAge == 1 {
+					timeUnit = "MONTH"
 				}
+				(reusableView as! HeaderCollectionReusableView).textLabel.text = "IN THE PAST \(PreferenceManager.shared.maxPreviousReleaseAge == 1 ? "" : String(PreferenceManager.shared.maxPreviousReleaseAge))\(timeUnit)"
 				break
 				
 			default: return reusableView
@@ -260,46 +307,48 @@ class NewReleasesViewController: UrsusViewController, UICollectionViewDataSource
 		var source = PreferenceManager.shared.newReleases
 		var artworkSource = self.newReleasesArtwork
 		
-		if PreferenceManager.shared.newReleases.isEmpty || indexPath.section == 1 {
+		if indexPath.section == 1 {
 			
 			source = PreferenceManager.shared.previousReleases
 			artworkSource = self.previousReleasesArtwork
 		}
 		
-		cell.releaseTitleLabel.text = source[indexPath.row].title
+		let release = source[indexPath.row]
 		
-		// get artist
-		guard let artist: Artist = PreferenceManager.shared.followingArtists.first(where: {
-			$0.releases.contains(where: {
-				$0.itunesID == source[indexPath.row].itunesID
-			})
-		}) else {
-			return UICollectionViewCell()
+		DispatchQueue.main.async {
+			cell.releaseArtView.hideArtwork()
 		}
 		
-		cell.secondaryLabel.text = artist.name
+		cell.releaseTitleLabel.text = release.title
 		
-		guard let artworkImage = artworkSource[indexPath.row] else {
+		cell.secondaryLabel.text = release.artist.name
+		
+		guard let image = artworkSource[indexPath.row] else {
 			
-			guard let url = source[indexPath.row].thumbnailURL else {
+			guard let url = release.thumbnailURL else {
 				return cell
 			}
 			
 			DispatchQueue.global().async {
 				
+				UIApplication.shared.isNetworkActivityIndicatorVisible = true
 				let artworkTask = RequestManager.shared.loadImage(from: url, completion: { (image, error) in
-					
+					UIApplication.shared.isNetworkActivityIndicatorVisible = false
 					guard let image = image, error == nil else {
 						print(error!)
 						return
 					}
 					
 					// add loaded image to prefetch source
-					artworkSource[indexPath.row] = image
+					if indexPath.section == 0 {
+						self.newReleasesArtwork[indexPath.row] = image
+					} else {
+						self.previousReleasesArtwork[indexPath.row] = image
+					}
 					
 					DispatchQueue.main.async {
-						cell.releaseArtView.imageView.image = artworkSource[indexPath.row]
-						cell.releaseArtView.showArtwork()
+						cell.releaseArtView.imageView.image = image
+						cell.releaseArtView.showArtwork(true)
 					}
 				})
 			}
@@ -308,9 +357,10 @@ class NewReleasesViewController: UrsusViewController, UICollectionViewDataSource
 		}
 		
 		DispatchQueue.main.async {
-			cell.releaseArtView.imageView.image = artworkImage
+			cell.releaseArtView.imageView.image = image
 			cell.releaseArtView.showArtwork()
 		}
+		
 		
 		return cell
 	}
@@ -323,23 +373,11 @@ class NewReleasesViewController: UrsusViewController, UICollectionViewDataSource
 	// MARK: - UICollectionViewDelegate
 	func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, referenceSizeForHeaderInSection section: Int) -> CGSize {
 		
-		if section == 0 {
-			if PreferenceManager.shared.newReleases.isEmpty {
-				if !PreferenceManager.shared.previousReleases.isEmpty {
-					return CGSize(width: collectionView.bounds.width, height: 60)
-				} else {
-					return .zero
-				}
-			}
-		} else if section == 1 {
-			if !PreferenceManager.shared.previousReleases.isEmpty {
-				return CGSize(width: collectionView.bounds.width, height: 60)
-			} else {
-				return .zero
-			}
+		if section == 1 && !PreferenceManager.shared.previousReleases.isEmpty {
+			return CGSize(width: collectionView.bounds.width, height: 60)
 		}
 		
-		return .zero
+		return CGSize(width: 0.1, height: 0.1)
 	}
 	func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
 		return CGSize(width: collectionView.bounds.size.width, height: 100)
@@ -355,11 +393,16 @@ class NewReleasesViewController: UrsusViewController, UICollectionViewDataSource
 		
 		if scrollView == self.collectionView {
 			if self.collectionView?.refreshControl?.isRefreshing ?? false {
+
 				let deadlineTime = DispatchTime.now() + .milliseconds(300)
 				DispatchQueue.main.asyncAfter(deadline: deadlineTime) {
-					PreferenceManager.shared.updateNewReleases()
+					if PreferenceManager.shared.lastReleasesUpdate != nil && PreferenceManager.shared.lastReleasesUpdate! < Calendar.current.date(byAdding: .minute, value: -5, to: Date())! {
+						PreferenceManager.shared.updateNewReleases()
+					} else {
+						self.collectionView?.refreshControl?.endRefreshing()
+					}
+					
 				}
-
 			}
 		}
 	}
@@ -371,7 +414,17 @@ class NewReleasesViewController: UrsusViewController, UICollectionViewDataSource
 	
 	// MARK: - Navigation
 	func dismissDestination() {
-		self.presentedViewController?.performSegue(withIdentifier: "Settings->NewReleases", sender: nil)
+		guard let presentedVC = self.presentedViewController else {
+			self.presentedViewController?.dismiss(animated: true, completion: nil)
+			return
+		}
+		
+		if presentedVC.isKind(of: SettingsViewController.self) {
+			self.presentedViewController?.performSegue(withIdentifier: "Settings->NewReleases", sender: nil)
+		}
+		else if presentedVC.isKind(of: ReleaseSortingViewController.self) {
+			self.presentedViewController?.performSegue(withIdentifier: "ReleaseSorting->NewReleases", sender: nil)
+		}
 	}
 	
 	// In a storyboard-based application, you will often want to do a little preparation before navigation
@@ -411,6 +464,11 @@ class NewReleasesViewController: UrsusViewController, UICollectionViewDataSource
 		}
 		
 		else if segue.identifier == "NewReleases->Settings" {
+			self.newReleasesSortButton.isEnabled = false
+			self.collectionView?.isUserInteractionEnabled = false
+			UIView.animate(withDuration: 0.4*ANIMATION_SPEED_MODIFIER, animations: {
+				self.collectionView?.alpha = 0.15
+			})
 			let tapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(self.dismissDestination))
 			self.view.addGestureRecognizer(tapGestureRecognizer)
 		}
@@ -418,10 +476,44 @@ class NewReleasesViewController: UrsusViewController, UICollectionViewDataSource
 		else if segue.identifier == "NewReleases->ArtistSearch" {
 //			self.searchButton.alpha = 0
 		}
+		
+		else if segue.identifier == "NewReleases->ReleaseSorting" {
+			self.blurView = UrsusBlurView(frame: self.view.bounds)
+			self.backdrop?.addSubview(self.blurView!)
+			UIView.animate(withDuration: ANIMATION_SPEED_MODIFIER*0.3, animations: {
+				self.blurView?.effect = PreferenceManager.shared.theme == .dark ? UIBlurEffect(style: .dark) : UIBlurEffect(style: .light)
+			})
+
+		}
 	}
 	override func prepareForUnwind(for segue: UIStoryboardSegue) {
+		super.prepareForUnwind(for: segue)
 		
 		self.isCurrentlyVisible = true
 		
+		if segue.identifier == "Settings->NewReleases" {
+			self.newReleasesSortButton.isEnabled = true
+			self.collectionView?.isUserInteractionEnabled = true
+			UIView.animate(withDuration: 0.4*ANIMATION_SPEED_MODIFIER, animations: {
+				self.collectionView?.alpha = 1
+			})
+		}
+		
+		else if segue.identifier == "ReleaseSorting->NewReleases" {
+			
+			UIView.animate(withDuration: ANIMATION_SPEED_MODIFIER*0.5, animations: {
+				self.blurView?.effect = nil
+			}) { (finished) in
+				self.blurView?.removeFromSuperview()
+				self.blurView = nil
+			}
+		}
+		
+		else if segue.identifier == "Release->NewReleases" {
+			if let selectedIndex = self.collectionView?.indexPathsForSelectedItems?[0] {
+				self.collectionView?.deselectItem(at: selectedIndex, animated: false)
+			}
+
+		}
 	}
 }

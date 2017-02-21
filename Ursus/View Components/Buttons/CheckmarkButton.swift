@@ -18,14 +18,14 @@ class CheckmarkButton: UrsusButton {
 		if !self.glyphOnly && self.changesWithTheme {
 			if PreferenceManager.shared.theme == .dark {
 				
-				StyleKit.drawCheckmarkIcon(frame: rect, resizing: .aspectFit, iconColor: StyleKit.darkIconGlyphColor)
+				StyleKit.drawCheckmarkIcon(frame: rect, resizing: self.resizingBehavior, iconColor: StyleKit.darkIconGlyphColor)
 			} else {
 				
-				StyleKit.drawCheckmarkIcon(frame: rect, resizing: .aspectFit, iconColor: StyleKit.lightIconGlyphColor)
+				StyleKit.drawCheckmarkIcon(frame: rect, resizing: self.resizingBehavior, iconColor: StyleKit.lightIconGlyphColor)
 			}
 		} else {
 			
-			StyleKit.drawCheckmarkIcon(frame: rect, resizing: .aspectFit, iconColor: self.tintColor)
+			StyleKit.drawCheckmarkIcon(frame: rect, resizing: self.resizingBehavior, iconColor: self.tintColor)
 		}
     }
 

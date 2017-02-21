@@ -17,6 +17,9 @@ enum Theme: Int64 {
 enum ThemeDeterminer: Int64 {
 	case displayBrightness = 0, twilight = 1, ambientLight = 2
 }
+enum ReleaseSorting: Int64 {
+	case releaseDate = 0, releaseTitle = 1, artistName = 2
+}
 
 public let ANIMATION_SPEED_MODIFIER = 1.0
 
@@ -49,9 +52,11 @@ class PreferenceManager: NSObject {
 	private let includeSinglesKey = "includeSingles"
 	private let ignoreFeaturesKey = "ignoreFeatures"
 	private let includeEPsKey = "includeEPs"
+	private let autoMarkAsSeenKey = "autoMarkAsSeenKey"
 	private let maxNewReleaseAgeKey = "maxNewReleaseAgeKey"
 	private let showPreviousReleasesKey = "showPreviousReleases"
 	private let maxPreviousReleaseAgeKey = "maxPreviousReleaseAgeKey"
+	private let releaseSortingKey = "releaseSortingKey"
 	
 	public let themeDidChangeNotification = Notification.Name(rawValue: "themeDidChangeNotification")
 	public let themeDeterminerDidChangeNotification = Notification.Name(rawValue: "themeDeterminerDidChangeNotification")
@@ -61,8 +66,8 @@ class PreferenceManager: NSObject {
 	
 	var firstLaunch = true {
 		didSet {
-			self.iCloudKeyStore.set(self.firstLaunch, forKey: self.firstLaunchKey)
-			self.iCloudKeyStore.synchronize()
+//			self.iCloudKeyStore.set(self.firstLaunch, forKey: self.firstLaunchKey)
+//			self.iCloudKeyStore.synchronize()
 			UserDefaults.standard.set(self.firstLaunch, forKey: self.firstLaunchKey)
 		}
 	}
@@ -80,7 +85,7 @@ class PreferenceManager: NSObject {
 				self.theme = self.determineTheme()
 			}
 			if self.themeMode != oldValue {
-				self.iCloudKeyStore.set(self.themeMode.rawValue, forKey: self.themeModeKey)
+//				self.iCloudKeyStore.set(self.themeMode.rawValue, forKey: self.themeModeKey)
 				UserDefaults.standard.set(self.themeMode.rawValue, forKey: self.themeModeKey)
 			}
 		}
@@ -90,7 +95,7 @@ class PreferenceManager: NSObject {
 			
 			if self.theme != oldValue {
 				self.themeDidChangeNotification.post()
-				self.iCloudKeyStore.set(self.theme.rawValue, forKey: self.themeKey)
+//				self.iCloudKeyStore.set(self.theme.rawValue, forKey: self.themeKey)
 				UserDefaults.standard.set(self.theme.rawValue, forKey: self.themeKey)
 			}
 		}
@@ -122,7 +127,7 @@ class PreferenceManager: NSObject {
 			if self.themeDeterminer != oldValue {
 				
 				self.themeDeterminerDidChangeNotification.post()
-				self.iCloudKeyStore.set(self.themeDeterminer.rawValue, forKey: self.themeDeterminerKey)
+//				self.iCloudKeyStore.set(self.themeDeterminer.rawValue, forKey: self.themeDeterminerKey)
 				UserDefaults.standard.set(self.themeDeterminer.rawValue, forKey: self.themeDeterminerKey)
 				self.theme = self.determineTheme()
 			}
@@ -160,7 +165,7 @@ class PreferenceManager: NSObject {
 	}
 	var themeBrightnessThreshold: Double = 0.5 {
 		didSet {
-			self.iCloudKeyStore.set(self.themeBrightnessThreshold, forKey: self.themeBrightnessThresholdKey)
+//			self.iCloudKeyStore.set(self.themeBrightnessThreshold, forKey: self.themeBrightnessThresholdKey)
 			UserDefaults.standard.set(self.themeBrightnessThreshold, forKey: self.themeBrightnessThresholdKey)
 			
 			self.theme = self.determineTheme()
@@ -185,6 +190,8 @@ class PreferenceManager: NSObject {
 					UIApplication.shared.isNetworkActivityIndicatorVisible = false
 					guard let sunrise = sunrise, let sunset = sunset, error == nil else {
 						print("Couldn't get sunrise and sunset", error!)
+						self.themeDeterminer = .displayBrightness
+						self.determiningTwilightTimes = false
 						return
 					}
 					
@@ -275,7 +282,7 @@ class PreferenceManager: NSObject {
 	var adaptiveArtistView: Bool = true {
 		didSet {
 			if self.adaptiveArtistView != oldValue {
-				self.iCloudKeyStore.set(self.adaptiveArtistView, forKey: self.adaptiveArtistViewKey)
+//				self.iCloudKeyStore.set(self.adaptiveArtistView, forKey: self.adaptiveArtistViewKey)
 				UserDefaults.standard.set(self.adaptiveArtistView, forKey: self.adaptiveArtistViewKey)
 			}
 		}
@@ -289,15 +296,25 @@ class PreferenceManager: NSObject {
 	
 	
 	// MARK: - RELEASE OPTIONS
-	var followingArtists: [Artist] = []
+	private var _followingArtists: [Artist] = []
+	var followingArtists: [Artist] {
+		set {
+			self._followingArtists = newValue
+		}
+		get {
+			return self._followingArtists.sorted(by: { (first, second) -> Bool in
+				return first.name < second.name
+			})
+		}
+	}
 	func follow(artist: Artist) {
-		if self.followingArtists.contains(where: { $0.itunesID == artist.itunesID }) {
+		if !self.followingArtists.contains(where: { $0.itunesID == artist.itunesID }) {
 			self.followingArtists.append(artist)
 		}
 		
 		let encodedFollowingArtists = NSKeyedArchiver.archivedData(withRootObject: self.followingArtists)
 		UserDefaults.standard.set(encodedFollowingArtists, forKey: self.followingArtistsKey)
-		self.iCloudKeyStore.set(encodedFollowingArtists, forKey: self.followingArtistsKey)
+//		self.iCloudKeyStore.set(encodedFollowingArtists, forKey: self.followingArtistsKey)
 	}
 	func unfollow(artist: Artist) {
 		self.followingArtists.remove(at: self.followingArtists.index(where: { (followed: Artist) -> Bool in
@@ -306,7 +323,7 @@ class PreferenceManager: NSObject {
 		
 		let encodedFollowingArtists = NSKeyedArchiver.archivedData(withRootObject: self.followingArtists)
 		UserDefaults.standard.set(encodedFollowingArtists, forKey: self.followingArtistsKey)
-		self.iCloudKeyStore.set(encodedFollowingArtists, forKey: self.followingArtistsKey)
+//		self.iCloudKeyStore.set(encodedFollowingArtists, forKey: self.followingArtistsKey)
 	}
 	
 	private var _newReleases: [Release] = []
@@ -315,20 +332,30 @@ class PreferenceManager: NSObject {
 			self._newReleases = newValue
 		}
 		get {
-			return self.followingArtists.flatMap({ (artist) -> [Release] in
+			let returnValue = self.followingArtists.flatMap({ (artist) -> [Release] in
 
 				artist.releases.filter({ (release) -> Bool in
 					
-					if !release.seenByUser {
+					if !release.seenByUser { // if release hasn't already been seen by user
 						
-						if !artist.includeEPs && release.type == .EP {
-							return false
-							
-						} else if !artist.includeSingles && release.type == .single {
-							return false
-							
-						} else {
-							return true
+						switch release.type {
+						case .EP:
+							if !(artist.includeEPs ?? self.includeEPs) { // user doesn't want to see EPs
+								return false
+							} else {
+								return true
+							}
+						case .single:
+							if !(artist.includeSingles ?? self.includeSingles) { // user doesn't want to see singles
+								return false
+							} else {
+								if (artist.ignoreFeatures ?? self.ignoreFeatures) && release.isFeature { // user doesn't want to see features
+									return false
+								} else {
+									return true
+								}
+							}
+						default: return true
 						}
 						
 					} else {
@@ -336,6 +363,14 @@ class PreferenceManager: NSObject {
 					}
 				})
 			})
+			
+			// sort according to user preference
+			switch PreferenceManager.shared.releaseSorting {
+			case .releaseDate: return returnValue.sorted(by: { $0.releaseDate < $1.releaseDate })
+			case .releaseTitle: return returnValue.sorted(by: { $0.title < $1.title })
+			case .artistName: return returnValue.sorted(by: { $0.artist.name < $1.artist.name })
+			}
+
 		}
 	}
 	private var _previousReleases: [Release] = []
@@ -344,100 +379,126 @@ class PreferenceManager: NSObject {
 			self._previousReleases = newValue
 		}
 		get {
-			return self.followingArtists.flatMap({ (artist) -> [Release] in
-				
-				artist.releases.filter({ (release) -> Bool in
-					
-					if self.showPreviousReleases && release.releaseDate < Calendar.current.date(byAdding: .month, value: -Int(self.maxPreviousReleaseAge), to: Date())! {
-						
-						return false
-						
-					} else {
-					
-						if release.seenByUser {
-							
-							if !artist.includeEPs && release.type == .EP {
-								return false
-								
-							} else if !artist.includeSingles && release.type == .single {
-								return false
-								
-							} else {
-								return true
-							}
-						} else {
-							return false
-						}
-					}
-				})
-			})
-		}
-	}
-	var lastUpdate: Date? = nil
-	func updateNewReleases() {
-		
-		if !self.followingArtists.isEmpty {
 			
-			UIApplication.shared.isNetworkActivityIndicatorVisible = true
+            if PreferenceManager.shared.showPreviousReleases {
+                
+                let returnValue = self.followingArtists.flatMap({ (artist) -> [Release] in
+                    
+                    artist.releases.filter({ (release) -> Bool in
+                        
+                        if release.releaseDate < Calendar.current.date(byAdding: .month, value: -Int(self.maxPreviousReleaseAge), to: Date())! {
+                            
+                            return false
+                            
+                        } else {
+                            
+                            if release.seenByUser {
+                                
+								switch release.type {
+								case .EP:
+									if !(artist.includeEPs ?? self.includeEPs) { // user doesn't want to see EPs
+										return false
+									} else {
+										return true
+									}
+								case .single:
+									if !(artist.includeSingles ?? self.includeSingles) { // user doesn't want to see singles
+										return false
+									} else {
+										if (artist.ignoreFeatures ?? self.ignoreFeatures) && release.isFeature { // user doesn't want to see features
+											return false
+										} else {
+											return true
+										}
+									}
+								default: return true
+								}
+
+							} else {
+                                return false
+                            }
+                        }
+                    })
+                })
+
+				// sort according to user preference
+				switch PreferenceManager.shared.releaseSorting {
+				case .releaseDate: return returnValue.sorted(by: { $0.releaseDate < $1.releaseDate })
+				case .releaseTitle: return returnValue.sorted(by: { $0.title < $1.title })
+				case .artistName: return returnValue.sorted(by: { $0.artist.name < $1.artist.name })
+				}
 				
-			self.followingArtists.forEach { (followed) in
+            } else {
+                
+                return []
+            }
+        }
+	}
+	var lastReleasesUpdate: Date?
+	func updateNewReleases(for artists: [Artist]?=nil) {
+		
+		// don't update new releases if no artists are being followed or releases have been updated in the past last ten seconds
+		if self.followingArtists.isEmpty { return }
+		
+		UIApplication.shared.isNetworkActivityIndicatorVisible = true
+		
+		let artistsToUpdate = artists ?? self.followingArtists
+		artistsToUpdate.forEach { (followed) in
+			
+			// request new releases for artists that need to be updated
+			RequestManager.shared.getReleases(for: followed, since: Calendar.current.date(byAdding: .month, value: -Int(self.maxPreviousReleaseAge), to: Date()), completion: { (releases, error) in
+				UIApplication.shared.isNetworkActivityIndicatorVisible = false
 				
-				guard let getReleasesTask = RequestManager.shared.getReleases(for: followed, since: Calendar.current.date(byAdding: .month, value: -Int(self.maxPreviousReleaseAge), to: Date()), completion: { (releases: [Release]?, error: Error?) in
-					UIApplication.shared.isNetworkActivityIndicatorVisible = false
-					
-					guard let releases = releases, error == nil else {
-						print(error!)
-						return
-					}
-					
-					releases.forEach({ (release) in
-						if followed.releases.contains(where: { (existingRelease) -> Bool in
-							return release.itunesID == existingRelease.itunesID
-						}) {
-							release.seenByUser = true
-						} else {
-							release.seenByUser = false
-						}
-					})
-					
-					followed.releases = releases
-				
-					if self.followingArtists.last?.itunesID == followed.itunesID {
-						
-						let encodedFollowingArtists = NSKeyedArchiver.archivedData(withRootObject: self.followingArtists)
-						UserDefaults.standard.set(encodedFollowingArtists, forKey: self.followingArtistsKey)
-						self.iCloudKeyStore.set(encodedFollowingArtists, forKey: self.followingArtistsKey)
-						
-						self.lastUpdate = Date()
-						self.didUpdateReleasesNotification.post()
-						
-					}
-				}) else {
-					
+				guard let releases = releases, error == nil else {
+					print(error!)
 					return
 				}
-			}
-		} else {
-			self.lastUpdate = Date()
+				
+				// only add releases that don't already exist
+				releases.forEach({ (release) in
+					
+					if !followed.releases.contains(where: { $0.itunesID == release.itunesID }) {
+						followed.releases.append(release)
+					}
+				})
+				
+				// filter out releases before max previous release age
+				followed.releases = followed.releases.filter({ $0.releaseDate < Calendar.current.date(byAdding: .day, value: -Int(self.maxPreviousReleaseAge), to: Date())! })
+				
+				// if on last artist
+				if artistsToUpdate.last?.itunesID == followed.itunesID {
+					
+					// save following artists
+					let encodedFollowingArtists = NSKeyedArchiver.archivedData(withRootObject: self.followingArtists)
+					UserDefaults.standard.set(encodedFollowingArtists, forKey: self.followingArtistsKey)
+					// self.iCloudKeyStore.set(encodedFollowingArtists, forKey: self.followingArtistsKey)
+					
+					// update last releases update
+					self.lastReleasesUpdate = Date()
+					
+					// post notification
+					self.didUpdateReleasesNotification.post()
+					
+				}
+			})
 		}
-		
 	}
 	var includeSingles: Bool = false {
 		didSet {
 			if self.includeSingles != oldValue {
 				
-				self.iCloudKeyStore.set(self.includeSingles, forKey: self.includeSinglesKey)
+//				self.iCloudKeyStore.set(self.includeSingles, forKey: self.includeSinglesKey)
 				UserDefaults.standard.set(self.includeSingles, forKey: self.includeSinglesKey)
-				self.updateNewReleases()
+				self.didUpdateReleasesNotification.post()
 			}
 		}
 	}
 	var ignoreFeatures: Bool = true {
 		didSet {
 			if self.ignoreFeatures != oldValue {
-				self.iCloudKeyStore.set(self.ignoreFeatures, forKey: self.ignoreFeaturesKey)
+//				self.iCloudKeyStore.set(self.ignoreFeatures, forKey: self.ignoreFeaturesKey)
 				UserDefaults.standard.set(self.ignoreFeatures, forKey: self.ignoreFeaturesKey)
-				self.updateNewReleases()
+				self.didUpdateReleasesNotification.post()
 			}
 		}
 	}
@@ -445,9 +506,19 @@ class PreferenceManager: NSObject {
 		didSet {
 			if self.includeEPs != oldValue {
 				
-				self.iCloudKeyStore.set(self.includeEPs, forKey: self.includeEPsKey)
+//				self.iCloudKeyStore.set(self.includeEPs, forKey: self.includeEPsKey)
 				UserDefaults.standard.set(self.includeEPs, forKey: self.includeEPsKey)
-				self.updateNewReleases()
+				self.didUpdateReleasesNotification.post()
+			}
+		}
+	}
+	var autoMarkAsSeen: Bool = true {
+		didSet {
+			if self.autoMarkAsSeen != oldValue {
+			
+//				self.iCloudKeyStore.set(self.autoMarkAsSeen, forKey: self.autoMarkAsSeenKey)
+				UserDefaults.standard.set(self.autoMarkAsSeen, forKey: self.autoMarkAsSeenKey)
+				self.didUpdateReleasesNotification.post()
 			}
 		}
 	}
@@ -457,9 +528,9 @@ class PreferenceManager: NSObject {
 				if self.maxNewReleaseAge <= 0 {
 					self.maxNewReleaseAge = 1
 				}
-				self.iCloudKeyStore.set(self.maxNewReleaseAge, forKey: self.maxNewReleaseAgeKey)
+//				self.iCloudKeyStore.set(self.maxNewReleaseAge, forKey: self.maxNewReleaseAgeKey)
 				UserDefaults.standard.set(self.maxNewReleaseAge, forKey: self.maxNewReleaseAgeKey)
-				self.updateNewReleases()
+				self.didUpdateReleasesNotification.post()
 			}
 		}
 	}
@@ -467,9 +538,9 @@ class PreferenceManager: NSObject {
 		didSet {
 			if self.showPreviousReleases != oldValue {
 				
-				self.iCloudKeyStore.set(self.showPreviousReleases, forKey: self.showPreviousReleasesKey)
+//				self.iCloudKeyStore.set(self.showPreviousReleases, forKey: self.showPreviousReleasesKey)
 				UserDefaults.standard.set(self.showPreviousReleases, forKey: self.showPreviousReleasesKey)
-				self.updateNewReleases()
+				self.didUpdateReleasesNotification.post()
 			}
 		}
 	}
@@ -479,10 +550,18 @@ class PreferenceManager: NSObject {
 				if self.maxPreviousReleaseAge <= 0 {
 					self.maxPreviousReleaseAge = 1
 				}
-				self.iCloudKeyStore.set(self.maxPreviousReleaseAge, forKey: self.maxPreviousReleaseAgeKey)
+//				self.iCloudKeyStore.set(self.maxPreviousReleaseAge, forKey: self.maxPreviousReleaseAgeKey)
 				UserDefaults.standard.set(self.maxPreviousReleaseAge, forKey: self.maxPreviousReleaseAgeKey)
-				self.updateNewReleases()
+				self.didUpdateReleasesNotification.post()
 			}
+		}
+	}
+	var releaseSorting: ReleaseSorting = .releaseDate {
+		didSet {
+			if self.releaseSorting != oldValue {
+			}
+			UserDefaults.standard.set(self.releaseSorting.rawValue, forKey: self.releaseSortingKey)
+			self.didUpdateReleasesNotification.post()
 		}
 	}
 
@@ -494,6 +573,14 @@ class PreferenceManager: NSObject {
 	// MARK: - DATA MANAGEMENT
 	var lastSync: Date?
 	let iCloudKeyStore = NSUbiquitousKeyValueStore.default()
+	func isiCloudContainerAvailable()->Bool {
+		if FileManager.default.ubiquityIdentityToken != nil {
+			return true
+		}
+		else {
+			return false
+		}
+	}
 	override init() {
 		
 		super.init()
@@ -508,12 +595,14 @@ class PreferenceManager: NSObject {
 			self.includeSinglesKey: false,
 			self.ignoreFeaturesKey: true,
 			self.includeEPsKey: true,
+			self.autoMarkAsSeenKey: true,
 			self.maxNewReleaseAgeKey: 4,
 			self.showPreviousReleasesKey: true,
-			self.maxPreviousReleaseAgeKey: 3
+			self.maxPreviousReleaseAgeKey: 3,
+			self.releaseSortingKey: 0
 		])
 		
-		NSUbiquitousKeyValueStore.didChangeExternallyNotification.add(self, selector: #selector(self.load))
+//		NSUbiquitousKeyValueStore.didChangeExternallyNotification.add(self, selector: #selector(self.load))
 		
 		self.load()
 
@@ -536,15 +625,16 @@ class PreferenceManager: NSObject {
 			
 			self.theme = Theme(rawValue: self.iCloudKeyStore.longLong(forKey: self.themeKey)) ?? self.theme
 		}
+		self.adaptiveArtistView = self.iCloudKeyStore.bool(forKey: self.adaptiveArtistViewKey)
 		
 		self.includeSingles = self.iCloudKeyStore.bool(forKey: self.includeSinglesKey)
 		self.ignoreFeatures = self.iCloudKeyStore.bool(forKey: self.ignoreFeaturesKey)
 		self.includeEPs = self.iCloudKeyStore.bool(forKey: self.includeEPsKey)
+		self.autoMarkAsSeen = self.iCloudKeyStore.bool(forKey: self.autoMarkAsSeenKey)
 		self.maxNewReleaseAge = self.iCloudKeyStore.longLong(forKey: self.maxNewReleaseAgeKey)
 		self.showPreviousReleases = self.iCloudKeyStore.bool(forKey: self.showPreviousReleasesKey)
 		self.maxPreviousReleaseAge = self.iCloudKeyStore.longLong(forKey: self.maxPreviousReleaseAgeKey)
-		
-		self.adaptiveArtistView = self.iCloudKeyStore.bool(forKey: self.adaptiveArtistViewKey)
+		self.releaseSorting = ReleaseSorting(rawValue: self.iCloudKeyStore.longLong(forKey: self.releaseSortingKey)) ?? self.releaseSorting
 		
 		self.save {
 			self.lastSync = Date()
@@ -558,15 +648,16 @@ class PreferenceManager: NSObject {
 			self.iCloudKeyStore.set(self.theme.rawValue, forKey: self.themeKey)
 			self.iCloudKeyStore.set(self.themeDeterminer.rawValue, forKey: self.themeDeterminerKey)
 			self.iCloudKeyStore.set(self.themeBrightnessThreshold, forKey: self.themeBrightnessThresholdKey)
+			self.iCloudKeyStore.set(self.adaptiveArtistView, forKey: self.adaptiveArtistViewKey)
 			
 			self.iCloudKeyStore.set(self.includeSingles, forKey: self.includeSinglesKey)
 			self.iCloudKeyStore.set(self.ignoreFeatures, forKey: self.ignoreFeaturesKey)
 			self.iCloudKeyStore.set(self.includeEPs, forKey: self.includeEPsKey)
+			self.iCloudKeyStore.set(self.autoMarkAsSeen, forKey: self.autoMarkAsSeenKey)
 			self.iCloudKeyStore.set(self.maxNewReleaseAge, forKey: self.maxNewReleaseAgeKey)
 			self.iCloudKeyStore.set(self.showPreviousReleases, forKey: self.showPreviousReleasesKey)
 			self.iCloudKeyStore.set(self.maxPreviousReleaseAge, forKey: self.maxPreviousReleaseAgeKey)
-			
-			self.iCloudKeyStore.set(self.adaptiveArtistView, forKey: self.adaptiveArtistViewKey)
+			self.iCloudKeyStore.set(self.releaseSorting.rawValue, forKey: self.releaseSortingKey)
 			
 			let encodedFollowingArtists = NSKeyedArchiver.archivedData(withRootObject: self.followingArtists)
 			self.iCloudKeyStore.set(encodedFollowingArtists, forKey: self.followingArtistsKey)
@@ -586,15 +677,16 @@ class PreferenceManager: NSObject {
 			UserDefaults.standard.set(self.themeBrightnessThreshold, forKey: self.themeBrightnessThresholdKey)
 			UserDefaults.standard.set(self.sunriseTime, forKey: self.sunriseTimeKey)
 			UserDefaults.standard.set(self.sunsetTime, forKey: self.sunsetTimeKey)
+			UserDefaults.standard.set(self.adaptiveArtistView, forKey: self.adaptiveArtistViewKey)
 			
 			UserDefaults.standard.set(self.includeSingles, forKey: self.includeSinglesKey)
 			UserDefaults.standard.set(self.ignoreFeatures, forKey: self.ignoreFeaturesKey)
 			UserDefaults.standard.set(self.includeEPs, forKey: self.includeEPsKey)
+			UserDefaults.standard.set(self.autoMarkAsSeen, forKey: self.autoMarkAsSeenKey)
 			UserDefaults.standard.set(NSNumber(value: self.maxNewReleaseAge), forKey: self.maxNewReleaseAgeKey)
 			UserDefaults.standard.set(self.showPreviousReleases, forKey: self.showPreviousReleasesKey)
 			UserDefaults.standard.set(NSNumber(value: self.maxPreviousReleaseAge), forKey: self.maxPreviousReleaseAgeKey)
-			
-			UserDefaults.standard.set(self.adaptiveArtistView, forKey: self.adaptiveArtistViewKey)
+			UserDefaults.standard.set(self.releaseSorting.rawValue, forKey: self.releaseSortingKey)
 			
 			let encodedFollowingArtists = NSKeyedArchiver.archivedData(withRootObject: self.followingArtists)
 			UserDefaults.standard.set(encodedFollowingArtists, forKey: self.followingArtistsKey)
@@ -603,46 +695,50 @@ class PreferenceManager: NSObject {
 		}
 		
 		completion?()
-		self.syncToiCloud()
+//		self.syncToiCloud()
 	}
 	func load(completion: (() -> Void)?=nil) {
 		
-		self.firstLaunch = UserDefaults.standard.bool(forKey: self.firstLaunchKey)
-		
-		if !self.firstLaunch {
-			self.syncFromiCloud()
+		DispatchQueue.global().async {
+			
+			self.firstLaunch = UserDefaults.standard.bool(forKey: self.firstLaunchKey)
+			
+			if !self.firstLaunch {
+//				self.syncFromiCloud()
+			}
+			
+			if let encodedFollowingArtists = UserDefaults.standard.object(forKey: self.followingArtistsKey) as? Data {
+				self.followingArtists = NSKeyedUnarchiver.unarchiveObject(with: encodedFollowingArtists) as! [Artist]
+			}
+			
+			self.themeMode = ThemeMode(rawValue: UserDefaults.standard.value(forKey: self.themeModeKey) as! Int64) ?? self.themeMode
+			
+			if self.themeMode == .auto {
+				
+				self.themeBrightnessThreshold = UserDefaults.standard.double(forKey: self.themeBrightnessThresholdKey)
+				self.sunriseTime = UserDefaults.standard.object(forKey: self.sunriseTimeKey) as? Date
+				self.sunsetTime = UserDefaults.standard.object(forKey: self.sunsetTimeKey) as? Date
+				
+				self.themeDeterminer = ThemeDeterminer(rawValue: UserDefaults.standard.value(forKey: self.themeDeterminerKey) as! Int64) ?? self.themeDeterminer
+				
+			} else {
+				
+				self.theme = Theme(rawValue: UserDefaults.standard.value(forKey: self.themeKey) as! Int64) ?? self.theme
+			}
+			self.adaptiveArtistView = UserDefaults.standard.bool(forKey: self.adaptiveArtistViewKey)
+			
+			self.includeSingles = UserDefaults.standard.bool(forKey: self.includeSinglesKey)
+			self.ignoreFeatures = UserDefaults.standard.bool(forKey: self.ignoreFeaturesKey)
+			self.includeEPs = UserDefaults.standard.bool(forKey: self.includeEPsKey)
+			self.autoMarkAsSeen = UserDefaults.standard.bool(forKey: self.autoMarkAsSeenKey)
+			self.maxNewReleaseAge = (UserDefaults.standard.object(forKey: self.maxNewReleaseAgeKey) as! NSNumber).int64Value
+			self.showPreviousReleases = UserDefaults.standard.bool(forKey: self.showPreviousReleasesKey)
+			self.maxPreviousReleaseAge = (UserDefaults.standard.object(forKey: self.maxPreviousReleaseAgeKey) as! NSNumber).int64Value
+			self.releaseSorting = ReleaseSorting(rawValue: UserDefaults.standard.value(forKey: self.releaseSortingKey) as! Int64) ?? self.releaseSorting
+			
+			UserDefaults.standard.synchronize()
+			
+			completion?()
 		}
-		
-		if let encodedFollowingArtists = UserDefaults.standard.object(forKey: self.followingArtistsKey) as? Data {
-			self.followingArtists = NSKeyedUnarchiver.unarchiveObject(with: encodedFollowingArtists) as! [Artist]
-		}
-		
-		self.themeMode = ThemeMode(rawValue: UserDefaults.standard.value(forKey: self.themeModeKey) as! Int64) ?? self.themeMode
-		
-		if self.themeMode == .auto {
-			
-			self.themeBrightnessThreshold = UserDefaults.standard.double(forKey: self.themeBrightnessThresholdKey)
-			self.sunriseTime = UserDefaults.standard.object(forKey: self.sunriseTimeKey) as? Date
-			self.sunsetTime = UserDefaults.standard.object(forKey: self.sunsetTimeKey) as? Date
-			
-			self.themeDeterminer = ThemeDeterminer(rawValue: UserDefaults.standard.value(forKey: self.themeDeterminerKey) as! Int64) ?? self.themeDeterminer
-			
-		} else {
-			
-			self.theme = Theme(rawValue: UserDefaults.standard.value(forKey: self.themeKey) as! Int64) ?? self.theme
-		}
-		
-		self.includeSingles = UserDefaults.standard.bool(forKey: self.includeSinglesKey)
-		self.ignoreFeatures = UserDefaults.standard.bool(forKey: self.ignoreFeaturesKey)
-		self.includeEPs = UserDefaults.standard.bool(forKey: self.includeEPsKey)
-		self.maxNewReleaseAge = (UserDefaults.standard.object(forKey: self.maxNewReleaseAgeKey) as! NSNumber).int64Value
-		self.showPreviousReleases = UserDefaults.standard.bool(forKey: self.showPreviousReleasesKey)
-		self.maxPreviousReleaseAge = (UserDefaults.standard.object(forKey: self.maxPreviousReleaseAgeKey) as! NSNumber).int64Value
-		
-		self.adaptiveArtistView = UserDefaults.standard.bool(forKey: self.adaptiveArtistViewKey)
-		
-		UserDefaults.standard.synchronize()
-		
-		completion?()
 	}
 }

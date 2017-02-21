@@ -27,7 +27,7 @@ class SortButton: UrsusButton {
 			}
 		} else {
 			
-			StyleKit.drawSortIcon(frame: rect, resizing: .aspectFit, iconColor: self.tintColor)
+			StyleKit.drawSortIcon(frame: rect, resizing: self.resizingBehavior, iconColor: self.tintColor)
 		}
 	}
 	

@@ -21,9 +21,27 @@ class UrsusButton: UIButton {
 			}
 		}
 	}
-    @IBInspectable var tapScale: CGFloat = 1.2
-	@IBInspectable var glyphOnly: Bool = false
-	@IBInspectable var bordered: Bool = true
+	@IBInspectable var tapScale: CGFloat = 1.2 {
+		didSet {
+			self.setNeedsDisplay()
+		}
+	}
+	@IBInspectable var glyphOnly: Bool = false {
+		didSet {
+			self.setNeedsDisplay()
+		}
+	}
+	@IBInspectable var bordered: Bool = true {
+		didSet {
+			self.setNeedsDisplay()
+		}
+	}
+	
+	var resizingBehavior: StyleKit.ResizingBehavior = .aspectFill {
+		didSet {
+			self.setNeedsDisplay()
+		}
+	}
 	
 	override init(frame: CGRect) {
 		

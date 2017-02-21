@@ -20,14 +20,14 @@ class SettingsButton: UrsusButton {
 		if !self.glyphOnly && self.changesWithTheme {
 			if PreferenceManager.shared.theme == .dark {
 				
-				StyleKit.drawSettingsIcon(frame: rect, resizing: .aspectFit, iconColor: StyleKit.darkIconGlyphColor)
+				StyleKit.drawSettingsIcon(frame: rect, resizing: self.resizingBehavior, iconColor: StyleKit.darkIconGlyphColor)
 			} else {
 				
-				StyleKit.drawSettingsIcon(frame: rect, resizing: .aspectFit, iconColor: StyleKit.lightIconGlyphColor)
+				StyleKit.drawSettingsIcon(frame: rect, resizing: self.resizingBehavior, iconColor: StyleKit.lightIconGlyphColor)
 			}
 		} else {
 			
-			StyleKit.drawSettingsIcon(frame: rect, resizing: .aspectFit, iconColor: self.tintColor)
+			StyleKit.drawSettingsIcon(frame: rect, resizing: self.resizingBehavior, iconColor: self.tintColor)
 		}
     }
 

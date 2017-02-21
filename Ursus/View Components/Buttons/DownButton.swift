@@ -33,14 +33,14 @@ class DownButton: UrsusButton {
 			} else {
 				self.layer.backgroundColor = UIColor.clear.cgColor
 			}
-			StyleKit.drawDownIcon(frame: rect, resizing: .aspectFit, iconColor: self.tintColor)
+			StyleKit.drawDownIcon(frame: rect, resizing: self.resizingBehavior, iconColor: self.tintColor)
 		} else {
 			if !self.glyphOnly {
 				self.layer.backgroundColor = self.tintColor.withAlpha(0.45).cgColor
 			} else {
 				self.layer.backgroundColor = UIColor.clear.cgColor
 			}
-			StyleKit.drawDownIcon(frame: rect, resizing: .aspectFit, iconColor: self.tintColor)
+			StyleKit.drawDownIcon(frame: rect, resizing: self.resizingBehavior, iconColor: self.tintColor)
 		}
 		
 	}

@@ -46,6 +46,17 @@
 	</dict>
 	<key>NSLocationWhenInUseUsageDescription</key>
 	<string>Location services are used only to determine twilight times for automatic dark mode.</string>
+	<key>UIApplicationShortcutItems</key>
+	<array>
+		<dict>
+			<key>UIApplicationShortcutItemIconType</key>
+			<string>UIApplicationShortcutIconTypeSearch</string>
+			<key>UIApplicationShortcutItemTitle</key>
+			<string>Search for an artist</string>
+			<key>UIApplicationShortcutItemType</key>
+			<string>com.arcyn1c.Ursus.search</string>
+		</dict>
+	</array>
 	<key>UIBackgroundModes</key>
 	<array>
 		<string>remote-notification</string>

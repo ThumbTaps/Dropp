@@ -11,7 +11,7 @@ import UIKit
 @IBDesignable
 class ArtistArtView: UIView {
 	
-	@IBOutlet weak var imageView: ArtistArtViewImageView!
+	@IBOutlet weak var imageView: UIImageView!
 	
 	override init(frame: CGRect) {
 		super.init(frame: frame)
@@ -22,6 +22,11 @@ class ArtistArtView: UIView {
 		super.init(coder: aDecoder)
 		self.themeDidChange()
 		PreferenceManager.shared.themeDidChangeNotification.add(self, selector: #selector(self.themeDidChange))
+	}
+	override func awakeFromNib() {
+		super.awakeFromNib()
+		
+		self.hideArtwork()
 	}
 	func themeDidChange() {
 		self.setNeedsDisplay()
@@ -45,31 +50,20 @@ class ArtistArtView: UIView {
 	}
 	
 	
-	func showArtwork() {
+	func showArtwork(_ animated: Bool=false) {
 		
-		UIView.animate(withDuration: ANIMATION_SPEED_MODIFIER*0.5, delay: 0, usingSpringWithDamping: 0.6, initialSpringVelocity: 0.85, options: .curveEaseOut, animations: {
+		UIView.animate(withDuration: animated ? ANIMATION_SPEED_MODIFIER*0.5 : 0, delay: 0, usingSpringWithDamping: 0.6, initialSpringVelocity: 0.85, options: .curveEaseOut, animations: {
 			self.imageView.alpha = 1
 			self.imageView.transform = CGAffineTransform(scaleX: 1, y: 1)
 		})
 		
 	}
-}
-
-
-@IBDesignable
-class ArtistArtViewImageView: UIImageView {
-	
-	override init(frame: CGRect) {
-		super.init(frame: frame)
-		self.commonInit()
-	}
-	required init?(coder aDecoder: NSCoder) {
-		super.init(coder: aDecoder)
-		self.commonInit()
-	}
-	func commonInit() {
+	func hideArtwork(_ animated: Bool=false) {
 		
-		self.transform = CGAffineTransform(scaleX: 0.4, y: 0.4)
-		self.alpha = 0
+		UIView.animate(withDuration: animated ? ANIMATION_SPEED_MODIFIER*0.3 : 0, delay: 0, options: .curveEaseOut, animations: {
+			self.imageView.alpha = 0
+			self.imageView.transform = CGAffineTransform(scaleX: 0.4, y: 0.4)
+		})
+		
 	}
 }

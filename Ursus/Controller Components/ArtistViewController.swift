@@ -20,8 +20,6 @@ class ArtistViewController: UrsusViewController, UICollectionViewDataSource, UIC
 	var artistArtworkImage: UIImage?
     private var colorPalette: UIImageColors?
 	
-	var expandedSummary = false
-	
     override func viewDidLoad() {
         super.viewDidLoad()
 		
@@ -58,25 +56,25 @@ class ArtistViewController: UrsusViewController, UICollectionViewDataSource, UIC
 				if self.colorPalette!.backgroundColor.isDarkColor {
 					UIApplication.shared.statusBarStyle = .lightContent
 					self.navigationTitle?.textColor = UIColor.white
-					self.collectionView?.backgroundColor = self.colorPalette!.backgroundColor.withBrightness(0.1).withAlpha(0.4)
+					self.collectionView?.backgroundColor = self.colorPalette!.backgroundColor.withBrightness(0.2).withAlpha(0.25)
 					self.collectionView?.indicatorStyle = .white
-					self.backdrop?.overlay.tintColor = self.colorPalette!.backgroundColor.withBrightness(0.1).withAlpha(0.9)
-					self.topScrollFadeView?.tintColor = self.colorPalette!.backgroundColor.withBrightness(0.1)
-					self.bottomScrollFadeView?.tintColor = self.colorPalette!.backgroundColor.withBrightness(0.1)
+					self.backdrop?.overlay.tintColor = self.colorPalette!.backgroundColor.withBrightness(0.2).withAlpha(0.9)
+					self.topScrollFadeView?.tintColor = self.colorPalette!.backgroundColor.withBrightness(0.2)
+					self.bottomScrollFadeView?.tintColor = self.colorPalette!.backgroundColor.withBrightness(0.2)
 					
 				} else {
 					
 					UIApplication.shared.statusBarStyle = .default
 					self.navigationTitle?.textColor = UIColor.black
-					self.collectionView?.backgroundColor = self.colorPalette!.backgroundColor.withBrightness(0.9).withAlpha(0.4)
+					self.collectionView?.backgroundColor = self.colorPalette!.backgroundColor.withBrightness(0.8).withAlpha(0.25)
 					self.collectionView?.indicatorStyle = .black
-					self.backdrop?.overlay.tintColor = self.colorPalette!.backgroundColor.withBrightness(0.9).withAlpha(0.9)
-					self.topScrollFadeView?.tintColor = self.colorPalette!.backgroundColor.withBrightness(0.9)
-					self.bottomScrollFadeView?.tintColor = self.colorPalette!.backgroundColor.withBrightness(0.9)
+					self.backdrop?.overlay.tintColor = self.colorPalette!.backgroundColor.withBrightness(0.8).withAlpha(0.9)
+					self.topScrollFadeView?.tintColor = self.colorPalette!.backgroundColor.withBrightness(0.8)
+					self.bottomScrollFadeView?.tintColor = self.colorPalette!.backgroundColor.withBrightness(0.8)
 				}
 				
-				self.closeButton.tintColor = self.colorPalette!.detailColor
-				self.followButton.tintColor = self.colorPalette!.detailColor
+				self.closeButton.tintColor = self.colorPalette!.primaryColor
+				self.followButton.tintColor = self.colorPalette!.primaryColor
 				
 			} else {
 				
@@ -91,7 +89,6 @@ class ArtistViewController: UrsusViewController, UICollectionViewDataSource, UIC
 		}
 		
 	}
-
 	override func viewDidAppear(_ animated: Bool) {
 		
 		DispatchQueue.main.async {
@@ -106,7 +103,13 @@ class ArtistViewController: UrsusViewController, UICollectionViewDataSource, UIC
 			
 		}
     }
-
+	override func viewDidDisappear(_ animated: Bool) {
+		super.viewDidDisappear(true)
+		
+		self.artist = nil
+		self.artistArtworkImage = nil
+		self.colorPalette = nil
+	}
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
@@ -116,9 +119,7 @@ class ArtistViewController: UrsusViewController, UICollectionViewDataSource, UIC
 		super.themeDidChange()
 		
 		DispatchQueue.main.async {
-			
-			self.setNeedsStatusBarAppearanceUpdate()
-			
+						
 			if PreferenceManager.shared.theme == .dark {
 				self.collectionView?.backgroundColor = self.colorPalette?.backgroundColor.withBrightness(0.1).withAlpha(0.25)
 				
@@ -126,15 +127,6 @@ class ArtistViewController: UrsusViewController, UICollectionViewDataSource, UIC
 				self.collectionView?.backgroundColor = self.colorPalette?.backgroundColor.withBrightness(0.9).withAlpha(0.25)
 			}
 			
-		}
-	}
-	override var preferredStatusBarStyle: UIStatusBarStyle {
-		get {
-			if self.colorPalette?.backgroundColor.isDarkColor ?? (PreferenceManager.shared.theme == .dark) {
-				return .lightContent
-			} else {
-				return .default
-			}
 		}
 	}
 
@@ -158,6 +150,15 @@ class ArtistViewController: UrsusViewController, UICollectionViewDataSource, UIC
 	}
 	@IBAction func toggleIncludeEPs(_ sender: UISwitch) {
 		self.artist.includeEPs = sender.isOn
+	}
+	@IBAction func exit(_ sender: Any) {
+		if self.presentingViewController!.isKind(of: ArtistSearchViewController.self) {
+			self.performSegue(withIdentifier: "Artist->ArtistSearch", sender: sender)
+		}
+		
+		else if self.presentingViewController!.isKind(of: ArtistSearchResultsViewController.self) {
+			self.performSegue(withIdentifier: "Artist->ArtistSearchResults", sender: sender)
+		}
 	}
 
 	
@@ -185,7 +186,7 @@ class ArtistViewController: UrsusViewController, UICollectionViewDataSource, UIC
 		case 2:
 			if PreferenceManager.shared.followingArtists.contains(where: { $0.itunesID == self.artist.itunesID }) {
 				numItems += 2
-				if self.artist.includeSingles {
+				if self.artist.includeSingles ?? PreferenceManager.shared.includeSingles {
 					numItems += 1
 				}
 			}
@@ -203,10 +204,10 @@ class ArtistViewController: UrsusViewController, UICollectionViewDataSource, UIC
 		dateFormatter.dateFormat = "MMM d, YYYY"
 		dateFormatter.timeZone = .current
 		
+		// LATEST RELEASE SECTION
 		if self.artist.latestRelease != nil &&
 			indexPath.section == 0 {
 			
-			// LATEST RELEASE SECTION
 			cell = collectionView.dequeueReusableCell(withReuseIdentifier: "LatestReleaseCell", for: indexPath) as! ReleaseCollectionViewCell
 			(cell as! ReleaseCollectionViewCell).releaseTitleLabel.text = self.artist.latestRelease!.title
 			
@@ -222,22 +223,23 @@ class ArtistViewController: UrsusViewController, UICollectionViewDataSource, UIC
 					
 					DispatchQueue.main.async {
 						(cell as! ReleaseCollectionViewCell).releaseArtView.imageView.image = image
-						(cell as! ReleaseCollectionViewCell).releaseArtView.showArtwork()
+						(cell as! ReleaseCollectionViewCell).releaseArtView.showArtwork(true)
 					}
 				}
 			}
 
 		}
 		
+		// SUMMARY SECTION
 		if self.artist.summary != nil &&
 			((indexPath.section == 0 && self.artist.latestRelease == nil) ||
 			(indexPath.section == 1 && self.artist.latestRelease != nil)) {
 			
-			// ADDITIONAL INFO SECTION
 			switch indexPath.row {
 			case 0:
 				cell = collectionView.dequeueReusableCell(withReuseIdentifier: "ArtistSummaryCell", for: indexPath) as! TextAreaCollectionViewCell
-				(cell as! TextAreaCollectionViewCell).textView.text = self.artist.summary
+				(cell as? TextAreaCollectionViewCell)?.textView.text = self.artist.summary
+				(cell as? TextAreaCollectionViewCell)?.expandButton?.tintColor = self.colorPalette?.primaryColor
 				
 				break
 				
@@ -246,44 +248,48 @@ class ArtistViewController: UrsusViewController, UICollectionViewDataSource, UIC
 			
 		}
 		
+		// RELEASE OPTIONS
 		if PreferenceManager.shared.followingArtists.contains(where: { $0.itunesID == self.artist.itunesID }) &&
 			((indexPath.section == 0 && self.artist.latestRelease == nil && self.artist.summary == nil) ||
 			(indexPath.section == 1 && self.artist.summary == nil) ||
 			indexPath.section == 2) {
 			
-			// RELEASE OPTIONS
 			switch indexPath.row {
 			case 0: // IGNORE SINGLES
 				cell = collectionView.dequeueReusableCell(withReuseIdentifier: "IncludeSinglesCell", for: indexPath) as! SettingsCollectionViewCell
-				((cell as! SettingsCollectionViewCell).accessoryView as? UISwitch)?.isOn = self.artist.includeSingles
+				((cell as? SettingsCollectionViewCell)?.accessoryView as? UISwitch)?.isOn = self.artist.includeSingles ?? PreferenceManager.shared.includeSingles
 				break
 				
 			case 1: // INCLUDE EPS / IGNORE FEATURES
-				if self.artist.includeSingles {
+				if self.artist.includeSingles ?? PreferenceManager.shared.includeSingles {
 					cell = collectionView.dequeueReusableCell(withReuseIdentifier: "IgnoreFeaturesCell", for: indexPath) as! SettingsCollectionViewCell
-					((cell as! SettingsCollectionViewCell).accessoryView as? UISwitch)?.isOn = self.artist.ignoreFeatures
+					((cell as? SettingsCollectionViewCell)?.accessoryView as? UISwitch)?.isOn = self.artist.ignoreFeatures ?? PreferenceManager.shared.ignoreFeatures
 				} else {
 					cell = collectionView.dequeueReusableCell(withReuseIdentifier: "IncludeEPsCell", for: indexPath) as! SettingsCollectionViewCell
-					((cell as! SettingsCollectionViewCell).accessoryView as? UISwitch)?.isOn = self.artist.includeEPs
+					((cell as? SettingsCollectionViewCell)?.accessoryView as? UISwitch)?.isOn = self.artist.includeEPs ?? PreferenceManager.shared.includeEPs
 				}
 				break
 				
 			case 2: // INCLUDE EPS
 				cell = collectionView.dequeueReusableCell(withReuseIdentifier: "IncludeEPsCell", for: indexPath) as! SettingsCollectionViewCell
-				((cell as! SettingsCollectionViewCell).accessoryView as? UISwitch)?.isOn = self.artist.includeEPs
+				((cell as? SettingsCollectionViewCell)?.accessoryView as? UISwitch)?.isOn = self.artist.includeEPs ?? PreferenceManager.shared.includeEPs
 				break
 			default: break
+			}
+			
+			DispatchQueue.main.async {
+				((cell as? SettingsCollectionViewCell)?.accessoryView as? UISwitch)?.tintColor = self.colorPalette?.primaryColor
+				((cell as? SettingsCollectionViewCell)?.accessoryView as? UISwitch)?.onTintColor = self.colorPalette?.primaryColor
 			}
 		}
 		
 		if self.colorPalette != nil {
-			cell.tintColor = self.colorPalette!.backgroundColor.withAlpha(0.5)
+			cell.tintColor = self.colorPalette?.backgroundColor.withAlpha(0.15)
 			
 		} else {
 			cell.changesWithTheme = true
 		}
 		
-
 		return cell
 	}
 	func collectionView(_ collectionView: UICollectionView, viewForSupplementaryElementOfKind kind: String, at indexPath: IndexPath) -> UICollectionReusableView {
@@ -360,10 +366,8 @@ class ArtistViewController: UrsusViewController, UICollectionViewDataSource, UIC
 			((indexPath.section == 0 && self.artist.latestRelease == nil) ||
 				(indexPath.section == 1 && self.artist.latestRelease != nil)) {
 			
-			// ADDITIONAL INFO SECTION
-			if self.expandedSummary {
-				
-			}
+			// SUMMARY SECTION
+			size = (collectionView.cellForItem(at: indexPath) as? TextAreaCollectionViewCell)?.textView.contentSize ?? size
 		}
 		
 		if PreferenceManager.shared.followingArtists.contains(where: { $0.itunesID == self.artist.itunesID }) &&
@@ -403,10 +407,10 @@ class ArtistViewController: UrsusViewController, UICollectionViewDataSource, UIC
 		}
     }
 	override func prepareForUnwind(for segue: UIStoryboardSegue) {
+		super.prepareForUnwind(for: segue)
 		
 		self.artist = nil
 		self.colorPalette = nil
 		self.artistArtworkImage = nil
-		super.prepareForUnwind(for: segue)
 	}
 }

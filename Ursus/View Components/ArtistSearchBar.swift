@@ -103,10 +103,10 @@ class ArtistSearchBar: UIView {
 				self.layoutIfNeeded()
 			})
 			
-			self.removeConstraints([self.searchBarSizeForSearchBarConstraint])
-			self.addConstraints([self.searchBarSizeForButtonConstraint])
+			self.removeConstraint(self.searchBarSizeForSearchBarConstraint)
+			self.addConstraint(self.searchBarSizeForButtonConstraint)
 
-			UIView.animate(withDuration: ANIMATION_SPEED_MODIFIER*0.25, delay: 0, options: .curveEaseOut, animations: {
+			UIView.animate(withDuration: ANIMATION_SPEED_MODIFIER*0.3, delay: 0, options: .curveEaseOut, animations: {
 				self.layoutIfNeeded()
 			}, completion: { (finished) in
 				
@@ -135,8 +135,8 @@ class ArtistSearchBar: UIView {
 				self.layoutIfNeeded()
 			})
 			
-			self.removeConstraints([self.searchBarSizeForButtonConstraint])
-			self.addConstraints([self.searchBarSizeForSearchBarConstraint])
+			self.removeConstraint(self.searchBarSizeForButtonConstraint)
+			self.addConstraint(self.searchBarSizeForSearchBarConstraint)
 
 			UIView.animate(withDuration: ANIMATION_SPEED_MODIFIER*0.8, delay: 0, usingSpringWithDamping: 0.8, initialSpringVelocity: 1, options: .curveEaseInOut, animations: {
 				self.layoutIfNeeded()

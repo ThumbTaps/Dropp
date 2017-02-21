@@ -123,7 +123,7 @@ class ArtistSearchViewController: UrsusViewController, UITextFieldDelegate, UIGe
 			self.view.removeConstraints([self.searchBarCenteredConstraint, self.searchBarHidingConstraint])
 			self.view.addConstraint(self.searchBarRestingConstraint)
 			
-			UIView.animate(withDuration: ANIMATION_SPEED_MODIFIER*0.85, delay: 0, usingSpringWithDamping: 0.7, initialSpringVelocity: 0.7, options: .curveEaseOut, animations: {
+			UIView.animate(withDuration: ANIMATION_SPEED_MODIFIER*0.9, delay: 0, usingSpringWithDamping: 0.7, initialSpringVelocity: 0.7, options: .curveEaseOut, animations: {
 				
 				self.view.layoutIfNeeded()
 			}, completion: { (completed) in
@@ -302,6 +302,10 @@ class ArtistSearchViewController: UrsusViewController, UITextFieldDelegate, UIGe
 		
 		if segue.identifier == "ArtistSearchResults->ArtistSearch" {
 			self.viewDidAppear(true)
+		}
+		
+		else if segue.identifier == "Artist->ArtistSearch" {
+			self.themeDidChange()
 		}
 	}
 }

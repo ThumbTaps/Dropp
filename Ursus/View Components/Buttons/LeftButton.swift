@@ -1,14 +1,15 @@
 //
-//  CloseButton.swift
+//  LeftButton.swift
 //  Ursus
 //
-//  Created by Jeffery Jackson, Jr. on 1/26/17.
-//  Copyright © 2017 Jeffery Jackson, Jr. All rights reserved.
+//  Created by Jeffery Jackson on 11/27/16.
+//  Copyright © 2016 Jeffery Jackson, Jr. All rights reserved.
 //
 
 import UIKit
 
-class CloseButton: UrsusButton {
+@IBDesignable
+class LeftButton: UrsusButton {
 	
 	override func themeDidChange() {
 		super.themeDidChange()
@@ -33,16 +34,16 @@ class CloseButton: UrsusButton {
 			} else {
 				self.layer.backgroundColor = UIColor.clear.cgColor
 			}
-			StyleKit.drawCloseIcon(frame: rect, resizing: self.resizingBehavior, iconColor: self.tintColor)
+			StyleKit.drawLeftIcon(frame: rect, resizing: self.resizingBehavior, iconColor: self.tintColor)
 		} else {
 			if !self.glyphOnly {
 				self.layer.backgroundColor = self.tintColor.withAlpha(0.45).cgColor
 			} else {
 				self.layer.backgroundColor = UIColor.clear.cgColor
 			}
-			StyleKit.drawCloseIcon(frame: rect, resizing: self.resizingBehavior, iconColor: self.tintColor)
+			StyleKit.drawLeftIcon(frame: rect, resizing: self.resizingBehavior, iconColor: self.tintColor)
 		}
 		
 	}
-
+	
 }
