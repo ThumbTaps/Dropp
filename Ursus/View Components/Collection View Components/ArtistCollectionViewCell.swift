@@ -11,7 +11,7 @@ import UIKit
 @IBDesignable
 class ArtistCollectionViewCell: UrsusCollectionViewCell {
 	
-	@IBOutlet weak var artistArtView: ArtistArtView!
+	@IBOutlet weak var artistArtView: ArtworkArtView!
 	@IBOutlet weak var artistNameLabel: UILabel!
 	
 	override func awakeFromNib() {

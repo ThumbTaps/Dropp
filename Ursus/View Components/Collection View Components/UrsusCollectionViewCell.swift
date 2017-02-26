@@ -55,10 +55,21 @@ class UrsusCollectionViewCell: UICollectionViewCell {
 		
 		DispatchQueue.main.async {
 			
-			if self.tintColor.isDarkColor {
-				self.selectedBackgroundView?.backgroundColor = StyleKit.darkStrokeColor
+			if self.changesWithTheme {
+				
+				if self.tintColor.isDarkColor {
+					self.selectedBackgroundView?.backgroundColor = StyleKit.darkTintColor.withAlphaComponent(0.1)
+				} else {
+					self.selectedBackgroundView?.backgroundColor = StyleKit.lightTintColor.withAlphaComponent(0.1)
+				}
+
 			} else {
-				self.selectedBackgroundView?.backgroundColor = StyleKit.lightStrokeColor
+				
+				if self.tintColor.isDarkColor {
+					self.selectedBackgroundView?.backgroundColor = StyleKit.darkStrokeColor
+				} else {
+					self.selectedBackgroundView?.backgroundColor = StyleKit.lightStrokeColor
+				}
 			}
 			self.setNeedsDisplay()
 		}

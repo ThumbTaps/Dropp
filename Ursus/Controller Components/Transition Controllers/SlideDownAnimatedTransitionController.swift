@@ -13,7 +13,7 @@ class SlideDownAnimatedTransitionController: NSObject, UIViewControllerAnimatedT
 	private var presenting = true
 	
 	func transitionDuration(using transitionContext: UIViewControllerContextTransitioning?) -> TimeInterval {
-		return self.presenting ? 0.8 : 0.5
+		return self.presenting ? 0.65 : 0.5
 	}
 	func animateTransition(using transitionContext: UIViewControllerContextTransitioning) {
 		guard let source = transitionContext.viewController(forKey: .from),
@@ -31,7 +31,7 @@ class SlideDownAnimatedTransitionController: NSObject, UIViewControllerAnimatedT
 			
 			DispatchQueue.main.async {
 				
-				UIView.animate(withDuration: ANIMATION_SPEED_MODIFIER*duration, delay: 0, usingSpringWithDamping: 0.75, initialSpringVelocity: 0.6, options: .curveEaseOut, animations: {
+				UIView.animate(withDuration: ANIMATION_SPEED_MODIFIER*duration, delay: 0, usingSpringWithDamping: 0.85, initialSpringVelocity: 0.6, options: .curveEaseOut, animations: {
 					
 					destination.view.transform = CGAffineTransform(translationX: 0, y: 0)
 					

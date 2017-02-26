@@ -10,7 +10,7 @@ import UIKit
 
 class ReleaseViewController: UrsusViewController {
 	
-	@IBOutlet weak var releaseArtworkView: ReleaseArtView!
+	@IBOutlet weak var releaseArtworkView: ArtworkArtView!
 	@IBOutlet weak var releaseTitleLabel: UILabel!
 	
 	var currentRelease: Release!

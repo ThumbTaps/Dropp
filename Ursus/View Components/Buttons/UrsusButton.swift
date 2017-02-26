@@ -21,7 +21,7 @@ class UrsusButton: UIButton {
 			}
 		}
 	}
-	@IBInspectable var tapScale: CGFloat = 1.2 {
+	@IBInspectable var tapScale: CGFloat = 0.9 {
 		didSet {
 			self.setNeedsDisplay()
 		}
@@ -123,9 +123,6 @@ class UrsusButton: UIButton {
 	}
 	override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
 		super.touchesBegan(touches, with: event)
-		
-		let feedbackGenerator = UIImpactFeedbackGenerator(style: .light)
-		feedbackGenerator.impactOccurred()
 		
 		UIView.animate(withDuration: 0.4, delay: 0, usingSpringWithDamping: 0.5, initialSpringVelocity: 0.8, options: .curveEaseOut, animations: {
 			self.transform = CGAffineTransform(scaleX: self.tapScale, y: self.tapScale)

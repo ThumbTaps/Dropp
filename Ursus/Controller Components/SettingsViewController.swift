@@ -8,7 +8,7 @@
 
 import UIKit
 
-class SettingsViewController: UrsusViewController, UICollectionViewDataSource, UICollectionViewDelegate, UICollectionViewDelegateFlowLayout, ThemeModeCollectionViewCellDelegate, UIPickerCollectionViewCellDelegate {
+class SettingsViewController: UrsusViewController {
 	
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -27,7 +27,6 @@ class SettingsViewController: UrsusViewController, UICollectionViewDataSource, U
 		}
 		
     }
-	
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
@@ -52,9 +51,27 @@ class SettingsViewController: UrsusViewController, UICollectionViewDataSource, U
 		}
 	}
 	
-	
-	
 
+	
+	
+	
+	// MARK: - Navigation
+	// In a storyboard-based application, you will often want to do a little preparation before navigation
+	override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+	// Get the new view controller using segue.destinationViewController.
+	// Pass the selected object to the new view controller.
+		PreferenceManager.shared.save()
+		
+		if segue.identifier == "Settings->NewReleases" {
+			self.transitioningDelegate = segue.destination as? UIViewControllerTransitioningDelegate
+			
+		}
+	}
+}
+
+
+extension SettingsViewController: UICollectionViewDataSource, UICollectionViewDelegate, UICollectionViewDelegateFlowLayout, ThemeModeCollectionViewCellDelegate, UIPickerCollectionViewCellDelegate {
+	
 	// MARK: - UICollectionViewDataSource
 	func numberOfSections(in collectionView: UICollectionView) -> Int {
 		return 2
@@ -144,7 +161,7 @@ class SettingsViewController: UrsusViewController, UICollectionViewDataSource, U
 			
 			return reusableView
 		}
-		
+			
 		else if kind == UICollectionElementKindSectionFooter {
 			
 			reusableView = collectionView.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: "SettingsCollectionViewFooter", for: indexPath) as! FooterCollectionReusableView
@@ -152,7 +169,7 @@ class SettingsViewController: UrsusViewController, UICollectionViewDataSource, U
 			var footerText = ""
 			
 			switch indexPath.section {
-			
+				
 			case 0: // DISPLAY OPTIONS
 				if PreferenceManager.shared.themeMode == .auto {
 					if PreferenceManager.shared.themeDeterminer == .displayBrightness {
@@ -316,14 +333,14 @@ class SettingsViewController: UrsusViewController, UICollectionViewDataSource, U
 						(cell as! UIPickerCollectionViewCell).selectedIndex = (cell as! UIPickerCollectionViewCell).options.index(where: {
 							Int64($0 as! Int) == PreferenceManager.shared.maxNewReleaseAge
 						}) ?? 0
-
+						
 					} else {
 						cell = collectionView.dequeueReusableCell(withReuseIdentifier: "ShowPreviousReleasesCell", for: indexPath)
 						((cell as! SettingsCollectionViewCell).accessoryView as? UISwitch)?.isOn = PreferenceManager.shared.showPreviousReleases
 					}
 				}
 				break
-			
+				
 			case 4: // MAX NEW RELEASE AGE / SHOW PREVIOUS RELEASES / MAX PREVIOUS RELEASE AGE
 				if PreferenceManager.shared.includeSingles {
 					if PreferenceManager.shared.autoMarkAsSeen {
@@ -340,7 +357,7 @@ class SettingsViewController: UrsusViewController, UICollectionViewDataSource, U
 						(cell as! UIPickerCollectionViewCell).selectedIndex = (cell as! UIPickerCollectionViewCell).options.index(where: {
 							Int64($0 as! Int) == PreferenceManager.shared.maxNewReleaseAge
 						}) ?? 0
-
+						
 					} else {
 						cell = collectionView.dequeueReusableCell(withReuseIdentifier: "ShowPreviousReleasesCell", for: indexPath)
 						((cell as! SettingsCollectionViewCell).accessoryView as? UISwitch)?.isOn = PreferenceManager.shared.showPreviousReleases
@@ -434,7 +451,7 @@ class SettingsViewController: UrsusViewController, UICollectionViewDataSource, U
 			break
 			
 		default: break
-		
+			
 		}
 		
 		if PreferenceManager.shared.theme == .dark {
@@ -487,6 +504,7 @@ class SettingsViewController: UrsusViewController, UICollectionViewDataSource, U
 		default: return
 		}
 	}
+	
 	func themeDeterminerChangeFailed() {
 		PreferenceManager.shared.themeDeterminerDidChangeNotification.remove(self)
 		self.collectionView?.reloadSections([0])
@@ -506,7 +524,6 @@ class SettingsViewController: UrsusViewController, UICollectionViewDataSource, U
 			self.collectionView?.reloadSections([0])
 		})
 	}
-
 	
 	
 	
@@ -520,7 +537,7 @@ class SettingsViewController: UrsusViewController, UICollectionViewDataSource, U
 			self.collectionView?.reloadSections([0])
 		})
 	}
-
+	
 	@IBAction func toggleIncludeSingles(_ sender: UISwitch) {
 		PreferenceManager.shared.includeSingles = sender.isOn
 		self.collectionView?.performBatchUpdates({
@@ -554,18 +571,5 @@ class SettingsViewController: UrsusViewController, UICollectionViewDataSource, U
 		self.collectionView?.performBatchUpdates({
 			self.collectionView?.reloadSections([1])
 		})
-	}
-	
-	
-	
-	
-	
-	
-	// MARK: - Navigation
-	// In a storyboard-based application, you will often want to do a little preparation before navigation
-	override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-	// Get the new view controller using segue.destinationViewController.
-	// Pass the selected object to the new view controller.
-		PreferenceManager.shared.save()
 	}
 }

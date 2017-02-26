@@ -8,12 +8,34 @@
 
 import UIKit
 
-class RevealBehindAnimatedTransitionController: NSObject, UIViewControllerAnimatedTransitioning, UIViewControllerTransitioningDelegate {
-
-	private var presenting = true
+class RevealBehindAnimatedTransitionController: UIPercentDrivenInteractiveTransition, UIViewControllerAnimatedTransitioning {
 	
+	var presenting = true
+	var interactive = false
+	
+	convenience init(forPresenting presenting: Bool, interactively interactive: Bool) {
+		self.init()
+		
+		self.presenting = presenting
+		self.interactive = interactive
+	}
 	func transitionDuration(using transitionContext: UIViewControllerContextTransitioning?) -> TimeInterval {
-		return self.presenting ? 0.8 : 0.7
+		var duration = 0.0
+		if self.presenting {
+			if self.interactive {
+				duration = 0.35
+			} else {
+				duration = 0.8
+			}
+		} else {
+			if self.interactive {
+				duration = 0.4
+			} else {
+				duration = 0.7
+			}
+		}
+		
+		return duration * ANIMATION_SPEED_MODIFIER
 	}
 	func animateTransition(using transitionContext: UIViewControllerContextTransitioning) {
 		guard let source = transitionContext.viewController(forKey: .from),
@@ -31,31 +53,47 @@ class RevealBehindAnimatedTransitionController: NSObject, UIViewControllerAnimat
 			darkeningOverlay.isUserInteractionEnabled = false
 			destination.view.addSubview(darkeningOverlay)
 			
-			let shadowView = UrsusShadowBackdrop(frame: destination.view.bounds, offset: CGSize(width: 0, height: -5), radius: 20)
-			shadowView.layer.cornerRadius = 12
-			destination.view.addSubview(shadowView)
-			
 			source.view.layer.masksToBounds = true
-			source.view.layer.cornerRadius = shadowView.layer.cornerRadius
+			source.view.layer.cornerRadius = 12
 			
 			transitionContext.containerView.addSubview(destination.view)
 			transitionContext.containerView.addSubview(source.view)
 			
-			UIView.animate(withDuration: ANIMATION_SPEED_MODIFIER*duration * 0.2, delay: 0, options: .curveEaseOut, animations: {
+			let popBackAnimator = UIViewPropertyAnimator(duration: duration*0.2, curve: .easeOut, animations: {
 				
 				source.view.transform = CGAffineTransform(scaleX: 0.96, y: 0.96)
-				shadowView.transform = CGAffineTransform(scaleX: 0.96, y: 0.96)
-				darkeningOverlay.alpha = 0.05
-			}, completion: { (completed) in
-				
-				UIView.animate(withDuration: ANIMATION_SPEED_MODIFIER*duration * 0.8, delay: 0, usingSpringWithDamping: UIAccessibilityIsReduceMotionEnabled() ? 1 : 0.8, initialSpringVelocity: UIAccessibilityIsReduceMotionEnabled() ? 0 : 0.8, options: .curveEaseInOut, animations: {
-					source.view.frame = source.view.frame.offsetBy(dx: 0, dy: destination.view.frame.height - 90)
-					shadowView.frame = shadowView.frame.offsetBy(dx: 0, dy: destination.view.frame.height - 90)
-				}, completion: { (completed) in
-					
-					transitionContext.completeTransition(!transitionContext.transitionWasCancelled)
-				})
+				darkeningOverlay.alpha = 0.1
 			})
+			
+			let slideDownAnimator = UIViewPropertyAnimator(duration: duration*0.8, dampingRatio: UIAccessibilityIsReduceMotionEnabled() ? 1 : 0.8, animations: {
+				
+				source.view.frame = source.view.frame.offsetBy(dx: 0, dy: destination.view.frame.height - 90)
+			})
+			slideDownAnimator.addCompletion({ (position) in
+				
+				transitionContext.completeTransition(!transitionContext.transitionWasCancelled)
+				if transitionContext.transitionWasCancelled {
+					
+					source.view.layer.masksToBounds = false
+					source.view.layer.cornerRadius = 0
+					
+					UIApplication.shared.keyWindow?.addSubview(source.view)
+				} else {
+					
+					// UIApplication.shared.keyWindow?.addSubview(destination.view)
+				}
+			})
+			
+			if self.interactive {
+				slideDownAnimator.startAnimation()
+				
+			} else {
+				popBackAnimator.addCompletion({ (position) in
+					slideDownAnimator.startAnimation()
+				})
+				popBackAnimator.startAnimation()
+			}
+			
 		}
 			
 			
@@ -64,27 +102,38 @@ class RevealBehindAnimatedTransitionController: NSObject, UIViewControllerAnimat
 			transitionContext.containerView.addSubview(source.view)
 			transitionContext.containerView.addSubview(destination.view)
 			
-			UIView.animate(withDuration: ANIMATION_SPEED_MODIFIER*duration, delay: 0, usingSpringWithDamping: UIAccessibilityIsReduceMotionEnabled() ? 1 : 0.8, initialSpringVelocity: UIAccessibilityIsReduceMotionEnabled() ? 0 : 0.3, options: .curveEaseOut, animations: {
+			var slideUpAnimator = UIViewPropertyAnimator(duration: duration, dampingRatio: UIAccessibilityIsReduceMotionEnabled() ? 1 : 0.8)
+			
+			if self.interactive {
+				slideUpAnimator = UIViewPropertyAnimator(duration: duration, curve: .linear)
+			}
+			
+			slideUpAnimator.addAnimations {
+
 				destination.view.transform = CGAffineTransform(scaleX: 1, y: 1)
 				destination.view.frame = transitionContext.finalFrame(for: destination)
-			}, completion: { (completed) in
+				destination.view.layoutIfNeeded()
+			}
+			slideUpAnimator.addCompletion({ (position) in
 				
 				transitionContext.completeTransition(!transitionContext.transitionWasCancelled)
 				if !transitionContext.transitionWasCancelled {
+										
 					destination.view.layer.masksToBounds = false
 					destination.view.layer.cornerRadius = 0
 					
 					UIApplication.shared.keyWindow?.addSubview(destination.view)
 				}
+				
 			})
+			slideUpAnimator.startAnimation()
 		}
 		
 	}
-	func animationController(forPresented presented: UIViewController, presenting: UIViewController, source: UIViewController) -> UIViewControllerAnimatedTransitioning? {
-		return self
+	func interactionControllerForDismissal(using animator: UIViewControllerAnimatedTransitioning) -> UIViewControllerInteractiveTransitioning? {
+		return self.interactive ? self : nil
 	}
-	func animationController(forDismissed dismissed: UIViewController) -> UIViewControllerAnimatedTransitioning? {
-		self.presenting = false
-		return self
+	func interactionControllerForPresentation(using animator: UIViewControllerAnimatedTransitioning) -> UIViewControllerInteractiveTransitioning? {
+		return self.interactive ? self : nil
 	}
 }

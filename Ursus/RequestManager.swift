@@ -10,7 +10,7 @@ import UIKit
 import CoreLocation
 
 enum RequestManagerError: Error {
-	case artistSearchUnavailable, additionalArtistInfoUnavailable, artistReleasesUnavailable, sunriseSunsetUnavailable
+	case artistLookupUnavailable, artistSearchUnavailable, additionalArtistInfoUnavailable, artistReleasesUnavailable, sunriseSunsetUnavailable
 }
 
 class RequestManager: NSObject, URLSessionDataDelegate {
@@ -30,6 +30,59 @@ class RequestManager: NSObject, URLSessionDataDelegate {
     	
 	
 	// MARK: Methods
+	func lookup(artist itunesID: Int, completion: @escaping ((_ response: Artist?, _ error: Error?) -> Void)) -> URLSessionDataTask? {
+		
+		// create URL for data request
+		guard let url = URL(string: "\(self.itunesLookupURL)?id=\(itunesID)&media=music") else {
+			completion(nil, RequestManagerError.artistLookupUnavailable)
+			return nil
+		}
+		
+		let task = self.session.dataTask(with: url) { (data, response, error) in
+			
+			
+			guard let data = data, error == nil else {
+				completion(nil, RequestManagerError.artistLookupUnavailable)
+				return
+			}
+			
+			do {
+				
+				// convert data into dictionary
+				let results = try JSONSerialization.jsonObject(with: data, options: .mutableContainers) as? [String: Any]
+				
+				guard let actualResults = results?["results"] as? [[String: Any]] else {
+					completion(nil, RequestManagerError.artistLookupUnavailable)
+					return
+				}
+				
+				if actualResults.isEmpty {
+					completion(nil, RequestManagerError.artistLookupUnavailable)
+					return
+				} else {
+					
+					let parsedArtist: [String: Any] = actualResults[0]
+					let itunesID = parsedArtist["artistId"] as? Int
+					let name = parsedArtist["artistName"] as? String
+					let itunesURLString = parsedArtist["artistLinkUrl"] as? String
+					let artist = Artist(itunesID: itunesID, name: name, itunesURL: URL(string: itunesURLString!))
+					artist.genre = parsedArtist["primaryGenreName"] as? String
+					
+					// trigger completion handler
+					completion(artist, nil)
+				}
+				
+			} catch _ {
+				
+				// trigger completion handler
+				completion(nil, RequestManagerError.artistLookupUnavailable)
+				
+			}
+		}
+		
+		task.resume()
+		return task
+	}
 	func search(for artist: String, completion: @escaping ((_ response: [Artist]?, _ error: Error?) -> Void)) -> URLSessionDataTask? {
 		
 		let parsedArtistName = artist.replacingOccurrences(of: " ", with: "+").trimmingCharacters(in: .whitespacesAndNewlines).addingPercentEncoding(withAllowedCharacters: .urlHostAllowed)?.lowercased()

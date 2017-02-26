@@ -11,7 +11,7 @@ import UIKit
 @IBDesignable
 class ReleaseCollectionViewCell: UrsusCollectionViewCell {
 	    
-	@IBOutlet weak var releaseArtView: ReleaseArtView!
+	@IBOutlet weak var releaseArtView: ArtworkArtView!
 	@IBOutlet weak var releaseTitleLabel: UILabel!
 	@IBOutlet weak var secondaryLabel: UILabel!
 	

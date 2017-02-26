@@ -23,6 +23,13 @@ class UrsusViewController: UIViewController {
 	@IBOutlet weak var navigationTitleRestingConstraint: NSLayoutConstraint?
 	@IBOutlet weak var collectionView: UICollectionView?
 	
+	var animationController: UIViewControllerAnimatedTransitioning?
+	var interactiveTransition: UIPercentDrivenInteractiveTransition? {
+		get {
+			return self.animationController as? UIPercentDrivenInteractiveTransition
+		}
+	}
+		
     override func viewDidLoad() {
         super.viewDidLoad()
 		
@@ -32,7 +39,7 @@ class UrsusViewController: UIViewController {
 		PreferenceManager.shared.themeDidChangeNotification.add(self, selector: #selector(self.themeDidChange))
 		
 		// start listening for new releases updates
-		PreferenceManager.shared.didUpdateReleasesNotification.add(self, selector: #selector(self.didUpdateNewReleases))
+		PreferenceManager.shared.didUpdateReleasesNotification.add(self, selector: #selector(self.didUpdateReleases))
 
 		self.collectionView?.contentInset = UIEdgeInsets(top: (self.topScrollFadeView?.frame.height ?? 120) - 40, left: 0, bottom: (self.bottomScrollFadeView?.frame.height ?? 120) - 40, right: 0)
 
@@ -57,6 +64,14 @@ class UrsusViewController: UIViewController {
 			
 		}
 		
+		if self.collectionView != nil && self.bottomScrollFadeView != nil {
+			// adjust bottom scroll fade view alpha if collection view does not encroach upon its layout space
+			if self.collectionView!.contentSize.height < self.bottomScrollFadeView!.frame.origin.y {
+				self.bottomScrollFadeView?.alpha = 0.3
+			} else {
+				self.bottomScrollFadeView?.alpha = 1
+			}
+		}
     }
 	
 	override func viewDidAppear(_ animated: Bool) {
@@ -112,7 +127,7 @@ class UrsusViewController: UIViewController {
 			
 		}
 	}
-	func didUpdateNewReleases() {
+	func didUpdateReleases() {
 		
 		// show banner if not on new releases view somehow... eheh
 		

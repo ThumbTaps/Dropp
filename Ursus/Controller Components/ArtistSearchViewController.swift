@@ -147,7 +147,13 @@ class ArtistSearchViewController: UrsusViewController, UITextFieldDelegate, UIGe
 			UIApplication.shared.isNetworkActivityIndicatorVisible = false
 			
 			guard let artists = artists, error == nil else {
-				print(error!)
+				
+				self.searching = false
+				self.searchBar.endSearching {
+					
+					self.searchBar.textField.becomeFirstResponder()
+					self.searchBar.textField.selectedTextRange = self.searchBar.textField.textRange(from: self.searchBar.textField.beginningOfDocument, to: self.searchBar.textField.endOfDocument)
+				}
 				return
 			}
 			

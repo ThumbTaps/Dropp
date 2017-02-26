@@ -44,8 +44,10 @@
 			</dict>
 		</dict>
 	</dict>
+	<key>NSAppleMusicUsageDescription</key>
+	<string>Media library access is used exclusively for artist follow suggestions and importing artists.</string>
 	<key>NSLocationWhenInUseUsageDescription</key>
-	<string>Location services are used only to determine twilight times for automatic dark mode.</string>
+	<string>Location services are used exclusively for determining twilight times for automatic dark mode.</string>
 	<key>UIApplicationShortcutItems</key>
 	<array>
 		<dict>

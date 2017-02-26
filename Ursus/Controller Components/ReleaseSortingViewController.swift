@@ -8,7 +8,7 @@
 
 import UIKit
 
-class ReleaseSortingViewController: UrsusViewController, UICollectionViewDataSource, UICollectionViewDelegate, UICollectionViewDelegateFlowLayout {
+class ReleaseSortingViewController: UrsusViewController, UICollectionViewDataSource, UICollectionViewDelegate, UICollectionViewDelegateFlowLayout, UIGestureRecognizerDelegate {
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -22,6 +22,7 @@ class ReleaseSortingViewController: UrsusViewController, UICollectionViewDataSou
 		let tapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(self.exit))
 		tapGestureRecognizer.cancelsTouchesInView = false
 		tapGestureRecognizer.delaysTouchesBegan = false
+		tapGestureRecognizer.delegate = self
 		self.view.addGestureRecognizer(tapGestureRecognizer)
 	}
     override func didReceiveMemoryWarning() {
@@ -105,6 +106,29 @@ class ReleaseSortingViewController: UrsusViewController, UICollectionViewDataSou
 		}
 		
 		self.performSegue(withIdentifier: "ReleaseSorting->NewReleases", sender: nil)
+	}
+	
+	
+	
+	
+	
+	// MARK: - UICollectionViewDelegateFlowLayout
+	func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
+		
+		return CGSize(width: self.view.bounds.width, height: 50)
+	}
+	
+	
+	
+	
+	// MARK: - UIGestureRecognizerDelegate
+	func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldReceive touch: UITouch) -> Bool {
+		
+		if touch.location(in: self.view).y > self.topScrollFadeView?.bounds.height ?? 0 {
+			return true
+		}
+		
+		return false
 	}
 	
 	

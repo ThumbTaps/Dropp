@@ -8,7 +8,7 @@
 
 import UIKit
 
-class NewReleasesViewController: UrsusViewController, UICollectionViewDataSource, UICollectionViewDataSourcePrefetching, UICollectionViewDelegate, UICollectionViewDelegateFlowLayout {
+class NewReleasesViewController: UrsusViewController {
 		
 	@IBOutlet weak var settingsButton: SettingsButton!
 	@IBOutlet weak var settingsButtonShowingConstraint: NSLayoutConstraint!
@@ -31,6 +31,13 @@ class NewReleasesViewController: UrsusViewController, UICollectionViewDataSource
 	@IBOutlet weak var newReleasesCountIndicatorRestingConstraint: NSLayoutConstraint!
 	
 	@IBOutlet weak var previousReleasesCountIndicator: UrsusCountIndicator!
+	
+	@IBOutlet weak var nowPlayingArtistQuickViewButton: ArtworkArtView!
+	@IBOutlet weak var nowPlayingArtistQuickViewButtonHidingConstraint: NSLayoutConstraint!
+	@IBOutlet weak var nowPlayingArtistQuickViewButtonRestingConstraint: NSLayoutConstraint!
+	
+	@IBOutlet var panGestureRecognizer: UIPanGestureRecognizer!
+	@IBOutlet var tapGestureRecognizer: UITapGestureRecognizer!
 	
 	var blurView: UIVisualEffectView?
 	
@@ -59,7 +66,10 @@ class NewReleasesViewController: UrsusViewController, UICollectionViewDataSource
 				self.collectionView?.indicatorStyle = .default
 			}
 			
-		}		
+		}
+		
+		// start monitoring now playing artist changes
+		PreferenceManager.shared.nowPlayingArtistDidChangeNotification.add(self, selector: #selector(self.nowPlayingArtistDidChange))
 	}
 	
 	override func viewDidAppear(_ animated: Bool) {
@@ -91,9 +101,6 @@ class NewReleasesViewController: UrsusViewController, UICollectionViewDataSource
 			UIView.animate(withDuration: ANIMATION_SPEED_MODIFIER*0.5, delay: 0, usingSpringWithDamping: 0.6, initialSpringVelocity: 1, options: .curveEaseOut, animations: {
 				
 				self.backdrop?.overlay.layoutIfNeeded()
-			}, completion: { (finished) in
-				
-				PreferenceManager.shared.updateNewReleases()
 			})
 		}
 		
@@ -111,7 +118,7 @@ class NewReleasesViewController: UrsusViewController, UICollectionViewDataSource
 	
 	
 	// MARK: - Notifications
-	override func didUpdateNewReleases() {
+	override func didUpdateReleases() {
 		
 		self.collectionView?.prefetchDataSource = self
 		self.collectionView?.dataSource = self
@@ -157,7 +164,7 @@ class NewReleasesViewController: UrsusViewController, UICollectionViewDataSource
 				self.backdrop?.overlay.addConstraints([self.newReleasesCountIndicatorRestingConstraint, self.newReleasesSortButtonRestingConstraint])
 			}
 			
-			UIView.animate(withDuration: ANIMATION_SPEED_MODIFIER*0.5, delay: 0, usingSpringWithDamping: 0.6, initialSpringVelocity: 1, options: .curveEaseOut, animations: {
+			UIViewPropertyAnimator(duration: 0.5*ANIMATION_SPEED_MODIFIER, dampingRatio: 0.6, animations: { 
 				
 				// hide new releases count indicator if there are no new releases
 				if PreferenceManager.shared.newReleases.isEmpty {
@@ -178,8 +185,82 @@ class NewReleasesViewController: UrsusViewController, UICollectionViewDataSource
 				}
 				
 				self.backdrop?.overlay.layoutIfNeeded()
+				
+			}).startAnimation()
+			
+			if self.collectionView != nil && self.bottomScrollFadeView != nil {
+				
+				// adjust bottom scroll fade view alpha if collection view does not encroach upon its layout space
+				UIViewPropertyAnimator(duration: 0.4*ANIMATION_SPEED_MODIFIER, curve: .easeOut, animations: { 
+					
+					if self.collectionView!.contentSize.height < self.view.bounds.height-self.bottomScrollFadeView!.bounds.height {
+						self.bottomScrollFadeView?.alpha = 0.3
+					} else {
+						self.bottomScrollFadeView?.alpha = 1
+					}
+				}).startAnimation()
+			}
+		}
+	}
+	func nowPlayingArtistDidChange() {
+		
+		DispatchQueue.main.async {
+			
+			self.backdrop?.overlay.removeConstraint(self.nowPlayingArtistQuickViewButtonRestingConstraint)
+			self.backdrop?.overlay.addConstraint(self.nowPlayingArtistQuickViewButtonHidingConstraint)
+			
+			let quickViewAnimator = UIViewPropertyAnimator(duration: 0.15*ANIMATION_SPEED_MODIFIER, curve: .easeOut, animations: {
+				self.backdrop?.overlay.layoutIfNeeded()
 			})
 			
+			quickViewAnimator.addCompletion({ (position) in
+				
+				self.nowPlayingArtistQuickViewButton.hideArtwork(false)
+				self.nowPlayingArtistQuickViewButton.imageView.image = nil
+				
+				// if there is anartist to show quick view for AND	the artist is not already being followed
+				if PreferenceManager.shared.nowPlayingArtist != nil && !PreferenceManager.shared.followingArtists.contains(where: { $0.itunesID == PreferenceManager.shared.nowPlayingArtist?.itunesID }) {
+					
+					DispatchQueue.global().async {
+						
+						// load all info for artist
+						let additionalInfoTask = RequestManager.shared.getAdditionalInfo(for: PreferenceManager.shared.nowPlayingArtist!, completion: { (artist, error) in
+							
+							guard let artist = artist, error == nil else {
+								return
+							}
+							
+							PreferenceManager.shared.nowPlayingArtist = artist
+							
+							guard let thumbnailURL = PreferenceManager.shared.nowPlayingArtist?.artworkURLs[.thumbnail] else {
+								return
+							}
+							
+							let loadImageTask = RequestManager.shared.loadImage(from: thumbnailURL, completion: { (image, error) in
+								
+								guard let image = image, error == nil else {
+									return
+								}
+								
+								DispatchQueue.main.async {
+									
+									self.nowPlayingArtistQuickViewButton.imageView.image = image
+									self.nowPlayingArtistQuickViewButton.showArtwork(false)
+									
+									self.backdrop?.overlay.removeConstraint(self.nowPlayingArtistQuickViewButtonHidingConstraint)
+									self.backdrop?.overlay.addConstraint(self.nowPlayingArtistQuickViewButtonRestingConstraint)
+									
+									UIViewPropertyAnimator(duration: 0.5*ANIMATION_SPEED_MODIFIER, dampingRatio: 0.65, animations: {
+										self.backdrop?.overlay.layoutIfNeeded()
+									}).startAnimation()
+								}
+							})
+						})
+					}
+				}
+			})
+			
+			quickViewAnimator.startAnimation()
 		}
 	}
 
@@ -194,10 +275,161 @@ class NewReleasesViewController: UrsusViewController, UICollectionViewDataSource
 			self.performSegue(withIdentifier: "NewReleases->ArtistSearch", sender: nil)
 		}
 	}
+	@IBAction func handle(_ recognizer: UIGestureRecognizer) {
+		
+		guard let presentedViewController = self.presentedViewController as? SettingsViewController else {
+			return
+		}
+		
+		if recognizer.isKind(of: UIPanGestureRecognizer.self) {
+			
+			let progress = abs((recognizer as! UIPanGestureRecognizer).translation(in: presentedViewController.view).y / presentedViewController.view.frame.height)
+			print(progress)
+			
+			switch recognizer.state {
+				
+			case .began:
+				self.animationController = RevealBehindAnimatedTransitionController(forPresenting: false, interactively: true)
+				presentedViewController.performSegue(withIdentifier: "Settings->NewReleases", sender: recognizer)
+				break
+				
+			case .changed:
+				
+				if progress <= 1 {
+					self.interactiveTransition?.update(progress)
+				}
+				break
+				
+			case .ended:
+				
+				if progress >= 0.3 {
+					if progress > 0.75 || ((recognizer as! UIPanGestureRecognizer).velocity(in: self.view).y < 0 && abs((recognizer as! UIPanGestureRecognizer).velocity(in: self.view).y) > 1000) {
+						self.interactiveTransition?.finish()
+						self.backdrop?.overlay.isUserInteractionEnabled = true
+						self.backdrop?.removeGestureRecognizer(self.tapGestureRecognizer)
+						self.backdrop?.removeGestureRecognizer(self.panGestureRecognizer)
+
+					} else {
+						self.interactiveTransition?.cancel()
+					}
+				} else {
+					if ((recognizer as! UIPanGestureRecognizer).velocity(in: self.view).y >= 0 && abs((recognizer as! UIPanGestureRecognizer).velocity(in: self.view).y) < 1000) {
+						self.interactiveTransition?.cancel()
+					} else {
+						self.interactiveTransition?.finish()
+						self.backdrop?.overlay.isUserInteractionEnabled = true
+						self.backdrop?.removeGestureRecognizer(self.tapGestureRecognizer)
+						self.backdrop?.removeGestureRecognizer(self.panGestureRecognizer)
+
+					}
+				}
+				
+				break
+				
+			default:
+				self.interactiveTransition?.cancel()
+				
+			}
+		}
+			
+		else if recognizer.isKind(of: UITapGestureRecognizer.self) {
+			self.animationController = RevealBehindAnimatedTransitionController(forPresenting: false, interactively: false)
+			presentedViewController.performSegue(withIdentifier: "Settings->NewReleases", sender: recognizer)
+			self.backdrop?.overlay.isUserInteractionEnabled = true
+			self.backdrop?.removeGestureRecognizer(self.tapGestureRecognizer)
+			self.backdrop?.removeGestureRecognizer(self.panGestureRecognizer)
+
+		}
+	}
+
 	
 	
-	
-	
+	// MARK: - Navigation
+	override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+		// Pass the selected object to the new view controller.
+		
+		self.isCurrentlyVisible = false
+		
+		if segue.identifier == "NewReleases->Release" {
+			// set current release for release view controller
+			var source = PreferenceManager.shared.newReleases
+			switch self.collectionView?.indexPathsForSelectedItems?[0].section ?? 0 {
+			case 0:
+				source = PreferenceManager.shared.newReleases
+				break
+				
+			case 1:
+				source = PreferenceManager.shared.previousReleases
+				break
+				
+			default: source = PreferenceManager.shared.newReleases
+			}
+			
+			(segue.destination as! ReleaseViewController).currentRelease = source[(self.collectionView?.indexPathsForSelectedItems?[0].row)!]
+			
+			// adjust colors
+			if PreferenceManager.shared.theme == .dark {
+				segue.destination.view.tintColor = StyleKit.darkBackgroundColor
+			} else {
+				segue.destination.view.tintColor = StyleKit.lightBackgroundColor
+			}
+		}
+			
+		else if segue.identifier == "NewReleases->Settings" {
+			
+			self.animationController = RevealBehindAnimatedTransitionController(forPresenting: true, interactively: false)
+			segue.destination.transitioningDelegate = self
+			UIViewPropertyAnimator(duration: 0.4*ANIMATION_SPEED_MODIFIER, curve: .easeOut, animations: {
+				self.collectionView?.alpha = 0.15
+			}).startAnimation()
+			self.backdrop?.overlay.isUserInteractionEnabled = false
+			self.backdrop?.addGestureRecognizer(self.tapGestureRecognizer)
+			self.backdrop?.addGestureRecognizer(self.panGestureRecognizer)
+			
+		}
+			
+		else if segue.identifier == "NewReleases->ArtistSearch" {
+			// self.searchButton.alpha = 0
+		}
+			
+		else if segue.identifier == "NewReleases->ReleaseSorting" {
+			self.blurView = UrsusBlurView(frame: self.view.bounds)
+			self.backdrop?.addSubview(self.blurView!)
+			UIView.animate(withDuration: ANIMATION_SPEED_MODIFIER*0.3, animations: {
+				self.blurView?.effect = PreferenceManager.shared.theme == .dark ? UIBlurEffect(style: .dark) : UIBlurEffect(style: .light)
+			})
+			
+		}
+	}
+	override func prepareForUnwind(for segue: UIStoryboardSegue) {
+		super.prepareForUnwind(for: segue)
+		
+		self.isCurrentlyVisible = true
+		
+		if segue.identifier == "Settings->NewReleases" {
+		}
+			
+		else if segue.identifier == "ReleaseSorting->NewReleases" {
+			
+			UIView.animate(withDuration: ANIMATION_SPEED_MODIFIER*0.5, animations: {
+				self.blurView?.effect = nil
+			}) { (finished) in
+				self.blurView?.removeFromSuperview()
+				self.blurView = nil
+			}
+		}
+			
+		else if segue.identifier == "Release->NewReleases" {
+			if let selectedIndex = self.collectionView?.indexPathsForSelectedItems?[0] {
+				self.collectionView?.deselectItem(at: selectedIndex, animated: false)
+			}
+			
+		}
+	}
+}
+
+
+extension NewReleasesViewController: UICollectionViewDataSourcePrefetching, UICollectionViewDataSource, UICollectionViewDelegate, UICollectionViewDelegateFlowLayout {
 	
 	// MARK: UICollectionViewDataSourcePrefetching
 	func collectionView(_ collectionView: UICollectionView, prefetchItemsAt indexPaths: [IndexPath]) {
@@ -252,8 +484,6 @@ class NewReleasesViewController: UrsusViewController, UICollectionViewDataSource
 			
 		}
 	}
-	
-	
 	
 	
 	
@@ -316,11 +546,11 @@ class NewReleasesViewController: UrsusViewController, UICollectionViewDataSource
 		let release = source[indexPath.row]
 		
 		DispatchQueue.main.async {
+			cell.releaseArtView.shadowed = false
 			cell.releaseArtView.hideArtwork()
 		}
 		
 		cell.releaseTitleLabel.text = release.title
-		
 		cell.secondaryLabel.text = release.artist.name
 		
 		guard let image = artworkSource[indexPath.row] else {
@@ -367,9 +597,6 @@ class NewReleasesViewController: UrsusViewController, UICollectionViewDataSource
 
 	
 	
-	
-	
-	
 	// MARK: - UICollectionViewDelegate
 	func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, referenceSizeForHeaderInSection section: Int) -> CGSize {
 		
@@ -382,9 +609,6 @@ class NewReleasesViewController: UrsusViewController, UICollectionViewDataSource
 	func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
 		return CGSize(width: collectionView.bounds.size.width, height: 100)
 	}
-	
-	
-	
 	
 	
 	
@@ -406,114 +630,15 @@ class NewReleasesViewController: UrsusViewController, UICollectionViewDataSource
 			}
 		}
 	}
+}
+
+
+extension NewReleasesViewController: UIViewControllerTransitioningDelegate {
 	
-	
-	
-	
-	
-	
-	// MARK: - Navigation
-	func dismissDestination() {
-		guard let presentedVC = self.presentedViewController else {
-			self.presentedViewController?.dismiss(animated: true, completion: nil)
-			return
-		}
-		
-		if presentedVC.isKind(of: SettingsViewController.self) {
-			self.presentedViewController?.performSegue(withIdentifier: "Settings->NewReleases", sender: nil)
-		}
-		else if presentedVC.isKind(of: ReleaseSortingViewController.self) {
-			self.presentedViewController?.performSegue(withIdentifier: "ReleaseSorting->NewReleases", sender: nil)
-		}
+	func animationController(forPresented presented: UIViewController, presenting: UIViewController, source: UIViewController) -> UIViewControllerAnimatedTransitioning? {
+		return self.animationController
 	}
-	
-	// In a storyboard-based application, you will often want to do a little preparation before navigation
-	override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-		// Get the new view controller using segue.destinationViewController.
-		// Pass the selected object to the new view controller.
-		
-		self.isCurrentlyVisible = false
-		
-		if segue.identifier == "NewReleases->Release" {
-			// set current release for release view controller
-			var source = PreferenceManager.shared.newReleases
-			switch self.collectionView?.indexPathsForSelectedItems?[0].section ?? 0 {
-			case 0:
-				if PreferenceManager.shared.newReleases.isEmpty {
-					source = PreferenceManager.shared.previousReleases
-				} else {
-					source = PreferenceManager.shared.newReleases
-				}
-				break
-				
-			case 1:
-				source = PreferenceManager.shared.previousReleases
-				break
-				
-			default: source = PreferenceManager.shared.newReleases
-			}
-
-			(segue.destination as! ReleaseViewController).currentRelease = source[(self.collectionView?.indexPathsForSelectedItems?[0].row)!]
-			
-			// adjust colors
-			if PreferenceManager.shared.theme == .dark {
-				segue.destination.view.tintColor = StyleKit.darkBackgroundColor
-			} else {
-				segue.destination.view.tintColor = StyleKit.lightBackgroundColor
-			}
-		}
-		
-		else if segue.identifier == "NewReleases->Settings" {
-			self.newReleasesSortButton.isEnabled = false
-			self.collectionView?.isUserInteractionEnabled = false
-			UIView.animate(withDuration: 0.4*ANIMATION_SPEED_MODIFIER, animations: {
-				self.collectionView?.alpha = 0.15
-			})
-			let tapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(self.dismissDestination))
-			self.view.addGestureRecognizer(tapGestureRecognizer)
-		}
-		
-		else if segue.identifier == "NewReleases->ArtistSearch" {
-//			self.searchButton.alpha = 0
-		}
-		
-		else if segue.identifier == "NewReleases->ReleaseSorting" {
-			self.blurView = UrsusBlurView(frame: self.view.bounds)
-			self.backdrop?.addSubview(self.blurView!)
-			UIView.animate(withDuration: ANIMATION_SPEED_MODIFIER*0.3, animations: {
-				self.blurView?.effect = PreferenceManager.shared.theme == .dark ? UIBlurEffect(style: .dark) : UIBlurEffect(style: .light)
-			})
-
-		}
-	}
-	override func prepareForUnwind(for segue: UIStoryboardSegue) {
-		super.prepareForUnwind(for: segue)
-		
-		self.isCurrentlyVisible = true
-		
-		if segue.identifier == "Settings->NewReleases" {
-			self.newReleasesSortButton.isEnabled = true
-			self.collectionView?.isUserInteractionEnabled = true
-			UIView.animate(withDuration: 0.4*ANIMATION_SPEED_MODIFIER, animations: {
-				self.collectionView?.alpha = 1
-			})
-		}
-		
-		else if segue.identifier == "ReleaseSorting->NewReleases" {
-			
-			UIView.animate(withDuration: ANIMATION_SPEED_MODIFIER*0.5, animations: {
-				self.blurView?.effect = nil
-			}) { (finished) in
-				self.blurView?.removeFromSuperview()
-				self.blurView = nil
-			}
-		}
-		
-		else if segue.identifier == "Release->NewReleases" {
-			if let selectedIndex = self.collectionView?.indexPathsForSelectedItems?[0] {
-				self.collectionView?.deselectItem(at: selectedIndex, animated: false)
-			}
-
-		}
+	func animationController(forDismissed dismissed: UIViewController) -> UIViewControllerAnimatedTransitioning? {
+		return self.animationController
 	}
 }

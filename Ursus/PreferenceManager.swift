@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import MediaPlayer
 
 enum ThemeMode: Int64 {
 	case manual = 0, auto = 1
@@ -63,6 +64,7 @@ class PreferenceManager: NSObject {
 	public let didUpdateReleasesNotification = Notification.Name(rawValue: "didUpdateReleasesNotification")
 	public let failedToUpdateReleasesNotification = Notification.Name(rawValue: "failedToUpdateReleasesNotification")
 	public let didChangeReleaseOptionsNotification = Notification.Name(rawValue: "didChangeReleaseOptionsNotification")
+	public let nowPlayingArtistDidChangeNotification = Notification.Name(rawValue: "nowPlayingArtistDidChangeNotification")
 	
 	var firstLaunch = true {
 		didSet {
@@ -454,16 +456,8 @@ class PreferenceManager: NSObject {
 					return
 				}
 				
-				// only add releases that don't already exist
-				releases.forEach({ (release) in
-					
-					if !followed.releases.contains(where: { $0.itunesID == release.itunesID }) {
-						followed.releases.append(release)
-					}
-				})
-				
 				// filter out releases before max previous release age
-				followed.releases = followed.releases.filter({ $0.releaseDate < Calendar.current.date(byAdding: .day, value: -Int(self.maxPreviousReleaseAge), to: Date())! })
+				followed.releases = releases.filter({ $0.releaseDate < Calendar.current.date(byAdding: .day, value: -Int(self.maxPreviousReleaseAge), to: Date())! })
 				
 				// if on last artist
 				if artistsToUpdate.last?.itunesID == followed.itunesID {
@@ -564,16 +558,56 @@ class PreferenceManager: NSObject {
 			self.didUpdateReleasesNotification.post()
 		}
 	}
+	
+	
+	
+	
+	
+	var nowPlayingArtist: Artist? {
+		didSet {
+			if self.nowPlayingArtist?.itunesID != oldValue?.itunesID {
+				self.nowPlayingArtistDidChangeNotification.post()
+			}
+		}
+	}
+	func nowPlayingItemDidChange() {
+		
+		DispatchQueue.main.async { // Apple says MPMusicPlayerController interactions need to happen on the main thread. Not sure this qualifies, but meh.
+			
+			if let nowPlayingItem = MPMusicPlayerController.systemMusicPlayer().nowPlayingItem {
+				
+				guard let artistName = nowPlayingItem.albumArtist else {
+					return
+				}
+				
+				DispatchQueue.global().async {
+					
+					// get info for artist from iTunes
+					RequestManager.shared.search(for: artistName, completion: { (artists, error) in
+						
+						guard let artist = artists?[0], error == nil else {
+							return
+						}
+						
+						self.nowPlayingArtist = artist
+					})
+				}
+			} else {
+				
+				self.nowPlayingArtist = nil
+			}
+		}
+	}
 
-	
-	
-	
-	
-	
+
+
+
+
+
 	// MARK: - DATA MANAGEMENT
 	var lastSync: Date?
 	let iCloudKeyStore = NSUbiquitousKeyValueStore.default()
-	func isiCloudContainerAvailable()->Bool {
+	func isiCloudContainerAvailable() -> Bool {
 		if FileManager.default.ubiquityIdentityToken != nil {
 			return true
 		}
@@ -603,9 +637,9 @@ class PreferenceManager: NSObject {
 		])
 		
 //		NSUbiquitousKeyValueStore.didChangeExternallyNotification.add(self, selector: #selector(self.load))
+		Notification.Name.MPMusicPlayerControllerNowPlayingItemDidChange.add(self, selector: #selector(self.nowPlayingItemDidChange))
+		MPMusicPlayerController.systemMusicPlayer().beginGeneratingPlaybackNotifications()
 		
-		self.load()
-
 	}
 	func syncFromiCloud() {
 		
@@ -737,7 +771,7 @@ class PreferenceManager: NSObject {
 			self.releaseSorting = ReleaseSorting(rawValue: UserDefaults.standard.value(forKey: self.releaseSortingKey) as! Int64) ?? self.releaseSorting
 			
 			UserDefaults.standard.synchronize()
-			
+
 			completion?()
 		}
 	}

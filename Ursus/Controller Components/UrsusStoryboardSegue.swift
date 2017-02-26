@@ -43,13 +43,9 @@ class UrsusStoryboardSegue: UIStoryboardSegue {
 			
 			
 		else if self.identifier == "NewReleases->Settings" {
-			self.animationController = RevealBehindAnimatedTransitionController()
-			self.destination.transitioningDelegate = self.animationController
 			self.source.present(self.destination, animated: true)
 			
 		} else if self.identifier == "Settings->NewReleases" {
-			self.animationController = RevealBehindAnimatedTransitionController()
-			self.source.transitioningDelegate = self.animationController
 			self.source.dismiss(animated: true)
 		}
 			
