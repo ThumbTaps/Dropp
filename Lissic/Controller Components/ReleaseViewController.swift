@@ -32,26 +32,19 @@ class ReleaseViewController: LissicViewController {
 		// load artwork
 		if self.currentRelease.artworkURL != nil {
 			
-			// show network activity indicator
-			UIApplication.shared.isNetworkActivityIndicatorVisible = true
-			
-			RequestManager.shared.loadImage(from: self.currentRelease.artworkURL!) { (image, error) in
+			RequestManager.shared.loadImage(from: self.currentRelease.artworkURL!, completion: { (image, error) in
 				
-				// hide network activity indicator
-				UIApplication.shared.isNetworkActivityIndicatorVisible = false
-				
-				if error == nil {
-					
-					DispatchQueue.main.async {
-						
-						self.releaseArtworkView.imageView.image = image
-						self.releaseArtworkView.showArtwork(true)
-					}
-					
-				} else {
-					
+				guard let image = image, error == nil else {
+					return
 				}
-			}
+				
+				DispatchQueue.main.async {
+					
+					self.releaseArtworkView.imageView.image = image
+					self.releaseArtworkView.showArtwork(true)
+				}
+				
+			})?.resume()
 		}
 		
     }

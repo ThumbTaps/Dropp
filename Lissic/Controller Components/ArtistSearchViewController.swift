@@ -136,15 +136,11 @@ class ArtistSearchViewController: LissicViewController, UITextFieldDelegate, UIG
 		self.searching = true
 		
 		self.searchBar.textField.resignFirstResponder()
-
-		UIApplication.shared.isNetworkActivityIndicatorVisible = true
 		
 		self.searchBar.startSearching()
 		
 		// trigger search
-		guard let searchTask = RequestManager.shared.search(for: artistName, completion: { (artists, error) -> Void in
-			
-			UIApplication.shared.isNetworkActivityIndicatorVisible = false
+		RequestManager.shared.search(for: artistName, completion: { (artists, error) -> Void in
 			
 			guard let artists = artists, error == nil else {
 				
@@ -164,69 +160,50 @@ class ArtistSearchViewController: LissicViewController, UITextFieldDelegate, UIG
 					
 					self.searchBar.textField.becomeFirstResponder()
 					self.searchBar.textField.selectedTextRange = self.searchBar.textField.textRange(from: self.searchBar.textField.beginningOfDocument, to: self.searchBar.textField.endOfDocument)
-
+					
 				}
 				
 			} else if artists.count == 1 { // go directly to artist view
 				
 				let finalArtist = PreferenceManager.shared.followingArtists.first(where: { $0.itunesID == artists[0].itunesID }) ?? artists[0]
-
-				UIApplication.shared.isNetworkActivityIndicatorVisible = true
 				
 				// get additional artist info
-				guard let additionalInfoTask = RequestManager.shared.getAdditionalInfo(for: finalArtist!, completion: { (artist, error) in
+				RequestManager.shared.getAdditionalInfo(for: finalArtist!, completion: { (artist, error) in
+					
 					guard artist != nil, error == nil else {
 						print(error!)
-						UIApplication.shared.isNetworkActivityIndicatorVisible = false
-
 						return
 					}
 					
 					finalArtist?.summary = artist?.summary
-					finalArtist?.artworkURLs = artist?.artworkURLs
+					finalArtist?.artworkURL = artist?.artworkURL
+					finalArtist?.thumbnailURL = artist?.thumbnailURL
+					
+					// go ahead and start loading artwork
+					_ = finalArtist?.loadArtwork()
 					
 					// get latest releases
-					guard let getReleasesTask = RequestManager.shared.getReleases(for: finalArtist!, completion: { (releases, error) in
+					RequestManager.shared.getReleases(for: finalArtist!, completion: { (releases, error) in
 						guard let releases = releases, error == nil else {
 							print(error!)
-							UIApplication.shared.isNetworkActivityIndicatorVisible = false
-
 							return
 						}
 						
 						finalArtist?.releases = releases
 						
-						// load artist artwork
-						guard let urlForArtwork = finalArtist?.artworkURLs[.mega] else {
-							print("Could not construct artwork URL", finalArtist!.artworkURLs)
-							return
-						}
-						guard let loadImageTask = RequestManager.shared.loadImage(from: urlForArtwork, completion: { (image, error) in
-							guard error == nil else {
-								print(error!)
-								UIApplication.shared.isNetworkActivityIndicatorVisible = false
-
-								return
-							}
-							
-							UIApplication.shared.isNetworkActivityIndicatorVisible = false
+						// making another call to load artwork just in case the premeditative request above hasn't completed (if it has this while callback immediately)
+						_ = finalArtist?.loadArtwork {
 							
 							self.searchBar.endSearching {
 								self.performSegue(withIdentifier: "ArtistSearch->Artist", sender: { (destination: ArtistViewController) in
 									destination.artist = finalArtist
-									destination.artistArtworkImage = image
 								})
-							}
-						}) else {
-							return
+							}							
 						}
 						
-					}) else {
-						return
-					}
-				}) else {
-					return
-				}
+					})?.resume()
+					
+				})?.resume()
 				
 			} else { // go to search results
 				
@@ -234,18 +211,12 @@ class ArtistSearchViewController: LissicViewController, UITextFieldDelegate, UIG
 					self.searchBar.becomeButton()
 					self.settleSearchBar()
 					self.performSegue(withIdentifier: "ArtistSearch->ArtistSearchResults", sender: artists)
-
+					
 				}
 				
 			}
 			
-		}) else {
-			
-			self.searching = false
-			self.searchBar.endSearching()
-			
-			return
-		}
+		})?.resume()
 	}
 
 

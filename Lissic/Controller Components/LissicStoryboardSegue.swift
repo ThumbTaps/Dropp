@@ -51,6 +51,15 @@ class LissicStoryboardSegue: UIStoryboardSegue {
 			
 			
 			
+		
+		else if self.identifier == "NewReleases->Artist" {
+			self.source.present(self.destination, animated: true)
+		} else if self.identifier == "Artist->NewReleases" {
+			self.source.dismiss(animated: true)
+		}
+			
+			
+			
 			
 		else if self.identifier == "NewReleases->Artists" {
 			self.source.present(self.destination, animated: true)
@@ -94,11 +103,11 @@ class LissicStoryboardSegue: UIStoryboardSegue {
 			
 			
 		else if self.identifier == "ArtistSearchResults->Artist" {
-			self.animationController = PopInFromFrameAnimatedTransitionController()
+			self.animationController = PopInAnimatedTransitionController()
 			self.destination.transitioningDelegate = self.animationController
 			self.source.present(self.destination, animated: true)
 		} else if self.identifier == "Artist->ArtistSearchResults" {
-			self.animationController = PopInFromFrameAnimatedTransitionController()
+			self.animationController = PopInAnimatedTransitionController()
 			self.source.transitioningDelegate = self.animationController
 			self.source.dismiss(animated: true)
 		}

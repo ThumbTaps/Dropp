@@ -32,7 +32,7 @@ class NewReleasesViewController: LissicViewController {
 	
 	@IBOutlet weak var previousReleasesCountIndicator: LissicCountIndicator!
 	
-	@IBOutlet weak var nowPlayingArtistQuickViewButton: ArtworkArtView!
+	@IBOutlet weak var nowPlayingArtistQuickViewButton: NowPlayingArtistQuickViewButton!
 	@IBOutlet weak var nowPlayingArtistQuickViewButtonHidingConstraint: NSLayoutConstraint!
 	@IBOutlet weak var nowPlayingArtistQuickViewButtonRestingConstraint: NSLayoutConstraint!
 	
@@ -42,9 +42,6 @@ class NewReleasesViewController: LissicViewController {
 	var blurView: UIVisualEffectView?
 	
 	var isCurrentlyVisible = true
-	
-	var newReleasesArtwork = [UIImage?](repeating: nil, count: PreferenceManager.shared.newReleases.count)
-	var previousReleasesArtwork = [UIImage?](repeating: nil, count: PreferenceManager.shared.previousReleases.count)
 	
 	var newReleasesArtworkDownloadTasks = [URLSessionDataTask?](repeating: nil, count: PreferenceManager.shared.newReleases.count)
 	var previousReleasesArtworkDownloadTasks = [URLSessionDataTask?](repeating: nil, count: PreferenceManager.shared.previousReleases.count)
@@ -56,9 +53,7 @@ class NewReleasesViewController: LissicViewController {
 		
 		DispatchQueue.main.async {
 			
-			if PreferenceManager.shared.newReleases.isEmpty && PreferenceManager.shared.previousReleases.isEmpty {
-				self.bottomScrollFadeView?.alpha = 0.5
-			}
+//			self.bottomScrollFadeView?.alpha = 0.5
 			
 			if PreferenceManager.shared.theme == .dark {
 				self.collectionView?.indicatorStyle = .white
@@ -95,15 +90,12 @@ class NewReleasesViewController: LissicViewController {
 				
 				self.backdrop?.overlay.removeConstraint(self.artistsButtonHidingConstraint)
 				self.backdrop?.overlay.addConstraint(self.artistsButtonShowingConstraint)
-				
 			}
 			
-			UIView.animate(withDuration: ANIMATION_SPEED_MODIFIER*0.5, delay: 0, usingSpringWithDamping: 0.6, initialSpringVelocity: 1, options: .curveEaseOut, animations: {
-				
+			UIViewPropertyAnimator(duration: ANIMATION_SPEED_MODIFIER*0.5, dampingRatio: 0.6, animations: { 
 				self.backdrop?.overlay.layoutIfNeeded()
-			})
+			}).startAnimation()
 		}
-		
 	}
 	
 	override func didReceiveMemoryWarning() {
@@ -123,9 +115,6 @@ class NewReleasesViewController: LissicViewController {
 		self.collectionView?.prefetchDataSource = self
 		self.collectionView?.dataSource = self
 		self.collectionView?.delegate = self
-		
-		self.newReleasesArtwork = [UIImage?](repeating: nil, count: PreferenceManager.shared.newReleases.count)
-		self.previousReleasesArtwork = [UIImage?](repeating: nil, count: PreferenceManager.shared.previousReleases.count)
 		
 		self.newReleasesArtworkDownloadTasks = [URLSessionDataTask?](repeating: nil, count: PreferenceManager.shared.newReleases.count)
 		self.previousReleasesArtworkDownloadTasks = [URLSessionDataTask?](repeating: nil, count: PreferenceManager.shared.previousReleases.count)
@@ -188,18 +177,18 @@ class NewReleasesViewController: LissicViewController {
 				
 			}).startAnimation()
 			
-			if self.collectionView != nil && self.bottomScrollFadeView != nil {
-				
-				// adjust bottom scroll fade view alpha if collection view does not encroach upon its layout space
-				UIViewPropertyAnimator(duration: 0.4*ANIMATION_SPEED_MODIFIER, curve: .easeOut, animations: { 
-					
-					if self.collectionView!.contentSize.height < self.view.bounds.height-self.bottomScrollFadeView!.bounds.height {
-						self.bottomScrollFadeView?.alpha = 0.3
-					} else {
-						self.bottomScrollFadeView?.alpha = 1
-					}
-				}).startAnimation()
-			}
+//			if self.collectionView != nil && self.bottomScrollFadeView != nil {
+//				
+//				// adjust bottom scroll fade view alpha if collection view does not encroach upon its layout space
+//				UIViewPropertyAnimator(duration: 0.4*ANIMATION_SPEED_MODIFIER, curve: .easeOut, animations: { 
+//					
+//					if self.collectionView!.contentSize.height < self.view.bounds.height-self.bottomScrollFadeView!.bounds.height {
+//						self.bottomScrollFadeView?.alpha = 0.3
+//					} else {
+//						self.bottomScrollFadeView?.alpha = 1
+//					}
+//				}).startAnimation()
+//			}
 		}
 	}
 	func nowPlayingArtistDidChange() {
@@ -221,42 +210,16 @@ class NewReleasesViewController: LissicViewController {
 				// if there is anartist to show quick view for AND	the artist is not already being followed
 				if PreferenceManager.shared.nowPlayingArtist != nil && !PreferenceManager.shared.followingArtists.contains(where: { $0.itunesID == PreferenceManager.shared.nowPlayingArtist?.itunesID }) {
 					
-					DispatchQueue.global().async {
-						
-						// load all info for artist
-						let additionalInfoTask = RequestManager.shared.getAdditionalInfo(for: PreferenceManager.shared.nowPlayingArtist!, completion: { (artist, error) in
-							
-							guard let artist = artist, error == nil else {
-								return
-							}
-							
-							PreferenceManager.shared.nowPlayingArtist = artist
-							
-							guard let thumbnailURL = PreferenceManager.shared.nowPlayingArtist?.artworkURLs[.thumbnail] else {
-								return
-							}
-							
-							let loadImageTask = RequestManager.shared.loadImage(from: thumbnailURL, completion: { (image, error) in
-								
-								guard let image = image, error == nil else {
-									return
-								}
-								
-								DispatchQueue.main.async {
-									
-									self.nowPlayingArtistQuickViewButton.imageView.image = image
-									self.nowPlayingArtistQuickViewButton.showArtwork(false)
-									
-									self.backdrop?.overlay.removeConstraint(self.nowPlayingArtistQuickViewButtonHidingConstraint)
-									self.backdrop?.overlay.addConstraint(self.nowPlayingArtistQuickViewButtonRestingConstraint)
-									
-									UIViewPropertyAnimator(duration: 0.5*ANIMATION_SPEED_MODIFIER, dampingRatio: 0.65, animations: {
-										self.backdrop?.overlay.layoutIfNeeded()
-									}).startAnimation()
-								}
-							})
-						})
-					}
+					self.nowPlayingArtistQuickViewButton.imageView.image = PreferenceManager.shared.nowPlayingArtist?.thumbnailImage
+					self.nowPlayingArtistQuickViewButton.showArtwork(false)
+					
+					self.backdrop?.overlay.removeConstraint(self.nowPlayingArtistQuickViewButtonHidingConstraint)
+					self.backdrop?.overlay.addConstraint(self.nowPlayingArtistQuickViewButtonRestingConstraint)
+					
+					UIViewPropertyAnimator(duration: 0.5*ANIMATION_SPEED_MODIFIER, dampingRatio: 0.65, animations: {
+						self.backdrop?.overlay.layoutIfNeeded()
+					}).startAnimation()
+
 				}
 			})
 			
@@ -269,10 +232,15 @@ class NewReleasesViewController: LissicViewController {
 	
 	
 	// MARK: - IBActions
-	@IBAction func showSearch(_ sender: Any) {
+	@IBAction func showSearch() {
 		let deadlineTime = DispatchTime.now() + .milliseconds(50)
 		DispatchQueue.main.asyncAfter(deadline: deadlineTime) {
 			self.performSegue(withIdentifier: "NewReleases->ArtistSearch", sender: nil)
+		}
+	}
+	@IBAction func gotoNowPlayingArtist() {
+		DispatchQueue.main.async {
+			self.performSegue(withIdentifier: "NewReleases->Artist", sender: self.nowPlayingArtistQuickViewButton)
 		}
 	}
 	@IBAction func handle(_ recognizer: UIGestureRecognizer) {
@@ -284,7 +252,6 @@ class NewReleasesViewController: LissicViewController {
 		if recognizer.isKind(of: UIPanGestureRecognizer.self) {
 			
 			let progress = abs((recognizer as! UIPanGestureRecognizer).translation(in: presentedViewController.view).y / presentedViewController.view.frame.height)
-			print(progress)
 			
 			switch recognizer.state {
 				
@@ -395,10 +362,23 @@ class NewReleasesViewController: LissicViewController {
 		else if segue.identifier == "NewReleases->ReleaseSorting" {
 			self.blurView = LissicBlurView(frame: self.view.bounds)
 			self.backdrop?.addSubview(self.blurView!)
-			UIView.animate(withDuration: ANIMATION_SPEED_MODIFIER*0.3, animations: {
+			UIViewPropertyAnimator(duration: ANIMATION_SPEED_MODIFIER*0.3, curve: .linear, animations: {
 				self.blurView?.effect = PreferenceManager.shared.theme == .dark ? UIBlurEffect(style: .dark) : UIBlurEffect(style: .light)
-			})
+			}).startAnimation()
 			
+		}
+		
+		else if segue.identifier == "NewReleases->Artist" {
+			if sender as? NowPlayingArtistQuickViewButton != nil {
+				let transitioner = PopInFromFrameAnimatedTransitionController(forPresenting: true, interactively: false)
+				let initialWidth = (UIScreen.main.bounds.width / UIScreen.main.bounds.height) * self.nowPlayingArtistQuickViewButton.bounds.height
+				let initialX = self.nowPlayingArtistQuickViewButton.frame.origin.x + (((UIScreen.main.bounds.width / UIScreen.main.bounds.height) * self.nowPlayingArtistQuickViewButton.bounds.height) / 2)
+				transitioner.initialFrame = CGRect(x: initialX, y: self.nowPlayingArtistQuickViewButton.frame.origin.y, width: initialWidth, height: self.nowPlayingArtistQuickViewButton.frame.height)
+				transitioner.finalFrame = UIScreen.main.bounds
+				self.animationController = transitioner
+				segue.destination.transitioningDelegate = self
+				(segue.destination as? ArtistViewController)?.artist = PreferenceManager.shared.nowPlayingArtist
+			}
 		}
 	}
 	override func prepareForUnwind(for segue: UIStoryboardSegue) {
@@ -407,16 +387,24 @@ class NewReleasesViewController: LissicViewController {
 		self.isCurrentlyVisible = true
 		
 		if segue.identifier == "Settings->NewReleases" {
+			if !(self.animationController as! RevealBehindAnimatedTransitionController).interactive { // if transition is not interactive
+				
+				UIViewPropertyAnimator(duration: 0.4*ANIMATION_SPEED_MODIFIER, curve: .easeOut, animations: {
+					self.collectionView?.alpha = 0.15
+				}).startAnimation()
+			}
 		}
 			
 		else if segue.identifier == "ReleaseSorting->NewReleases" {
 			
-			UIView.animate(withDuration: ANIMATION_SPEED_MODIFIER*0.5, animations: {
+			let animator = UIViewPropertyAnimator(duration: ANIMATION_SPEED_MODIFIER*0.5, curve: .easeOut, animations: {
 				self.blurView?.effect = nil
-			}) { (finished) in
+			})
+			animator.addCompletion({ (position) in
 				self.blurView?.removeFromSuperview()
 				self.blurView = nil
-			}
+			})
+			animator.startAnimation()
 		}
 			
 		else if segue.identifier == "Release->NewReleases" {
@@ -437,37 +425,33 @@ extension NewReleasesViewController: UICollectionViewDataSourcePrefetching, UICo
 		indexPaths.forEach { (indexPath) in
 			
 			var source = PreferenceManager.shared.newReleases
-			var destination = self.newReleasesArtwork
 			
 			if indexPath.section == 1 {
 				
 				source = PreferenceManager.shared.previousReleases
-				destination = self.previousReleasesArtwork
 			}
 			
-			if destination[indexPath.row] == nil {
+			let artworkTask = source[indexPath.row].loadThumbnail {
 				
-				if let artworkURL = source[indexPath.row].artworkURL {
-					DispatchQueue.global().async {
-						
-						UIApplication.shared.isNetworkActivityIndicatorVisible = true
-						if let artworkTask = RequestManager.shared.loadImage(from: artworkURL, completion: { (image, error) in
-							
-							UIApplication.shared.isNetworkActivityIndicatorVisible = false
-							if let image = image, error == nil {
-								destination[indexPath.row] = image
-							}
-							
-						}) {
-							
-							if indexPath.section == 0 {
-								self.newReleasesArtworkDownloadTasks[indexPath.row] = artworkTask
-							} else {
-								self.previousReleasesArtworkDownloadTasks[indexPath.row] = artworkTask
-							}
-						}
-					}
+				switch indexPath.section {
+				case 0:
+					PreferenceManager.shared.newReleases[indexPath.row].thumbnailImage = source[indexPath.row].thumbnailImage
+					break
+				case 1:
+					PreferenceManager.shared.previousReleases[indexPath.row].thumbnailImage = source[indexPath.row].thumbnailImage
+					break
+				default: break
 				}
+			}
+			
+			switch indexPath.section {
+			case 0:
+				self.newReleasesArtworkDownloadTasks[indexPath.row] = artworkTask
+				break
+			case 1:
+				self.previousReleasesArtworkDownloadTasks[indexPath.row] = artworkTask
+				break
+			default: break
 			}
 
 		}
@@ -492,6 +476,7 @@ extension NewReleasesViewController: UICollectionViewDataSourcePrefetching, UICo
         return 2
 	}
 	func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+		
 		var numItems = PreferenceManager.shared.newReleases.count
 		
 		if section == 1 {
@@ -535,12 +520,10 @@ extension NewReleasesViewController: UICollectionViewDataSourcePrefetching, UICo
 		}
 		
 		var source = PreferenceManager.shared.newReleases
-		var artworkSource = self.newReleasesArtwork
 		
 		if indexPath.section == 1 {
 			
 			source = PreferenceManager.shared.previousReleases
-			artworkSource = self.previousReleasesArtwork
 		}
 		
 		let release = source[indexPath.row]
@@ -553,7 +536,7 @@ extension NewReleasesViewController: UICollectionViewDataSourcePrefetching, UICo
 		cell.releaseTitleLabel.text = release.title
 		cell.secondaryLabel.text = release.artist.name
 		
-		guard let image = artworkSource[indexPath.row] else {
+		guard let image = source[indexPath.row].thumbnailImage else {
 			
 			guard let url = release.thumbnailURL else {
 				return cell
@@ -561,26 +544,30 @@ extension NewReleasesViewController: UICollectionViewDataSourcePrefetching, UICo
 			
 			DispatchQueue.global().async {
 				
-				UIApplication.shared.isNetworkActivityIndicatorVisible = true
-				let artworkTask = RequestManager.shared.loadImage(from: url, completion: { (image, error) in
-					UIApplication.shared.isNetworkActivityIndicatorVisible = false
+				RequestManager.shared.loadImage(from: url, completion: { (image, error) in
+
 					guard let image = image, error == nil else {
 						print(error!)
 						return
 					}
 					
 					// add loaded image to prefetch source
-					if indexPath.section == 0 {
-						self.newReleasesArtwork[indexPath.row] = image
-					} else {
-						self.previousReleasesArtwork[indexPath.row] = image
+					switch indexPath.section {
+					case 0:
+						PreferenceManager.shared.newReleases[indexPath.row].thumbnailImage = image
+						break
+					case 1:
+						PreferenceManager.shared.previousReleases[indexPath.row].thumbnailImage = image
+						break
+					default: break
 					}
 					
 					DispatchQueue.main.async {
 						cell.releaseArtView.imageView.image = image
 						cell.releaseArtView.showArtwork(true)
 					}
-				})
+					
+				})?.resume()
 			}
 			
 			return cell
@@ -614,17 +601,17 @@ extension NewReleasesViewController: UICollectionViewDataSourcePrefetching, UICo
 	
 	// MARK: - UIScrollViewDelegate
 	func scrollViewDidEndDragging(_ scrollView: UIScrollView, willDecelerate decelerate: Bool) {
-		
+
 		if scrollView == self.collectionView {
 			if self.collectionView?.refreshControl?.isRefreshing ?? false {
 
 				let deadlineTime = DispatchTime.now() + .milliseconds(300)
 				DispatchQueue.main.asyncAfter(deadline: deadlineTime) {
-					if PreferenceManager.shared.lastReleasesUpdate != nil && PreferenceManager.shared.lastReleasesUpdate! < Calendar.current.date(byAdding: .minute, value: -5, to: Date())! {
-						PreferenceManager.shared.updateNewReleases()
-					} else {
-						self.collectionView?.refreshControl?.endRefreshing()
-					}
+					PreferenceManager.shared.updateNewReleases()
+					//if PreferenceManager.shared.lastReleasesUpdate != nil && PreferenceManager.shared.lastReleasesUpdate! < Calendar.current.date(byAdding: .minute, value: -5, to: Date())! {
+					//} else {
+					//	self.collectionView?.refreshControl?.endRefreshing()
+					//}
 					
 				}
 			}

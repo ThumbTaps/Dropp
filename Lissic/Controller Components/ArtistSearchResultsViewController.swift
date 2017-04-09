@@ -8,7 +8,7 @@
 
 import UIKit
 
-class ArtistSearchResultsViewController: LissicViewController, UICollectionViewDataSource, UICollectionViewDelegate, UICollectionViewDelegateFlowLayout {
+class ArtistSearchResultsViewController: LissicViewController {
 	
 	@IBOutlet weak var searchButton: SearchButton!
 	
@@ -42,10 +42,6 @@ class ArtistSearchResultsViewController: LissicViewController, UICollectionViewD
         // Dispose of any resources that can be recreated.
     }
 	
-	
-	
-	
-	
 	override func themeDidChange() {
 		super.themeDidChange()
 		
@@ -59,124 +55,6 @@ class ArtistSearchResultsViewController: LissicViewController, UICollectionViewD
 			}
 		}
 	}
-	
-	
-	
-	
-	
-	
-	// MARK: - UICollectionView
-	func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-		return self.artistSearchResults.count
-	}
-	func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
-		return CGSize(width: self.view.bounds.width, height: 50)
-	}
-	func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-		
-		let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "ArtistSearchResultCell", for: indexPath) as! ArtistCollectionViewCell
-		
-		cell.artistNameLabel.text = self.artistSearchResults[indexPath.row].name
-		
-		return cell
-	}
-	func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-		
-		// show existing following artist or from search results
-		let selectedArtist = PreferenceManager.shared.followingArtists.first(where: { $0.itunesID == self.artistSearchResults[indexPath.row].itunesID }) ?? self.artistSearchResults[indexPath.row]
-		var artistArtworkImage: UIImage?
-		
-		guard selectedArtist != nil else {
-			// TODO: Show error preparing displaying artist
-			return
-		}
-		
-		let totalRequests = 2
-		var completedRequests = 0 {
-			didSet {
-				if completedRequests == totalRequests {
-					// trigger segue
-					self.performSegue(withIdentifier: "ArtistSearchResults->Artist", sender: { (destination: ArtistViewController) in
-						destination.artist = selectedArtist
-						destination.artistArtworkImage = artistArtworkImage
-					})
-				}
-			}
-		}
-		
-		UIApplication.shared.isNetworkActivityIndicatorVisible = true
-		// load additional info for artist
-		guard let additionalInfoTask = RequestManager.shared.getAdditionalInfo(for: selectedArtist, completion: { (artist, error) in
-			
-			guard let artist = artist, error == nil else {
-				print(error!)
-				return
-			}
-			
-			selectedArtist.summary = artist.summary
-			selectedArtist.artworkURLs = artist.artworkURLs
-
-			// load artist artwork
-			guard let urlForArtwork = selectedArtist.artworkURLs[.mega] else {
-				print("Could not construct artwork URL", selectedArtist.artworkURLs)
-				completedRequests += 1
-				UIApplication.shared.isNetworkActivityIndicatorVisible = false
-				return
-			}
-
-			guard let loadImageTask = RequestManager.shared.loadImage(from: urlForArtwork, completion: { (image, error) in
-				
-				guard let image = image, error == nil else {
-					print(error)
-					completedRequests += 1
-					UIApplication.shared.isNetworkActivityIndicatorVisible = false
-					
-					return
-				}
-				
-				artistArtworkImage = image
-				
-				completedRequests += 1
-				UIApplication.shared.isNetworkActivityIndicatorVisible = false
-			}) else {
-				
-				print("Couldn't load artwork")
-				completedRequests += 1
-				UIApplication.shared.isNetworkActivityIndicatorVisible = false
-				return
-			}
-			
-		}) else {
-
-			// TODO: Bail
-			UIApplication.shared.isNetworkActivityIndicatorVisible = false
-			return
-		}
-		
-		UIApplication.shared.isNetworkActivityIndicatorVisible = true
-		// load releases
-		guard let releasesTask = RequestManager.shared.getReleases(for: selectedArtist, completion: { (releases, error) in
-			
-			guard let releases = releases, error == nil else {
-				print(error!)
-				return
-			}
-			
-			selectedArtist.releases = releases
-			
-			completedRequests += 1
-			UIApplication.shared.isNetworkActivityIndicatorVisible = false
-		}) else {
-			
-			// TODO: Bail
-			UIApplication.shared.isNetworkActivityIndicatorVisible = false
-			return
-		}
-	}
-	
-	
-	
-
 	
 	// MARK: - Navigation
     // In a storyboard-based application, you will often want to do a little preparation before navigation
@@ -210,4 +88,76 @@ class ArtistSearchResultsViewController: LissicViewController, UICollectionViewD
 		
 	}
 
+}
+
+extension ArtistSearchResultsViewController: UICollectionViewDataSource, UICollectionViewDelegate, UICollectionViewDelegateFlowLayout {
+	
+	func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+		return self.artistSearchResults.count
+	}
+	func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
+		return CGSize(width: self.view.bounds.width, height: 50)
+	}
+	func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+		
+		let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "ArtistSearchResultCell", for: indexPath) as! ArtistCollectionViewCell
+		
+		cell.artistNameLabel.text = self.artistSearchResults[indexPath.row].name
+		
+		return cell
+	}
+	func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+		
+		// show existing following artist or from search results
+		let selectedArtist = PreferenceManager.shared.followingArtists.first(where: { $0.itunesID == self.artistSearchResults[indexPath.row].itunesID }) ?? self.artistSearchResults[indexPath.row]
+		var artistArtworkImage: UIImage?
+		
+		var remainingRequests = 3 {
+			didSet {
+				print(remainingRequests)
+				if remainingRequests == 0 {
+					// trigger segue
+					self.performSegue(withIdentifier: "ArtistSearchResults->Artist", sender: { (destination: ArtistViewController) in
+						destination.artist = selectedArtist
+					})
+				}
+			}
+		}
+		
+		// additional info request - 1
+		RequestManager.shared.getAdditionalInfo(for: selectedArtist, completion: { (artist, error) in
+			
+			remainingRequests -= 1
+			
+			guard let artist = artist, error == nil else {
+				print(error!)
+				return
+			}
+			
+			selectedArtist.summary = artist.summary
+			selectedArtist.artworkURL = artist.artworkURL
+			selectedArtist.thumbnailURL = artist.thumbnailURL
+			
+			_ = selectedArtist.loadArtwork {
+				
+				remainingRequests -= 1
+			}
+			
+		})?.resume()
+		
+		
+		// load releases - 3
+		RequestManager.shared.getReleases(for: selectedArtist, completion: { (releases, error) in
+			
+			remainingRequests -= 1
+			
+			guard let releases = releases, error == nil else {
+				print(error!)
+				return
+			}
+			
+			selectedArtist.releases = releases
+			
+		})?.resume()
+	}
 }

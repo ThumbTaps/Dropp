@@ -9,7 +9,14 @@
 import UIKit
 
 class NowPlayingArtistQuickViewButton: ArtworkArtView {
-
+	
+	override init(frame: CGRect) {
+		super.init(frame: frame)
+	}
+	required init?(coder aDecoder: NSCoder) {
+		super.init(coder: aDecoder)
+	}
+	
     /*
     // Only override draw() if you perform custom drawing.
     // An empty implementation adversely affects performance during animation.
@@ -28,9 +35,12 @@ class NowPlayingArtistQuickViewButton: ArtworkArtView {
 	override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
 		super.touchesBegan(touches, with: event)
 		
-		UIView.animate(withDuration: 0.4, delay: 0, usingSpringWithDamping: 0.5, initialSpringVelocity: 0.8, options: .curveEaseOut, animations: {
-			self.transform = CGAffineTransform(scaleX: 0.9, y: 0.9)
-		})
+		DispatchQueue.main.async {
+			
+			UIViewPropertyAnimator(duration: 0.4 * ANIMATION_SPEED_MODIFIER, dampingRatio: 0.5) {
+				self.transform = CGAffineTransform(scaleX: 0.9, y: 0.9)
+			}.startAnimation()
+		}
 		
 	}
 	override func touchesMoved(_ touches: Set<UITouch>, with event: UIEvent?) {
@@ -46,9 +56,12 @@ class NowPlayingArtistQuickViewButton: ArtworkArtView {
 	}
 	override func touchesEnded(_ touches: Set<UITouch>, with event: UIEvent?) {
 		
-		UIView.animate(withDuration: 0.5, delay: 0, usingSpringWithDamping: 0.6, initialSpringVelocity: 0.8, options: .curveEaseOut, animations: {
-			self.transform = CGAffineTransform(scaleX: 1, y: 1)
-		})
+		DispatchQueue.main.async {
+			
+			UIViewPropertyAnimator(duration: 0.5 * ANIMATION_SPEED_MODIFIER, dampingRatio: 0.6) {
+				self.transform = CGAffineTransform(scaleX: 1, y: 1)
+			}.startAnimation()
+		}
 		
 		super.touchesEnded(touches, with: event)
 	}

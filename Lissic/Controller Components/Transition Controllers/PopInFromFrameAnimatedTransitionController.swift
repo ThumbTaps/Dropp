@@ -10,12 +10,20 @@ import UIKit
 
 class PopInFromFrameAnimatedTransitionController: NSObject, UIViewControllerAnimatedTransitioning, UIViewControllerTransitioningDelegate {
 	
-	private var presenting = true
+	var presenting = true
+	var interactive = false
+	
+	convenience init(forPresenting presenting: Bool, interactively interactive: Bool) {
+		self.init()
+		
+		self.presenting = presenting
+		self.interactive = interactive
+	}
 	var initialFrame: CGRect = .zero
 	var finalFrame: CGRect = .zero
 	
 	func transitionDuration(using transitionContext: UIViewControllerContextTransitioning?) -> TimeInterval {
-		return self.presenting ? 0.8 : 0.1
+		return self.presenting ? 0.6 : 0.6
 	}
 	func animateTransition(using transitionContext: UIViewControllerContextTransitioning) {
 		guard let source = transitionContext.viewController(forKey: .from),
@@ -27,23 +35,21 @@ class PopInFromFrameAnimatedTransitionController: NSObject, UIViewControllerAnim
 		
 		if self.presenting {
 			
-			destination.view.alpha = 0
 			destination.view.frame = self.initialFrame
 			destination.view.clipsToBounds = false
 			
 			transitionContext.containerView.addSubview(source.view)
 			transitionContext.containerView.addSubview(destination.view)
 			
-			UIView.animate(withDuration: ANIMATION_SPEED_MODIFIER*duration*0.4, delay: 0, options: .curveEaseOut, animations: {
-				
+			let animator = UIViewPropertyAnimator(duration: ANIMATION_SPEED_MODIFIER*duration, dampingRatio: 0.8, animations: {
 				destination.view.frame = self.finalFrame
-				destination.view.alpha = 1
-				
-			}, completion: { (completed) in
-				
-				transitionContext.completeTransition(!transitionContext.transitionWasCancelled)
-					
 			})
+				
+			animator.addCompletion({ (position) in
+				transitionContext.completeTransition(!transitionContext.transitionWasCancelled)
+			})
+			
+			animator.startAnimation()
 		}
 			
 		else {
@@ -53,15 +59,16 @@ class PopInFromFrameAnimatedTransitionController: NSObject, UIViewControllerAnim
 			transitionContext.containerView.addSubview(destination.view)
 			transitionContext.containerView.addSubview(source.view)
 			
-			UIView.animate(withDuration: ANIMATION_SPEED_MODIFIER*duration, delay: 0, options: .curveEaseOut, animations: {
-				
+			let animator = UIViewPropertyAnimator(duration: ANIMATION_SPEED_MODIFIER*duration, curve: .easeOut, animations: {
 				source.view.frame = self.initialFrame
 				source.view.alpha = 0
-				
-			}, completion: { (completed) in
-				
+			})
+			
+			animator.addCompletion({ (position) in
 				transitionContext.completeTransition(!transitionContext.transitionWasCancelled)
 			})
+			
+			animator.startAnimation()
 		}
 		
 	}

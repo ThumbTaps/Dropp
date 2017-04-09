@@ -8,9 +8,8 @@
 
 import UIKit
 
-class ArtistsViewController: LissicViewController, UICollectionViewDataSourcePrefetching, UICollectionViewDataSource, UICollectionViewDelegate, UICollectionViewDelegateFlowLayout {
+class ArtistsViewController: LissicViewController {
 	
-	var artistsArtwork = [UIImage?](repeating: nil, count: PreferenceManager.shared.followingArtists.count)
 	var artworkDownloadTasks = [URLSessionDataTask?](repeating: nil, count: PreferenceManager.shared.followingArtists.count)
 	
     override func viewDidLoad() {
@@ -23,31 +22,30 @@ class ArtistsViewController: LissicViewController, UICollectionViewDataSourcePre
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
     }
-	
-	
-	
+
+    // MARK: - Navigation
+
+    // In a storyboard-based application, you will often want to do a little preparation before navigation
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        // Get the new view controller using segue.destinationViewController.
+        // Pass the selected object to the new view controller.
+		
+		
+    }
+
+}
+
+extension ArtistsViewController: UICollectionViewDataSourcePrefetching, UICollectionViewDataSource, UICollectionViewDelegate, UICollectionViewDelegateFlowLayout {
 	
 	// MARK: - UICollectionViewDataSourcePrefetching
 	func collectionView(_ collectionView: UICollectionView, prefetchItemsAt indexPaths: [IndexPath]) {
 		
 		indexPaths.forEach { (indexPath) in
 			
-			guard let artworkURL = PreferenceManager.shared.followingArtists[indexPath.row].artworkURLs[.thumbnail] else {
-				return
+			let artworkTask = PreferenceManager.shared.followingArtists[indexPath.row].loadArtwork {
+				self.artworkDownloadTasks[indexPath.row] = nil
 			}
-			
-			DispatchQueue.global().async {
-				
-				if let artworkTask = RequestManager.shared.loadImage(from: artworkURL, completion: { (image, error) in
-					
-					if let image = image, error == nil {
-						self.artistsArtwork[indexPath.row] = image
-					}
-					
-				}) {
-					self.artworkDownloadTasks[indexPath.row] = artworkTask
-				}
-			}
+			self.artworkDownloadTasks[indexPath.row] = artworkTask
 		}
 	}
 	func collectionView(_ collectionView: UICollectionView, cancelPrefetchingForItemsAt indexPaths: [IndexPath]) {
@@ -56,9 +54,6 @@ class ArtistsViewController: LissicViewController, UICollectionViewDataSourcePre
 			self.artworkDownloadTasks[indexPath.row]?.cancel()
 		}
 	}
-
-	
-	
 	
 	
 	// MARK: - UICollectionViewDataSource
@@ -77,58 +72,20 @@ class ArtistsViewController: LissicViewController, UICollectionViewDataSourcePre
 		cell.artistNameLabel.text = artist.name
 		cell.artistArtView.hideArtwork()
 		
-		guard let image = self.artistsArtwork[indexPath.row] else {
+		_ = PreferenceManager.shared.followingArtists[indexPath.row].loadThumbnail {
 			
-			guard let url = artist.artworkURLs[.thumbnail] else {
-				return cell
+			DispatchQueue.main.async {
+				cell.artistArtView.imageView.image = PreferenceManager.shared.followingArtists[indexPath.row].thumbnailImage
+				cell.artistArtView.showArtwork(true)
 			}
-			
-			DispatchQueue.global().async {
-				
-				let artworkTask = RequestManager.shared.loadImage(from: url, completion: { (image, error) in
-					
-					guard let image = image, error == nil else {
-						print(error!)
-						return
-					}
-					
-					// add loaded image to prefetch source
-					self.artistsArtwork[indexPath.row] = image
-					
-					DispatchQueue.main.async {
-						cell.artistArtView.imageView.image = image
-						cell.artistArtView.showArtwork(true)
-					}
-				})
-			}
-			
-			return cell
 		}
 		
-		DispatchQueue.main.async {
-			cell.artistArtView.imageView.image = image
-			cell.artistArtView.showArtwork()
-		}
-				
 		return cell
 	}
+	
+	
+	// MARK: - UICollectionViewDelegateFlowLayout
 	func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
 		return CGSize(width: self.view.bounds.width, height: 100)
 	}
-
-	
-	
-	
-	
-	
-    // MARK: - Navigation
-
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        // Get the new view controller using segue.destinationViewController.
-        // Pass the selected object to the new view controller.
-		
-		
-    }
-
 }

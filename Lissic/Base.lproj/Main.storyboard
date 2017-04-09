@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="12113" systemVersion="16E163f" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES" initialViewController="igh-Gg-oBy">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="12118" systemVersion="16F43c" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES" initialViewController="igh-Gg-oBy">
     <device id="retina5_5" orientation="portrait">
         <adaptation id="fullscreen"/>
     </device>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="12078"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="12086"/>
         <capability name="Aspect ratio constraints" minToolsVersion="5.1"/>
         <capability name="Constraints to layout margins" minToolsVersion="6.0"/>
         <capability name="Segues with Peek and Pop" minToolsVersion="7.1"/>
@@ -810,13 +810,13 @@
                         <outlet property="navigationTitleHidingConstraint" destination="wfh-oz-bk0" id="ycS-4t-X7s"/>
                         <outlet property="navigationTitleRestingConstraint" destination="7cb-wM-RRd" id="4u4-RA-LFo"/>
                         <outlet property="topScrollFadeView" destination="9pc-lh-ZPo" id="fFf-7I-XLv"/>
-                        <segue destination="Kna-iH-fwp" kind="unwind" identifier="Settings-&gt;NewReleases" customClass="UrsusStoryboardSegue" customModule="Lissic" customModuleProvider="target" unwindAction="prepareForUnwindFor:" id="Kam-og-nSw"/>
+                        <segue destination="Kna-iH-fwp" kind="unwind" identifier="Settings-&gt;NewReleases" customClass="LissicStoryboardSegue" customModule="Lissic" customModuleProvider="target" unwindAction="prepareForUnwindFor:" id="Kam-og-nSw"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="oR9-o4-9ac" userLabel="First Responder" sceneMemberID="firstResponder"/>
                 <exit id="Kna-iH-fwp" userLabel="Exit" sceneMemberID="exit"/>
             </objects>
-            <point key="canvasLocation" x="-3014.4927536231885" y="1138.0434782608697"/>
+            <point key="canvasLocation" x="-3680" y="1137"/>
         </scene>
         <!--Artist Search-->
         <scene sceneID="Wcv-Rb-N4r">
@@ -919,9 +919,9 @@
                         <outlet property="searchBarCenteredConstraint" destination="4to-X8-R76" id="kM2-j3-i7q"/>
                         <outlet property="searchBarHidingConstraint" destination="Zqk-Xr-WWm" id="720-cx-UqL"/>
                         <outlet property="searchBarRestingConstraint" destination="UOE-XM-roy" id="87c-8l-gOm"/>
-                        <segue destination="eq1-Fd-vdq" kind="custom" identifier="ArtistSearch-&gt;ArtistSearchResults" customClass="UrsusStoryboardSegue" customModule="Lissic" customModuleProvider="target" id="QMU-U7-kqF"/>
-                        <segue destination="YBR-9N-AHs" kind="custom" identifier="ArtistSearch-&gt;Artist" customClass="UrsusStoryboardSegue" customModule="Lissic" customModuleProvider="target" id="qkx-Fg-KPo"/>
-                        <segue destination="Zsd-jN-gNZ" kind="unwind" identifier="ArtistSearch-&gt;NewReleases" customClass="UrsusStoryboardSegue" customModule="Lissic" customModuleProvider="target" unwindAction="prepareForUnwindFor:" id="eBZ-vG-HyK"/>
+                        <segue destination="eq1-Fd-vdq" kind="custom" identifier="ArtistSearch-&gt;ArtistSearchResults" customClass="LissicStoryboardSegue" customModule="Lissic" customModuleProvider="target" id="QMU-U7-kqF"/>
+                        <segue destination="YBR-9N-AHs" kind="custom" identifier="ArtistSearch-&gt;Artist" customClass="LissicStoryboardSegue" customModule="Lissic" customModuleProvider="target" id="qkx-Fg-KPo"/>
+                        <segue destination="Zsd-jN-gNZ" kind="unwind" identifier="ArtistSearch-&gt;NewReleases" customClass="LissicStoryboardSegue" customModule="Lissic" customModuleProvider="target" unwindAction="prepareForUnwindFor:" id="eBZ-vG-HyK"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="D13-5Y-cXW" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -932,7 +932,7 @@
                     </connections>
                 </tapGestureRecognizer>
             </objects>
-            <point key="canvasLocation" x="-2209" y="1139"/>
+            <point key="canvasLocation" x="-2952" y="1139"/>
         </scene>
         <!--New Releases-->
         <scene sceneID="Vt8-o4-acr">
@@ -1037,7 +1037,7 @@
                                                     <outlet property="releaseArtView" destination="8TL-MB-ole" id="jXp-v1-CYU"/>
                                                     <outlet property="releaseTitleLabel" destination="8Ao-1W-PMW" id="gCZ-B4-p4i"/>
                                                     <outlet property="secondaryLabel" destination="wy4-a4-Vef" id="zTY-N7-rdp"/>
-                                                    <segue destination="Jai-jZ-F7n" kind="custom" identifier="NewReleases-&gt;Release" customClass="UrsusStoryboardSegue" customModule="Lissic" customModuleProvider="target" id="kRG-BK-4CJ">
+                                                    <segue destination="Jai-jZ-F7n" kind="custom" identifier="NewReleases-&gt;Release" customClass="LissicStoryboardSegue" customModule="Lissic" customModuleProvider="target" id="kRG-BK-4CJ">
                                                         <segue key="commit" inheritsFrom="parent" id="sTC-nE-yKX"/>
                                                         <segue key="preview" inheritsFrom="commit" id="qfX-CP-nSz"/>
                                                     </segue>
@@ -1087,7 +1087,7 @@
                                             <constraint firstAttribute="height" constant="45" id="dX7-nK-mw2"/>
                                         </constraints>
                                         <connections>
-                                            <segue destination="tIm-Ss-63n" kind="custom" identifier="NewReleases-&gt;Settings" customClass="UrsusStoryboardSegue" customModule="Lissic" customModuleProvider="target" id="ubg-n1-0s5"/>
+                                            <segue destination="tIm-Ss-63n" kind="custom" identifier="NewReleases-&gt;Settings" customClass="LissicStoryboardSegue" customModule="Lissic" customModuleProvider="target" id="ubg-n1-0s5"/>
                                         </connections>
                                     </button>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="nrJ-fe-wG3" customClass="ArtistsButton" customModule="Lissic" customModuleProvider="target">
@@ -1097,7 +1097,7 @@
                                             <constraint firstAttribute="height" constant="45" id="u3J-b8-tNQ"/>
                                         </constraints>
                                         <connections>
-                                            <segue destination="r2U-EQ-06c" kind="custom" identifier="NewReleases-&gt;Artists" customClass="UrsusStoryboardSegue" customModule="Lissic" customModuleProvider="target" id="sgU-aW-9BD"/>
+                                            <segue destination="r2U-EQ-06c" kind="custom" identifier="NewReleases-&gt;Artists" customClass="LissicStoryboardSegue" customModule="Lissic" customModuleProvider="target" id="sgU-aW-9BD"/>
                                         </connections>
                                     </button>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="3Qu-ZD-RnC" userLabel="Search Button" customClass="SearchButton" customModule="Lissic" customModuleProvider="target">
@@ -1108,7 +1108,7 @@
                                         </constraints>
                                         <color key="tintColor" red="1" green="1" blue="1" alpha="0.90000000000000002" colorSpace="calibratedRGB"/>
                                         <connections>
-                                            <action selector="showSearch:" destination="igh-Gg-oBy" eventType="touchUpInside" id="8Gs-h7-Ac9"/>
+                                            <action selector="showSearch" destination="igh-Gg-oBy" eventType="touchUpInside" id="xmh-Wt-9nd"/>
                                         </connections>
                                     </button>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="New Releases" textAlignment="center" lineBreakMode="wordWrap" minimumScaleFactor="0.80000000000000004" adjustsLetterSpacingToFitWidth="YES" translatesAutoresizingMaskIntoConstraints="NO" id="mEf-hi-SXp">
@@ -1128,10 +1128,10 @@
                                             <userDefinedRuntimeAttribute type="boolean" keyPath="bordered" value="NO"/>
                                         </userDefinedRuntimeAttributes>
                                         <connections>
-                                            <segue destination="oCP-Ph-pfv" kind="custom" identifier="NewReleases-&gt;ReleaseSorting" customClass="UrsusStoryboardSegue" customModule="Lissic" customModuleProvider="target" id="X63-HF-esA"/>
+                                            <segue destination="oCP-Ph-pfv" kind="custom" identifier="NewReleases-&gt;ReleaseSorting" customClass="LissicStoryboardSegue" customModule="Lissic" customModuleProvider="target" id="X63-HF-esA"/>
                                         </connections>
                                     </button>
-                                    <button opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="1000" verticalHuggingPriority="1000" horizontalCompressionResistancePriority="250" verticalCompressionResistancePriority="1000" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="tailTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="God-eY-bpw" customClass="UrsusCountIndicator" customModule="Lissic" customModuleProvider="target">
+                                    <button opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="1000" verticalHuggingPriority="1000" horizontalCompressionResistancePriority="250" verticalCompressionResistancePriority="1000" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="tailTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="God-eY-bpw" customClass="LissicCountIndicator" customModule="Lissic" customModuleProvider="target">
                                         <rect key="frame" x="437" y="-33" width="22" height="22"/>
                                         <constraints>
                                             <constraint firstAttribute="height" constant="22" id="HsU-hG-jHp"/>
@@ -1148,7 +1148,7 @@
                                             <userDefinedRuntimeAttribute type="boolean" keyPath="tinted" value="NO"/>
                                         </userDefinedRuntimeAttributes>
                                     </button>
-                                    <button opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="1000" verticalHuggingPriority="1000" horizontalCompressionResistancePriority="250" verticalCompressionResistancePriority="1000" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="tailTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="zNO-xx-eEi" customClass="UrsusCountIndicator" customModule="Lissic" customModuleProvider="target">
+                                    <button opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="1000" verticalHuggingPriority="1000" horizontalCompressionResistancePriority="250" verticalCompressionResistancePriority="1000" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="tailTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="zNO-xx-eEi" customClass="LissicCountIndicator" customModule="Lissic" customModuleProvider="target">
                                         <rect key="frame" x="414" y="-36" width="28" height="28"/>
                                         <constraints>
                                             <constraint firstAttribute="height" constant="28" id="YBr-TJ-bEn"/>
@@ -1171,6 +1171,7 @@
                                             </imageView>
                                         </subviews>
                                         <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                                        <gestureRecognizers/>
                                         <constraints>
                                             <constraint firstItem="gRB-JZ-TmW" firstAttribute="centerX" secondItem="5UF-wq-CbN" secondAttribute="centerX" id="4IJ-MB-DfP"/>
                                             <constraint firstItem="gRB-JZ-TmW" firstAttribute="height" secondItem="5UF-wq-CbN" secondAttribute="height" id="BdX-7l-aJ9"/>
@@ -1184,6 +1185,7 @@
                                         </userDefinedRuntimeAttributes>
                                         <connections>
                                             <outlet property="imageView" destination="gRB-JZ-TmW" id="0bF-Kq-pdK"/>
+                                            <outletCollection property="gestureRecognizers" destination="bNd-Ha-lu6" appends="YES" id="Owr-Xw-pXt"/>
                                         </connections>
                                     </view>
                                 </subviews>
@@ -1283,7 +1285,8 @@
                         <outlet property="settingsButtonShowingConstraint" destination="uyX-EX-fF1" id="3pG-Ti-21a"/>
                         <outlet property="tapGestureRecognizer" destination="nbl-CT-YMx" id="EEb-Vw-lB2"/>
                         <outlet property="topScrollFadeView" destination="lXh-cc-Zs0" id="EhT-PY-4tp"/>
-                        <segue destination="exg-Xr-PvW" kind="custom" identifier="NewReleases-&gt;ArtistSearch" customClass="UrsusStoryboardSegue" customModule="Lissic" customModuleProvider="target" id="ksI-Oy-xBb"/>
+                        <segue destination="exg-Xr-PvW" kind="custom" identifier="NewReleases-&gt;ArtistSearch" customClass="LissicStoryboardSegue" customModule="Lissic" customModuleProvider="target" id="ksI-Oy-xBb"/>
+                        <segue destination="YBR-9N-AHs" kind="custom" identifier="NewReleases-&gt;Artist" customClass="LissicStoryboardSegue" customModule="Lissic" customModuleProvider="target" id="X9s-ZU-Vl0"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="tI2-kc-gZW" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -1297,6 +1300,11 @@
                     <connections>
                         <action selector="handle:" destination="igh-Gg-oBy" id="b8k-rM-CC9"/>
                         <outlet property="delegate" destination="igh-Gg-oBy" id="EjZ-Wu-Duv"/>
+                    </connections>
+                </tapGestureRecognizer>
+                <tapGestureRecognizer id="bNd-Ha-lu6">
+                    <connections>
+                        <action selector="gotoNowPlayingArtist" destination="igh-Gg-oBy" id="GDe-91-aUs"/>
                     </connections>
                 </tapGestureRecognizer>
             </objects>
@@ -1487,7 +1495,7 @@
                         <outlet property="collectionView" destination="eja-31-fKA" id="8eJ-bj-DW1"/>
                         <outlet property="navigationTitle" destination="UIp-SY-ze9" id="ClB-sA-HAI"/>
                         <outlet property="topScrollFadeView" destination="2Gl-Xm-dqa" id="G0q-1g-A75"/>
-                        <segue destination="jzK-3U-oX2" kind="unwind" identifier="ReleaseSorting-&gt;NewReleases" customClass="UrsusStoryboardSegue" customModule="Lissic" customModuleProvider="target" unwindAction="prepareForUnwindFor:" id="O48-21-Lpc"/>
+                        <segue destination="jzK-3U-oX2" kind="unwind" identifier="ReleaseSorting-&gt;NewReleases" customClass="LissicStoryboardSegue" customModule="Lissic" customModuleProvider="target" unwindAction="prepareForUnwindFor:" id="O48-21-Lpc"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="1RY-jD-dWH" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -1570,7 +1578,7 @@
                                                 <connections>
                                                     <outlet property="artistArtView" destination="2Pt-2d-nsW" id="YBP-aQ-k9b"/>
                                                     <outlet property="artistNameLabel" destination="7Ei-Ye-VGT" id="BiD-FH-7gv"/>
-                                                    <segue destination="YBR-9N-AHs" kind="custom" identifier="Artists-&gt;Artist" customClass="UrsusStoryboardSegue" customModule="Lissic" customModuleProvider="target" id="34k-uI-Gug">
+                                                    <segue destination="YBR-9N-AHs" kind="custom" identifier="Artists-&gt;Artist" customClass="LissicStoryboardSegue" customModule="Lissic" customModuleProvider="target" id="34k-uI-Gug">
                                                         <segue key="commit" inheritsFrom="parent" id="e6B-KM-uuu"/>
                                                         <segue key="preview" inheritsFrom="commit" id="L1r-in-iWC"/>
                                                     </segue>
@@ -1656,7 +1664,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="7p2-cg-9ta" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-533" y="1139"/>
+            <point key="canvasLocation" x="-533" y="1136"/>
         </scene>
         <!--Artist Search Results-->
         <scene sceneID="lIr-pR-ftG">
@@ -1747,7 +1755,7 @@
                                     </mask>
                                 </variation>
                                 <connections>
-                                    <segue destination="crX-Jb-gtt" kind="unwind" identifier="ArtistSearchResults-&gt;ArtistSearch" customClass="UrsusStoryboardSegue" customModule="Lissic" customModuleProvider="target" unwindAction="prepareForUnwindFor:" id="SxX-g5-oAC"/>
+                                    <segue destination="crX-Jb-gtt" kind="unwind" identifier="ArtistSearchResults-&gt;ArtistSearch" customClass="LissicStoryboardSegue" customModule="Lissic" customModuleProvider="target" unwindAction="prepareForUnwindFor:" id="SxX-g5-oAC"/>
                                 </connections>
                             </button>
                         </subviews>
@@ -1778,13 +1786,13 @@
                         <outlet property="navigationTitle" destination="Ayi-xb-clx" id="GBK-ej-49l"/>
                         <outlet property="searchButton" destination="GUJ-Ck-o7X" id="0OS-gl-Chm"/>
                         <outlet property="topScrollFadeView" destination="CCs-Xy-viH" id="18d-wd-vkF"/>
-                        <segue destination="YBR-9N-AHs" kind="custom" identifier="ArtistSearchResults-&gt;Artist" customClass="UrsusStoryboardSegue" customModule="Lissic" customModuleProvider="target" id="Ygw-SB-yfN"/>
+                        <segue destination="YBR-9N-AHs" kind="custom" identifier="ArtistSearchResults-&gt;Artist" customClass="LissicStoryboardSegue" customModule="Lissic" customModuleProvider="target" id="Ygw-SB-yfN"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="BNc-Sd-N24" userLabel="First Responder" sceneMemberID="firstResponder"/>
                 <exit id="crX-Jb-gtt" userLabel="Exit" sceneMemberID="exit"/>
             </objects>
-            <point key="canvasLocation" x="-1378" y="1139"/>
+            <point key="canvasLocation" x="-2210" y="1139"/>
         </scene>
         <!--Release-->
         <scene sceneID="zPJ-Lr-gTs">
@@ -1841,7 +1849,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="gCy-57-Dhm" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="696" y="1138"/>
+            <point key="canvasLocation" x="648" y="1136"/>
         </scene>
         <!--Artist-->
         <scene sceneID="53E-9z-o5B">
@@ -1931,13 +1939,13 @@
                                                     <outlet property="releaseArtView" destination="rrY-xV-xHl" id="CF7-7O-ddI"/>
                                                     <outlet property="releaseTitleLabel" destination="twd-rS-kl8" id="Wa6-CX-ITW"/>
                                                     <outlet property="secondaryLabel" destination="A4y-WI-aEX" id="xK4-DV-B3g"/>
-                                                    <segue destination="Jai-jZ-F7n" kind="custom" identifier="Artist-&gt;Release" customClass="UrsusStoryboardSegue" customModule="Lissic" customModuleProvider="target" id="aQx-GT-xWZ">
+                                                    <segue destination="Jai-jZ-F7n" kind="custom" identifier="Artist-&gt;Release" customClass="LissicStoryboardSegue" customModule="Lissic" customModuleProvider="target" id="aQx-GT-xWZ">
                                                         <segue key="commit" inheritsFrom="parent" id="qXs-qg-053"/>
                                                         <segue key="preview" inheritsFrom="commit" id="ts8-HO-27d"/>
                                                     </segue>
                                                 </connections>
                                             </collectionViewCell>
-                                            <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="MoreReleasesCell" id="OIX-BZ-XLn" customClass="SettingsCollectionViewCell" customModule="Lissic" customModuleProvider="target">
+                                            <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="PreviousReleasesCell" id="OIX-BZ-XLn" customClass="SettingsCollectionViewCell" customModule="Lissic" customModuleProvider="target">
                                                 <rect key="frame" x="0.0" y="160" width="414" height="50"/>
                                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                                 <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center">
@@ -2214,7 +2222,7 @@
                                         <color key="textColor" red="0.20000000000000001" green="0.20000000000000001" blue="0.20000000000000001" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                         <nil key="highlightedColor"/>
                                     </label>
-                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="C4E-GX-90Y" customClass="UrsusButton" customModule="Lissic" customModuleProvider="target">
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="C4E-GX-90Y" customClass="LissicButton" customModule="Lissic" customModuleProvider="target">
                                         <rect key="frame" x="107.66666666666669" y="671" width="200" height="50"/>
                                         <constraints>
                                             <constraint firstAttribute="width" relation="lessThanOrEqual" constant="200" id="28W-E8-eK0"/>
@@ -2234,7 +2242,7 @@
                                         </userDefinedRuntimeAttributes>
                                         <connections>
                                             <action selector="followArtist:" destination="YBR-9N-AHs" eventType="touchUpInside" id="gMd-tL-O5T"/>
-                                            <segue destination="r2U-EQ-06c" kind="custom" identifier="Artist-&gt;Artists" customClass="UrsusStoryboardSegue" customModule="Lissic" customModuleProvider="target" id="um3-Zv-nGd"/>
+                                            <segue destination="r2U-EQ-06c" kind="custom" identifier="Artist-&gt;Artists" customClass="LissicStoryboardSegue" customModule="Lissic" customModuleProvider="target" id="um3-Zv-nGd"/>
                                         </connections>
                                     </button>
                                 </subviews>
@@ -2304,14 +2312,14 @@
                         <outlet property="navigationTitleHidingConstraint" destination="Ca1-of-M5d" id="bTZ-6v-crS"/>
                         <outlet property="navigationTitleRestingConstraint" destination="ozf-JN-aG7" id="KjW-fS-YwR"/>
                         <outlet property="topScrollFadeView" destination="1DT-rh-hYB" id="xdu-9t-9L6"/>
-                        <segue destination="EfK-6Q-bWP" kind="unwind" identifier="Artist-&gt;ArtistSearchResults" customClass="UrsusStoryboardSegue" customModule="Lissic" customModuleProvider="target" unwindAction="prepareForUnwindFor:" id="l2K-rr-98U"/>
-                        <segue destination="EfK-6Q-bWP" kind="unwind" identifier="Artist-&gt;ArtistSearch" customClass="UrsusStoryboardSegue" customModule="Lissic" customModuleProvider="target" unwindAction="prepareForUnwindFor:" id="blu-cR-HPu"/>
+                        <segue destination="EfK-6Q-bWP" kind="unwind" identifier="Artist-&gt;ArtistSearchResults" customClass="LissicStoryboardSegue" customModule="Lissic" customModuleProvider="target" unwindAction="prepareForUnwindFor:" id="l2K-rr-98U"/>
+                        <segue destination="EfK-6Q-bWP" kind="unwind" identifier="Artist-&gt;ArtistSearch" customClass="LissicStoryboardSegue" customModule="Lissic" customModuleProvider="target" unwindAction="prepareForUnwindFor:" id="blu-cR-HPu"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="zJk-bn-ceC" userLabel="First Responder" sceneMemberID="firstResponder"/>
                 <exit id="EfK-6Q-bWP" userLabel="Exit" sceneMemberID="exit"/>
             </objects>
-            <point key="canvasLocation" x="-1378" y="1955"/>
+            <point key="canvasLocation" x="-1378" y="2012"/>
         </scene>
         <!--Import-->
         <scene sceneID="6i2-E8-2AF">
@@ -2410,9 +2418,9 @@
         </scene>
     </scenes>
     <inferredMetricsTieBreakers>
+        <segue reference="X9s-ZU-Vl0"/>
         <segue reference="sTC-nE-yKX"/>
         <segue reference="sgU-aW-9BD"/>
-        <segue reference="qkx-Fg-KPo"/>
     </inferredMetricsTieBreakers>
     <color key="tintColor" red="0.94901960780000005" green="0.2156862745" blue="0.25882352939999997" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
 </document>

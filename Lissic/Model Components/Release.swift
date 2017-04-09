@@ -20,7 +20,9 @@ class Release: NSObject, NSCoding {
 	var summary: String?
 	var genre: String?
 	var artworkURL: URL?
+	var artworkImage: UIImage?
 	var thumbnailURL: URL?
+	var thumbnailImage: UIImage?
 	var trackCount: Int?
 	var isFeature = false
 	private var _seenByUser: Bool?
@@ -62,7 +64,7 @@ class Release: NSObject, NSCoding {
 				$0.releases.contains(where: {
 					$0.itunesID == itunesID
 				})
-			})! // this can't return nil because the release literally don't exist without the artists
+			})! // this can't return nil because the releases literally don't exist without the artists
 		}
 	}
 	
@@ -101,6 +103,9 @@ class Release: NSObject, NSCoding {
 			aCoder.encode(self.trackCount, forKey: "trackCount")
 		}
 		aCoder.encode(self.isFeature, forKey: "isFeature")
+		if self._seenByUser != nil {
+			aCoder.encode(self._seenByUser, forKey: "seenByUser")
+		}
 	}
 	required init?(coder aDecoder: NSCoder) {
 		
@@ -114,6 +119,7 @@ class Release: NSObject, NSCoding {
 		self.thumbnailURL = aDecoder.decodeObject(forKey: "thumbnailURL") as? URL
 		self.trackCount = aDecoder.decodeObject(forKey: "trackCount") as? Int
 		self.isFeature = (aDecoder.decodeObject(forKey: "isFeature") as? Bool) ?? false
+		self._seenByUser = aDecoder.decodeObject(forKey: "seenByUser") as? Bool
 	}
 	
 	
@@ -122,4 +128,62 @@ class Release: NSObject, NSCoding {
 		return release.releaseDate > self.releaseDate
 	}
 
+	func loadThumbnail(_ completion: (() -> Void)?=nil) -> URLSessionDataTask? {
+		
+		// only load artwork if it hasn't already been loaded and stored
+		guard self.thumbnailImage != nil else {
+			completion?()
+			return nil
+		}
+		
+		// make sure there's an artwork url first
+		guard let thumbnailURL = self.thumbnailURL else {
+			completion?()
+			return nil
+		}
+		
+		// load image from artwork url
+		let task = RequestManager.shared.loadImage(from: thumbnailURL, completion: { (image, error) in
+			guard let image = image, error == nil else {
+				completion?()
+				return
+			}
+			
+			self.thumbnailImage = image
+			completion?()
+			
+		})
+		
+		task?.resume()
+		return task
+	}
+	func loadArtwork(_ completion: (() -> Void)?=nil) -> URLSessionDataTask? {
+		
+		// only load artwork if it hasn't already been loaded and stored
+		guard self.artworkImage != nil else {
+			completion?()
+			return nil
+		}
+		
+		// make sure there's an artwork url first
+		guard let artworkURL = self.artworkURL else {
+			completion?()
+			return nil
+		}
+		
+		// load image from artwork url
+		let task = RequestManager.shared.loadImage(from: artworkURL, completion: { (image, error) in
+			guard let image = image, error == nil else {
+				completion?()
+				return
+			}
+			
+			self.artworkImage = image
+			completion?()
+			
+		})
+		
+		task?.resume()
+		return task
+	}
 }

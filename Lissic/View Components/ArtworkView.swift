@@ -66,9 +66,11 @@ class ArtworkArtView: UIView {
 		if self.tintColor.isDarkColor {
 			StyleKit.drawDarkPlaceholderReleaseArtwork(frame: rect, resizing: .aspectFit)
 			self.layer.borderColor = StyleKit.darkStrokeColor.cgColor
+			self.layer.backgroundColor = StyleKit.darkBackgroundColor.cgColor
 		} else {
 			StyleKit.drawLightPlaceholderReleaseArtwork(frame: rect, resizing: .aspectFit)
 			self.layer.borderColor = StyleKit.lightStrokeColor.cgColor
+			self.layer.backgroundColor = StyleKit.lightBackgroundColor.cgColor
 		}
 		
 		if self.shadowed {
@@ -76,10 +78,9 @@ class ArtworkArtView: UIView {
 			self.layer.shadowColor = UIColor.black.cgColor
 			self.layer.shadowRadius = rect.width / 10
 			self.layer.shadowOffset = CGSize(width: 0, height: 3)
-			self.layer.shadowOpacity = self.tintColor.isDarkColor ? 0.8 : 0.25
+			self.layer.shadowOpacity = self.tintColor.isDarkColor ? 0.8 : 0.2
 		}
 		
-		self.layer.backgroundColor = UIColor.clear.cgColor
 		self.layer.borderWidth = min(rect.width / 70, 3)
 		self.layer.cornerRadius = rect.width / 24
 	}
@@ -87,18 +88,18 @@ class ArtworkArtView: UIView {
 	
 	func showArtwork(_ animated: Bool=false) {
 		
-		UIView.animate(withDuration: animated ? ANIMATION_SPEED_MODIFIER*0.5 : 0, delay: 0, usingSpringWithDamping: 0.6, initialSpringVelocity: 0.85, options: .curveEaseOut, animations: {
+		UIViewPropertyAnimator(duration: animated ? ANIMATION_SPEED_MODIFIER*0.5 : 0, dampingRatio: 0.6) {
 			self.imageView.alpha = 1
 			self.imageView.transform = CGAffineTransform(scaleX: 1, y: 1)
-		})
+		}.startAnimation()
 		
 	}
 	func hideArtwork(_ animated: Bool=false) {
 		
-		UIView.animate(withDuration: animated ? ANIMATION_SPEED_MODIFIER*0.3 : 0, delay: 0, options: .curveEaseOut, animations: {
+		UIViewPropertyAnimator(duration: animated ? ANIMATION_SPEED_MODIFIER*0.3 : 0, curve: .easeOut) {
 			self.imageView.alpha = 0
 			self.imageView.transform = CGAffineTransform(scaleX: 0.4, y: 0.4)
-		})
+		}.startAnimation()
 		
 	}
 }

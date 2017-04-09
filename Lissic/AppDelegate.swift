@@ -30,7 +30,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 		
 		if shortcutIdentifier == .search {
 			self.window?.rootViewController?.dismiss(animated: false)
-			(self.window?.rootViewController as? NewReleasesViewController)?.showSearch(self)
+			(self.window?.rootViewController as? NewReleasesViewController)?.showSearch()
 			succeeded = true
 		}
 		
@@ -109,7 +109,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 		
 		guard let shortcut = shortcutItem else { return }
 		
-		self.handleShortcutItem(shortcut)
+		_ = self.handleShortcutItem(shortcut)
 		
 		self.shortcutItem = nil
 	}

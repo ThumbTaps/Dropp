@@ -66,11 +66,11 @@ class LissicViewController: UIViewController {
 		
 		if self.collectionView != nil && self.bottomScrollFadeView != nil {
 			// adjust bottom scroll fade view alpha if collection view does not encroach upon its layout space
-			if self.collectionView!.contentSize.height < self.bottomScrollFadeView!.frame.origin.y {
-				self.bottomScrollFadeView?.alpha = 0.3
-			} else {
-				self.bottomScrollFadeView?.alpha = 1
-			}
+//			if self.collectionView!.contentSize.height < self.bottomScrollFadeView!.frame.origin.y {
+//				self.bottomScrollFadeView?.alpha = 0.3
+//			} else {
+//				self.bottomScrollFadeView?.alpha = 1
+//			}
 		}
     }
 	
@@ -86,9 +86,9 @@ class LissicViewController: UIViewController {
 			(self.backdrop?.overlay ?? self.view).removeConstraint(self.navigationTitleHidingConstraint!)
 			(self.backdrop?.overlay ?? self.view).addConstraint(self.navigationTitleRestingConstraint!)
 		
-			UIView.animate(withDuration: ANIMATION_SPEED_MODIFIER*0.5, delay: 0, usingSpringWithDamping: 0.6, initialSpringVelocity: 0.8, options: .curveEaseOut, animations: {
+			UIViewPropertyAnimator(duration: ANIMATION_SPEED_MODIFIER*0.5, dampingRatio: 0.6, animations: { 
 				(self.backdrop?.overlay ?? self.view).layoutIfNeeded()
-			})
+			}).startAnimation()
 		}
 	}
 

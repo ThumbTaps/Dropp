@@ -8,47 +8,44 @@
 
 import UIKit
 
-class ArtistViewController: LissicViewController, UICollectionViewDataSource, UICollectionViewDelegate, UICollectionViewDelegateFlowLayout {
+class ArtistViewController: LissicViewController {
 	
 	@IBOutlet weak var closeButton: CloseButton!
 	@IBOutlet weak var followButton: LissicButton!
-    @IBOutlet weak var followButtonRestingConstraint: NSLayoutConstraint!
-    @IBOutlet weak var followButtonHidingConstraint: NSLayoutConstraint!
+	@IBOutlet weak var followButtonRestingConstraint: NSLayoutConstraint!
+	@IBOutlet weak var followButtonHidingConstraint: NSLayoutConstraint!
 	@IBOutlet weak var followButtonCenteredConstraint: NSLayoutConstraint!
 	
-	var artist: Artist!
-	var artistArtworkImage: UIImage?
-    private var colorPalette: UIImageColors?
+	var artist: Artist! // expects a fully-formed artist object
+	var colorPalette: UIImageColors?
 	
-    override func viewDidLoad() {
-        super.viewDidLoad()
+	override func viewDidLoad() {
+		super.viewDidLoad()
 		
 		// don't monitor theme changes
 		PreferenceManager.shared.themeDidChangeNotification.remove(self)
 		
-		self.navigationTitle?.text = self.artist?.name
+		DispatchQueue.main.async {
 			
-		if PreferenceManager.shared.followingArtists.contains(where: { $0.itunesID == self.artist.itunesID }) {
-			self.followButton.isEnabled = false
-			self.followButton.alpha = 0.5
-		}
-		
-		if PreferenceManager.shared.adaptiveArtistView {
+			self.navigationTitle?.text = self.artist?.name
 			
-			self.colorPalette = self.artistArtworkImage?.getColors()
+			if PreferenceManager.shared.followingArtists.contains(where: { $0.itunesID == self.artist.itunesID }) {
+				self.followButton.isEnabled = false
+				self.followButton.alpha = 0.5
+			}
+			
+			if PreferenceManager.shared.adaptiveArtistView {
 				
-			DispatchQueue.main.async {
-				self.backdrop?.imageView.image = self.artistArtworkImage
+				self.colorPalette = self.artist.artworkImage?.getColors()
+				self.backdrop?.imageView.image = self.artist.artworkImage
+				
 				if !UIAccessibilityIsReduceMotionEnabled() {
 					self.backdrop?.imageView.enableParallax()
 				}
 			}
-		}
-		
-		DispatchQueue.main.async {
 			
 			if self.colorPalette != nil {
-			
+				
 				self.view.backgroundColor = self.colorPalette!.backgroundColor
 				
 				self.view.tintColor = self.colorPalette!.primaryColor
@@ -92,34 +89,33 @@ class ArtistViewController: LissicViewController, UICollectionViewDataSource, UI
 	override func viewDidAppear(_ animated: Bool) {
 		
 		DispatchQueue.main.async {
-		
+			
 			// move follow button in
 			self.backdrop?.overlay.removeConstraint(self.followButtonCenteredConstraint)
 			self.backdrop?.overlay.addConstraint(self.followButtonRestingConstraint)
 			
-			UIView.animate(withDuration: ANIMATION_SPEED_MODIFIER*0.6, delay: 0, usingSpringWithDamping: 0.6, initialSpringVelocity: 1, options: .curveEaseInOut, animations: {
+			UIViewPropertyAnimator(duration: ANIMATION_SPEED_MODIFIER*0.6, dampingRatio: 0.6, animations: { 
 				self.view.layoutIfNeeded()
-			})
+			}).startAnimation()
 			
 		}
-    }
+	}
 	override func viewDidDisappear(_ animated: Bool) {
 		super.viewDidDisappear(true)
 		
 		self.artist = nil
-		self.artistArtworkImage = nil
 		self.colorPalette = nil
 	}
-    override func didReceiveMemoryWarning() {
-        super.didReceiveMemoryWarning()
-        // Dispose of any resources that can be recreated.
-    }
+	override func didReceiveMemoryWarning() {
+		super.didReceiveMemoryWarning()
+		// Dispose of any resources that can be recreated.
+	}
 	
 	override func themeDidChange() {
 		super.themeDidChange()
 		
 		DispatchQueue.main.async {
-						
+			
 			if PreferenceManager.shared.theme == .dark {
 				self.collectionView?.backgroundColor = self.colorPalette?.backgroundColor.withBrightness(0.1).withAlpha(0.25)
 				
@@ -129,8 +125,8 @@ class ArtistViewController: LissicViewController, UICollectionViewDataSource, UI
 			
 		}
 	}
-
-
+	
+	
 	
 	
 	
@@ -155,15 +151,41 @@ class ArtistViewController: LissicViewController, UICollectionViewDataSource, UI
 		if self.presentingViewController!.isKind(of: ArtistSearchViewController.self) {
 			self.performSegue(withIdentifier: "Artist->ArtistSearch", sender: sender)
 		}
-		
+			
 		else if self.presentingViewController!.isKind(of: ArtistSearchResultsViewController.self) {
 			self.performSegue(withIdentifier: "Artist->ArtistSearchResults", sender: sender)
 		}
 	}
+	
+	
+	// MARK: - Navigation
+	
+	// In a storyboard-based application, you will often want to do a little preparation before navigation
+	override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+		// Get the new view controller using segue.destinationViewController.
+		// Pass the selected object to the new view controller.
+		
+		if segue.identifier == "Artist->Release" {
+			// set current release for release view controller
+			(segue.destination as! ReleaseViewController).currentRelease = self.artist.latestRelease
+			
+			// adjust colors
+			if self.colorPalette!.backgroundColor.isDarkColor {
+				(segue.destination as! ReleaseViewController).theme = .dark
+			} else {
+				(segue.destination as! ReleaseViewController).theme = .light
+			}
+		}
+	}
+	override func prepareForUnwind(for segue: UIStoryboardSegue) {
+		super.prepareForUnwind(for: segue)
+		
+		self.artist = nil
+		self.colorPalette = nil
+	}
+}
 
-	
-	
-	
+extension ArtistViewController: UICollectionViewDataSource, UICollectionViewDelegate, UICollectionViewDelegateFlowLayout {
 	
 	// MARK: - UICollectionViewDataSource
 	func numberOfSections(in collectionView: UICollectionView) -> Int {
@@ -205,8 +227,7 @@ class ArtistViewController: LissicViewController, UICollectionViewDataSource, UI
 		dateFormatter.timeZone = .current
 		
 		// LATEST RELEASE SECTION
-		if self.artist.latestRelease != nil &&
-			indexPath.section == 0 {
+		if self.artist.latestRelease != nil && indexPath.section == 0 {
 			
 			cell = collectionView.dequeueReusableCell(withReuseIdentifier: "LatestReleaseCell", for: indexPath) as! ReleaseCollectionViewCell
 			(cell as! ReleaseCollectionViewCell).releaseTitleLabel.text = self.artist.latestRelease!.title
@@ -214,26 +235,19 @@ class ArtistViewController: LissicViewController, UICollectionViewDataSource, UI
 			// get release date
 			(cell as! ReleaseCollectionViewCell).secondaryLabel.text = "Released on \(dateFormatter.string(from: self.artist.latestRelease!.releaseDate))"
 			
-			if let thumbnailURL = self.artist.latestRelease!.thumbnailURL {
+			_ = self.artist.latestRelease!.loadThumbnail {
 				
-				RequestManager.shared.loadImage(from: thumbnailURL) { (image, error) in
-					guard let image = image, error == nil else {
-						return
-					}
-					
-					DispatchQueue.main.async {
-						(cell as! ReleaseCollectionViewCell).releaseArtView.imageView.image = image
-						(cell as! ReleaseCollectionViewCell).releaseArtView.showArtwork(true)
-					}
+				DispatchQueue.main.async {
+					(cell as! ReleaseCollectionViewCell).releaseArtView.imageView.image = self.artist.latestRelease!.thumbnailImage
+					(cell as! ReleaseCollectionViewCell).releaseArtView.showArtwork(true)
 				}
 			}
-
 		}
 		
 		// SUMMARY SECTION
 		if self.artist.summary != nil &&
 			((indexPath.section == 0 && self.artist.latestRelease == nil) ||
-			(indexPath.section == 1 && self.artist.latestRelease != nil)) {
+				(indexPath.section == 1 && self.artist.latestRelease != nil)) {
 			
 			switch indexPath.row {
 			case 0:
@@ -251,8 +265,8 @@ class ArtistViewController: LissicViewController, UICollectionViewDataSource, UI
 		// RELEASE OPTIONS
 		if PreferenceManager.shared.followingArtists.contains(where: { $0.itunesID == self.artist.itunesID }) &&
 			((indexPath.section == 0 && self.artist.latestRelease == nil && self.artist.summary == nil) ||
-			(indexPath.section == 1 && self.artist.summary == nil) ||
-			indexPath.section == 2) {
+				(indexPath.section == 1 && self.artist.summary == nil) ||
+				indexPath.section == 2) {
 			
 			switch indexPath.row {
 			case 0: // IGNORE SINGLES
@@ -294,7 +308,7 @@ class ArtistViewController: LissicViewController, UICollectionViewDataSource, UI
 	}
 	func collectionView(_ collectionView: UICollectionView, viewForSupplementaryElementOfKind kind: String, at indexPath: IndexPath) -> UICollectionReusableView {
 		
-		var reusableView = collectionView.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: "ArtistCollectionViewHeader", for: indexPath) as! HeaderCollectionReusableView
+		let reusableView = collectionView.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: "ArtistCollectionViewHeader", for: indexPath) as! HeaderCollectionReusableView
 		
 		if self.artist.latestRelease != nil &&
 			indexPath.section == 0 {
@@ -327,12 +341,9 @@ class ArtistViewController: LissicViewController, UICollectionViewDataSource, UI
 			
 			reusableView.tintColor = self.colorPalette?.backgroundColor.withBrightness(0.9).withAlpha(0.2)
 		}
-
+		
 		return reusableView
 	}
-	
-	
-	
 	
 	
 	// MARK: - UICollectionViewDelegate
@@ -343,9 +354,6 @@ class ArtistViewController: LissicViewController, UICollectionViewDataSource, UI
 		
 		return cell.reuseIdentifier == "LatestReleaseCell"
 	}
-	
-	
-	
 	
 	
 	// MARK: - UICollectionViewDelegateFlowLayout
@@ -380,37 +388,5 @@ class ArtistViewController: LissicViewController, UICollectionViewDataSource, UI
 		}
 		
 		return size
-	}
-	
-
-	
-	
-	
-
-    // MARK: - Navigation
-
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        // Get the new view controller using segue.destinationViewController.
-        // Pass the selected object to the new view controller.
-				
-		if segue.identifier == "Artist->Release" {
-			// set current release for release view controller
-			(segue.destination as! ReleaseViewController).currentRelease = self.artist.latestRelease
-			
-			// adjust colors
-			if self.colorPalette!.backgroundColor.isDarkColor {
-				(segue.destination as! ReleaseViewController).theme = .dark
-			} else {
-				(segue.destination as! ReleaseViewController).theme = .light
-			}
-		}
-    }
-	override func prepareForUnwind(for segue: UIStoryboardSegue) {
-		super.prepareForUnwind(for: segue)
-		
-		self.artist = nil
-		self.colorPalette = nil
-		self.artistArtworkImage = nil
 	}
 }

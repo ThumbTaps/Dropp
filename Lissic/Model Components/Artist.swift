@@ -8,10 +8,6 @@
 
 import UIKit
 
-enum ArtworkSize: Int {
-	case small = 0, medium = 1, large = 2, extraLarge = 3, mega = 4, thumbnail = 5
-}
-
 class Artist: NSObject, NSCoding {
 
 	var itunesID: Int!
@@ -19,8 +15,18 @@ class Artist: NSObject, NSCoding {
 	var itunesURL: URL!
 	var summary: String?
 	var genre: String?
-	var artworkURLs: [ArtworkSize: URL]! = [:]
-	var releases: [Release] = []
+	var artworkURL: URL?
+	var artworkImage: UIImage?
+	var thumbnailURL: URL?
+	var thumbnailImage: UIImage?
+	var releases: [Release] = [] {
+		didSet {
+			print("\n\n\n\(self.name!.uppercased())")
+			self.releases.forEach { (release) in
+				print("\(release.title!) - \(release.releaseDate)")
+			}
+		}
+	}
 	var latestRelease: Release? {
 		get {
 			return self.releases.max(by: { $0.isNewerThan($1) })
@@ -47,7 +53,32 @@ class Artist: NSObject, NSCoding {
 			}
 		}
 	}
-	
+	var lastUpdate: Date? = nil {
+		didSet {
+			guard let oneWeekAgo = Calendar.current.date(byAdding: .day, value: -7, to: Date()) else {
+				return
+			}
+			print(self.lastUpdate)
+			if (self.lastUpdate ?? oneWeekAgo) < oneWeekAgo {
+				// update artist info
+				RequestManager.shared.getAdditionalInfo(for: self, completion: { (artist, error) in
+					guard let artist = artist, error == nil else {
+						return
+					}
+					
+					self.summary = artist.summary
+					self.genre = artist.genre
+					self.artworkURL = artist.artworkURL
+					self.artworkImage = nil
+					self.thumbnailURL = artist.thumbnailURL
+					self.thumbnailImage = nil
+					
+					self.lastUpdate = Date()
+					
+				})?.resume()
+			}
+		}
+	}
 	
 	init(itunesID: Int!, name: String!, itunesURL: URL!) {
 		
@@ -56,7 +87,6 @@ class Artist: NSObject, NSCoding {
 		self.itunesID = itunesID
 		self.name = name
 		self.itunesURL = itunesURL
-		
 	}
 	
 	
@@ -73,10 +103,16 @@ class Artist: NSObject, NSCoding {
 		if self.genre != nil {
 			aCoder.encode(self.genre, forKey: "genre")
 		}
-		if self.artworkURLs != nil {
-			aCoder.encode(self.artworkURLs.flatMap({ $0.value }), forKey: "artworkURLs")
+		
+		if self.artworkURL != nil {
+			aCoder.encode(self.artworkURL, forKey: "artworkURL")
 		}
+		if self.thumbnailURL != nil {
+			aCoder.encode(self.artworkURL, forKey: "thumbnailURL")
+		}
+		
 		aCoder.encode(self.releases, forKey: "releases")
+		
 		if self.includeSingles != nil {
 			aCoder.encode(self.includeSingles, forKey: "includeSingles")
 		}
@@ -85,6 +121,10 @@ class Artist: NSObject, NSCoding {
 		}
 		if self.includeEPs != nil {
 			aCoder.encode(self.includeEPs, forKey: "includeEPs")
+		}
+		if self.lastUpdate != nil {
+			print("Saving last update")
+			aCoder.encode(self.lastUpdate, forKey: "lastUpdate")
 		}
 	}
 	required init?(coder aDecoder: NSCoder) {
@@ -96,14 +136,74 @@ class Artist: NSObject, NSCoding {
 		self.itunesURL = aDecoder.decodeObject(forKey: "itunesURL") as! URL
 		self.summary = aDecoder.decodeObject(forKey: "summary") as? String
 		self.genre = aDecoder.decodeObject(forKey: "genre") as? String
-		if let artworkArray = aDecoder.decodeObject(forKey: "artworkURLs") as? [URL] {
-			for (index, element) in artworkArray.enumerated() {
-				self.artworkURLs[ArtworkSize(rawValue: index)!] = element
-			}
-		}
+		self.artworkURL = aDecoder.decodeObject(forKey: "artworkURL") as? URL
+		self.thumbnailURL = aDecoder.decodeObject(forKey: "thumbnailURL") as? URL
 		self.releases = aDecoder.decodeObject(forKey: "releases") as! [Release]
 		self.includeSingles = aDecoder.decodeObject(forKey: "includeSingles") as? Bool
 		self.ignoreFeatures = aDecoder.decodeObject(forKey: "ignoreFeatures") as? Bool
 		self.includeEPs = aDecoder.decodeObject(forKey: "includeEPs") as? Bool
+		defer {
+			print("Setting last update")
+			self.lastUpdate = aDecoder.decodeObject(forKey: "lastUpdate") as? Date
+		}
+	}
+	
+	func loadThumbnail(_ completion: (() -> Void)?=nil) -> URLSessionDataTask? {
+		
+		// only load artwork if it hasn't already been loaded and stored
+		guard self.thumbnailImage == nil else {
+			completion?()
+			return nil
+		}
+		
+		// make sure there's an artwork url first
+		guard let thumbnailURL = self.thumbnailURL else {
+			completion?()
+			return nil
+		}
+		
+		// load image from artwork url
+		let task = RequestManager.shared.loadImage(from: thumbnailURL, completion: { (image, error) in
+			guard let image = image, error == nil else {
+				completion?()
+				return
+			}
+			
+			self.thumbnailImage = image
+			completion?()
+			
+		})
+			
+		task?.resume()
+		return task
+	}
+	func loadArtwork(_ completion: (() -> Void)?=nil) -> URLSessionDataTask? {
+		
+		// only load artwork if it hasn't already been loaded and stored
+		guard self.artworkImage == nil else {
+			completion?()
+			return nil
+		}
+		
+		// make sure there's an artwork url first
+		guard let artworkURL = self.artworkURL else {
+			completion?()
+			return nil
+		}
+		
+		// load image from artwork url
+		let task = RequestManager.shared.loadImage(from: artworkURL, completion: { (image, error) in
+			guard let image = image, error == nil else {
+				completion?()
+				return
+			}
+			
+			self.artworkImage = image
+			completion?()
+			
+		})
+			
+		task?.resume()
+		return task
 	}
 }

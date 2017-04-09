@@ -21,17 +21,20 @@ enum ThemeDeterminer: Int64 {
 enum ReleaseSorting: Int64 {
 	case releaseDate = 0, releaseTitle = 1, artistName = 2
 }
+enum ArtworkSize: Int {
+	case small = 0, medium = 1, large = 2, extraLarge = 3, mega = 4, thumbnail = 5
+}
 
 public let ANIMATION_SPEED_MODIFIER = 1.0
 
 extension Notification.Name {
-	func post(object:Any? = nil, userInfo:[AnyHashable: Any]? = nil) {
+	func post(object: Any? = nil, userInfo:[AnyHashable: Any]? = nil) {
 		NotificationCenter.default.post(name: self, object: object, userInfo: userInfo)
 	}
 	func add(_ observer:Any!, selector: Selector!, object: Any?=nil) {
 		NotificationCenter.default.addObserver(observer, selector: selector, name: self, object: object)
 	}
-	func remove(_ observer:Any!) {
+	func remove(_ observer: Any!) {
 		NotificationCenter.default.removeObserver(observer, name: self, object: nil)
 	}
 }
@@ -79,7 +82,7 @@ class PreferenceManager: NSObject {
 	
 	
 	
-	// MARK: - DISPLAY OPTIONS
+	// MARK: - THEME OPTIONS
 	var themeMode: ThemeMode = .manual {
 		didSet {
 
@@ -102,7 +105,7 @@ class PreferenceManager: NSObject {
 			}
 		}
 	}
-	var themeTransitionDuration = 0.6
+	var themeTransitionDuration = 0.3
 	var themeDeterminer: ThemeDeterminer = .displayBrightness {
 		didSet {
 			
@@ -187,9 +190,8 @@ class PreferenceManager: NSObject {
 				
 				self.determiningTwilightTimes = true
 				
-				UIApplication.shared.isNetworkActivityIndicatorVisible = true
-				let sunriseSunsetTask = RequestManager.shared.getSunriseAndSunset { (sunrise, sunset, error) in
-					UIApplication.shared.isNetworkActivityIndicatorVisible = false
+				RequestManager.shared.getSunriseAndSunset(completion: { (sunrise, sunset, error) in
+
 					guard let sunrise = sunrise, let sunset = sunset, error == nil else {
 						print("Couldn't get sunrise and sunset", error!)
 						self.themeDeterminer = .displayBrightness
@@ -202,7 +204,8 @@ class PreferenceManager: NSObject {
 					
 					self.theme = self.themeBasedOnTwilight()
 					self.determiningTwilightTimes = false
-				}
+					
+				})?.resume()
 			}
 		} else {
 			
@@ -368,9 +371,9 @@ class PreferenceManager: NSObject {
 			
 			// sort according to user preference
 			switch PreferenceManager.shared.releaseSorting {
-			case .releaseDate: return returnValue.sorted(by: { $0.releaseDate < $1.releaseDate })
+			case .releaseDate: return returnValue.sorted(by: { $0.releaseDate > $1.releaseDate })
 			case .releaseTitle: return returnValue.sorted(by: { $0.title < $1.title })
-			case .artistName: return returnValue.sorted(by: { $0.artist.name < $1.artist.name })
+			case .artistName: return returnValue.sorted(by: { $0.title < $1.title }).sorted(by: { $0.artist.name < $1.artist.name })
 			}
 
 		}
@@ -425,9 +428,9 @@ class PreferenceManager: NSObject {
 
 				// sort according to user preference
 				switch PreferenceManager.shared.releaseSorting {
-				case .releaseDate: return returnValue.sorted(by: { $0.releaseDate < $1.releaseDate })
+				case .releaseDate: return returnValue.sorted(by: { $0.releaseDate > $1.releaseDate })
 				case .releaseTitle: return returnValue.sorted(by: { $0.title < $1.title })
-				case .artistName: return returnValue.sorted(by: { $0.artist.name < $1.artist.name })
+				case .artistName: return returnValue.sorted(by: { $0.title < $1.title }).sorted(by: { $0.artist.name < $1.artist.name })
 				}
 				
             } else {
@@ -442,22 +445,31 @@ class PreferenceManager: NSObject {
 		// don't update new releases if no artists are being followed or releases have been updated in the past last ten seconds
 		if self.followingArtists.isEmpty { return }
 		
-		UIApplication.shared.isNetworkActivityIndicatorVisible = true
-		
 		let artistsToUpdate = artists ?? self.followingArtists
 		artistsToUpdate.forEach { (followed) in
 			
 			// request new releases for artists that need to be updated
 			RequestManager.shared.getReleases(for: followed, since: Calendar.current.date(byAdding: .month, value: -Int(self.maxPreviousReleaseAge), to: Date()), completion: { (releases, error) in
-				UIApplication.shared.isNetworkActivityIndicatorVisible = false
 				
 				guard let releases = releases, error == nil else {
 					print(error!)
 					return
 				}
 				
-				// filter out releases before max previous release age
-				followed.releases = releases.filter({ $0.releaseDate < Calendar.current.date(byAdding: .day, value: -Int(self.maxPreviousReleaseAge), to: Date())! })
+				// only add releases that don't already exist
+				followed.releases = releases.map({ (release) -> Release in
+					
+					if followed.releases.contains(where: { $0.itunesID == release.itunesID }) {
+						guard let existingCorrespondingRelease = followed.releases.first(where: { $0.itunesID == release.itunesID }) else {
+							return release
+						}
+						release.seenByUser = existingCorrespondingRelease.seenByUser
+						release.thumbnailImage = existingCorrespondingRelease.thumbnailImage
+						release.artworkImage = existingCorrespondingRelease.artworkImage
+					}
+					
+					return release
+				})
 				
 				// if on last artist
 				if artistsToUpdate.last?.itunesID == followed.itunesID {
@@ -474,7 +486,7 @@ class PreferenceManager: NSObject {
 					self.didUpdateReleasesNotification.post()
 					
 				}
-			})
+			})?.resume()
 		}
 	}
 	var includeSingles: Bool = false {
@@ -580,18 +592,33 @@ class PreferenceManager: NSObject {
 					return
 				}
 				
-				DispatchQueue.global().async {
+				// get info for artist from iTunes
+				print("Searching for now playing artist: \(artistName)")
+				RequestManager.shared.search(for: artistName, completion: { (artists, error) in
 					
-					// get info for artist from iTunes
-					RequestManager.shared.search(for: artistName, completion: { (artists, error) in
+					// FIXME: This isn't a viable verification that the currently playing artist is the one that was found in the search
+					guard let artist = artists?[0], error == nil else {
+						return
+					}
+					
+					// load all info for artist
+					RequestManager.shared.getAdditionalInfo(for: artist, completion: { (artist, error) in
 						
-						guard let artist = artists?[0], error == nil else {
+						guard let artist = artist, error == nil else {
 							return
 						}
 						
-						self.nowPlayingArtist = artist
-					})
-				}
+						_ = artist.loadThumbnail {
+							
+							self.nowPlayingArtist = artist
+							_ = self.nowPlayingArtist?.loadArtwork()
+						}
+						
+						
+					})?.resume()
+					
+				})?.resume()
+
 			} else {
 				
 				self.nowPlayingArtist = nil
