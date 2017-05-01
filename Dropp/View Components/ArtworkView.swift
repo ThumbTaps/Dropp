@@ -11,12 +11,6 @@ import UIKit
 @IBDesignable
 class ArtworkView: UIView {
 	
-	var theme: Theme? = .light {
-		didSet {
-			self.setNeedsDisplay()
-		}
-	}
-	
 	@IBInspectable var shadowed: Bool = false {
 		didSet {
 			self.setNeedsDisplay()
@@ -25,30 +19,19 @@ class ArtworkView: UIView {
 	
 	@IBOutlet weak var imageView: UIImageView!
 	
-	private var shadow: DroppShadowBackdrop!
+	var shadow: DroppShadowBackdrop?
 	
-	override init(frame: CGRect) {
-		super.init(frame: frame)
-		
-		self.shadow = DroppShadowBackdrop(frame: self.bounds, offset: CGSize(width: 0, height: 3), radius: self.bounds.width / 10)
-		if self.shadowed {
-			self.insertSubview(shadow, at: 0)
-		}
-	}
-	required init?(coder aDecoder: NSCoder) {
-		super.init(coder: aDecoder)
-		
-		self.shadow = DroppShadowBackdrop(frame: self.bounds, offset: CGSize(width: 0, height: 3), radius: self.bounds.width / 10)
-		if self.shadowed {
-			self.insertSubview(shadow, at: 0)
-		}
-	}
 	override func awakeFromNib() {
 		super.awakeFromNib()
 		
+		if self.shadowed {
+			self.shadow = DroppShadowBackdrop(frame: self.bounds, offset: CGSize(width: 0, height: 5), radius: self.bounds.width / 10, cornerRadius: self.bounds.width * 0.05, color: ThemeKit.shadowColor)
+			self.shadow?.transform = CGAffineTransform(scaleX: 0.95, y: 0.95)
+			self.insertSubview(self.shadow!, at: 0)
+		}
 		
 		self.imageView?.clipsToBounds = true
-		self.imageView?.layer.cornerRadius = self.bounds.width * 0.1
+		self.imageView?.layer.cornerRadius = self.bounds.width * 0.05
 		self.imageView.contentMode = .scaleAspectFill
 
 		self.hideArtwork()
@@ -61,8 +44,7 @@ class ArtworkView: UIView {
 		self.layer.backgroundColor = ThemeKit.backgroundColor.cgColor
 		
 //		self.layer.borderWidth = min(rect.width / 50, 4)
-		self.layer.cornerRadius = rect.width * 0.1
-		self.shadow.alpha = self.theme == .dark ? 0.8 : 0.25
+		self.layer.cornerRadius = rect.width * 0.05
 	}
 	
 	
@@ -70,6 +52,7 @@ class ArtworkView: UIView {
 		
 		UIViewPropertyAnimator(duration: animated ? ANIMATION_SPEED_MODIFIER*0.5 : 0, curve: .easeOut) {
 			self.imageView.alpha = 1
+			self.shadow?.alpha = 1
 		}.startAnimation()
 		
 	}
@@ -77,6 +60,7 @@ class ArtworkView: UIView {
 		
 		UIViewPropertyAnimator(duration: animated ? ANIMATION_SPEED_MODIFIER*0.3 : 0, curve: .easeOut) {
 			self.imageView.alpha = 0
+			self.shadow?.alpha = 0
 		}.startAnimation()
 		
 	}

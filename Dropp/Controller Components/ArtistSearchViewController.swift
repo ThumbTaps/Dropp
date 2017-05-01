@@ -18,11 +18,14 @@ class ArtistSearchViewController: DroppViewController {
 		return searchButton
 	}
 	
-    override func viewDidLoad() {
-        super.viewDidLoad()
-
-        // Do any additional setup after loading the view.
-    }
+	var nowPlayingArtistArtworkTask: URLSessionDataTask?
+	
+	override func viewDidLoad() {
+		super.viewDidLoad()
+		
+		// start monitoring now playing artist changes
+		PreferenceManager.shared.nowPlayingArtistDidChangeNotification.add(self, selector: #selector(self.nowPlayingArtistDidChange))
+	}
 	
 	override func viewDidAppear(_ animated: Bool) {
 		super.viewDidAppear(animated)
@@ -30,18 +33,38 @@ class ArtistSearchViewController: DroppViewController {
 		self.searchBar.becomeFirstResponder()
 	}
 	
-    override func didReceiveMemoryWarning() {
-        super.didReceiveMemoryWarning()
-        // Dispose of any resources that can be recreated.
-    }
-    
-
-    // MARK: - Navigation
-
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        // Get the new view controller using segue.destinationViewController.
-        // Pass the selected object to the new view controller.
+	override func viewDidDisappear(_ animated: Bool) {
+		super.viewDidDisappear(animated)
+		
+		PreferenceManager.shared.nowPlayingArtistDidChangeNotification.remove(self)
+	}
+	override func didReceiveMemoryWarning() {
+		super.didReceiveMemoryWarning()
+		// Dispose of any resources that can be recreated.
+	}
+	
+	
+	
+	
+	override func adjustToTheme() {
+		super.adjustToTheme()
+		
+		self.searchBar.barStyle = ThemeKit.barStyle
+		let shouldBecomeFirstResponderAgain = self.searchBar.isFirstResponder
+		self.searchBar.resignFirstResponder()
+		self.searchBar.keyboardAppearance = ThemeKit.keyboardAppearance
+		if shouldBecomeFirstResponderAgain { self.searchBar.becomeFirstResponder() }
+	}
+	func nowPlayingArtistDidChange() {
+		self.collectionView?.reloadData()
+	}
+	
+	// MARK: - Navigation
+	
+	// In a storyboard-based application, you will often want to do a little preparation before navigation
+	override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+		// Get the new view controller using segue.destinationViewController.
+		// Pass the selected object to the new view controller.
 		
 		if segue.identifier == "showSearchResults" {
 			if let searchTerm = self.searchBar.text, let searchResults = sender as? [Artist] {
@@ -50,12 +73,14 @@ class ArtistSearchViewController: DroppViewController {
 			}
 			
 		}
-		
+			
 		else if segue.identifier == "showArtist" {
-			(segue.destination as? ArtistViewController)?.artist = sender as? Artist
+			(segue.destination as? ArtistViewController)?.currentArtist = sender as? Artist
 		}
-    }
-
+		
+		super.prepare(for: segue, sender: sender)
+	}
+	
 }
 
 extension ArtistSearchViewController: UISearchBarDelegate {
@@ -81,11 +106,26 @@ extension ArtistSearchViewController: UISearchBarDelegate {
 				self.performSegue(withIdentifier: "showSearchResults", sender: artists)
 			}
 			
-		}?.resume()
+			}?.resume()
 	}
 }
 
-extension ArtistSearchViewController: UICollectionViewDataSource, UICollectionViewDelegate {
+extension ArtistSearchViewController: UICollectionViewDataSourcePrefetching, UICollectionViewDataSource, UICollectionViewDelegate {
+	
+	// MARK: UICollectionViewDataSourcePrefetching
+	func collectionView(_ collectionView: UICollectionView, prefetchItemsAt indexPaths: [IndexPath]) {
+		
+		self.nowPlayingArtistArtworkTask = PreferenceManager.shared.nowPlayingArtist?.loadThumbnail()
+	}
+	func collectionView(_ collectionView: UICollectionView, cancelPrefetchingForItemsAt indexPaths: [IndexPath]) {
+		
+		self.nowPlayingArtistArtworkTask?.cancel()
+	}
+	
+	
+	
+	
+	// MARK: UICollectionViewDataSource
 	func numberOfSections(in collectionView: UICollectionView) -> Int {
 		if PreferenceManager.shared.nowPlayingArtist != nil {
 			return 1
@@ -94,7 +134,7 @@ extension ArtistSearchViewController: UICollectionViewDataSource, UICollectionVi
 		return 0
 	}
 	func collectionView(_ collectionView: UICollectionView, viewForSupplementaryElementOfKind kind: String, at indexPath: IndexPath) -> UICollectionReusableView {
-
+		
 		guard let reusableView = collectionView.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: "NowPlayingArtistCollectionViewHeader", for: indexPath) as? HeaderCollectionReusableView else {
 			return UICollectionReusableView()
 		}
@@ -125,43 +165,23 @@ extension ArtistSearchViewController: UICollectionViewDataSource, UICollectionVi
 		cell.artistNameLabel.text = nowPlayingArtist.name
 		cell.backgroundColor = ThemeKit.backdropOverlayColor
 		cell.artistNameLabel.textColor = ThemeKit.primaryTextColor
-		
-		// check if thumbnail image needs to be downloaded
-		guard let image = nowPlayingArtist.thumbnailImage else {
-			guard let url = nowPlayingArtist.thumbnailURL else {
-				return cell
+
+		_ = nowPlayingArtist.loadThumbnail({
+			
+			DispatchQueue.main.async {
+				cell.artistArtworkView.imageView.image = PreferenceManager.shared.nowPlayingArtist?.thumbnailImage
+				cell.artistArtworkView.showArtwork(true)
 			}
 			
-			RequestManager.shared.loadImage(from: url, completion: { (image, error) in
-				
-				guard let image = image, error == nil else {
-					print(error!)
-					return
-				}
-				
-				// add loaded image to now playing artist if now playing artist hasn't changed since download began
-				if PreferenceManager.shared.nowPlayingArtist?.itunesID ==
-					nowPlayingArtist.itunesID {
-					PreferenceManager.shared.nowPlayingArtist?.thumbnailImage = image
-				}
-				
-				DispatchQueue.main.async {
-					cell.artistArtworkView.imageView.image = image
-					cell.artistArtworkView.showArtwork(true)
-				}
-				
-			})?.resume()
-			
-			return cell
-		}
-		
-		DispatchQueue.main.async {
-			cell.artistArtworkView.imageView.image = image
-			cell.artistArtworkView.showArtwork(true)
-		}
+		})
 		
 		return cell
 	}
+	
+	
+	
+	
+	// MARK: UICollectionViewDelegate
 	func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
 		
 		guard let nowPlayingArtist = PreferenceManager.shared.nowPlayingArtist else {

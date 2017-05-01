@@ -27,6 +27,10 @@ class DroppViewController: UIViewController {
 		return true
 	}
 	
+	var shouldIgnoreThemeChanges: Bool {
+		return false
+	}
+	
 	var backButton: DroppButton? {
 		return nil
 	}
@@ -47,10 +51,7 @@ class DroppViewController: UIViewController {
 			layout.sectionHeadersPinToVisibleBounds = true
 		}
 		
-		let topInset = self.headerHeight + (self.shouldShowFooter ? (self.footerView?.frame.height ?? self.navController?.footerBackButton.frame.height ?? 0) - 10 : 0)
-		self.collectionView?.contentInset = UIEdgeInsets(top: topInset, left: 0, bottom: 0, right: 0)
-		
-    }
+	}
 	
 	override func viewWillAppear(_ animated: Bool) {
 		super.viewWillAppear(animated)
@@ -60,6 +61,18 @@ class DroppViewController: UIViewController {
 	override func viewDidAppear(_ animated: Bool) {
 		super.viewDidAppear(animated)
 		
+		// deselect any collection view cells
+		if let selectedIndexPaths = self.collectionView?.indexPathsForSelectedItems {
+			if !selectedIndexPaths.isEmpty {
+				self.collectionView?.deselectItem(at: selectedIndexPaths[0], animated: true)
+			}
+		}
+
+		self.adjustToTheme()
+
+		let topInset = self.headerHeight + (self.shouldShowFooter ? (self.footerView?.frame.height ?? self.navController?.footerBackButton.frame.height ?? 0) - 10 : 0)
+		self.collectionView?.contentInset = UIEdgeInsets(top: topInset, left: 0, bottom: 0, right: 0)
+		self.collectionView?.scrollIndicatorInsets = UIEdgeInsets(top: topInset, left: 0, bottom: 10, right: 0)
 	}
 
     override func didReceiveMemoryWarning() {
@@ -78,7 +91,8 @@ class DroppViewController: UIViewController {
 		// show banner if not on new releases view somehow... eheh
 		
 	}
-	func themeDidChange() {
+	func adjustToTheme() {
+		self.view.tintColor = ThemeKit.tintColor
 		self.collectionView?.indicatorStyle = ThemeKit.indicatorStyle
 		self.collectionView?.backgroundColor = ThemeKit.backdropOverlayColor
 		self.collectionView?.reloadData()

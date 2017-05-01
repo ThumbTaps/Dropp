@@ -42,44 +42,37 @@ class DroppNavigationController: UIViewController {
 		super.viewDidLoad()
 		
 		// Do any additional setup after loading the view.
-		PreferenceManager.shared.themeDidChangeNotification.add(self, selector: #selector(self.themeDidChange))
-		
-		if PreferenceManager.shared.followingArtists.isEmpty {
-			
-			// show search bar
-			if PreferenceManager.shared.firstLaunch {
-				if let searchViewController = self.storyboard?.instantiateViewController(withIdentifier: "ArtistSearch") as? ArtistSearchViewController {
-					
-					self.push(searchViewController, animated: false)
-				}
-				
-				PreferenceManager.shared.firstLaunch = false
-			}
-			
-		}
-		
+		PreferenceManager.shared.themeDidChangeNotification.add(self, selector: #selector(self.adjustToTheme))
 	}
 	override func viewWillAppear(_ animated: Bool) {
 		super.viewWillAppear(animated)
 		
 		self.view.layer.cornerRadius = 12
+		self.view.layer.masksToBounds = true
+		self.childViewContainer.layer.cornerRadius = 12
 		self.childViewContainer.layer.cornerRadius = 12
 		
-		self.themeDidChange()
+		self.adjustToTheme()
 	}
 	
-	func themeDidChange() {
-		DispatchQueue.main.async {
+	func adjustToTheme(preparingFor viewController: DroppViewController?=nil) {
+		
+		if !(viewController?.shouldIgnoreThemeChanges ?? self.currentViewController?.shouldIgnoreThemeChanges ?? true) {
 			
-			UIApplication.shared.keyWindow?.backgroundColor = ThemeKit.backgroundColor
-			UIApplication.shared.statusBarStyle = ThemeKit.statusBarStyle
-			self.view.tintColor = ThemeKit.tintColor
-			self.view.backgroundColor = ThemeKit.backgroundColor
-			self.childViewContainer.backgroundColor = ThemeKit.backgroundColor
-			self.headerView.effect = UIBlurEffect(style: ThemeKit.blurEffectStyle)
-			self.footerViewContainer.backgroundColor = ThemeKit.backgroundColor
-			self.headerLabel.textColor = ThemeKit.primaryTextColor
-			self.currentViewController?.themeDidChange()
+			DispatchQueue.main.async {
+				
+				UIApplication.shared.statusBarStyle = ThemeKit.statusBarStyle
+				self.view.tintColor = ThemeKit.tintColor
+				
+				self.headerView.effect = UIBlurEffect(style: ThemeKit.blurEffectStyle)
+				self.headerLabel.textColor = ThemeKit.primaryTextColor
+				
+				self.footerViewContainer.backgroundColor = ThemeKit.backgroundColor
+				self.footerBackButton.destinationTitle.textColor = ThemeKit.primaryTextColor
+				
+				self.childViewContainer.backgroundColor = ThemeKit.backgroundColor
+				self.shadowBackdrop.shadowColor = ThemeKit.shadowColor
+			}
 		}
 	}
 	private func addChildView(_ childView: UIView?) {
@@ -125,7 +118,7 @@ class DroppNavigationController: UIViewController {
 			
 			self.footerViewContainer?.addSubview(footerView)
 			self.footerViewContainer.addConstraints([
-				NSLayoutConstraint(item: footerView, attribute: .top, relatedBy: .equal, toItem: self.footerViewContainer, attribute: .top, multiplier: 1, constant: 10),
+				NSLayoutConstraint(item: footerView, attribute: .top, relatedBy: .equal, toItem: self.footerViewContainer, attribute: .top, multiplier: 1, constant: 0),
 				NSLayoutConstraint(item: footerView, attribute: .left, relatedBy: .equal, toItem: self.footerViewContainer, attribute: .left, multiplier: 1, constant: 0),
 				NSLayoutConstraint(item: footerView, attribute: .bottom, relatedBy: .equal, toItem: self.footerViewContainer, attribute: .bottom, multiplier: 1, constant: 0),
 				NSLayoutConstraint(item: footerView, attribute: .right, relatedBy: .equal, toItem: self.footerViewContainer, attribute: .right, multiplier: 1, constant: 0)
@@ -161,40 +154,43 @@ class DroppNavigationController: UIViewController {
 	}
 	
 	// MARK: - Navigation
-	func push(_ childViewController: DroppViewController, animated: Bool=true, popped: Bool=false) {
+	func push(_ destinationViewController: DroppViewController, animated: Bool=true, popped: Bool=false) {
 		
 		// disable interaction
 		self.view.isUserInteractionEnabled = false
 		
 		DispatchQueue.main.async {
+			
+			// add new view controller if it isn't already present (transition is an unwind)
+			if !self.childViewControllers.contains(destinationViewController) {
+				self.addChildViewController(destinationViewController)
+			}
+			
 			if popped {
 				// let the old view controller know it is about to move
 				self.currentViewController?.willMove(toParentViewController: nil)
-			}
-			
-			// add new view controller
-			if !self.childViewControllers.contains(childViewController) {
-				self.addChildViewController(childViewController)
+				self.currentViewController?.removeFromParentViewController()
 			}
 			
 			// add new view controller view
-			self.addChildView(childViewController.view)
+			self.addChildView(destinationViewController.view)
 			
 			// add the button view of the new view controller
-			self.addButtonView(childViewController.buttonView)
+			self.addButtonView(destinationViewController.buttonView)
 			
 			// determine header height delta
-			let headerHeightDelta = (childViewController.headerHeight + 20) - self.headerViewHeightConstraint.constant
+			let headerHeightDelta = (destinationViewController.headerHeight + 20) - self.headerViewHeightConstraint.constant
 			
 			var footerBackButtonSnapshot: UIView?
 			
-			if let footerView = childViewController.footerView {
+			if let footerView = destinationViewController.footerView {
 				
 				// add the footer view of the new view controller
 				self.addFooterView(footerView)
 				
 				// prepare footer view for transition in
 				footerView.transform = CGAffineTransform(translationX: 0, y: headerHeightDelta > 0 ? -self.footerViewHeightConstraint.constant : self.footerViewHeightConstraint.constant)
+				footerView.alpha = 0
 				
 			} else {
 				
@@ -207,6 +203,7 @@ class DroppNavigationController: UIViewController {
 				
 				// prepare footer back button for transition in
 				self.footerBackButton.transform = CGAffineTransform(translationX: 0, y: headerHeightDelta > 0 ? -self.footerViewHeightConstraint.constant : self.footerViewHeightConstraint.constant)
+				self.footerBackButton.alpha = 0
 				
 				// adjust footer view back button
 				if let backButton = self.lastViewController?.backButton {
@@ -220,23 +217,26 @@ class DroppNavigationController: UIViewController {
 			}
 			
 			// prepare new view controller for transition
-			childViewController.view.transform = CGAffineTransform(translationX: 0, y: headerHeightDelta > 0 ? -abs(headerHeightDelta) : abs(headerHeightDelta))
-			childViewController.buttonView?.transform = CGAffineTransform(translationX: 0, y: headerHeightDelta > 0 ? -self.buttonViewContainer.frame.height : self.buttonViewContainer.frame.height)
-			childViewController.view.alpha = 0
-			childViewController.buttonView?.alpha = 0
+			destinationViewController.view.transform = CGAffineTransform(translationX: 0, y: headerHeightDelta > 0 ? -abs(headerHeightDelta) : abs(headerHeightDelta))
+			destinationViewController.buttonView?.transform = CGAffineTransform(translationX: 0, y: headerHeightDelta > 0 ? -self.buttonViewContainer.frame.height : self.buttonViewContainer.frame.height)
+			destinationViewController.view.alpha = 0
+			destinationViewController.buttonView?.alpha = 0
 			
 			
 			// animate
-			self.headerViewHeightConstraint.constant = childViewController.headerHeight + 20
-			self.footerViewHeightConstraint.constant = (childViewController.footerView?.frame.height ?? 60) + 10
+			self.headerViewHeightConstraint.constant = destinationViewController.headerHeight + 20
+			self.footerViewHeightConstraint.constant = (destinationViewController.footerView?.frame.height ?? 60) + 10
+			self.childViewContainerBottomConstraint.constant = -(self.footerViewHeightConstraint.constant - 10)
 			let animation = UIViewPropertyAnimator(duration: (animated ? 0.6 : 0) * ANIMATION_SPEED_MODIFIER, dampingRatio: 0.7) {
+				
+				self.adjustToTheme(preparingFor: destinationViewController)
 				
 				// adjust header height
 				self.headerView.layoutIfNeeded()
 				
 				// adjust header label
-				self.headerLabel.font = UIFont(name: self.headerLabel.font.fontName, size: childViewController.headerLabelSize)
-				self.headerLabel.text = childViewController.title
+				self.headerLabel.font = UIFont(name: self.headerLabel.font.fontName, size: destinationViewController.headerLabelSize)
+				self.headerLabel.text = destinationViewController.title
 				
 				// move out old view
 				self.currentViewController?.view.transform = CGAffineTransform(translationX: 0, y: headerHeightDelta)
@@ -251,38 +251,42 @@ class DroppNavigationController: UIViewController {
 				self.currentViewController?.footerView?.alpha = 0
 				
 				// move in new view
-				childViewController.view.transform = CGAffineTransform(translationX: 0, y: 0)
-				childViewController.view.alpha = 1
+				destinationViewController.view.transform = CGAffineTransform(translationX: 0, y: 0)
+				destinationViewController.view.alpha = 1
 				
 				// move in new button view
-				childViewController.buttonView?.transform = CGAffineTransform(translationX: 0, y: 0)
-				childViewController.buttonView?.alpha = 1
+				destinationViewController.buttonView?.transform = CGAffineTransform(translationX: 0, y: 0)
+				destinationViewController.buttonView?.alpha = 1
 				
 				// if footer back button snapshot has been taken, then there is no footer view to reveal
-				if footerBackButtonSnapshot == nil, let footerView = childViewController.footerView {
+				if footerBackButtonSnapshot == nil, let footerView = destinationViewController.footerView {
+					
+					self.footerBackButton.transform = CGAffineTransform(translationX: 0, y: headerHeightDelta > 0 ? self.footerViewHeightConstraint.constant : -self.footerViewHeightConstraint.constant)
+					self.footerBackButton.alpha = 0
 					
 					// move in new footer view
 					footerView.transform = CGAffineTransform(translationX: 0, y: 0)
-					
-					self.footerBackButton.transform = CGAffineTransform(translationX: 0, y: headerHeightDelta > 0 ? self.footerViewHeightConstraint.constant : -self.footerViewHeightConstraint.constant)
+					footerView.alpha = 1
 					
 				} else {
 					footerBackButtonSnapshot?.transform = CGAffineTransform(translationX: 0, y: headerHeightDelta > 0 ? self.footerViewHeightConstraint.constant : -self.footerViewHeightConstraint.constant)
+					footerBackButtonSnapshot?.alpha = 0
 					
 					self.footerBackButton.transform = CGAffineTransform(translationX: 0, y: 0)
+					self.footerBackButton.alpha = 1
 				}
 				
 				// adjust footer height
 				self.footerViewContainer.layoutIfNeeded()
-				
+				self.view.layoutIfNeeded()
 			}
 			
 			DispatchQueue.main.async {
 				
-				if self.lastViewController != nil || childViewController.shouldShowFooter {
-					self.showFooter(animated)
-				} else {
+				if self.lastViewController == nil && !destinationViewController.shouldShowFooter {
 					self.hideFooter(animated)
+				} else {
+					self.showFooter(animated)
 				}
 			}
 			
@@ -290,14 +294,6 @@ class DroppNavigationController: UIViewController {
 				if position == .end {
 					
 					footerBackButtonSnapshot?.removeFromSuperview()
-					
-					if popped {
-						// let the old view controller know it is about to move
-						self.currentViewController?.removeFromParentViewController()
-					}
-					
-					// remove old view controller view
-					self.currentViewController?.view.removeFromSuperview()
 					
 					// remove old button view
 					if let buttonView = self.currentViewController?.buttonView {
@@ -309,13 +305,16 @@ class DroppNavigationController: UIViewController {
 						self.currentViewController?.view.addSubview(footerView)
 					}
 					
-					// let the new view controller know it moved
-					if !self.childViewControllers.contains(childViewController) {
-						childViewController.didMove(toParentViewController: self)
+					// remove old view controller view
+					self.currentViewController?.view.removeFromSuperview()
+					
+					// let the new view controller know it moved if presentation is not an unwind
+					if !self.childViewControllers.contains(destinationViewController) {
+						destinationViewController.didMove(toParentViewController: self)
 					}
 					
 					// update current view controller
-					self.currentViewController = childViewController
+					self.currentViewController = destinationViewController
 					
 					self.view.isUserInteractionEnabled = true
 				}

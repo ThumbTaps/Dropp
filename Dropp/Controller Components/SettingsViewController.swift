@@ -34,6 +34,7 @@ class SettingsViewController: DroppViewController {
 	// Pass the selected object to the new view controller.
 		PreferenceManager.shared.save()
 		
+		super.prepare(for: segue, sender: sender)
 	}
 }
 

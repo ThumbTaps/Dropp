@@ -34,6 +34,7 @@ class ArtistsViewController: DroppViewController {
 
     // In a storyboard-based application, you will often want to do a little preparation before navigation
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+		
         // Get the new view controller using segue.destinationViewController.
         // Pass the selected object to the new view controller.
 		
@@ -41,14 +42,12 @@ class ArtistsViewController: DroppViewController {
 			
 			if let selectedIndex = self.collectionView?.indexPathsForSelectedItems?[0].row {
 				
-				(segue.destination as? ArtistViewController)?.artist = PreferenceManager.shared.followingArtists[selectedIndex]
+				(segue.destination as? ArtistViewController)?.currentArtist = PreferenceManager.shared.followingArtists[selectedIndex]
 			}
 		}
+
+		super.prepare(for: segue, sender: sender)
     }
-	override func unwind(for unwindSegue: UIStoryboardSegue, towardsViewController subsequentVC: UIViewController) {
-		
-		self.navController?.pop()
-	}
 }
 
 extension ArtistsViewController: UICollectionViewDataSourcePrefetching, UICollectionViewDataSource, UICollectionViewDelegate, UICollectionViewDelegateFlowLayout {
@@ -85,6 +84,10 @@ extension ArtistsViewController: UICollectionViewDataSourcePrefetching, UICollec
 		
 		let artist = PreferenceManager.shared.followingArtists[indexPath.row]
 		
+		cell.backgroundColor = ThemeKit.backdropOverlayColor
+		cell.artistNameLabel.textColor = ThemeKit.primaryTextColor
+		cell.selectedBackgroundView?.backgroundColor = ThemeKit.tintColor.withAlpha(0.2)
+
 		cell.artistNameLabel.text = artist.name
 		cell.artistArtworkView.hideArtwork()
 		
@@ -97,11 +100,5 @@ extension ArtistsViewController: UICollectionViewDataSourcePrefetching, UICollec
 		}
 		
 		return cell
-	}
-	
-	
-	// MARK: - UICollectionViewDelegateFlowLayout
-	func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
-		return CGSize(width: self.view.bounds.width, height: 80)
 	}
 }

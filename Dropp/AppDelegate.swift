@@ -90,10 +90,19 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 			launchedFromShortcut = true
 		} else {
 			
-			if let rootNavigationController = self.window?.rootViewController as? DroppNavigationController,
-				let newReleasesViewController = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: "NewReleases") as? NewReleasesViewController {
+
+			if let rootNavigationController = self.window?.rootViewController as? DroppNavigationController {
 				
-				rootNavigationController.push(newReleasesViewController, animated: false)
+				if PreferenceManager.shared.followingArtists.isEmpty && PreferenceManager.shared.firstLaunch {
+					if let searchViewController = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: "ArtistSearch") as? ArtistSearchViewController {
+						rootNavigationController.push(searchViewController, animated: false)
+						PreferenceManager.shared.firstLaunch = false
+					}
+				} else {
+					if let newReleasesViewController = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: "NewReleases") as? NewReleasesViewController {
+						rootNavigationController.push(newReleasesViewController, animated: false)
+					}
+				}
 			}
 
 		}

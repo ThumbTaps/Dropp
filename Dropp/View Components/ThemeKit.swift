@@ -51,6 +51,11 @@ class ThemeKit: NSObject {
 			StyleKit.darkTertiaryTextColor :
 			StyleKit.lightTertiaryTextColor
 	}
+	public dynamic class var shadowColor: UIColor {
+		return PreferenceManager.shared.theme == .dark ?
+			StyleKit.darkShadowColor :
+			StyleKit.lightShadowColor
+	}
 	
 	
 	public dynamic class var statusBarStyle: UIStatusBarStyle {
@@ -67,6 +72,16 @@ class ThemeKit: NSObject {
 		return PreferenceManager.shared.theme == .dark ?
 			.dark :
 			.light
+	}
+	public dynamic class var barStyle: UIBarStyle {
+		return PreferenceManager.shared.theme == .dark ?
+			.black :
+			.default
+	}
+	public dynamic class var keyboardAppearance: UIKeyboardAppearance {
+		return PreferenceManager.shared.theme == .dark ?
+			.dark :
+			.default
 	}
 	
 	

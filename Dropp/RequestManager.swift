@@ -21,6 +21,8 @@ enum RequestManagerError: Error {
 	
 	artistReleases_Unavailable,
 	
+	releaseTracks_Unavailable,
+	
 	sunriseSunset_Unavailable
 }
 
@@ -55,7 +57,7 @@ class RequestManager: NSObject {
 			DispatchQueue.main.async {
 				UIApplication.shared.isNetworkActivityIndicatorVisible = false
 			}
-
+			
 			guard let data = data, error == nil else {
 				completion(nil, RequestManagerError.artistLookup_Unavailable)
 				return
@@ -106,7 +108,8 @@ class RequestManager: NSObject {
 	}
 	func search(for artist: String, completion: @escaping ((_ response: [Artist]?, _ error: Error?) -> Void)) -> URLSessionDataTask? {
 		
-		let parsedArtistName = artist.replacingOccurrences(of: " ", with: "+").trimmingCharacters(in: .whitespacesAndNewlines).addingPercentEncoding(withAllowedCharacters: .urlHostAllowed)?.lowercased()
+		let parsedArtistName = artist.replacingOccurrences(of: " ", with: "+").replacingOccurrences(of: "&", with: "and").trimmingCharacters(in: .whitespacesAndNewlines).addingPercentEncoding(withAllowedCharacters: .urlHostAllowed)?.lowercased()
+		print("PARSED ARTIST NAME: \(parsedArtistName!)")
 		
 		// create URL for data request
 		guard let url = URL(string: "\(self.itunesSearchURL)?term=\(parsedArtistName!)&media=music&entity=musicArtist&attribute=artistTerm&limit=10") else {
@@ -171,7 +174,7 @@ class RequestManager: NSObject {
 	}
 	func getAdditionalInfo(for artist: Artist, completion: @escaping ((_ completedArtist: Artist?, _ error: Error?) -> Void)) -> URLSessionDataTask? {
 		
-		let parsedArtistName = artist.name.replacingOccurrences(of: " ", with: "+").trimmingCharacters(in: .whitespacesAndNewlines).addingPercentEncoding(withAllowedCharacters: .urlHostAllowed)?.lowercased()
+		let parsedArtistName = artist.name.replacingOccurrences(of: " ", with: "+").replacingOccurrences(of: "&", with: "and").trimmingCharacters(in: .whitespacesAndNewlines).addingPercentEncoding(withAllowedCharacters: .urlHostAllowed)?.lowercased()
 		
 		guard let url = URL(string: "\(self.lastFMLookupURL)?method=artist.getinfo&artist=\(parsedArtistName!)&api_key=\(self.lastFMAPIKey)&format=json") else {
 			completion(nil, RequestManagerError.additionalArtistInfo_Unavailable)
@@ -231,7 +234,7 @@ class RequestManager: NSObject {
 						}
 					}
 				})
-								
+				
 				// trigger completion handler
 				completion(artist, nil)
 				
@@ -276,6 +279,7 @@ class RequestManager: NSObject {
 				}
 				
 				var finalResults = Array(intermediateResults[1..<intermediateResults.count])
+				// filter out cleaned collections
 				finalResults = finalResults.filter({ (result) -> Bool in
 					
 					guard let explicitness = result["collectionExplicitness"] as? String else {
@@ -288,46 +292,48 @@ class RequestManager: NSObject {
 				let dateFormatter = DateFormatter()
 				dateFormatter.dateFormat = "YYYY-MM-dd"
 				
-				let releases = finalResults.map({ ( parsedRelease ) -> Release? in
+				let releases = finalResults.map({ ( unparsedRelease ) -> Release? in
 					
-					guard let itunesID = parsedRelease["collectionId"] as? Int,
-						let title = parsedRelease["collectionName"] as? String,
-						let releaseDateString = parsedRelease["releaseDate"] as? String,
-						let itunesURLString = parsedRelease["collectionViewUrl"] as? String else {
+					guard let itunesID = unparsedRelease["collectionId"] as? Int,
+						let title = unparsedRelease["collectionName"] as? String,
+						let releaseDateString = unparsedRelease["releaseDate"] as? String,
+						let itunesURLString = unparsedRelease["collectionViewUrl"] as? String else {
 							return nil
 					}
 					
-					print("\n\n\n\(parsedRelease)")
+					print("\n\n\n\(unparsedRelease)")
 					let releaseDate = dateFormatter.date(from: releaseDateString.components(separatedBy: "T")[0])
 					let release = Release(itunesID: itunesID, title: title, releaseDate: releaseDate, itunesURL: URL(string: itunesURLString))
 					
-					release.genre = parsedRelease["primaryGenreName"] as? String
+					release.genre = unparsedRelease["primaryGenreName"] as? String
 					
-					if let artworkURLString = parsedRelease["artworkUrl100"] as? String {
+					if let artworkURLString = unparsedRelease["artworkUrl100"] as? String {
 						release.artworkURL = URL(string: artworkURLString.replacingOccurrences(of: "100x100bb", with: "1000x1000"))
 					}
 					
-					if let thumbnailURLString = parsedRelease["artworkUrl100"] as? String {
+					if let thumbnailURLString = unparsedRelease["artworkUrl100"] as? String {
 						release.thumbnailURL = URL(string: thumbnailURLString.replacingOccurrences(of: "100x100bb", with: "222x222"))
 					}
 					
-					release.isFeature = (parsedRelease["artistId"] as? Int) != artist.itunesID
-
-					release.trackCount = parsedRelease["trackCount"] as? Int
+					release.isFeature = (unparsedRelease["artistId"] as? Int) != artist.itunesID
 					
 					return release
 				})
+					// filter out failed parses
+					.filter({ (release) -> Bool in
+						return release != nil
+					})
 				
 				
 				// trigger completion handler
 				if date != nil {
 					// pass off only releases after the specified date
 					completion(releases.filter({ (release) -> Bool in
-						return release != nil && release!.releaseDate >= date!
+						return release!.releaseDate >= date!
 					}) as? [Release], nil)
 				} else {
 					// pass off only valid releases
-					completion(releases.filter({ $0 != nil }) as? [Release], nil)
+					completion(releases as? [Release], nil)
 				}
 				
 			} catch _ {
@@ -340,11 +346,85 @@ class RequestManager: NSObject {
 		
 		return task
 	}
+	func getTracks(for release: Release, completion: @escaping ((_ tracks: [Track]?, _ error: Error?) -> Void)) -> URLSessionDataTask? {
+		
+		// create URL for data request
+		guard let url = URL(string: "\(self.itunesLookupURL)?id=\(release.itunesID!)&media=music&entity=song&attribute=albumTerm") else {
+			completion(nil, RequestManagerError.artistReleases_Unavailable)
+			return nil
+		}
+		
+		DispatchQueue.main.async {
+			UIApplication.shared.isNetworkActivityIndicatorVisible = true
+		}
+		let task = self.session.dataTask(with: url) { (data, response, error) in
+			DispatchQueue.main.async {
+				UIApplication.shared.isNetworkActivityIndicatorVisible = false
+			}
+			
+			guard let data = data, error == nil else {
+				completion(nil, RequestManagerError.artistReleases_Unavailable)
+				return
+			}
+			
+			do {
+				
+				// convert data into dictionary
+				let initialResults = try JSONSerialization.jsonObject(with: data, options: .mutableContainers) as? [String: Any]
+				
+				guard let intermediateResults = initialResults!["results"] as? [[String : Any]] else {
+					completion(nil, RequestManagerError.artistReleases_Unavailable)
+					return
+				}
+				
+				let finalResults = Array(intermediateResults[1..<intermediateResults.count])
+				
+				let tracks = finalResults.map({ (unparsedTrack) -> Track? in
+					
+					guard let itunesID = unparsedTrack["trackId"] as? Int,
+						let title = unparsedTrack["trackName"] as? String,
+						let trackNumber = unparsedTrack["trackNumber"] as? Int,
+						let itunesURLString = unparsedTrack["trackViewUrl"] as? String else {
+							return nil
+					}
+					
+					let track = Track(itunesID: itunesID, title: title, trackNumber: trackNumber, itunesURL: URL(string: itunesURLString))
+					
+					track.duration = unparsedTrack["trackTimeMillis"] as? Int
+					track.isStreamable = unparsedTrack["isStreamable"] as? Bool
+					if let previewURLString = unparsedTrack["previewURL"] as? String {
+						track.previewURL = URL(string: previewURLString)
+					}
+					
+					return track
+				})
+					// sort by track number
+					.sorted(by: { (trackOne, trackTwo) -> Bool in
+						
+						return trackOne!.trackNumber > trackTwo!.trackNumber
+					})
+					// get rid of failed parses
+					.filter({ (track) -> Bool in
+						return track != nil
+					})
+				
+				completion(tracks as? [Track], nil)
+				
+			} catch _ {
+				
+				// trigger completion handler
+				completion(nil, RequestManagerError.releaseTracks_Unavailable)
+			}
+		}
+		
+		return task
+	}
 	func loadImage(from url: URL, completion: @escaping ((_ image: UIImage?, _ error: Error?) -> Void)) -> URLSessionDataTask? {
 		
 		DispatchQueue.main.async {
 			UIApplication.shared.isNetworkActivityIndicatorVisible = true
 		}
+		
 		let task = self.session.dataTask(with: url) { (data, response, error) in
 			DispatchQueue.main.async {
 				UIApplication.shared.isNetworkActivityIndicatorVisible = false

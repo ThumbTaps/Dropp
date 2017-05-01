@@ -19,14 +19,7 @@ class Artist: NSObject, NSCoding {
 	var artworkImage: UIImage?
 	var thumbnailURL: URL?
 	var thumbnailImage: UIImage?
-	var releases: [Release] = [] {
-		didSet {
-			print("\n\n\n\(self.name!.uppercased())")
-			self.releases.forEach { (release) in
-				print("\(release.title!) - \(release.releaseDate)")
-			}
-		}
-	}
+	var releases: [Release] = []
 	var latestRelease: Release? {
 		get {
 			return self.releases.max(by: { $0.isNewerThan($1) })
@@ -200,7 +193,6 @@ class Artist: NSObject, NSCoding {
 			
 			self.artworkImage = image
 			completion?()
-			
 		})
 			
 		task?.resume()

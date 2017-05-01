@@ -14,8 +14,22 @@ class ArtistViewController: DroppViewController {
 	
 	@IBOutlet weak var followButton: DroppButton!
 	
-	var artist: Artist! // expects a fully-formed artist object
-	var colorPalette: UIImageColors?
+	var currentArtist: Artist!
+	private var palette: UIImageColors?
+	var colorPalette: UIImageColors? {
+		set {
+			self.palette = newValue
+		}
+		get {
+			if !PreferenceManager.shared.adaptiveArtistView {
+				return nil
+			}
+			
+			return self.palette
+		}
+	}
+	
+	var latestReleaseArtworkTask: URLSessionDataTask?
 	
 	override var backButton: DroppButton? {
 		let artistButton = ArtistsButton()
@@ -23,63 +37,64 @@ class ArtistViewController: DroppViewController {
 		return artistButton
 	}
 	
+	override var shouldIgnoreThemeChanges: Bool {
+		return true
+	}
+	
 	override func viewDidLoad() {
 		super.viewDidLoad()
 		
-		self.title = self.artist.name
-		
-		// don't monitor theme changes
-		PreferenceManager.shared.themeDidChangeNotification.remove(self)
+		self.title = self.currentArtist.name
+		self.headerHeight = CGFloat(180 + (self.title!.characters.count - 80))
 		
 		DispatchQueue.main.async {
 			
-			if PreferenceManager.shared.followingArtists.contains(where: { $0.itunesID == self.artist.itunesID }) {
+			if PreferenceManager.shared.followingArtists.contains(where: { $0.itunesID == self.currentArtist.itunesID }) {
 				self.followButton.setTitle("Unfollow", for: .normal)
 				self.followButton.tintColor = ThemeKit.strokeColor
 			}
 			
-			if PreferenceManager.shared.adaptiveArtistView {
-				
-				self.colorPalette = self.artist.artworkImage?.getColors()
-				self.artistImageView.image = self.artist.artworkImage
-				
-				if !UIAccessibilityIsReduceMotionEnabled() {
-					self.artistImageView.enableParallax()
-				}
-			}
-			
-			if self.colorPalette != nil {
-				
-				self.view.backgroundColor = self.colorPalette!.backgroundColor
-				
-				self.view.tintColor = self.colorPalette!.primaryColor
-				
-				if self.colorPalette!.backgroundColor.isDarkColor {
-					UIApplication.shared.statusBarStyle = .lightContent
-					self.collectionView?.backgroundColor = self.colorPalette!.backgroundColor.withBrightness(0.2).withAlpha(0.25)
-					self.collectionView?.indicatorStyle = .white
-					
-				} else {
-					
-					UIApplication.shared.statusBarStyle = .default
-					self.collectionView?.backgroundColor = self.colorPalette!.backgroundColor.withBrightness(0.8).withAlpha(0.25)
-					self.collectionView?.indicatorStyle = .black
-				}
-			}
 		}
 	}
-
+	
 	override func viewDidDisappear(_ animated: Bool) {
 		super.viewDidDisappear(true)
 		
-		self.artist = nil
+		self.currentArtist = nil
 		self.colorPalette = nil
 	}
 	override func didReceiveMemoryWarning() {
 		super.didReceiveMemoryWarning()
 		// Dispose of any resources that can be recreated.
 	}
-		
+	
+	
+	override func adjustToTheme() {
+		DispatchQueue.main.async {
+			
+			self.navController?.view.tintColor = self.colorPalette?.primaryColor ?? ThemeKit.tintColor
+			
+			if self.colorPalette?.backgroundColor.isDarkColor ?? (PreferenceManager.shared.theme == .dark) {
+				UIApplication.shared.statusBarStyle = .lightContent
+				self.navController?.headerView.effect = UIBlurEffect(style: .dark)
+				self.collectionView?.indicatorStyle = .white
+				
+			} else {
+				
+				UIApplication.shared.statusBarStyle = .default
+				self.navController?.headerView.effect = UIBlurEffect(style: .light)
+				self.collectionView?.indicatorStyle = .black
+			}
+			
+			self.navController?.headerLabel.textColor = self.colorPalette?.detailColor ?? ThemeKit.primaryTextColor
+			self.navController?.footerViewContainer.backgroundColor = self.colorPalette?.backgroundColor ?? ThemeKit.backgroundColor
+			self.navController?.footerBackButton.destinationTitle.textColor = self.colorPalette?.detailColor ?? ThemeKit.primaryTextColor
+			self.collectionView?.backgroundColor = self.colorPalette?.backgroundColor.withAlpha(0.8) ?? ThemeKit.backdropOverlayColor
+			
+			//			self.collectionView?.reloadData()
+		}
+	}
+	
 	
 	
 	
@@ -87,19 +102,37 @@ class ArtistViewController: DroppViewController {
 	// MARK: - IBActions
 	@IBAction func followArtist(_ sender: Any) {
 		
-		PreferenceManager.shared.follow(artist: self.artist)
+		PreferenceManager.shared.follow(artist: self.currentArtist)
+		
+		DispatchQueue.global().async {
+
+			_ = self.currentArtist.loadArtwork {
+				DispatchQueue.main.async {
+					
+					self.currentArtist.artworkImage?.getColors(completionHandler: { (imageColors) in
+						self.colorPalette = imageColors
+						UIView.transition(with: self.view, duration: 0.6, options: .transitionCrossDissolve, animations: {
+							self.followButton.setTitle("Unfollow", for: .normal)
+							self.artistImageView.image = self.currentArtist.artworkImage
+							self.adjustToTheme()
+						}, completion: nil)
+					})
+					
+				}
+			}
+		}
 	}
 	@IBAction func toggleIncludeSingles(_ sender: UISwitch) {
-		self.artist.includeSingles = sender.isOn
+		self.currentArtist.includeSingles = sender.isOn
 		self.collectionView?.performBatchUpdates({
 			self.collectionView?.reloadSections([(self.collectionView?.numberOfSections ?? 3) - 1])
 		})
 	}
 	@IBAction func toggleIgnoreFeatures(_ sender: UISwitch) {
-		self.artist.ignoreFeatures = sender.isOn
+		self.currentArtist.ignoreFeatures = sender.isOn
 	}
 	@IBAction func toggleIncludeEPs(_ sender: UISwitch) {
-		self.artist.includeEPs = sender.isOn
+		self.currentArtist.includeEPs = sender.isOn
 	}
 	
 	
@@ -107,20 +140,34 @@ class ArtistViewController: DroppViewController {
 	
 	// In a storyboard-based application, you will often want to do a little preparation before navigation
 	override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+		super.prepare(for: segue, sender: sender)
 		// Get the new view controller using segue.destinationViewController.
 		// Pass the selected object to the new view controller.
 		
 	}
 }
 
-extension ArtistViewController: UICollectionViewDataSource, UICollectionViewDelegate, UICollectionViewDelegateFlowLayout {
+extension ArtistViewController: UICollectionViewDataSourcePrefetching, UICollectionViewDataSource, UICollectionViewDelegate, UICollectionViewDelegateFlowLayout {
+	
+	// MARK: UICollectionViewDataSourcePrefetching
+	func collectionView(_ collectionView: UICollectionView, prefetchItemsAt indexPaths: [IndexPath]) {
+		
+		self.latestReleaseArtworkTask = self.currentArtist.latestRelease?.loadThumbnail()
+	}
+	func collectionView(_ collectionView: UICollectionView, cancelPrefetchingForItemsAt indexPaths: [IndexPath]) {
+		
+		self.latestReleaseArtworkTask?.cancel()
+	}
+	
+	
+	
 	
 	// MARK: - UICollectionViewDataSource
 	func numberOfSections(in collectionView: UICollectionView) -> Int {
 		var numSections = 0
-		if self.artist.latestRelease != nil { numSections += 1 }
-		if self.artist.summary != nil { numSections += 1 }
-		if PreferenceManager.shared.followingArtists.contains(where: { $0.itunesID == artist.itunesID }) { numSections += 1 }
+		if self.currentArtist.latestRelease != nil { numSections += 1 }
+		if self.currentArtist.summary != nil { numSections += 1 }
+		if PreferenceManager.shared.followingArtists.contains(where: { $0.itunesID == currentArtist.itunesID }) { numSections += 1 }
 		
 		return numSections
 	}
@@ -128,15 +175,15 @@ extension ArtistViewController: UICollectionViewDataSource, UICollectionViewDele
 		var numItems = 0
 		switch section {
 		case 0:
-			if self.artist.latestRelease != nil { numItems += 1 }
+			if self.currentArtist.latestRelease != nil { numItems += 1 }
 			break
 		case 1:
-			if self.artist.summary != nil { numItems += 1 }
+			if self.currentArtist.summary != nil { numItems += 1 }
 			break
 		case 2:
-			if PreferenceManager.shared.followingArtists.contains(where: { $0.itunesID == self.artist.itunesID }) {
+			if PreferenceManager.shared.followingArtists.contains(where: { $0.itunesID == self.currentArtist.itunesID }) {
 				numItems += 2
-				if self.artist.includeSingles ?? PreferenceManager.shared.includeSingles {
+				if self.currentArtist.includeSingles ?? PreferenceManager.shared.includeSingles {
 					numItems += 1
 				}
 			}
@@ -155,32 +202,38 @@ extension ArtistViewController: UICollectionViewDataSource, UICollectionViewDele
 		dateFormatter.timeZone = .current
 		
 		// LATEST RELEASE SECTION
-		if self.artist.latestRelease != nil && indexPath.section == 0 {
+		if self.currentArtist.latestRelease != nil && indexPath.section == 0 {
 			
 			cell = collectionView.dequeueReusableCell(withReuseIdentifier: "LatestReleaseCell", for: indexPath) as! ReleaseCollectionViewCell
-			(cell as! ReleaseCollectionViewCell).releaseTitleLabel.text = self.artist.latestRelease!.title
+			(cell as! ReleaseCollectionViewCell).releaseTitleLabel.text = self.currentArtist.latestRelease!.title
 			
 			// get release date
-			(cell as! ReleaseCollectionViewCell).secondaryLabel.text = "Released on \(dateFormatter.string(from: self.artist.latestRelease!.releaseDate))"
+			(cell as! ReleaseCollectionViewCell).secondaryLabel.text = "Released on \(dateFormatter.string(from: self.currentArtist.latestRelease!.releaseDate))"
 			
-			_ = self.artist.latestRelease!.loadThumbnail {
+			_ = self.currentArtist.latestRelease!.loadThumbnail {
 				
 				DispatchQueue.main.async {
-					(cell as! ReleaseCollectionViewCell).releaseArtworkView.imageView.image = self.artist.latestRelease!.thumbnailImage
+					(cell as! ReleaseCollectionViewCell).releaseArtworkView.imageView.image = self.currentArtist.latestRelease!.thumbnailImage
 					(cell as! ReleaseCollectionViewCell).releaseArtworkView.showArtwork(true)
 				}
 			}
+			if self.colorPalette?.backgroundColor.isDarkColor ?? false {
+				(cell as! ReleaseCollectionViewCell).releaseArtworkView.shadow?.shadowColor = StyleKit.darkShadowColor
+			} else {
+				(cell as! ReleaseCollectionViewCell).releaseArtworkView.shadow?.shadowColor = StyleKit.lightShadowColor
+			}
+			
 		}
 		
 		// SUMMARY SECTION
-		if self.artist.summary != nil &&
-			((indexPath.section == 0 && self.artist.latestRelease == nil) ||
-				(indexPath.section == 1 && self.artist.latestRelease != nil)) {
+		if self.currentArtist.summary != nil &&
+			((indexPath.section == 0 && self.currentArtist.latestRelease == nil) ||
+				(indexPath.section == 1 && self.currentArtist.latestRelease != nil)) {
 			
 			switch indexPath.row {
 			case 0:
 				cell = collectionView.dequeueReusableCell(withReuseIdentifier: "ArtistSummaryCell", for: indexPath) as! TextAreaCollectionViewCell
-				(cell as? TextAreaCollectionViewCell)?.textView.text = self.artist.summary
+				(cell as? TextAreaCollectionViewCell)?.textView.text = self.currentArtist.summary
 				(cell as? TextAreaCollectionViewCell)?.expandButton?.tintColor = self.colorPalette?.primaryColor
 				
 				break
@@ -191,30 +244,30 @@ extension ArtistViewController: UICollectionViewDataSource, UICollectionViewDele
 		}
 		
 		// RELEASE OPTIONS
-		if PreferenceManager.shared.followingArtists.contains(where: { $0.itunesID == self.artist.itunesID }) &&
-			((indexPath.section == 0 && self.artist.latestRelease == nil && self.artist.summary == nil) ||
-				(indexPath.section == 1 && self.artist.summary == nil) ||
+		if PreferenceManager.shared.followingArtists.contains(where: { $0.itunesID == self.currentArtist.itunesID }) &&
+			((indexPath.section == 0 && self.currentArtist.latestRelease == nil && self.currentArtist.summary == nil) ||
+				(indexPath.section == 1 && self.currentArtist.summary == nil) ||
 				indexPath.section == 2) {
 			
 			switch indexPath.row {
 			case 0: // IGNORE SINGLES
 				cell = collectionView.dequeueReusableCell(withReuseIdentifier: "IncludeSinglesCell", for: indexPath) as! SettingsCollectionViewCell
-				((cell as? SettingsCollectionViewCell)?.accessoryView as? UISwitch)?.isOn = self.artist.includeSingles ?? PreferenceManager.shared.includeSingles
+				((cell as? SettingsCollectionViewCell)?.accessoryView as? UISwitch)?.isOn = self.currentArtist.includeSingles ?? PreferenceManager.shared.includeSingles
 				break
 				
 			case 1: // INCLUDE EPS / IGNORE FEATURES
-				if self.artist.includeSingles ?? PreferenceManager.shared.includeSingles {
+				if self.currentArtist.includeSingles ?? PreferenceManager.shared.includeSingles {
 					cell = collectionView.dequeueReusableCell(withReuseIdentifier: "IgnoreFeaturesCell", for: indexPath) as! SettingsCollectionViewCell
-					((cell as? SettingsCollectionViewCell)?.accessoryView as? UISwitch)?.isOn = self.artist.ignoreFeatures ?? PreferenceManager.shared.ignoreFeatures
+					((cell as? SettingsCollectionViewCell)?.accessoryView as? UISwitch)?.isOn = self.currentArtist.ignoreFeatures ?? PreferenceManager.shared.ignoreFeatures
 				} else {
 					cell = collectionView.dequeueReusableCell(withReuseIdentifier: "IncludeEPsCell", for: indexPath) as! SettingsCollectionViewCell
-					((cell as? SettingsCollectionViewCell)?.accessoryView as? UISwitch)?.isOn = self.artist.includeEPs ?? PreferenceManager.shared.includeEPs
+					((cell as? SettingsCollectionViewCell)?.accessoryView as? UISwitch)?.isOn = self.currentArtist.includeEPs ?? PreferenceManager.shared.includeEPs
 				}
 				break
 				
 			case 2: // INCLUDE EPS
 				cell = collectionView.dequeueReusableCell(withReuseIdentifier: "IncludeEPsCell", for: indexPath) as! SettingsCollectionViewCell
-				((cell as? SettingsCollectionViewCell)?.accessoryView as? UISwitch)?.isOn = self.artist.includeEPs ?? PreferenceManager.shared.includeEPs
+				((cell as? SettingsCollectionViewCell)?.accessoryView as? UISwitch)?.isOn = self.currentArtist.includeEPs ?? PreferenceManager.shared.includeEPs
 				break
 			default: break
 			}
@@ -225,12 +278,7 @@ extension ArtistViewController: UICollectionViewDataSource, UICollectionViewDele
 			}
 		}
 		
-//		if self.colorPalette != nil {
-//			cell.tintColor = self.colorPalette?.backgroundColor.withAlphaComponent(0.15)
-//			
-//		} else {
-//			cell.changesWithTheme = true
-//		}
+		cell.selectedBackgroundView?.backgroundColor = self.colorPalette?.primaryColor.withAlpha(0.2)
 		
 		return cell
 	}
@@ -240,7 +288,7 @@ extension ArtistViewController: UICollectionViewDataSource, UICollectionViewDele
 			return UICollectionReusableView()
 		}
 		
-		if self.artist.latestRelease != nil &&
+		if self.currentArtist.latestRelease != nil &&
 			indexPath.section == 0 {
 			
 			// LATEST RELEASE SECTION
@@ -248,17 +296,17 @@ extension ArtistViewController: UICollectionViewDataSource, UICollectionViewDele
 			
 		}
 		
-		if self.artist.summary != nil &&
-			((indexPath.section == 0 && self.artist.latestRelease == nil) ||
-				(indexPath.section == 1 && self.artist.latestRelease != nil)) {
+		if self.currentArtist.summary != nil &&
+			((indexPath.section == 0 && self.currentArtist.latestRelease == nil) ||
+				(indexPath.section == 1 && self.currentArtist.latestRelease != nil)) {
 			
 			// ADDITIONAL INFO SECTION
 			reusableView.textLabel.text = "SUMMARY"
 		}
 		
-		if PreferenceManager.shared.followingArtists.contains(where: { $0.itunesID == self.artist.itunesID }) &&
-			((indexPath.section == 0 && self.artist.latestRelease == nil && self.artist.summary == nil) ||
-				(indexPath.section == 1 && self.artist.summary == nil) ||
+		if PreferenceManager.shared.followingArtists.contains(where: { $0.itunesID == self.currentArtist.itunesID }) &&
+			((indexPath.section == 0 && self.currentArtist.latestRelease == nil && self.currentArtist.summary == nil) ||
+				(indexPath.section == 1 && self.currentArtist.summary == nil) ||
 				indexPath.section == 2) {
 			
 			// RELEASE OPTIONS
@@ -292,29 +340,29 @@ extension ArtistViewController: UICollectionViewDataSource, UICollectionViewDele
 	
 	// MARK: - UICollectionViewDelegateFlowLayout
 	func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, referenceSizeForHeaderInSection section: Int) -> CGSize {
-		return CGSize(width: self.view.bounds.width, height: 60)
+		return CGSize(width: self.view.bounds.width, height: 50)
 	}
 	func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
 		
 		var size = CGSize(width: collectionView.bounds.width, height: 100)
 		
-		if self.artist.latestRelease != nil &&
+		if self.currentArtist.latestRelease != nil &&
 			indexPath.section == 0 {
 			
 			// LATEST RELEASE SECTION
 		}
 		
-		if self.artist.summary != nil &&
-			((indexPath.section == 0 && self.artist.latestRelease == nil) ||
-				(indexPath.section == 1 && self.artist.latestRelease != nil)) {
+		if self.currentArtist.summary != nil &&
+			((indexPath.section == 0 && self.currentArtist.latestRelease == nil) ||
+				(indexPath.section == 1 && self.currentArtist.latestRelease != nil)) {
 			
 			// SUMMARY SECTION
 			size = (collectionView.cellForItem(at: indexPath) as? TextAreaCollectionViewCell)?.textView.contentSize ?? size
 		}
 		
-		if PreferenceManager.shared.followingArtists.contains(where: { $0.itunesID == self.artist.itunesID }) &&
-			((indexPath.section == 0 && self.artist.latestRelease == nil && self.artist.summary == nil) ||
-				(indexPath.section == 1 && self.artist.summary == nil) ||
+		if PreferenceManager.shared.followingArtists.contains(where: { $0.itunesID == self.currentArtist.itunesID }) &&
+			((indexPath.section == 0 && self.currentArtist.latestRelease == nil && self.currentArtist.summary == nil) ||
+				(indexPath.section == 1 && self.currentArtist.summary == nil) ||
 				indexPath.section == 2) {
 			
 			// RELEASE OPTIONS

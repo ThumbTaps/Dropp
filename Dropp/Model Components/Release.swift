@@ -23,7 +23,7 @@ class Release: NSObject, NSCoding {
 	var artworkImage: UIImage?
 	var thumbnailURL: URL?
 	var thumbnailImage: UIImage?
-	var trackCount: Int?
+	var tracks: [Track]?
 	var isFeature = false
 	private var _seenByUser: Bool?
 	var seenByUser: Bool {
@@ -49,7 +49,7 @@ class Release: NSObject, NSCoding {
 	}
 	var type: ReleaseType {
 		get {
-			if self.title.lowercased().hasSuffix("- single") || self.trackCount == 1 {
+			if self.title.lowercased().hasSuffix("- single") || self.tracks?.count == 1 {
 				return .single
 			} else if self.title.lowercased().hasSuffix(" ep") {
 				return .EP
@@ -99,8 +99,8 @@ class Release: NSObject, NSCoding {
 		if self.thumbnailURL != nil {
 			aCoder.encode(self.artworkURL, forKey: "thumbnailURL")
 		}
-		if self.trackCount != nil {
-			aCoder.encode(self.trackCount, forKey: "trackCount")
+		if self.tracks != nil {
+			aCoder.encode(self.tracks, forKey: "tracks")
 		}
 		aCoder.encode(self.isFeature, forKey: "isFeature")
 		if self._seenByUser != nil {
@@ -117,7 +117,7 @@ class Release: NSObject, NSCoding {
 		self.itunesURL = aDecoder.decodeObject(forKey: "itunesURL") as! URL
 		self.artworkURL = aDecoder.decodeObject(forKey: "artworkURL") as? URL
 		self.thumbnailURL = aDecoder.decodeObject(forKey: "thumbnailURL") as? URL
-		self.trackCount = aDecoder.decodeObject(forKey: "trackCount") as? Int
+		self.tracks = aDecoder.decodeObject(forKey: "tracks") as? [Track]
 		self.isFeature = (aDecoder.decodeObject(forKey: "isFeature") as? Bool) ?? false
 		self._seenByUser = aDecoder.decodeObject(forKey: "seenByUser") as? Bool
 	}
@@ -131,7 +131,7 @@ class Release: NSObject, NSCoding {
 	func loadThumbnail(_ completion: (() -> Void)?=nil) -> URLSessionDataTask? {
 		
 		// only load artwork if it hasn't already been loaded and stored
-		guard self.thumbnailImage != nil else {
+		guard self.thumbnailImage == nil else {
 			completion?()
 			return nil
 		}
@@ -160,7 +160,7 @@ class Release: NSObject, NSCoding {
 	func loadArtwork(_ completion: (() -> Void)?=nil) -> URLSessionDataTask? {
 		
 		// only load artwork if it hasn't already been loaded and stored
-		guard self.artworkImage != nil else {
+		guard self.artworkImage == nil else {
 			completion?()
 			return nil
 		}
@@ -182,6 +182,27 @@ class Release: NSObject, NSCoding {
 			completion?()
 			
 		})
+		
+		task?.resume()
+		return task
+	}
+	func loadTracks(_ completion: (() -> Void)?=nil) -> URLSessionDataTask? {
+		
+		// only load tracks if they haven't already been loaded
+		guard self.tracks == nil else {
+			completion?()
+			return nil
+		}
+		
+		let task = RequestManager.shared.getTracks(for: self) { (tracks, error) in
+			guard let tracks = tracks, error == nil else {
+				completion?()
+				return
+			}
+			
+			self.tracks = tracks
+			completion?()
+		}
 		
 		task?.resume()
 		return task

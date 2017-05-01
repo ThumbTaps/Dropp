@@ -9,7 +9,23 @@
 import UIKit
 
 class FooterButton: UIView {
+	
+	var selectedBackgroundView: UIView?
+	
+	override func layoutSubviews() {
+		super.layoutSubviews()
 
+		self.selectedBackgroundView = UIView(frame: CGRect(x: 0, y: 0, width: frame.width, height: frame.height))
+		self.selectedBackgroundView?.backgroundColor = self.tintColor.withAlpha(0.2)
+		self.selectedBackgroundView?.isHidden = true
+		self.insertSubview(self.selectedBackgroundView!, at: 0)
+	}
+	
+	override func tintColorDidChange() {
+		super.tintColorDidChange()
+		
+		self.selectedBackgroundView?.backgroundColor = self.tintColor.withAlpha(0.2)
+	}
     /*
     // Only override draw() if you perform custom drawing.
     // An empty implementation adversely affects performance during animation.
@@ -29,7 +45,7 @@ class FooterButton: UIView {
 		
 		DispatchQueue.main.async {
 			
-			self.backgroundColor = self.tintColor.withAlpha(0.2)
+			self.selectedBackgroundView?.isHidden = false
 		}
 		
 	}
@@ -46,10 +62,7 @@ class FooterButton: UIView {
 	}
 	override func touchesEnded(_ touches: Set<UITouch>, with event: UIEvent?) {
 		
-		DispatchQueue.main.async {
-			
-			self.backgroundColor = ThemeKit.backgroundColor
-		}
+		self.selectedBackgroundView?.isHidden = true
 		
 		super.touchesEnded(touches, with: event)
 	}

@@ -98,14 +98,14 @@ class SettingsThemeModeOption: UIView {
 	override init(frame: CGRect) {
 		super.init(frame: frame)
 		
-		PreferenceManager.shared.themeDidChangeNotification.add(self, selector: #selector(self.themeDidChange))
+		PreferenceManager.shared.themeDidChangeNotification.add(self, selector: #selector(self.adjustToTheme))
 		self.themeDeterminerDidChange()
 		PreferenceManager.shared.themeDeterminerDidChangeNotification.add(self, selector: #selector(self.themeDeterminerDidChange))
 	}
 	required init?(coder aDecoder: NSCoder) {
 		super.init(coder: aDecoder)
 		
-		PreferenceManager.shared.themeDidChangeNotification.add(self, selector: #selector(self.themeDidChange))
+		PreferenceManager.shared.themeDidChangeNotification.add(self, selector: #selector(self.adjustToTheme))
 		self.themeDeterminerDidChange()
 		PreferenceManager.shared.themeDeterminerDidChangeNotification.add(self, selector: #selector(self.themeDeterminerDidChange))
 	}
@@ -114,12 +114,12 @@ class SettingsThemeModeOption: UIView {
 		
 		if PreferenceManager.shared.themeDeterminer == .displayBrightness {
 			// start monitoring brightness
-			Notification.Name.UIScreenBrightnessDidChange.add(self, selector: #selector(self.themeDidChange))
+			Notification.Name.UIScreenBrightnessDidChange.add(self, selector: #selector(self.adjustToTheme))
 		} else if PreferenceManager.shared.themeDeterminer == .twilight {
 			// TODO: Set trigger for sunset or sunrise time?
 		}
 	}
-	func themeDidChange() {
+	func adjustToTheme() {
 		
 		DispatchQueue.main.async {
 			

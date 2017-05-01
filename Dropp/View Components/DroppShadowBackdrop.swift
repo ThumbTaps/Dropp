@@ -11,15 +11,35 @@ import UIKit
 @IBDesignable
 class DroppShadowBackdrop: UIView {
 	
-	@IBInspectable var offset: CGSize = CGSize(width: 0, height: 0)
-	@IBInspectable var radius: CGFloat = 10
-	@IBInspectable var opacity: CGFloat = 0.15
+	@IBInspectable var offset: CGSize = CGSize(width: 0, height: 0) {
+		didSet {
+			self.setNeedsDisplay()
+		}
+	}
+	@IBInspectable var radius: CGFloat = 10 {
+		didSet {
+			self.setNeedsDisplay()
+		}
+	}
+	@IBInspectable var cornerRadius: CGFloat = 0 {
+		didSet {
+			self.setNeedsDisplay()
+		}
+	}
+	@IBInspectable var shadowColor: UIColor = UIColor.black {
+		didSet {
+			self.setNeedsDisplay()
+		}
+	}
 	
-	convenience init(frame: CGRect, offset: CGSize, radius: CGFloat) {
+	convenience init(frame: CGRect, offset: CGSize, radius: CGFloat, cornerRadius: CGFloat, color: UIColor) {
 		self.init(frame: frame)
 		
 		self.offset = offset
 		self.radius = radius
+		self.cornerRadius = cornerRadius
+		self.shadowColor = color
+		self.backgroundColor = UIColor.clear
 	}
 	
 	// Only override draw() if you perform custom drawing.
@@ -27,14 +47,13 @@ class DroppShadowBackdrop: UIView {
 	override func draw(_ rect: CGRect) {
 		// Drawing code
 		
-		self.layer.cornerRadius = 12
+		self.layer.backgroundColor = UIColor.clear.cgColor
+		self.layer.cornerRadius = self.cornerRadius
 		self.layer.shadowPath = CGPath(roundedRect: rect, cornerWidth: 0, cornerHeight: 0, transform: nil)
-		self.layer.shadowColor = UIColor.black.cgColor
+		self.layer.shadowColor = self.shadowColor.cgColor
 		self.layer.shadowOffset = self.offset
 		self.layer.shadowRadius = self.radius
-		self.layer.borderWidth = 1
-		self.layer.borderColor = UIColor.black.withAlpha(self.opacity).cgColor
-		self.layer.shadowOpacity = Float(self.opacity)
+		self.layer.shadowOpacity = 1
 		
 	}
 	

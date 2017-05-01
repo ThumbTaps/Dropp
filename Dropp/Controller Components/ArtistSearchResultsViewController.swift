@@ -35,9 +35,11 @@ class ArtistSearchResultsViewController: DroppViewController {
 	// MARK: - Navigation
     // In a storyboard-based application, you will often want to do a little preparation before navigation
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+		
         // Get the new view controller using segue.destinationViewController.
         // Pass the selected object to the new view controller.
 		
+		super.prepare(for: segue, sender: sender)
     }
 
 }
@@ -59,6 +61,7 @@ extension ArtistSearchResultsViewController: UICollectionViewDataSource, UIColle
 		cell.artistNameLabel.text = self.artistSearchResults[indexPath.row].name
 		
 		cell.backgroundColor = ThemeKit.backdropOverlayColor
+		cell.artistNameLabel.textColor = ThemeKit.primaryTextColor
 		
 		return cell
 	}
@@ -74,7 +77,7 @@ extension ArtistSearchResultsViewController: UICollectionViewDataSource, UIColle
 				if remainingRequests == 0 {
 					// trigger segue
 					self.performSegue(withIdentifier: "showArtist", sender: { (destination: ArtistViewController) in
-						destination.artist = selectedArtist
+						destination.currentArtist = selectedArtist
 					})
 				}
 			}

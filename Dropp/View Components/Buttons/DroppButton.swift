@@ -55,8 +55,12 @@ class DroppButton: UIButton {
 		if self.iconOnly {
 			self.layer.backgroundColor = UIColor.clear.cgColor
 		} else {
-			self.layer.backgroundColor = ThemeKit.tintColor.cgColor
-			self.setTitleColor(ThemeKit.glyphColor, for: .normal)
+			self.layer.backgroundColor = self.tintColor.cgColor
+			if self.tintColor.isDarkColor {
+				self.setTitleColor(StyleKit.darkGlyphColor, for: .normal)
+			} else {
+				self.setTitleColor(StyleKit.lightGlyphColor, for: .normal)
+			}
 		}
 	}
 	override func point(inside point: CGPoint, with event: UIEvent?) -> Bool {

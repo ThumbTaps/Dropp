@@ -33,7 +33,7 @@ class NewReleasesViewController: DroppViewController {
 	}
 	override func viewDidLoad() {
 		super.viewDidLoad()
-				
+		
 		self.collectionView?.refreshControl = UIRefreshControl(frame: CGRect(x: 0, y: 130, width: 45, height: 45))
 		
 		DispatchQueue.main.async {
@@ -42,14 +42,21 @@ class NewReleasesViewController: DroppViewController {
 			self.newReleasesCountIndicator.isHidden = true
 		}
 		
-		// start monitoring now playing artist changes
-		PreferenceManager.shared.nowPlayingArtistDidChangeNotification.add(self, selector: #selector(self.nowPlayingArtistDidChange))
 	}
 	
 	override func viewDidAppear(_ animated: Bool) {
 		super.viewDidAppear(animated)
 		
+		// start monitoring now playing artist changes
+		PreferenceManager.shared.nowPlayingArtistDidChangeNotification.add(self, selector: #selector(self.nowPlayingArtistDidChange))
+		
 		PreferenceManager.shared.updateNewReleases()
+	}
+	
+	override func viewDidDisappear(_ animated: Bool) {
+		super.viewDidDisappear(animated)
+		
+		PreferenceManager.shared.nowPlayingArtistDidChangeNotification.remove(self)
 	}
 	
 	override func didReceiveMemoryWarning() {
@@ -64,6 +71,12 @@ class NewReleasesViewController: DroppViewController {
 	
 	
 	// MARK: - Notifications
+	override func adjustToTheme() {
+		super.adjustToTheme()
+		
+		self.nowPlayingArtistQuickViewButton.artistNameLabel.textColor = ThemeKit.primaryTextColor
+		self.nowPlayingArtistQuickViewButton.secondaryLabel.textColor = ThemeKit.secondaryTextColor
+	}
 	override func didUpdateReleases() {
 		
 		self.collectionView?.prefetchDataSource = self
@@ -117,7 +130,7 @@ class NewReleasesViewController: DroppViewController {
 				self.nowPlayingArtistQuickViewButton.artistArtworkView.imageView.image = PreferenceManager.shared.nowPlayingArtist?.thumbnailImage
 				self.nowPlayingArtistQuickViewButton.artistArtworkView.showArtwork(false)
 				self.nowPlayingArtistQuickViewButton.artistNameLabel.text = PreferenceManager.shared.nowPlayingArtist?.name
-								
+				
 				self.navController?.showFooter(true)
 			} else {
 				
@@ -153,8 +166,10 @@ class NewReleasesViewController: DroppViewController {
 			
 			
 		else if segue.identifier == "showArtist" {
-			(segue.destination as? ArtistViewController)?.artist = PreferenceManager.shared.nowPlayingArtist
+			(segue.destination as? ArtistViewController)?.currentArtist = PreferenceManager.shared.nowPlayingArtist
 		}
+		
+		super.prepare(for: segue, sender: sender)
 	}
 }
 
@@ -194,7 +209,6 @@ extension NewReleasesViewController: UICollectionViewDataSourcePrefetching, UICo
 				break
 			default: break
 			}
-			
 		}
 	}
 	func collectionView(_ collectionView: UICollectionView, cancelPrefetchingForItemsAt indexPaths: [IndexPath]) {
@@ -259,9 +273,8 @@ extension NewReleasesViewController: UICollectionViewDataSourcePrefetching, UICo
 		let release = source[indexPath.row]
 		
 		DispatchQueue.main.async {
-			cell.releaseArtworkView.shadowed = false
-			cell.releaseArtworkView.hideArtwork()
 			
+			cell.releaseArtworkView.hideArtwork()
 			cell.backgroundColor = ThemeKit.backdropOverlayColor
 			cell.releaseTitleLabel.textColor = ThemeKit.primaryTextColor
 			cell.secondaryLabel.textColor = ThemeKit.secondaryTextColor
@@ -270,43 +283,12 @@ extension NewReleasesViewController: UICollectionViewDataSourcePrefetching, UICo
 		cell.releaseTitleLabel.text = release.title
 		cell.secondaryLabel.text = release.artist.name
 		
-		guard let image = source[indexPath.row].thumbnailImage else {
-			
-			guard let url = release.thumbnailURL else {
-				return cell
+		_ = source[indexPath.row].loadThumbnail {
+
+			DispatchQueue.main.async {
+				cell.releaseArtworkView.imageView.image = source[indexPath.row].thumbnailImage
+				cell.releaseArtworkView.showArtwork(true)
 			}
-			
-			RequestManager.shared.loadImage(from: url, completion: { (image, error) in
-				
-				guard let image = image, error == nil else {
-					print(error!)
-					return
-				}
-				
-				// add loaded image to prefetch source
-				switch indexPath.section {
-				case 0:
-					PreferenceManager.shared.newReleases[indexPath.row].thumbnailImage = image
-					break
-				case 1:
-					PreferenceManager.shared.previousReleases[indexPath.row].thumbnailImage = image
-					break
-				default: break
-				}
-				
-				DispatchQueue.main.async {
-					cell.releaseArtworkView.imageView.image = image
-					cell.releaseArtworkView.showArtwork(true)
-				}
-				
-			})?.resume()
-			
-			return cell
-		}
-		
-		DispatchQueue.main.async {
-			cell.releaseArtworkView.imageView.image = image
-			cell.releaseArtworkView.showArtwork()
 		}
 		
 		return cell
@@ -315,10 +297,28 @@ extension NewReleasesViewController: UICollectionViewDataSourcePrefetching, UICo
 	
 	
 	// MARK: - UICollectionViewDelegate
+	func collectionView(_ collectionView: UICollectionView, didHighlightItemAt indexPath: IndexPath) {
+		
+		var source = PreferenceManager.shared.newReleases
+		if indexPath.section == 1 {
+			source = PreferenceManager.shared.previousReleases
+		}
+		
+		_ = source[indexPath.row].loadTracks()
+		_ = source[indexPath.row].loadArtwork()
+	}
+	
+	
+	
+	
+	// MARK: - UICollectionViewDelegateFlowLayout
 	func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, referenceSizeForHeaderInSection section: Int) -> CGSize {
 		
 		if section == 0 {
-			return CGSize.zero
+			return .zero
+		}
+		if section == 1 && PreferenceManager.shared.previousReleases.isEmpty {
+			return .zero
 		}
 		return CGSize(width: collectionView.frame.width, height: 50)
 	}

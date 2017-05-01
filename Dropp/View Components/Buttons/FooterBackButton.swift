@@ -31,6 +31,7 @@ class FooterBackButton: FooterButton {
 		DispatchQueue.main.async {
 			
 			self.destinationButtonContainer.addSubview(button)
+			button.frame = CGRect(x: 0, y: 0, width: self.destinationButtonContainer.frame.width, height: self.destinationButtonContainer.frame.height)
 			self.destinationButtonContainer.addConstraints([
 				NSLayoutConstraint(item: button, attribute: .top, relatedBy: .equal, toItem: self.destinationButtonContainer, attribute: .top, multiplier: 1, constant: 10),
 				NSLayoutConstraint(item: button, attribute: .left, relatedBy: .equal, toItem: self.destinationButtonContainer, attribute: .left, multiplier: 1, constant: 0),
