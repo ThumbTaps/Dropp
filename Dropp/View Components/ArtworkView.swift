@@ -31,7 +31,7 @@ class ArtworkView: UIView {
 		}
 		
 		self.imageView?.clipsToBounds = true
-		self.imageView?.layer.cornerRadius = self.bounds.width * 0.05
+		self.imageView?.layer.cornerRadius = 4
 		self.imageView.contentMode = .scaleAspectFill
 
 		self.hideArtwork()
@@ -47,7 +47,7 @@ class ArtworkView: UIView {
 		super.draw(rect)
 				
 //		self.layer.borderWidth = min(rect.width / 50, 4)
-		self.layer.cornerRadius = rect.width * 0.05
+		self.layer.cornerRadius = 4
 	}
 	
 	

@@ -26,9 +26,10 @@ class DroppButton: UIButton {
 			self.setNeedsDisplay()
 		}
 	}
+	@IBInspectable var haptic: Bool = false
 	
 	var iconRect: CGRect!
-	var resizingBehavior: StyleKit.ResizingBehavior = .aspectFill {
+	var resizingBehavior: StyleKit.ResizingBehavior = .aspectFit {
 		didSet {
 			self.setNeedsDisplay()
 		}
@@ -45,23 +46,25 @@ class DroppButton: UIButton {
 		self.layer.cornerRadius = 6
 		self.layer.masksToBounds = true
 		
-		self.iconRect = CGRect(x: 0, y: 0, width: min(rect.width, rect.height), height: min(rect.width, rect.height))
+		self.iconRect = CGRect(x: 0, y: 0, width: rect.height, height: rect.height)
 		
 		if self.badged {
-			self.iconRect = iconRect.applying(CGAffineTransform(scaleX: 0.85, y: 0.85)).applying(CGAffineTransform(translationX: self.iconRect.width * 0.15, y: (self.iconRect.height/2) * 0.15))
-			self.titleEdgeInsets = UIEdgeInsets(top: 0, left: self.iconRect.width * 1.1, bottom: 0, right: self.iconRect.origin.x / 2)
-			self.contentHorizontalAlignment = .left
+			self.iconRect = CGRect(x: 2.5, y: 0, width: rect.height, height: rect.height)
+			self.contentMode = .left
 		}
+
 		if self.iconOnly {
 			self.layer.backgroundColor = UIColor.clear.cgColor
 		} else {
 			self.layer.backgroundColor = self.tintColor.cgColor
+
 			if self.tintColor.isDarkColor {
 				self.setTitleColor(StyleKit.darkGlyphColor, for: .normal)
 			} else {
 				self.setTitleColor(StyleKit.lightGlyphColor, for: .normal)
 			}
 		}
+		
 	}
 	override func point(inside point: CGPoint, with event: UIEvent?) -> Bool {
 		let marginForError: CGFloat = 10
@@ -72,6 +75,11 @@ class DroppButton: UIButton {
 	}
 	override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
 		super.touchesBegan(touches, with: event)
+		
+		if self.haptic {
+			let feedbackGenerator = UIImpactFeedbackGenerator(style: .heavy)
+			feedbackGenerator.impactOccurred()
+		}
 		
 		UIViewPropertyAnimator(duration: 0.4 * ANIMATION_SPEED_MODIFIER, dampingRatio: 0.5) {
 			self.transform = CGAffineTransform(scaleX: self.tapScale, y: self.tapScale)

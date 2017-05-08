@@ -85,6 +85,30 @@ class NewReleasesViewController: DroppViewController {
 	
 	
 	
+	// MARK: Methods
+	@IBAction func showReleaseSortingOptions() {
+		let alertController = UIAlertController(title: "Release Sorting", message: "Set sorting for new and previous releases", preferredStyle: .actionSheet)
+		alertController.view.tintColor = ThemeKit.tintColor
+		
+		alertController.addAction(UIAlertAction(title: "Release Date", style: .default, handler: { (alertAction) in
+			self.releaseSortingButton.setTitle(alertAction.title, for: .normal)
+			PreferenceManager.shared.releaseSorting = .releaseDate
+		}))
+		alertController.addAction(UIAlertAction(title: "Release Title", style: .default, handler: { (alertAction) in
+			self.releaseSortingButton.setTitle(alertAction.title, for: .normal)
+			PreferenceManager.shared.releaseSorting = .releaseTitle
+		}))
+		alertController.addAction(UIAlertAction(title: "Artist Name", style: .default, handler: { (alertAction) in
+			self.releaseSortingButton.setTitle(alertAction.title, for: .normal)
+			PreferenceManager.shared.releaseSorting = .artistName
+		}))
+		alertController.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: nil))
+		
+		self.present(alertController, animated: true, completion: nil)
+	}
+	
+	
+	
 	
 	// MARK: - Notifications
 	override func adjustToTheme() {

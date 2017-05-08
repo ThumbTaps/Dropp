@@ -71,7 +71,7 @@ class DroppNavigationController: UIViewController {
 				self.headerLabel.textColor = ThemeKit.primaryTextColor
 				
 				self.footerViewContainer.backgroundColor = ThemeKit.backgroundColor
-				self.footerBackButton.destinationTitle.textColor = ThemeKit.primaryTextColor
+				self.footerBackButton.destinationTitle.textColor = ThemeKit.tintColor
 				
 				self.childViewContainer.backgroundColor = ThemeKit.backgroundColor
 				self.shadowBackdrop.shadowColor = ThemeKit.shadowColor
@@ -140,7 +140,7 @@ class DroppNavigationController: UIViewController {
 			self.currentViewController?.didShowFooter()
 		}
 	}
-	public func hideFooter(_ animated: Bool=false) {
+	public func hideFooter(_ animated: Bool=false, completion: (() -> Void)?=nil) {
 		DispatchQueue.main.async {
 			self.childViewContainerBottomConstraint.constant = 0
 			UIViewPropertyAnimator(duration: (animated ? 0.5 : 0) * ANIMATION_SPEED_MODIFIER, dampingRatio: 0.7) {

@@ -81,19 +81,22 @@ class ArtistViewController: DroppViewController {
 			self.navController?.headerView.effect = UIBlurEffect(style: .dark)
 			self.collectionView?.indicatorStyle = .white
 			self.navController?.shadowBackdrop.shadowColor = StyleKit.darkShadowColor
-			
+			self.navController?.footerViewContainer.backgroundColor = self.colorPalette?.backgroundColor.withBrightness(0.25) ?? ThemeKit.backgroundColor
+			self.collectionView?.backgroundColor = self.colorPalette?.backgroundColor.withBrightness(0.25).withAlpha(0.8) ?? ThemeKit.backdropOverlayColor
+
 		} else {
 			
 			UIApplication.shared.statusBarStyle = .default
 			self.navController?.headerView.effect = UIBlurEffect(style: .light)
 			self.collectionView?.indicatorStyle = .black
 			self.navController?.shadowBackdrop.shadowColor = StyleKit.lightShadowColor
+			self.navController?.footerViewContainer.backgroundColor = self.colorPalette?.backgroundColor ?? ThemeKit.backgroundColor
+			self.collectionView?.backgroundColor = self.colorPalette?.backgroundColor.withAlpha(0.8) ?? ThemeKit.backdropOverlayColor
 		}
 		
 		self.navController?.headerLabel.textColor = self.colorPalette?.detailColor ?? ThemeKit.primaryTextColor
 		self.navController?.footerViewContainer.backgroundColor = self.colorPalette?.backgroundColor ?? ThemeKit.backgroundColor
 		self.navController?.footerBackButton.destinationTitle.textColor = self.colorPalette?.detailColor ?? ThemeKit.primaryTextColor
-		self.collectionView?.backgroundColor = self.colorPalette?.backgroundColor.withAlpha(0.8) ?? ThemeKit.backdropOverlayColor
 		
 		self.collectionView?.reloadData()
 	}
@@ -231,16 +234,16 @@ extension ArtistViewController: UICollectionViewDataSourcePrefetching, UICollect
 		
 		var cell = DroppCollectionViewCell()
 		
-		let dateFormatter = DateFormatter()
-		dateFormatter.dateFormat = "MMM d, YYYY"
-		dateFormatter.timeZone = .current
-		
 		// LATEST RELEASE SECTION
 		if self.currentArtist.latestRelease != nil && indexPath.section == 0 {
 			
 			let latestReleaseCell = collectionView.dequeueReusableCell(withReuseIdentifier: "LatestReleaseCell", for: indexPath) as! ReleaseCollectionViewCell
 			
 			latestReleaseCell.releaseTitleLabel.text = self.currentArtist.latestRelease!.title
+
+			let dateFormatter = DateFormatter()
+			dateFormatter.dateFormat = "MMM d, YYYY"
+			dateFormatter.timeZone = .current
 			latestReleaseCell.secondaryLabel.text = "Released on \(dateFormatter.string(from: self.currentArtist.latestRelease!.releaseDate))"
 			
 			latestReleaseCell.releaseTitleLabel.textColor = self.colorPalette?.backgroundColor.isDarkColor ?? (PreferenceManager.shared.theme == .dark) ? StyleKit.darkPrimaryTextColor : StyleKit.lightPrimaryTextColor

@@ -194,5 +194,3 @@ build
 /*.gcno
 
 # End of https://www.gitignore.io/api/xcode,swift,objective-c,c,c++
-
-Server/

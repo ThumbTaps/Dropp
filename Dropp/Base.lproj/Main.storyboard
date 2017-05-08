@@ -9,7 +9,7 @@
         <capability name="Alignment constraints with different attributes" minToolsVersion="5.1"/>
         <capability name="Aspect ratio constraints" minToolsVersion="5.1"/>
         <capability name="Constraints to layout margins" minToolsVersion="6.0"/>
-        <capability name="Segues with Peek and Pop" minToolsVersion="7.1"/>
+        <capability name="Constraints with non-1.0 multipliers" minToolsVersion="5.1"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <scenes>
@@ -715,7 +715,7 @@
                                         <rect key="frame" x="8" y="6" width="398" height="29"/>
                                         <segments>
                                             <segment title="Display"/>
-                                            <segment title="Release"/>
+                                            <segment title="Releases"/>
                                             <segment title="Extra"/>
                                         </segments>
                                     </segmentedControl>
@@ -917,7 +917,7 @@
                     </connections>
                 </tapGestureRecognizer>
             </objects>
-            <point key="canvasLocation" x="-6029" y="1060"/>
+            <point key="canvasLocation" x="-5952" y="1060"/>
         </scene>
         <!--New Releases-->
         <scene sceneID="Vt8-o4-acr">
@@ -1063,10 +1063,7 @@
                                             <outlet property="releaseArtworkView" destination="8TL-MB-ole" id="3ty-HL-e1R"/>
                                             <outlet property="releaseTitleLabel" destination="8Ao-1W-PMW" id="gCZ-B4-p4i"/>
                                             <outlet property="secondaryLabel" destination="wy4-a4-Vef" id="zTY-N7-rdp"/>
-                                            <segue destination="Jai-jZ-F7n" kind="custom" identifier="showRelease" customClass="DroppStoryboardSegue" customModule="Dropp" customModuleProvider="target" id="SuV-Bs-1vU">
-                                                <segue key="commit" inheritsFrom="parent" id="IEe-oq-ApJ"/>
-                                                <segue key="preview" inheritsFrom="commit" id="Lkz-wJ-sK2"/>
-                                            </segue>
+                                            <segue destination="Jai-jZ-F7n" kind="custom" identifier="showRelease" customClass="DroppStoryboardSegue" customModule="Dropp" customModuleProvider="target" id="SuV-Bs-1vU"/>
                                         </connections>
                                     </collectionViewCell>
                                 </cells>
@@ -1130,25 +1127,24 @@
                                             <segue destination="tIm-Ss-63n" kind="custom" identifier="NewReleases-&gt;Settings" customClass="DroppStoryboardSegue" customModule="Dropp" customModuleProvider="target" id="E7a-Cj-PlX"/>
                                         </connections>
                                     </button>
-                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="U6V-Ve-1TH" customClass="SortButton" customModule="Dropp" customModuleProvider="target">
-                                        <rect key="frame" x="8" y="5" width="130" height="30"/>
-                                        <constraints>
-                                            <constraint firstAttribute="width" constant="130" id="Sly-pd-Lpd"/>
-                                        </constraints>
+                                    <button opaque="NO" contentMode="scaleAspectFit" contentHorizontalAlignment="left" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="clip" translatesAutoresizingMaskIntoConstraints="NO" id="U6V-Ve-1TH" customClass="SortButton" customModule="Dropp" customModuleProvider="target">
+                                        <rect key="frame" x="8" y="5" width="132" height="30"/>
                                         <fontDescription key="fontDescription" type="system" weight="semibold" pointSize="15"/>
+                                        <inset key="contentEdgeInsets" minX="30" minY="6" maxX="8" maxY="6"/>
                                         <state key="normal" title="Release Date">
                                             <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                         </state>
                                         <userDefinedRuntimeAttributes>
                                             <userDefinedRuntimeAttribute type="boolean" keyPath="badged" value="YES"/>
                                         </userDefinedRuntimeAttributes>
+                                        <connections>
+                                            <action selector="showReleaseSortingOptions" destination="igh-Gg-oBy" eventType="touchUpInside" id="XUU-jq-CYh"/>
+                                        </connections>
                                     </button>
                                     <button opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="c6O-XB-bM5" customClass="DroppButton" customModule="Dropp" customModuleProvider="target">
-                                        <rect key="frame" x="143" y="5" width="60" height="30"/>
-                                        <constraints>
-                                            <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="60" id="0mU-B9-eD3"/>
-                                        </constraints>
+                                        <rect key="frame" x="145" y="5" width="59" height="30"/>
                                         <fontDescription key="fontDescription" type="system" weight="semibold" pointSize="15"/>
+                                        <inset key="contentEdgeInsets" minX="8" minY="6" maxX="8" maxY="6"/>
                                         <state key="normal" title="1 New">
                                             <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                         </state>
@@ -1208,7 +1204,7 @@
                     </connections>
                 </tapGestureRecognizer>
             </objects>
-            <point key="canvasLocation" x="-4788" y="143"/>
+            <point key="canvasLocation" x="-4788.4057971014499" y="142.66304347826087"/>
         </scene>
         <!--Artists You Follow-->
         <scene sceneID="Sho-Fl-vwd">
@@ -1420,34 +1416,17 @@
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="KMD-9d-H13">
                                 <rect key="frame" x="0.0" y="0.0" width="414" height="40"/>
                                 <subviews>
-                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="piP-cI-CZ5" customClass="SortButton" customModule="Dropp" customModuleProvider="target">
-                                        <rect key="frame" x="8" y="5" width="110" height="30"/>
-                                        <constraints>
-                                            <constraint firstAttribute="width" constant="110" id="cQn-y8-EWG"/>
-                                        </constraints>
-                                        <fontDescription key="fontDescription" type="system" weight="semibold" pointSize="15"/>
-                                        <state key="normal" title="Relevance">
-                                            <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                                        </state>
-                                        <userDefinedRuntimeAttributes>
-                                            <userDefinedRuntimeAttribute type="boolean" keyPath="badged" value="YES"/>
-                                        </userDefinedRuntimeAttributes>
-                                    </button>
                                     <button opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="G5A-zc-BKV" customClass="DroppButton" customModule="Dropp" customModuleProvider="target">
-                                        <rect key="frame" x="123" y="5" width="90" height="30"/>
-                                        <constraints>
-                                            <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="90" id="tjx-hD-Vzv"/>
-                                        </constraints>
+                                        <rect key="frame" x="8" y="5.6666666666666661" width="72" height="30"/>
                                         <fontDescription key="fontDescription" type="system" weight="semibold" pointSize="15"/>
-                                        <state key="normal" title="10 Results">
+                                        <inset key="contentEdgeInsets" minX="8" minY="6" maxX="8" maxY="6"/>
+                                        <state key="normal" title="1 Result">
                                             <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                         </state>
                                     </button>
                                 </subviews>
                                 <constraints>
-                                    <constraint firstItem="G5A-zc-BKV" firstAttribute="leading" secondItem="piP-cI-CZ5" secondAttribute="trailing" constant="5" id="8gU-4x-6j4"/>
-                                    <constraint firstItem="piP-cI-CZ5" firstAttribute="leading" secondItem="KMD-9d-H13" secondAttribute="leadingMargin" id="ZAI-tB-GiV"/>
-                                    <constraint firstItem="piP-cI-CZ5" firstAttribute="centerY" secondItem="KMD-9d-H13" secondAttribute="centerY" id="mUZ-eM-LTG"/>
+                                    <constraint firstItem="G5A-zc-BKV" firstAttribute="leading" secondItem="KMD-9d-H13" secondAttribute="leadingMargin" id="3Qg-SU-XM5"/>
                                     <constraint firstAttribute="height" constant="40" id="oZo-Op-tgu"/>
                                     <constraint firstItem="G5A-zc-BKV" firstAttribute="centerY" secondItem="KMD-9d-H13" secondAttribute="centerY" id="zhe-p1-Ifk"/>
                                 </constraints>
@@ -1477,7 +1456,6 @@
                         <outlet property="buttonView" destination="KMD-9d-H13" id="1Yu-0O-shI"/>
                         <outlet property="collectionView" destination="Cwn-1B-Gqe" id="aXE-eO-wln"/>
                         <outlet property="resultCoundIndicator" destination="G5A-zc-BKV" id="pmh-Xu-rN9"/>
-                        <outlet property="resultsSortingButton" destination="piP-cI-CZ5" id="b0v-fI-hKc"/>
                         <segue destination="YBR-9N-AHs" kind="custom" identifier="showArtist" customClass="DroppStoryboardSegue" customModule="Dropp" customModuleProvider="target" id="Ygw-SB-yfN"/>
                     </connections>
                 </viewController>
@@ -1497,9 +1475,28 @@
                         <rect key="frame" x="0.0" y="0.0" width="414" height="736"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <imageView userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="BvF-hn-rgu">
-                                <rect key="frame" x="0.0" y="0.0" width="414" height="736"/>
-                            </imageView>
+                            <view alpha="0.0" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="mv6-PR-u72" customClass="ReleaseArtworkView" customModule="Dropp" customModuleProvider="target">
+                                <rect key="frame" x="-161" y="0.0" width="736" height="736"/>
+                                <subviews>
+                                    <imageView clipsSubviews="YES" userInteractionEnabled="NO" alpha="0.0" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="ime-IW-Jdy">
+                                        <rect key="frame" x="0.0" y="0.0" width="736" height="736"/>
+                                    </imageView>
+                                </subviews>
+                                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                                <constraints>
+                                    <constraint firstItem="ime-IW-Jdy" firstAttribute="width" secondItem="mv6-PR-u72" secondAttribute="width" id="5CJ-Fu-h2V"/>
+                                    <constraint firstItem="ime-IW-Jdy" firstAttribute="centerX" secondItem="mv6-PR-u72" secondAttribute="centerX" id="Ez9-Xl-llx"/>
+                                    <constraint firstItem="ime-IW-Jdy" firstAttribute="centerY" secondItem="mv6-PR-u72" secondAttribute="centerY" id="ebh-00-7bV"/>
+                                    <constraint firstAttribute="width" secondItem="mv6-PR-u72" secondAttribute="height" multiplier="1:1" id="jD4-TI-dhx"/>
+                                    <constraint firstItem="ime-IW-Jdy" firstAttribute="height" secondItem="mv6-PR-u72" secondAttribute="height" id="wjQ-5E-E0i"/>
+                                </constraints>
+                                <userDefinedRuntimeAttributes>
+                                    <userDefinedRuntimeAttribute type="boolean" keyPath="shadowed" value="YES"/>
+                                </userDefinedRuntimeAttributes>
+                                <connections>
+                                    <outlet property="imageView" destination="ime-IW-Jdy" id="iXY-4Y-sO4"/>
+                                </connections>
+                            </view>
                             <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" directionalLockEnabled="YES" alwaysBounceVertical="YES" showsHorizontalScrollIndicator="NO" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="B7T-1w-mTh">
                                 <rect key="frame" x="0.0" y="40" width="414" height="696"/>
                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
@@ -1510,8 +1507,96 @@
                                     <inset key="sectionInset" minX="0.0" minY="0.0" maxX="0.0" maxY="0.0"/>
                                 </collectionViewFlowLayout>
                                 <cells>
-                                    <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="ReleaseTrackCell" id="6H8-s4-NeE" customClass="ReleaseTrackCollectionViewCell" customModule="Dropp" customModuleProvider="target">
+                                    <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="ArtistCell" id="pi0-Un-ItC" customClass="BadgedCollectionViewCell" customModule="Dropp" customModuleProvider="target">
                                         <rect key="frame" x="0.0" y="50" width="414" height="50"/>
+                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                        <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center">
+                                            <rect key="frame" x="0.0" y="0.0" width="414" height="50"/>
+                                            <autoresizingMask key="autoresizingMask"/>
+                                            <subviews>
+                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Artist Name" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumScaleFactor="0.80000001192092896" adjustsLetterSpacingToFitWidth="YES" translatesAutoresizingMaskIntoConstraints="NO" id="lYq-0F-mDd">
+                                                    <rect key="frame" x="68" y="15" width="93" height="20"/>
+                                                    <fontDescription key="fontDescription" type="boldSystem" pointSize="16"/>
+                                                    <nil key="textColor"/>
+                                                    <nil key="highlightedColor"/>
+                                                </label>
+                                                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="r2m-Sc-FXT">
+                                                    <rect key="frame" x="18" y="5" width="40" height="40"/>
+                                                    <subviews>
+                                                        <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="iob-Rt-sKa" customClass="ArtistsButton" customModule="Dropp" customModuleProvider="target">
+                                                            <rect key="frame" x="0.0" y="0.0" width="40" height="40"/>
+                                                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                                            <userDefinedRuntimeAttributes>
+                                                                <userDefinedRuntimeAttribute type="boolean" keyPath="iconOnly" value="YES"/>
+                                                            </userDefinedRuntimeAttributes>
+                                                        </button>
+                                                    </subviews>
+                                                    <constraints>
+                                                        <constraint firstAttribute="width" constant="40" id="2x3-Oo-jl6"/>
+                                                        <constraint firstAttribute="width" secondItem="r2m-Sc-FXT" secondAttribute="height" multiplier="1:1" id="VBi-F6-SCq"/>
+                                                    </constraints>
+                                                </view>
+                                            </subviews>
+                                        </view>
+                                        <constraints>
+                                            <constraint firstItem="r2m-Sc-FXT" firstAttribute="centerY" secondItem="pi0-Un-ItC" secondAttribute="centerY" id="4Ko-kZ-f3f"/>
+                                            <constraint firstItem="r2m-Sc-FXT" firstAttribute="leading" secondItem="pi0-Un-ItC" secondAttribute="leadingMargin" constant="10" id="OuD-Ad-LjO"/>
+                                            <constraint firstItem="lYq-0F-mDd" firstAttribute="centerY" secondItem="pi0-Un-ItC" secondAttribute="centerY" id="fju-AD-7pc"/>
+                                            <constraint firstItem="lYq-0F-mDd" firstAttribute="trailing" relation="lessThanOrEqual" secondItem="pi0-Un-ItC" secondAttribute="trailingMargin" constant="-10" id="uhp-XA-cvI"/>
+                                            <constraint firstItem="lYq-0F-mDd" firstAttribute="leading" secondItem="r2m-Sc-FXT" secondAttribute="trailing" constant="10" id="x0X-yl-R8P"/>
+                                        </constraints>
+                                        <connections>
+                                            <outlet property="badge" destination="iob-Rt-sKa" id="4uX-mu-xaf"/>
+                                            <outlet property="badgeContainer" destination="r2m-Sc-FXT" id="EMy-aa-HT1"/>
+                                            <outlet property="textLabel" destination="lYq-0F-mDd" id="r5b-qg-IDE"/>
+                                        </connections>
+                                    </collectionViewCell>
+                                    <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="ReleaseDateCell" id="YNO-mt-vOl" customClass="BadgedCollectionViewCell" customModule="Dropp" customModuleProvider="target">
+                                        <rect key="frame" x="0.0" y="100" width="414" height="50"/>
+                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                        <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center">
+                                            <rect key="frame" x="0.0" y="0.0" width="414" height="50"/>
+                                            <autoresizingMask key="autoresizingMask"/>
+                                            <subviews>
+                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Released on Jan 1, 1970" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumScaleFactor="0.80000000000000004" adjustsLetterSpacingToFitWidth="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Az2-k2-PHp">
+                                                    <rect key="frame" x="68" y="15" width="185" height="20"/>
+                                                    <fontDescription key="fontDescription" type="boldSystem" pointSize="16"/>
+                                                    <nil key="textColor"/>
+                                                    <nil key="highlightedColor"/>
+                                                </label>
+                                                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="bKt-Jm-SiX">
+                                                    <rect key="frame" x="18" y="5" width="40" height="40"/>
+                                                    <subviews>
+                                                        <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="l32-Lr-Myl" customClass="CalendarButton" customModule="Dropp" customModuleProvider="target">
+                                                            <rect key="frame" x="0.0" y="0.0" width="40" height="40"/>
+                                                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                                            <userDefinedRuntimeAttributes>
+                                                                <userDefinedRuntimeAttribute type="boolean" keyPath="iconOnly" value="YES"/>
+                                                            </userDefinedRuntimeAttributes>
+                                                        </button>
+                                                    </subviews>
+                                                    <constraints>
+                                                        <constraint firstAttribute="width" constant="40" id="50Y-1Y-x7b"/>
+                                                        <constraint firstAttribute="width" secondItem="bKt-Jm-SiX" secondAttribute="height" multiplier="1:1" id="H6x-gl-gxY"/>
+                                                    </constraints>
+                                                </view>
+                                            </subviews>
+                                        </view>
+                                        <constraints>
+                                            <constraint firstItem="bKt-Jm-SiX" firstAttribute="centerY" secondItem="YNO-mt-vOl" secondAttribute="centerY" id="CfJ-Cz-Plf"/>
+                                            <constraint firstItem="Az2-k2-PHp" firstAttribute="leading" secondItem="bKt-Jm-SiX" secondAttribute="trailing" constant="10" id="NpF-4x-GkA"/>
+                                            <constraint firstItem="Az2-k2-PHp" firstAttribute="trailing" relation="lessThanOrEqual" secondItem="YNO-mt-vOl" secondAttribute="trailingMargin" constant="-10" id="QCa-E8-4QK"/>
+                                            <constraint firstItem="bKt-Jm-SiX" firstAttribute="leading" secondItem="YNO-mt-vOl" secondAttribute="leadingMargin" constant="10" id="Zkf-7s-DpC"/>
+                                            <constraint firstItem="Az2-k2-PHp" firstAttribute="centerY" secondItem="YNO-mt-vOl" secondAttribute="centerY" id="fwy-kq-J8i"/>
+                                        </constraints>
+                                        <connections>
+                                            <outlet property="badge" destination="l32-Lr-Myl" id="tiO-go-GEM"/>
+                                            <outlet property="badgeContainer" destination="bKt-Jm-SiX" id="Mv1-7o-59f"/>
+                                            <outlet property="textLabel" destination="Az2-k2-PHp" id="dT1-vp-U9Y"/>
+                                        </connections>
+                                    </collectionViewCell>
+                                    <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="ReleaseTrackCell" id="6H8-s4-NeE" customClass="ReleaseTrackCollectionViewCell" customModule="Dropp" customModuleProvider="target">
+                                        <rect key="frame" x="0.0" y="150" width="414" height="50"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                         <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center">
                                             <rect key="frame" x="0.0" y="0.0" width="414" height="50"/>
@@ -1581,10 +1666,8 @@
                                 <subviews>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="8Zd-it-uEg" customClass="ShareButton" customModule="Dropp" customModuleProvider="target">
                                         <rect key="frame" x="8" y="5" width="80" height="30"/>
-                                        <constraints>
-                                            <constraint firstAttribute="width" constant="80" id="iDy-hV-Mpm"/>
-                                        </constraints>
                                         <fontDescription key="fontDescription" type="system" weight="semibold" pointSize="15"/>
+                                        <inset key="contentEdgeInsets" minX="30" minY="6" maxX="8" maxY="6"/>
                                         <state key="normal" title="Share">
                                             <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                         </state>
@@ -1593,16 +1676,14 @@
                                         </userDefinedRuntimeAttributes>
                                     </button>
                                     <button opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="ciz-Zs-HwR" customClass="DroppButton" customModule="Dropp" customModuleProvider="target">
-                                        <rect key="frame" x="93" y="5" width="100" height="30"/>
-                                        <constraints>
-                                            <constraint firstAttribute="width" constant="100" id="Axn-z8-gzZ"/>
-                                        </constraints>
+                                        <rect key="frame" x="93" y="5" width="90" height="30"/>
                                         <fontDescription key="fontDescription" type="system" weight="semibold" pointSize="15"/>
+                                        <inset key="contentEdgeInsets" minX="8" minY="6" maxX="8" maxY="6"/>
                                         <state key="normal" title="View On...">
                                             <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                         </state>
                                         <connections>
-                                            <action selector="viewOn:" destination="Jai-jZ-F7n" eventType="touchUpInside" id="gDE-Ns-eQ6"/>
+                                            <action selector="viewOn" destination="Jai-jZ-F7n" eventType="touchUpInside" id="yY4-Qc-AZI"/>
                                         </connections>
                                     </button>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Q2g-dl-Wt4" customClass="ViewArtworkButton" customModule="Dropp" customModuleProvider="target">
@@ -1616,7 +1697,14 @@
                                         </state>
                                         <userDefinedRuntimeAttributes>
                                             <userDefinedRuntimeAttribute type="boolean" keyPath="iconOnly" value="YES"/>
+                                            <userDefinedRuntimeAttribute type="boolean" keyPath="haptic" value="YES"/>
                                         </userDefinedRuntimeAttributes>
+                                        <connections>
+                                            <action selector="concealArtwork" destination="Jai-jZ-F7n" eventType="touchCancel" id="NQi-Ta-rSd"/>
+                                            <action selector="concealArtwork" destination="Jai-jZ-F7n" eventType="touchUpOutside" id="iYn-xB-PI8"/>
+                                            <action selector="concealArtwork" destination="Jai-jZ-F7n" eventType="touchUpInside" id="w5m-uw-JhZ"/>
+                                            <action selector="revealArtwork" destination="Jai-jZ-F7n" eventType="touchDown" id="Cj4-MH-SNG"/>
+                                        </connections>
                                     </button>
                                 </subviews>
                                 <constraints>
@@ -1635,23 +1723,25 @@
                         <constraints>
                             <constraint firstItem="gPv-FR-HxY" firstAttribute="leading" secondItem="5F0-qW-O4b" secondAttribute="leading" id="7Aa-nh-O1E"/>
                             <constraint firstItem="B7T-1w-mTh" firstAttribute="top" secondItem="gPv-FR-HxY" secondAttribute="bottom" placeholder="YES" id="DLf-2R-eRR"/>
-                            <constraint firstItem="BvF-hn-rgu" firstAttribute="bottom" secondItem="5F0-qW-O4b" secondAttribute="bottom" id="LnK-oO-0gv"/>
-                            <constraint firstItem="BvF-hn-rgu" firstAttribute="trailing" secondItem="5F0-qW-O4b" secondAttribute="trailing" id="NEi-nv-Ri0"/>
+                            <constraint firstItem="mv6-PR-u72" firstAttribute="centerX" secondItem="5F0-qW-O4b" secondAttribute="centerX" id="Ekr-3o-ePJ"/>
+                            <constraint firstItem="mv6-PR-u72" firstAttribute="height" secondItem="5F0-qW-O4b" secondAttribute="height" id="M1S-Re-dSW"/>
                             <constraint firstItem="gPv-FR-HxY" firstAttribute="top" secondItem="5F0-qW-O4b" secondAttribute="top" id="PUC-RE-QMj"/>
+                            <constraint firstItem="mv6-PR-u72" firstAttribute="centerY" secondItem="5F0-qW-O4b" secondAttribute="centerY" id="ana-9B-uIs"/>
                             <constraint firstItem="gPv-FR-HxY" firstAttribute="trailing" secondItem="5F0-qW-O4b" secondAttribute="trailing" id="cEp-ND-HQs"/>
-                            <constraint firstItem="BvF-hn-rgu" firstAttribute="top" secondItem="5F0-qW-O4b" secondAttribute="top" id="chU-2q-edZ"/>
                             <constraint firstItem="B7T-1w-mTh" firstAttribute="top" secondItem="5F0-qW-O4b" secondAttribute="top" priority="999" id="dlx-1D-AeA"/>
                             <constraint firstItem="B7T-1w-mTh" firstAttribute="leading" secondItem="5F0-qW-O4b" secondAttribute="leading" id="ecQ-qh-4Pl"/>
                             <constraint firstItem="B7T-1w-mTh" firstAttribute="bottom" secondItem="5F0-qW-O4b" secondAttribute="bottom" id="mx1-qB-FwC"/>
+                            <constraint firstItem="mv6-PR-u72" firstAttribute="width" secondItem="mv6-PR-u72" secondAttribute="height" multiplier="1:1" id="myC-rr-rQK"/>
                             <constraint firstItem="B7T-1w-mTh" firstAttribute="trailing" secondItem="5F0-qW-O4b" secondAttribute="trailing" id="ppM-5x-vCl"/>
-                            <constraint firstItem="BvF-hn-rgu" firstAttribute="leading" secondItem="5F0-qW-O4b" secondAttribute="leading" id="tWJ-gb-UdI"/>
+                            <constraint firstItem="mv6-PR-u72" firstAttribute="width" secondItem="5F0-qW-O4b" secondAttribute="width" multiplier="0.8" priority="999" id="vNq-cH-S80"/>
                         </constraints>
                     </view>
                     <nil key="simulatedStatusBarMetrics"/>
                     <connections>
                         <outlet property="buttonView" destination="gPv-FR-HxY" id="ARH-Kg-cfc"/>
                         <outlet property="collectionView" destination="B7T-1w-mTh" id="NdA-IL-hbi"/>
-                        <outlet property="releaseArtworkImageView" destination="BvF-hn-rgu" id="kAY-p2-hI6"/>
+                        <outlet property="releaseArtworkView" destination="mv6-PR-u72" id="z4p-se-ziV"/>
+                        <outlet property="releaseArtworkViewFullScreenConstraint" destination="M1S-Re-dSW" id="nKg-LK-m1l"/>
                         <outlet property="shareButton" destination="8Zd-it-uEg" id="7Xq-ne-wrF"/>
                         <outlet property="viewArtworkButton" destination="Q2g-dl-Wt4" id="Lk6-SW-9SP"/>
                         <outlet property="viewOnButton" destination="ciz-Zs-HwR" id="zc5-R1-HuL"/>
@@ -1938,11 +2028,9 @@
                                 <rect key="frame" x="0.0" y="0.0" width="414" height="40"/>
                                 <subviews>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="nqw-fk-Gay" customClass="DroppButton" customModule="Dropp" customModuleProvider="target">
-                                        <rect key="frame" x="8" y="5" width="80" height="30"/>
-                                        <constraints>
-                                            <constraint firstAttribute="width" constant="80" id="FXP-dV-uMt"/>
-                                        </constraints>
+                                        <rect key="frame" x="8" y="5" width="63" height="30"/>
                                         <fontDescription key="fontDescription" type="system" weight="semibold" pointSize="15"/>
+                                        <inset key="contentEdgeInsets" minX="8" minY="6" maxX="8" maxY="6"/>
                                         <state key="normal" title="Follow">
                                             <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                         </state>
@@ -1951,11 +2039,9 @@
                                         </connections>
                                     </button>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="3Ev-RX-8On" customClass="DroppButton" customModule="Dropp" customModuleProvider="target">
-                                        <rect key="frame" x="96" y="5.6666666666666661" width="100" height="30"/>
-                                        <constraints>
-                                            <constraint firstAttribute="width" constant="100" id="fOZ-Xs-r0Q"/>
-                                        </constraints>
+                                        <rect key="frame" x="79" y="5.6666666666666661" width="90" height="30"/>
                                         <fontDescription key="fontDescription" type="system" weight="semibold" pointSize="15"/>
+                                        <inset key="contentEdgeInsets" minX="8" minY="6" maxX="8" maxY="6"/>
                                         <state key="normal" title="View On...">
                                             <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                         </state>
@@ -2175,8 +2261,8 @@
     <inferredMetricsTieBreakers>
         <segue reference="E7a-Cj-PlX"/>
         <segue reference="f6P-rD-2HI"/>
-        <segue reference="34k-uI-Gug"/>
-        <segue reference="k8j-Eo-Pib"/>
+        <segue reference="SuV-Bs-1vU"/>
+        <segue reference="HQT-ob-VG3"/>
     </inferredMetricsTieBreakers>
     <color key="tintColor" red="0.50588235294117645" green="0.81176470588235294" blue="0.9137254901960784" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
 </document>

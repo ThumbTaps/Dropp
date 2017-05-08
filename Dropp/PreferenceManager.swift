@@ -391,8 +391,8 @@ class PreferenceManager: NSObject {
 			// sort according to user preference
 			switch PreferenceManager.shared.releaseSorting {
 			case .releaseDate: return returnValue.sorted(by: { $0.releaseDate > $1.releaseDate })
-			case .releaseTitle: return returnValue.sorted(by: { $0.title.localizedCaseInsensitiveCompare($1.title) == .orderedDescending })
-			case .artistName: return returnValue.sorted(by: { $0.title.localizedCaseInsensitiveCompare($1.title) == .orderedDescending }).sorted(by: { $0.artist.name.localizedCaseInsensitiveCompare($1.artist.name) == .orderedDescending })
+			case .releaseTitle: return returnValue.sorted(by: { $0.title.localizedCaseInsensitiveCompare($1.title) == .orderedAscending })
+			case .artistName: return returnValue.sorted(by: { $0.title.localizedCaseInsensitiveCompare($1.title) == .orderedAscending }).sorted(by: { $0.artist.name.localizedCaseInsensitiveCompare($1.artist.name) == .orderedAscending })
 			}
 			
 		}
@@ -448,8 +448,8 @@ class PreferenceManager: NSObject {
 				// sort according to user preference
 				switch PreferenceManager.shared.releaseSorting {
 				case .releaseDate: return returnValue.sorted(by: { $0.releaseDate > $1.releaseDate })
-				case .releaseTitle: return returnValue.sorted(by: { $0.title.localizedCaseInsensitiveCompare($1.title) == .orderedDescending })
-				case .artistName: return returnValue.sorted(by: { $0.title.localizedCaseInsensitiveCompare($1.title) == .orderedDescending }).sorted(by: { $0.artist.name.localizedCaseInsensitiveCompare($1.artist.name) == .orderedDescending })
+				case .releaseTitle: return returnValue.sorted(by: { $0.title.localizedCaseInsensitiveCompare($1.title) == .orderedAscending })
+				case .artistName: return returnValue.sorted(by: { $0.title.localizedCaseInsensitiveCompare($1.title) == .orderedAscending }).sorted(by: { $0.artist.name.localizedCaseInsensitiveCompare($1.artist.name) == .orderedAscending })
 				}
 				
 			} else {
@@ -714,7 +714,7 @@ class PreferenceManager: NSObject {
 	override init() {
 		
 		super.init()
-		
+
 		UserDefaults.standard.register(defaults: [
 			self.firstLaunchKey: true,
 			self.followingArtistsKey: [],
@@ -845,7 +845,7 @@ class PreferenceManager: NSObject {
 			
 			if let encodedFollowingArtists = UserDefaults.standard.object(forKey: self.followingArtistsKey) as? Data,
 				let followingArtists = NSKeyedUnarchiver.unarchiveObject(with: encodedFollowingArtists) as? [Artist] {
-                    
+				
 				self.followingArtists = followingArtists
 			} else {
 				
@@ -959,4 +959,20 @@ class PreferenceManager: NSObject {
 		try? FileManager.default.removeItem(at: filepath)
 	}
 	
+	func purgeArtworkCache(completion: ((_ error: Error?) -> Void)?=nil) {
+		do {
+			
+			let contents = try FileManager.default.contentsOfDirectory(atPath: self.artworkCachePath.path)
+			for path in contents {
+				let fullpath = self.artworkCachePath.appendingPathComponent(path)
+				try FileManager.default.removeItem(atPath: fullpath.path)
+			}
+			
+			completion?(nil)
+		}
+			
+		catch {
+			completion?(error)
+		}
+	}
 }
