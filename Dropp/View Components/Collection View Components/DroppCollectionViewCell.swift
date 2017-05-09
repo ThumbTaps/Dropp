@@ -31,7 +31,7 @@ class DroppCollectionViewCell: UICollectionViewCell {
 	override func tintColorDidChange() {
 		super.tintColorDidChange()
 		
-		self.selectedBackgroundView?.backgroundColor = self.tintColor.withAlpha(0.4)
+		self.selectedBackgroundView?.backgroundColor = self.tintColor.withAlpha(0.2)
 		self.setNeedsDisplay()
 	}
 	override func draw(_ rect: CGRect) {

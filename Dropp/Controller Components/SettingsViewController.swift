@@ -437,7 +437,7 @@ extension SettingsViewController: UICollectionViewDataSource, UICollectionViewDe
 		}
 		
 		cell.backgroundColor = ThemeKit.backdropOverlayColor
-		cell.selectedBackgroundView?.backgroundColor = ThemeKit.tintColor.withAlpha(0.4)
+		cell.selectedBackgroundView?.backgroundColor = ThemeKit.tintColor.withAlpha(0.2)
 		
 		return cell
 		

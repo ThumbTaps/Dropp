@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import AVFoundation
 
 class ReleaseViewController: DroppViewController {
 	
@@ -18,6 +19,9 @@ class ReleaseViewController: DroppViewController {
 	
 	var currentRelease: Release!
 	var colorPalette: UIImageColors?
+	
+	var previewPlayer: AVPlayer?
+	var currentlyPlayingTrackIndex: Int?
 	
 	override var indicator: UIView? {
 		let emblem = ReleaseArtworkView()
@@ -77,12 +81,48 @@ class ReleaseViewController: DroppViewController {
 		super.willMove(toParentViewController: parent)
 	}
 	
-	
 	override func didReceiveMemoryWarning() {
 		super.didReceiveMemoryWarning()
 		// Dispose of any resources that can be recreated.
 	}
 	
+	
+	func playTrack(_ sender: Any?) {
+		
+		// stop any currently playing tracks
+		if self.currentlyPlayingTrackIndex != nil,
+			let currentlyPlayingTrackCell = self.collectionView?.cellForItem(at: IndexPath(item: self.currentlyPlayingTrackIndex!, section: 1)) as? ReleaseTrackCollectionViewCell {
+			self.stopTrack(currentlyPlayingTrackCell.previewButton.stopButton)
+		}
+			
+		guard let previewButton = (sender as? UIView)?.superview as? PreviewButton else {
+			return
+		}
+		
+		let currentIndex = previewButton.tag
+		guard let track = self.currentRelease.tracks?[currentIndex] else {
+			return
+		}
+		guard let previewURL = track.previewURL else {
+			return
+		}
+		
+		let playerItem = AVPlayerItem(url: previewURL)
+		self.previewPlayer = AVPlayer(playerItem: playerItem)
+		self.previewPlayer?.volume = 1
+		self.previewPlayer?.play()
+			
+		previewButton.setPlaying(true, animated: true)
+		self.currentlyPlayingTrackIndex = currentIndex
+	}
+	
+	func stopTrack(_ sender: Any?) {
+		
+		if let previewButton = (sender as? UIView)?.superview as? PreviewButton {
+			self.previewPlayer?.pause()
+			previewButton.setPlaying(false, animated: true)
+		}
+	}
 	
 	override func adjustToTheme() {
 		
@@ -231,7 +271,7 @@ extension ReleaseViewController: UICollectionViewDataSource, UICollectionViewDel
 			}
 			
 			badgedCell?.badge?.tintColor = self.colorPalette?.primaryColor ?? ThemeKit.tintColor
-			badgedCell?.textLabel.textColor = self.colorPalette?.backgroundColor.isDarkColor ?? (PreferenceManager.shared.theme == .dark) ? StyleKit.darkPrimaryTextColor : StyleKit.lightPrimaryTextColor
+			badgedCell?.textLabel.textColor = self.colorPalette?.primaryColor ?? ThemeKit.tintColor
 			
 			cell = badgedCell
 			
@@ -239,10 +279,25 @@ extension ReleaseViewController: UICollectionViewDataSource, UICollectionViewDel
 			if let trackCell = collectionView.dequeueReusableCell(withReuseIdentifier: "ReleaseTrackCell", for: indexPath) as? ReleaseTrackCollectionViewCell {
 				
 				trackCell.trackNumberLabel.text = "\(indexPath.row + 1)."
-				trackCell.trackTitleLabel.text = self.currentRelease.tracks?[indexPath.row].title
+
+				if let track = self.currentRelease.tracks?[indexPath.row] {
+					trackCell.trackTitleLabel.text = track.title
+					
+					if (track.isStreamable ?? false) && track.previewURL != nil {
+						trackCell.previewButton.isHidden = false
+						
+						// set action
+						trackCell.previewButton.tag = indexPath.row
+						trackCell.previewButton.playButton.addTarget(self, action: #selector(self.playTrack(_:)), for: .touchUpInside)
+						trackCell.previewButton.stopButton.addTarget(self, action: #selector(self.stopTrack(_:)), for: .touchUpInside)
+					} else {
+						trackCell.previewButton.isHidden = true
+					}
+				}
 				
 				trackCell.trackTitleLabel.textColor = self.colorPalette?.backgroundColor.isDarkColor ?? (PreferenceManager.shared.theme == .dark) ? StyleKit.darkPrimaryTextColor : StyleKit.lightPrimaryTextColor
 				trackCell.trackNumberLabel.textColor = self.colorPalette?.backgroundColor.isDarkColor ?? (PreferenceManager.shared.theme == .dark) ? StyleKit.darkSecondaryTextColor : StyleKit.lightSecondaryTextColor
+				trackCell.previewButton.tintColor = self.colorPalette?.primaryColor ?? ThemeKit.tintColor
 				
 				cell = trackCell
 			}
@@ -254,10 +309,17 @@ extension ReleaseViewController: UICollectionViewDataSource, UICollectionViewDel
 		} else {
 			cell?.backgroundColor = self.colorPalette?.backgroundColor.withAlpha(0.8) ?? ThemeKit.backdropOverlayColor
 		}
-		cell?.selectedBackgroundView?.backgroundColor = self.colorPalette?.primaryColor.withAlpha(0.4) ?? ThemeKit.tintColor.withAlpha(0.4)
+		cell?.selectedBackgroundView?.backgroundColor = self.colorPalette?.primaryColor.withAlpha(0.2) ?? ThemeKit.tintColor.withAlpha(0.2)
 		cell?.strokeColor = self.colorPalette?.backgroundColor.isDarkColor ?? (PreferenceManager.shared.theme == .dark) ? StyleKit.darkStrokeColor : StyleKit.lightStrokeColor
 		
 		return cell ?? UICollectionViewCell()
+	}
+	
+	
+	
+	// MARK: - UICollectionViewDelegate
+	func collectionView(_ collectionView: UICollectionView, shouldHighlightItemAt indexPath: IndexPath) -> Bool {
+		return indexPath.section == 0
 	}
 	
 	

@@ -18,7 +18,7 @@ class FooterButton: UIView {
 		if self.selectedBackgroundView == nil {
 			
 			self.selectedBackgroundView = UIView(frame: CGRect(x: 0, y: 0, width: frame.width, height: frame.height+10))
-			self.selectedBackgroundView?.backgroundColor = self.tintColor.withAlpha(0.4)
+			self.selectedBackgroundView?.backgroundColor = self.tintColor.withAlpha(0.2)
 			self.selectedBackgroundView?.isHidden = true
 			self.selectedBackgroundView?.alpha = 0
 			self.insertSubview(self.selectedBackgroundView!, at: 0)
@@ -29,7 +29,7 @@ class FooterButton: UIView {
 	override func tintColorDidChange() {
 		super.tintColorDidChange()
 		
-		self.selectedBackgroundView?.backgroundColor = self.tintColor.withAlpha(0.4)
+		self.selectedBackgroundView?.backgroundColor = self.tintColor.withAlpha(0.2)
 	}
 	/*
 	// Only override draw() if you perform custom drawing.

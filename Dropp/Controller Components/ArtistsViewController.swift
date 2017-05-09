@@ -97,7 +97,7 @@ extension ArtistsViewController: UICollectionViewDataSourcePrefetching, UICollec
 		cell.artistNameLabel.text = artist.name
 		cell.backgroundColor = ThemeKit.backdropOverlayColor
 		cell.artistNameLabel.textColor = ThemeKit.primaryTextColor
-		cell.selectedBackgroundView?.backgroundColor = ThemeKit.tintColor.withAlpha(0.4)
+		cell.selectedBackgroundView?.backgroundColor = ThemeKit.tintColor.withAlpha(0.2)
 		cell.artistArtworkView.backgroundColor = ThemeKit.backgroundColor
 		cell.artistArtworkView.hideArtwork()
 		

@@ -324,7 +324,7 @@ extension ArtistViewController: UICollectionViewDataSourcePrefetching, UICollect
 		
 		cell.strokeColor = self.colorPalette?.backgroundColor.isDarkColor ?? (PreferenceManager.shared.theme == .dark) ? StyleKit.darkStrokeColor : StyleKit.lightStrokeColor
 		cell.backgroundColor = self.colorPalette?.backgroundColor.withAlpha(0.8) ?? ThemeKit.backdropOverlayColor
-		cell.selectedBackgroundView?.backgroundColor = self.colorPalette?.primaryColor.withAlpha(0.4) ?? ThemeKit.tintColor.withAlpha(0.4)
+		cell.selectedBackgroundView?.backgroundColor = self.colorPalette?.primaryColor.withAlpha(0.2) ?? ThemeKit.tintColor.withAlpha(0.2)
 		
 		return cell
 	}

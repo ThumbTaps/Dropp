@@ -1514,10 +1514,10 @@
                                             <rect key="frame" x="0.0" y="0.0" width="414" height="50"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
-                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Artist Name" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumScaleFactor="0.80000001192092896" adjustsLetterSpacingToFitWidth="YES" translatesAutoresizingMaskIntoConstraints="NO" id="lYq-0F-mDd">
+                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Artist Name" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumScaleFactor="0.80000000000000004" adjustsLetterSpacingToFitWidth="YES" translatesAutoresizingMaskIntoConstraints="NO" id="lYq-0F-mDd">
                                                     <rect key="frame" x="68" y="15" width="93" height="20"/>
                                                     <fontDescription key="fontDescription" type="boldSystem" pointSize="16"/>
-                                                    <nil key="textColor"/>
+                                                    <color key="textColor" red="0.50588235290000005" green="0.81176470590000005" blue="0.91372549020000005" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                                     <nil key="highlightedColor"/>
                                                 </label>
                                                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="r2m-Sc-FXT">
@@ -1558,10 +1558,10 @@
                                             <rect key="frame" x="0.0" y="0.0" width="414" height="50"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
-                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Released on Jan 1, 1970" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumScaleFactor="0.80000000000000004" adjustsLetterSpacingToFitWidth="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Az2-k2-PHp">
+                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Released on Jan 1, 1970" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumScaleFactor="0.80000000000000004" adjustsLetterSpacingToFitWidth="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Az2-k2-PHp">
                                                     <rect key="frame" x="68" y="15" width="185" height="20"/>
                                                     <fontDescription key="fontDescription" type="boldSystem" pointSize="16"/>
-                                                    <nil key="textColor"/>
+                                                    <color key="textColor" red="0.50588235290000005" green="0.81176470590000005" blue="0.91372549020000005" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                                     <nil key="highlightedColor"/>
                                                 </label>
                                                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="bKt-Jm-SiX">
@@ -1617,16 +1617,52 @@
                                                     <nil key="textColor"/>
                                                     <nil key="highlightedColor"/>
                                                 </label>
+                                                <view opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="TkD-mL-NRH" customClass="PreviewButton" customModule="Dropp" customModuleProvider="target">
+                                                    <rect key="frame" x="361" y="5" width="40" height="40"/>
+                                                    <subviews>
+                                                        <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Bk4-1U-z6w" customClass="PlayButton" customModule="Dropp" customModuleProvider="target">
+                                                            <rect key="frame" x="0.0" y="0.0" width="40" height="40"/>
+                                                            <userDefinedRuntimeAttributes>
+                                                                <userDefinedRuntimeAttribute type="boolean" keyPath="iconOnly" value="YES"/>
+                                                            </userDefinedRuntimeAttributes>
+                                                        </button>
+                                                        <button hidden="YES" opaque="NO" alpha="0.0" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="91h-2v-pNl" customClass="StopButton" customModule="Dropp" customModuleProvider="target">
+                                                            <rect key="frame" x="0.0" y="0.0" width="40" height="40"/>
+                                                            <userDefinedRuntimeAttributes>
+                                                                <userDefinedRuntimeAttribute type="boolean" keyPath="iconOnly" value="YES"/>
+                                                            </userDefinedRuntimeAttributes>
+                                                        </button>
+                                                    </subviews>
+                                                    <constraints>
+                                                        <constraint firstItem="91h-2v-pNl" firstAttribute="height" secondItem="TkD-mL-NRH" secondAttribute="height" id="4aU-aA-eSD"/>
+                                                        <constraint firstItem="Bk4-1U-z6w" firstAttribute="height" secondItem="TkD-mL-NRH" secondAttribute="height" id="5C1-XT-23g"/>
+                                                        <constraint firstItem="91h-2v-pNl" firstAttribute="centerX" secondItem="TkD-mL-NRH" secondAttribute="centerX" id="CMy-Wc-WcT"/>
+                                                        <constraint firstItem="91h-2v-pNl" firstAttribute="centerY" secondItem="TkD-mL-NRH" secondAttribute="centerY" id="Ojo-B6-h5n"/>
+                                                        <constraint firstAttribute="width" secondItem="TkD-mL-NRH" secondAttribute="height" multiplier="1:1" id="aTA-7G-ESI"/>
+                                                        <constraint firstItem="91h-2v-pNl" firstAttribute="width" secondItem="TkD-mL-NRH" secondAttribute="width" id="j0j-0h-diF"/>
+                                                        <constraint firstItem="Bk4-1U-z6w" firstAttribute="centerY" secondItem="TkD-mL-NRH" secondAttribute="centerY" id="jig-d9-vlO"/>
+                                                        <constraint firstItem="Bk4-1U-z6w" firstAttribute="centerX" secondItem="TkD-mL-NRH" secondAttribute="centerX" id="oes-qI-W4D"/>
+                                                        <constraint firstAttribute="width" constant="40" id="ySq-ma-tkb"/>
+                                                        <constraint firstItem="Bk4-1U-z6w" firstAttribute="width" secondItem="TkD-mL-NRH" secondAttribute="width" id="zia-9y-lom"/>
+                                                    </constraints>
+                                                    <connections>
+                                                        <outlet property="playButton" destination="Bk4-1U-z6w" id="JvM-TU-siU"/>
+                                                        <outlet property="stopButton" destination="91h-2v-pNl" id="xfc-iu-7ah"/>
+                                                    </connections>
+                                                </view>
                                             </subviews>
                                         </view>
                                         <constraints>
                                             <constraint firstItem="2bX-5b-l5d" firstAttribute="leading" secondItem="6H8-s4-NeE" secondAttribute="leadingMargin" constant="5" id="0Ft-GL-F64"/>
+                                            <constraint firstItem="TkD-mL-NRH" firstAttribute="trailing" secondItem="6H8-s4-NeE" secondAttribute="trailingMargin" constant="-5" id="4Pe-dj-FxB"/>
+                                            <constraint firstItem="EuN-h0-xc2" firstAttribute="trailing" relation="lessThanOrEqual" secondItem="TkD-mL-NRH" secondAttribute="leading" constant="-10" id="84m-BR-J3H"/>
+                                            <constraint firstItem="TkD-mL-NRH" firstAttribute="centerY" secondItem="6H8-s4-NeE" secondAttribute="centerY" id="Atf-ks-z8P"/>
                                             <constraint firstItem="EuN-h0-xc2" firstAttribute="centerY" secondItem="6H8-s4-NeE" secondAttribute="centerY" id="H8R-U9-eqZ"/>
                                             <constraint firstItem="2bX-5b-l5d" firstAttribute="centerY" secondItem="6H8-s4-NeE" secondAttribute="centerY" id="gv8-lI-GFC"/>
                                             <constraint firstItem="EuN-h0-xc2" firstAttribute="leading" secondItem="2bX-5b-l5d" secondAttribute="trailing" constant="10" id="jWj-74-HaT"/>
-                                            <constraint firstItem="EuN-h0-xc2" firstAttribute="trailing" relation="lessThanOrEqual" secondItem="6H8-s4-NeE" secondAttribute="trailingMargin" constant="-10" id="qhe-lh-f6h"/>
                                         </constraints>
                                         <connections>
+                                            <outlet property="previewButton" destination="TkD-mL-NRH" id="vUF-dY-Omv"/>
                                             <outlet property="trackNumberLabel" destination="2bX-5b-l5d" id="FA6-zb-pyL"/>
                                             <outlet property="trackTitleLabel" destination="EuN-h0-xc2" id="gJx-hM-Epj"/>
                                         </connections>

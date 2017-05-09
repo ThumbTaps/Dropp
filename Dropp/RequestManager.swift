@@ -385,7 +385,7 @@ class RequestManager: NSObject {
 					
 					track.duration = unparsedTrack["trackTimeMillis"] as? Int
 					track.isStreamable = unparsedTrack["isStreamable"] as? Bool
-					if let previewURLString = unparsedTrack["previewURL"] as? String {
+					if let previewURLString = unparsedTrack["previewUrl"] as? String {
 						track.previewURL = URL(string: previewURLString)
 					}
 					
