@@ -8,63 +8,41 @@
 
 import UIKit
 
-class ArtistViewController: DroppViewController {
+class ArtistViewController: DroppModalViewController {
 	
-	@IBOutlet weak var artistArtworkImageView: UIImageView!
+	@IBOutlet weak var artistNameLabel: UILabel!
+	@IBOutlet weak var artistArtworkView: ArtistArtworkView!
 	@IBOutlet weak var followButton: DroppButton!
 	@IBOutlet weak var viewOnButton: DroppButton!
-	@IBOutlet weak var viewArtworkButton: ViewArtworkButton!
 	
 	var currentArtist: Artist!
-	private var palette: UIImageColors?
-	var colorPalette: UIImageColors? {
-		set {
-			self.palette = newValue
-		}
-		get {
-			if !PreferenceManager.shared.adaptiveArtistView {
-				return nil
-			}
-			
-			return self.palette
-		}
-	}
 	
 	var latestReleaseArtworkTask: URLSessionDataTask?
-	
-	override var indicator: UIView? {
-		let emblem = ArtistArtworkView()
-		emblem.shadowed = true
-		emblem.imageView?.image = self.currentArtist.thumbnailImage
-		return emblem
-	}
-	
-	override var shouldIgnoreThemeChanges: Bool {
-		return true
-	}
 	
 	override func viewDidLoad() {
 		super.viewDidLoad()
 		
-		self.title = self.currentArtist.name
-		self.headerHeight = CGFloat(180 + (self.title!.characters.count - 80))
+		self.artistNameLabel.text = self.currentArtist.name
+		
+		_ = self.currentArtist.loadArtwork {
+			
+			self.artistArtworkView.imageView.image = self.currentArtist.artworkImage
+			self.artistArtworkView.showArtwork(false)
+		}
+		
+		if !UIAccessibilityIsReduceMotionEnabled() {
+			self.artistArtworkView.enableParallax(amount: 15)
+		}
 		
 		self.followingStatusDidChange()
-		
-		if let flowLayout = self.collectionView?.collectionViewLayout as? UICollectionViewFlowLayout {
-			flowLayout.itemSize = UICollectionViewFlowLayoutAutomaticSize
-		}
 	}
 	
-	override func willMove(toParentViewController parent: UIViewController?) {
+	override func viewDidDisappear(_ animated: Bool) {
+		super.viewDidDisappear(animated)
 		
-		if parent == nil {
-			self.currentArtist.artworkImage = nil
-		}
-		
-		super.willMove(toParentViewController: parent)
+		self.currentArtist.artworkImage = nil
 	}
-	
+
 	override func didReceiveMemoryWarning() {
 		super.didReceiveMemoryWarning()
 		// Dispose of any resources that can be recreated.
@@ -72,70 +50,41 @@ class ArtistViewController: DroppViewController {
 	
 	
 	override func adjustToTheme() {
+		super.adjustToTheme()
 		
-		self.navController?.view.tintColor = self.colorPalette?.primaryColor ?? ThemeKit.tintColor
-		self.view.tintColor = self.colorPalette?.primaryColor ?? ThemeKit.tintColor
-		
-		if self.colorPalette?.backgroundColor.isDarkColor ?? (PreferenceManager.shared.theme == .dark) {
-			UIApplication.shared.statusBarStyle = .lightContent
-			self.navController?.headerView.effect = UIBlurEffect(style: .dark)
-			self.collectionView?.indicatorStyle = .white
-			self.navController?.shadowBackdrop.shadowColor = StyleKit.darkShadowColor
-			self.navController?.footerViewContainer.backgroundColor = self.colorPalette?.backgroundColor.withBrightness(0.25) ?? ThemeKit.backgroundColor
-			self.collectionView?.backgroundColor = self.colorPalette?.backgroundColor.withBrightness(0.25).withAlpha(0.8) ?? ThemeKit.backdropOverlayColor
-
-		} else {
+		DispatchQueue.main.async {
 			
-			UIApplication.shared.statusBarStyle = .default
-			self.navController?.headerView.effect = UIBlurEffect(style: .light)
-			self.collectionView?.indicatorStyle = .black
-			self.navController?.shadowBackdrop.shadowColor = StyleKit.lightShadowColor
-			self.navController?.footerViewContainer.backgroundColor = self.colorPalette?.backgroundColor ?? ThemeKit.backgroundColor
-			self.collectionView?.backgroundColor = self.colorPalette?.backgroundColor.withAlpha(0.8) ?? ThemeKit.backdropOverlayColor
+			self.view.tintColor = self.currentArtist.colorPalette?.detailColor.highlight(withLevel: 0.35) ?? ThemeKit.tintColor
+			
+			self.artistNameLabel.textColor = ThemeKit.primaryTextColor
+			
+			if self.currentArtist.isBeingFollowed {
+				self.followButton.tintColor = self.currentArtist.colorPalette?.backgroundColor.isDarkColor ?? (PreferenceManager.shared.theme == .dark) ? StyleKit.darkStrokeColor : StyleKit.lightStrokeColor
+			} else {
+				self.followButton.tintColor = self.view.tintColor
+			}
 		}
-		
-		self.navController?.headerLabel.textColor = self.colorPalette?.detailColor ?? ThemeKit.primaryTextColor
-		self.navController?.footerViewContainer.backgroundColor = self.colorPalette?.backgroundColor ?? ThemeKit.backgroundColor
-		self.navController?.footerBackButton.destinationTitle.textColor = self.colorPalette?.detailColor ?? ThemeKit.primaryTextColor
-		
-		self.collectionView?.reloadData()
 	}
 	func followingStatusDidChange() {
 		
-		if !self.currentArtist.isBeingFollowed {
-			
-			DispatchQueue.main.async {
-				self.followButton.setTitle("Follow", for: .normal)
-				
-				UIView.transition(with: self.view, duration: 0.3 * ANIMATION_SPEED_MODIFIER, options: .transitionCrossDissolve, animations: {
-					self.followButton.tintColor = ThemeKit.tintColor
-					self.artistArtworkImageView.image = nil
-					self.colorPalette = nil
-					self.adjustToTheme()
-					
-				}, completion: nil)
-			}
-			
-		} else {
-			
-			DispatchQueue.main.async {
+		DispatchQueue.main.async {
+			if self.currentArtist.isBeingFollowed {
 				self.followButton.setTitle("Unfollow", for: .normal)
-				
-				_ = self.currentArtist.loadArtwork {
-					self.currentArtist.artworkImage?.getColors(completionHandler: { (imageColors) in
-						self.colorPalette = imageColors
-						self.followButton.tintColor = self.colorPalette?.backgroundColor.isDarkColor ?? (PreferenceManager.shared.theme == .dark) ? StyleKit.darkStrokeColor : StyleKit.lightStrokeColor
-						
-						UIView.transition(with: self.view, duration: 0.3 * ANIMATION_SPEED_MODIFIER, options: .transitionCrossDissolve, animations: {
-							self.artistArtworkImageView.image = self.currentArtist.artworkImage
-							self.adjustToTheme()
-							
-						}, completion: nil)
-					})
-				}
+			} else {
+				self.followButton.setTitle("Follow", for: .normal)
 			}
+			
+			UIViewPropertyAnimator(duration: 0.2 * ANIMATION_SPEED_MODIFIER, curve: .linear, animations: {
+				
+				if self.currentArtist.isBeingFollowed {
+					self.followButton.tintColor = self.currentArtist.colorPalette?.backgroundColor.isDarkColor ?? (PreferenceManager.shared.theme == .dark) ? StyleKit.darkStrokeColor : StyleKit.lightStrokeColor
+				} else {
+					self.followButton.tintColor = self.view.tintColor
+				}
+			}).startAnimation()
 		}
 	}
+	
 	
 	
 	
@@ -180,7 +129,7 @@ class ArtistViewController: DroppViewController {
 			// set current release
 			(segue.destination as? ReleaseViewController)?.currentRelease = self.currentArtist.latestRelease
 		}
-
+		
 	}
 }
 
@@ -240,33 +189,33 @@ extension ArtistViewController: UICollectionViewDataSourcePrefetching, UICollect
 			let latestReleaseCell = collectionView.dequeueReusableCell(withReuseIdentifier: "LatestReleaseCell", for: indexPath) as! ReleaseCollectionViewCell
 			
 			latestReleaseCell.releaseTitleLabel.text = self.currentArtist.latestRelease!.title
-
+			
 			let dateFormatter = DateFormatter()
 			dateFormatter.dateFormat = "MMM d, YYYY"
 			dateFormatter.timeZone = .current
 			latestReleaseCell.secondaryLabel.text = "Released on \(dateFormatter.string(from: self.currentArtist.latestRelease!.releaseDate))"
 			
-			latestReleaseCell.releaseTitleLabel.textColor = self.colorPalette?.backgroundColor.isDarkColor ?? (PreferenceManager.shared.theme == .dark) ? StyleKit.darkPrimaryTextColor : StyleKit.lightPrimaryTextColor
-			latestReleaseCell.secondaryLabel.textColor = self.colorPalette?.backgroundColor.isDarkColor ?? (PreferenceManager.shared.theme == .dark) ? StyleKit.darkSecondaryTextColor : StyleKit.lightSecondaryTextColor
+			latestReleaseCell.releaseTitleLabel.textColor = self.currentArtist.colorPalette?.backgroundColor.isDarkColor ?? (PreferenceManager.shared.theme == .dark) ? StyleKit.darkPrimaryTextColor : StyleKit.lightPrimaryTextColor
+			latestReleaseCell.secondaryLabel.textColor = self.currentArtist.colorPalette?.backgroundColor.isDarkColor ?? (PreferenceManager.shared.theme == .dark) ? StyleKit.darkSecondaryTextColor : StyleKit.lightSecondaryTextColor
 			latestReleaseCell.releaseArtworkView.hideArtwork()
 			
-			if self.colorPalette?.backgroundColor.isDarkColor ?? (PreferenceManager.shared.theme == .dark) {
+			if self.currentArtist.colorPalette?.backgroundColor.isDarkColor ?? (PreferenceManager.shared.theme == .dark) {
 				latestReleaseCell.releaseArtworkView.shadow?.shadowColor = StyleKit.darkShadowColor
 			} else {
 				latestReleaseCell.releaseArtworkView.shadow?.shadowColor = StyleKit.lightShadowColor
 			}
 			
-			latestReleaseCell.releaseArtworkView.backgroundColor = self.colorPalette?.backgroundColor ?? ThemeKit.backgroundColor
+			latestReleaseCell.releaseArtworkView.backgroundColor = self.currentArtist.colorPalette?.backgroundColor ?? ThemeKit.backgroundColor
 			
 			_ = self.currentArtist.latestRelease!.loadArtwork {
 				
-				DispatchQueue.main.async {
-					
-					latestReleaseCell.releaseArtworkView.imageView.image = self.currentArtist.latestRelease?.thumbnailImage
-					if latestReleaseCell.releaseArtworkView.imageView.image != nil {
-						latestReleaseCell.releaseArtworkView.showArtwork(true)
-					}
+				//				DispatchQueue.main.async {
+				
+				latestReleaseCell.releaseArtworkView.imageView.image = self.currentArtist.latestRelease?.thumbnailImage
+				if latestReleaseCell.releaseArtworkView.imageView.image != nil {
+					latestReleaseCell.releaseArtworkView.showArtwork(true)
 				}
+				//				}
 			}
 			
 		}
@@ -280,7 +229,7 @@ extension ArtistViewController: UICollectionViewDataSourcePrefetching, UICollect
 			case 0:
 				cell = collectionView.dequeueReusableCell(withReuseIdentifier: "ArtistSummaryCell", for: indexPath) as! TextAreaCollectionViewCell
 				(cell as? TextAreaCollectionViewCell)?.textView.text = self.currentArtist.summary
-				(cell as? TextAreaCollectionViewCell)?.textView.textColor = self.colorPalette?.detailColor ?? ThemeKit.primaryTextColor
+				(cell as? TextAreaCollectionViewCell)?.textView.textColor = self.currentArtist.colorPalette?.detailColor ?? ThemeKit.primaryTextColor
 				
 				break
 				
@@ -290,7 +239,7 @@ extension ArtistViewController: UICollectionViewDataSourcePrefetching, UICollect
 		}
 		
 		// RELEASE OPTIONS
-		if PreferenceManager.shared.followingArtists.contains(where: { $0.itunesID == self.currentArtist.itunesID }) &&
+		if self.currentArtist.isBeingFollowed &&
 			((indexPath.section == 0 && self.currentArtist.latestRelease == nil && self.currentArtist.summary == nil) ||
 				(indexPath.section == 1 && self.currentArtist.summary == nil) ||
 				indexPath.section == 2) {
@@ -318,13 +267,13 @@ extension ArtistViewController: UICollectionViewDataSourcePrefetching, UICollect
 			default: break
 			}
 			
-			(cell as? SettingsCollectionViewCell)?.textLabel?.textColor = self.colorPalette?.detailColor ?? ThemeKit.primaryTextColor
+			(cell as? SettingsCollectionViewCell)?.textLabel?.textColor = self.currentArtist.colorPalette?.detailColor ?? ThemeKit.primaryTextColor
 			((cell as? SettingsCollectionViewCell)?.accessoryView as? UISwitch)?.onTintColor = self.view.tintColor
 		}
 		
-		cell.strokeColor = self.colorPalette?.backgroundColor.isDarkColor ?? (PreferenceManager.shared.theme == .dark) ? StyleKit.darkStrokeColor : StyleKit.lightStrokeColor
-		cell.backgroundColor = self.colorPalette?.backgroundColor.withAlpha(0.8) ?? ThemeKit.backdropOverlayColor
-		cell.selectedBackgroundView?.backgroundColor = self.colorPalette?.primaryColor.withAlpha(0.2) ?? ThemeKit.tintColor.withAlpha(0.2)
+		cell.strokeColor = self.currentArtist.colorPalette?.backgroundColor.isDarkColor ?? (PreferenceManager.shared.theme == .dark) ? StyleKit.darkStrokeColor : StyleKit.lightStrokeColor
+		cell.backgroundColor = self.currentArtist.colorPalette?.backgroundColor.withAlpha(0.8) ?? ThemeKit.backdropOverlayColor
+		cell.selectedBackgroundView?.backgroundColor = self.currentArtist.colorPalette?.primaryColor.withAlpha(0.2) ?? ThemeKit.tintColor.withAlpha(0.2)
 		
 		return cell
 	}
@@ -359,9 +308,9 @@ extension ArtistViewController: UICollectionViewDataSourcePrefetching, UICollect
 			reusableView.textLabel.text = "RELEASE OPTIONS"
 		}
 		
-		reusableView.backgroundColor = self.colorPalette?.backgroundColor.withAlpha(0.8) ?? ThemeKit.backdropOverlayColor
-		reusableView.textLabel.textColor = self.colorPalette?.detailColor ?? ThemeKit.primaryTextColor
-		reusableView.strokeColor = self.colorPalette?.backgroundColor.isDarkColor ?? (PreferenceManager.shared.theme == .dark) ? StyleKit.darkStrokeColor : StyleKit.lightStrokeColor
+		reusableView.backgroundColor = self.currentArtist.colorPalette?.backgroundColor.withAlpha(0.8) ?? ThemeKit.backdropOverlayColor
+		reusableView.textLabel.textColor = self.currentArtist.colorPalette?.detailColor ?? ThemeKit.primaryTextColor
+		reusableView.strokeColor = self.currentArtist.colorPalette?.backgroundColor.isDarkColor ?? (PreferenceManager.shared.theme == .dark) ? StyleKit.darkStrokeColor : StyleKit.lightStrokeColor
 		
 		return reusableView
 	}
@@ -399,7 +348,7 @@ extension ArtistViewController: UICollectionViewDataSourcePrefetching, UICollect
 			size = (collectionView.cellForItem(at: indexPath) as? TextAreaCollectionViewCell)?.contentView.systemLayoutSizeFitting(UILayoutFittingCompressedSize) ?? size
 		}
 		
-		if PreferenceManager.shared.followingArtists.contains(where: { $0.itunesID == self.currentArtist.itunesID }) &&
+		if self.currentArtist.isBeingFollowed &&
 			((indexPath.section == 0 && self.currentArtist.latestRelease == nil && self.currentArtist.summary == nil) ||
 				(indexPath.section == 1 && self.currentArtist.summary == nil) ||
 				indexPath.section == 2) {

@@ -9,94 +9,66 @@
 import UIKit
 import AVFoundation
 
-class ReleaseViewController: DroppViewController {
+class ReleaseViewController: DroppModalViewController {
 	
 	@IBOutlet weak var releaseArtworkView: ReleaseArtworkView!
-	@IBOutlet var releaseArtworkViewFullScreenConstraint: NSLayoutConstraint!
+	@IBOutlet weak var releaseTitleLabel: UILabel!
+	@IBOutlet weak var artistNameButton: DroppButton!
+	@IBOutlet weak var releaseDateLabel: UILabel!
 	@IBOutlet weak var shareButton: ShareButton!
 	@IBOutlet weak var viewOnButton: DroppButton!
 	@IBOutlet weak var viewArtworkButton: ViewArtworkButton!
 	
 	var currentRelease: Release!
-	var colorPalette: UIImageColors?
 	
 	var previewPlayer: AVPlayer?
 	var currentlyPlayingTrackIndex: Int?
 	
-	override var indicator: UIView? {
-		let emblem = ReleaseArtworkView()
-		emblem.shadowed = true
-		emblem.imageView?.image = self.currentRelease.thumbnailImage
-		return emblem
-	}
-	
 	override func viewDidLoad() {
 		super.viewDidLoad()
 		
-		// Do any additional setup after loading the view.
-		self.title = self.currentRelease.title
-		if let characterCount = self.title?.characters.count {
-			self.headerHeight = CGFloat(100 + (30 * (CGFloat(characterCount) / (UIScreen.main.bounds.width / 14))))
+		self.releaseTitleLabel.text = self.currentRelease.title
+		self.artistNameButton.setTitle(self.currentRelease.artist.name, for: .normal)
+		self.releaseDateLabel.text = self.currentRelease.releaseDate.string(prefixed: true)
+		
+		_ = self.currentRelease.loadArtwork {
+			
+			self.releaseArtworkView.imageView.image = self.currentRelease.artworkImage
+			self.releaseArtworkView.showArtwork(false)
 		}
 		
-		if self.currentRelease.artist?.isBeingFollowed ?? false {
+		if let layout = self.collectionView?.collectionViewLayout as? UICollectionViewFlowLayout {
+			layout.sectionHeadersPinToVisibleBounds = false
+		}
+
+		if self.currentRelease.tracks == nil {
 			
-			// load artwork
-			_ = self.currentRelease.loadArtwork({
-				
-				self.currentRelease.artworkImage?.getColors(completionHandler: { (imageColors) in
-					self.colorPalette = imageColors
-					
-					DispatchQueue.main.async {
-						
-						UIView.transition(with: self.view, duration: 0.3 * ANIMATION_SPEED_MODIFIER, options: .transitionCrossDissolve, animations: {
-							self.releaseArtworkView.imageView.image = self.currentRelease.artworkImage
-							self.releaseArtworkView.showArtwork()
-							self.releaseArtworkView.alpha = 1
-							self.adjustToTheme()
-						}, completion: nil)
-					}
-				})
-			})
-			
-		} else {
-			
-			DispatchQueue.main.async {
-				
-				UIView.transition(with: self.view, duration: 0.3 * ANIMATION_SPEED_MODIFIER, options: .transitionCrossDissolve, animations: {
-					self.adjustToTheme()
-				}, completion: nil)
+			_ = self.currentRelease.loadTracks {
+				self.collectionView?.reloadData()
 			}
 		}
 		
-	}
-	
-	override func willMove(toParentViewController parent: UIViewController?) {
-		
-		if parent == nil {
-			self.currentRelease.artworkImage = nil
-			self.currentRelease.tracks = nil
+		if !UIAccessibilityIsReduceMotionEnabled() {
+			self.releaseArtworkView.enableParallax(amount: 15)
 		}
+	}
+	
+	override func viewDidDisappear(_ animated: Bool) {
+		super.viewDidDisappear(animated)
 		
-		super.willMove(toParentViewController: parent)
+		self.currentRelease.artworkImage = nil
 	}
-	
-	override func didReceiveMemoryWarning() {
-		super.didReceiveMemoryWarning()
-		// Dispose of any resources that can be recreated.
-	}
-	
 	
 	func playTrack(_ sender: Any?) {
 		
-		// stop any currently playing tracks
-		if self.currentlyPlayingTrackIndex != nil,
-			let currentlyPlayingTrackCell = self.collectionView?.cellForItem(at: IndexPath(item: self.currentlyPlayingTrackIndex!, section: 1)) as? ReleaseTrackCollectionViewCell {
-			self.stopTrack(currentlyPlayingTrackCell.previewButton.stopButton)
-		}
-			
 		guard let previewButton = (sender as? UIView)?.superview as? PreviewButton else {
 			return
+		}
+		
+		if self.currentlyPlayingTrackIndex != nil,
+			let currentlyPlayingTrackCell = self.collectionView?.cellForItem(at: IndexPath(item: self.currentlyPlayingTrackIndex!, section: 1)) as? ReleaseTrackCollectionViewCell,
+			self.currentlyPlayingTrackIndex != previewButton.tag {
+			self.stopTrack(currentlyPlayingTrackCell.previewButton.stopButton)
 		}
 		
 		let currentIndex = previewButton.tag
@@ -111,7 +83,7 @@ class ReleaseViewController: DroppViewController {
 		self.previewPlayer = AVPlayer(playerItem: playerItem)
 		self.previewPlayer?.volume = 1
 		self.previewPlayer?.play()
-			
+		
 		previewButton.setPlaying(true, animated: true)
 		self.currentlyPlayingTrackIndex = currentIndex
 	}
@@ -125,69 +97,16 @@ class ReleaseViewController: DroppViewController {
 	}
 	
 	override func adjustToTheme() {
+		super.adjustToTheme()
 		
-		self.navController?.view.tintColor = self.colorPalette?.primaryColor ?? ThemeKit.tintColor
-		
-		if self.colorPalette?.backgroundColor.isDarkColor ?? (PreferenceManager.shared.theme == .dark) {
-			UIApplication.shared.statusBarStyle = .lightContent
-			self.navController?.headerView.effect = UIBlurEffect(style: .dark)
-			self.collectionView?.indicatorStyle = .white
-			self.navController?.shadowBackdrop.shadowColor = StyleKit.darkShadowColor
-			self.navController?.footerViewContainer.backgroundColor = self.colorPalette?.backgroundColor.withBrightness(0.25) ?? ThemeKit.backgroundColor
-			self.collectionView?.backgroundColor = self.colorPalette?.backgroundColor.withBrightness(0.25).withAlpha(0.8) ?? ThemeKit.backdropOverlayColor
+		DispatchQueue.main.async {
 			
-		} else {
-			
-			UIApplication.shared.statusBarStyle = .default
-			self.navController?.headerView.effect = UIBlurEffect(style: .light)
-			self.collectionView?.indicatorStyle = .black
-			self.navController?.shadowBackdrop.shadowColor = StyleKit.lightShadowColor
-			self.navController?.footerViewContainer.backgroundColor = self.colorPalette?.backgroundColor ?? ThemeKit.backgroundColor
-			self.collectionView?.backgroundColor = self.colorPalette?.backgroundColor.withAlpha(0.8) ?? ThemeKit.backdropOverlayColor
+			self.view.tintColor = self.currentRelease.colorPalette?.primaryColor.shadow(withLevel: 0.2) ?? ThemeKit.tintColor
 		}
-		
-		self.navController?.headerLabel.textColor = self.colorPalette?.detailColor ?? ThemeKit.primaryTextColor
-		self.navController?.footerBackButton.destinationTitle.textColor = self.colorPalette?.primaryColor ?? ThemeKit.tintColor
-		
-		self.collectionView?.reloadData()
-		
 	}
 	
 	@IBAction func viewOn() {
 		UIApplication.shared.open(self.currentRelease.itunesURL, options: [:], completionHandler: nil)
-	}
-	
-	@IBAction func revealArtwork() {
-		DispatchQueue.main.async {
-			
-			self.navController?.hideFooter(true)
-			
-			self.view.removeConstraint(self.releaseArtworkViewFullScreenConstraint)
-			UIViewPropertyAnimator(duration: 0.45 * ANIMATION_SPEED_MODIFIER, dampingRatio: 0.8) {
-				self.view.backgroundColor = self.colorPalette?.backgroundColor ?? ThemeKit.backgroundColor
-				self.collectionView?.alpha = 0
-				self.view.layoutIfNeeded()
-				}.startAnimation()
-		}
-	}
-	@IBAction func concealArtwork() {
-		DispatchQueue.main.async {
-			
-			self.view.addConstraint(self.releaseArtworkViewFullScreenConstraint)
-			let animation = UIViewPropertyAnimator(duration: 0.35 * ANIMATION_SPEED_MODIFIER, curve: .easeOut) {
-				self.view.backgroundColor = ThemeKit.backgroundColor
-				self.collectionView?.alpha = 1
-				self.view.layoutIfNeeded()
-			}
-			
-			animation.addCompletion({ (position) in
-				if position == .end {
-					self.navController?.showFooter(true)
-				}
-			})
-			
-			animation.startAnimation()
-		}
 	}
 	
 	/*
@@ -207,112 +126,55 @@ extension ReleaseViewController: UICollectionViewDataSource, UICollectionViewDel
 	
 	// MARK: - UICollectionViewDataSource
 	func numberOfSections(in collectionView: UICollectionView) -> Int {
-		return 2
+		return 1
 	}
 	func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
 		
-		switch section {
-		case 0: return 2
-		case 1: return self.currentRelease.tracks?.count ?? 0
-		default: return 0
-		}
+		return self.currentRelease.tracks?.count ?? 0
 	}
 	func collectionView(_ collectionView: UICollectionView, viewForSupplementaryElementOfKind kind: String, at indexPath: IndexPath) -> UICollectionReusableView {
 		
 		let reusableView = collectionView.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: "ReleaseCollectionViewHeader", for: indexPath) as? HeaderCollectionReusableView
 		
-		switch indexPath.section {
-		case 0: reusableView?.textLabel.text = "INFO"
-			break
-		case 1: reusableView?.textLabel.text = "TRACK LISTING"
-			break
-		default: reusableView?.textLabel.text = ""
+		DispatchQueue.main.async {
+			
+			reusableView?.textLabel.text = "TRACK LISTING"
+			reusableView?.backgroundColor = ThemeKit.backdropOverlayColor
+			reusableView?.textLabel.textColor = ThemeKit.primaryTextColor
+			reusableView?.strokeColor = ThemeKit.strokeColor
 		}
-		if self.colorPalette?.backgroundColor.isDarkColor ?? false {
-			reusableView?.backgroundColor = self.colorPalette?.backgroundColor.withBrightness(0.25).withAlpha(0.8)
-		} else {
-			reusableView?.backgroundColor = self.colorPalette?.backgroundColor.withAlpha(0.8) ?? ThemeKit.backdropOverlayColor
-		}
-		reusableView?.textLabel.textColor = self.colorPalette?.detailColor ?? ThemeKit.primaryTextColor
-		reusableView?.strokeColor = self.colorPalette?.backgroundColor.isDarkColor ?? (PreferenceManager.shared.theme == .dark) ? StyleKit.darkStrokeColor : StyleKit.lightStrokeColor
 		
 		return reusableView ?? UICollectionReusableView()
 	}
 	func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
 		
-		var cell: DroppCollectionViewCell?
+		let cell: ReleaseTrackCollectionViewCell = collectionView.dequeueReusableCell(withReuseIdentifier: "ReleaseTrackCell", for: indexPath) as! ReleaseTrackCollectionViewCell
 		
-		if indexPath.section == 0 {
+		DispatchQueue.main.async {
 			
-			var badgedCell: BadgedCollectionViewCell?
-			
-			if indexPath.row == 0 {
+			if let track = self.currentRelease.tracks?[indexPath.row] {
+				cell.trackNumberLabel.text = String(track.trackNumber)
+				cell.trackTitleLabel.text = track.title
 				
-				badgedCell = collectionView.dequeueReusableCell(withReuseIdentifier: "ArtistCell", for: indexPath) as? BadgedCollectionViewCell
-				
-				badgedCell?.textLabel.text = self.currentRelease.artist.name
+				if (track.isStreamable ?? false) && track.previewURL != nil {
+					cell.previewButton.isHidden = false
 					
-			}
-			
-			else if indexPath.row == 1 {
-
-				badgedCell = collectionView.dequeueReusableCell(withReuseIdentifier: "ReleaseDateCell", for: indexPath) as? BadgedCollectionViewCell
-					
-				let dateFormatter = DateFormatter()
-				dateFormatter.dateFormat = "MMM d, YYYY"
-				dateFormatter.timeZone = .current
-				if Date() == self.currentRelease.releaseDate {
-					badgedCell?.textLabel.text = "Released Today"
-				} else if Date() > self.currentRelease.releaseDate {
-					badgedCell?.textLabel.text = "Released on \(dateFormatter.string(from: self.currentRelease.releaseDate))"
+					// set action
+					cell.previewButton.tag = indexPath.row
+					cell.previewButton.playButton.addTarget(self, action: #selector(self.playTrack(_:)), for: .touchUpInside)
+					cell.previewButton.stopButton.addTarget(self, action: #selector(self.stopTrack(_:)), for: .touchUpInside)
 				} else {
-					badgedCell?.textLabel.text = "Due on \(dateFormatter.string(from: self.currentRelease.releaseDate))"
+					cell.previewButton.isHidden = true
 				}
 			}
 			
-			badgedCell?.badge?.tintColor = self.colorPalette?.primaryColor ?? ThemeKit.tintColor
-			badgedCell?.textLabel.textColor = self.colorPalette?.primaryColor ?? ThemeKit.tintColor
-			
-			cell = badgedCell
-			
-		} else if indexPath.section == 1 {
-			if let trackCell = collectionView.dequeueReusableCell(withReuseIdentifier: "ReleaseTrackCell", for: indexPath) as? ReleaseTrackCollectionViewCell {
-				
-				trackCell.trackNumberLabel.text = "\(indexPath.row + 1)."
-
-				if let track = self.currentRelease.tracks?[indexPath.row] {
-					trackCell.trackTitleLabel.text = track.title
-					
-					if (track.isStreamable ?? false) && track.previewURL != nil {
-						trackCell.previewButton.isHidden = false
-						
-						// set action
-						trackCell.previewButton.tag = indexPath.row
-						trackCell.previewButton.playButton.addTarget(self, action: #selector(self.playTrack(_:)), for: .touchUpInside)
-						trackCell.previewButton.stopButton.addTarget(self, action: #selector(self.stopTrack(_:)), for: .touchUpInside)
-					} else {
-						trackCell.previewButton.isHidden = true
-					}
-				}
-				
-				trackCell.trackTitleLabel.textColor = self.colorPalette?.backgroundColor.isDarkColor ?? (PreferenceManager.shared.theme == .dark) ? StyleKit.darkPrimaryTextColor : StyleKit.lightPrimaryTextColor
-				trackCell.trackNumberLabel.textColor = self.colorPalette?.backgroundColor.isDarkColor ?? (PreferenceManager.shared.theme == .dark) ? StyleKit.darkSecondaryTextColor : StyleKit.lightSecondaryTextColor
-				trackCell.previewButton.tintColor = self.colorPalette?.primaryColor ?? ThemeKit.tintColor
-				
-				cell = trackCell
-			}
+			cell.trackNumberLabel.textColor = ThemeKit.tertiaryTextColor
+			cell.trackTitleLabel.textColor = ThemeKit.primaryTextColor
+			cell.backgroundColor = ThemeKit.backdropOverlayColor.withAlpha(0.7)
+			cell.strokeColor = ThemeKit.strokeColor
 		}
 		
-		
-		if self.colorPalette?.backgroundColor.isDarkColor ?? false {
-			cell?.backgroundColor = self.colorPalette?.backgroundColor.withBrightness(0.25).withAlpha(0.8)
-		} else {
-			cell?.backgroundColor = self.colorPalette?.backgroundColor.withAlpha(0.8) ?? ThemeKit.backdropOverlayColor
-		}
-		cell?.selectedBackgroundView?.backgroundColor = self.colorPalette?.primaryColor.withAlpha(0.2) ?? ThemeKit.tintColor.withAlpha(0.2)
-		cell?.strokeColor = self.colorPalette?.backgroundColor.isDarkColor ?? (PreferenceManager.shared.theme == .dark) ? StyleKit.darkStrokeColor : StyleKit.lightStrokeColor
-		
-		return cell ?? UICollectionViewCell()
+		return cell
 	}
 	
 	

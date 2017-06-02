@@ -11,7 +11,7 @@ import UIKit
 @IBDesignable
 class DroppButton: UIButton {
 	
-	@IBInspectable var tapScale: CGFloat = 0.9 {
+	@IBInspectable var tapScale: CGFloat = 0.95 {
 		didSet {
 			self.setNeedsDisplay()
 		}
@@ -77,7 +77,7 @@ class DroppButton: UIButton {
 		super.touchesBegan(touches, with: event)
 		
 		if self.haptic {
-			let feedbackGenerator = UIImpactFeedbackGenerator(style: .heavy)
+			let feedbackGenerator = UIImpactFeedbackGenerator(style: .light)
 			feedbackGenerator.impactOccurred()
 		}
 		

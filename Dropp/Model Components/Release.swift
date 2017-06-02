@@ -27,12 +27,15 @@ class Release: NSObject, NSCoding {
 				
 				// scale to appropriate resolution
 				self._artworkImage = Utils.scaleImage(newValue!, to: PreferenceManager.shared.artworkSize)
-				self.thumbnailImage = Utils.scaleImage(self.artworkImage!, to: PreferenceManager.shared.thumbnailSize)
+				if self.artworkImage != nil {
+					self.thumbnailImage = Utils.scaleImage(self.artworkImage!, to: PreferenceManager.shared.thumbnailSize)
+				}
 				
 				// save to filesystem if artist is being followed
 				if self.artist.isBeingFollowed {
 					PreferenceManager.shared.cacheArtwork(release: self)
 				}
+				
 			} else {
 				self._artworkImage = newValue
 			}
@@ -41,8 +44,31 @@ class Release: NSObject, NSCoding {
 			return self._artworkImage
 		}
 	}
-	var thumbnailImage: UIImage?
-	var tracks: [Track]?
+	var thumbnailImage: UIImage? {
+		didSet {
+			if self.thumbnailImage != nil {
+				
+				DispatchQueue.global().async {
+					
+					// get color palette
+					self.colorPalette = self.thumbnailImage?.getColors()
+				}
+			}
+		}
+	}
+	private var _tracks: [Track]?
+	var tracks: [Track]? {
+		set {
+			if newValue != nil {
+				self._tracks = newValue?.sorted(by: { $0.trackNumber < $1.trackNumber })
+			} else {
+				self._tracks = nil
+			}
+		}
+		get {
+			return self._tracks
+		}
+	}
 	var isFeature = false
 	private var _seenByUser: Bool?
 	var seenByUser: Bool {
@@ -90,6 +116,7 @@ class Release: NSObject, NSCoding {
 			return self._artist
 		}
 	}
+	var colorPalette: UIImageColors? = nil
 	
 	
 	init(itunesID: Int!, title: String!, releaseDate: Date!, itunesURL: URL!) {
@@ -136,7 +163,7 @@ class Release: NSObject, NSCoding {
 		self.genre = aDecoder.decodeObject(forKey: "genre") as? String
 		self.itunesURL = aDecoder.decodeObject(forKey: "itunesURL") as! URL
 		self.artworkURL = aDecoder.decodeObject(forKey: "artworkURL") as? URL
-		self.tracks = aDecoder.decodeObject(forKey: "tracks") as? [Track]
+		self._tracks = aDecoder.decodeObject(forKey: "tracks") as? [Track]
 		self.isFeature = (aDecoder.decodeObject(forKey: "isFeature") as? Bool) ?? false
 		self._seenByUser = aDecoder.decodeObject(forKey: "seenByUser") as? Bool
 	}
@@ -154,6 +181,13 @@ class Release: NSObject, NSCoding {
 		// only load artwork if it hasn't already been loaded and stored on the instance
 		guard (!thumbnailOnly! && self.artworkImage == nil) || (thumbnailOnly! && self.thumbnailImage == nil) else {
 			completion?()
+			return nil
+		}
+		
+		if self.artworkLoadTask != nil {
+			if completion != nil {
+				self.artworkLoadListeners.append(completion!)
+			}
 			return nil
 		}
 		
@@ -175,22 +209,15 @@ class Release: NSObject, NSCoding {
 				return nil
 			}
 			
-			if self.artworkLoadTask != nil {
-				if completion != nil {
-					self.artworkLoadListeners.append(completion!)
-				}
-				return nil
-			}
-			
 			// load image from artwork url
 			self.artworkLoadTask = RequestManager.shared.loadImage(from: artworkURL, completion: { (image, error) in
+				self.artworkLoadTask = nil
 				guard let image = image, error == nil else {
 					print("Failed to load artwork for \(self.title!): ", error ?? "")
 					return
 				}
 				
 				self.artworkImage = image
-				self.artworkLoadTask = nil
 				completion?()
 				
 				// execute any callbacks in waiting
@@ -223,13 +250,13 @@ class Release: NSObject, NSCoding {
 		}
 		
 		self.trackLoadTask = RequestManager.shared.getTracks(for: self) { (tracks, error) in
+			self.trackLoadTask = nil
 			guard let tracks = tracks, error == nil else {
 				print("Failed to load tracks for \(self.title!): ", error ?? "")
 				return
 			}
 			
 			self.tracks = tracks
-			self.trackLoadTask = nil
 			completion?()
 			
 			// execute any callbacks in waiting
@@ -239,5 +266,21 @@ class Release: NSObject, NSCoding {
 		
 		self.trackLoadTask?.resume()
 		return self.trackLoadTask
+	}
+}
+
+extension Date {
+	func string(prefixed: Bool = false) -> String {
+		let dateFormatter = DateFormatter()
+		dateFormatter.dateFormat = "MMM d, YYYY"
+		dateFormatter.timeZone = .current
+		if Date() == self {
+			return "Released Today"
+		} else if Date() > self {
+			return "Released on \(dateFormatter.string(from: self))"
+		} else {
+			return "Due on \(dateFormatter.string(from: self))"
+		}
+
 	}
 }

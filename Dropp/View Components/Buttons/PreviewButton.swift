@@ -25,10 +25,10 @@ class PreviewButton: UIView {
 		if playing {
 			
 			self.stopButton.isHidden = false
-			self.stopButton.transform = CGAffineTransform(scaleX: 1.5, y: 1.5)
+			self.stopButton.transform = CGAffineTransform(scaleX: 2, y: 2)
 			self.stopButton.alpha = 0
 			
-			let animation = UIViewPropertyAnimator(duration: (animated! ? 0.6 : 0) * ANIMATION_SPEED_MODIFIER, dampingRatio: 0.7, animations: {
+			let animation = UIViewPropertyAnimator(duration: (animated! ? 0.8 : 0) * ANIMATION_SPEED_MODIFIER, dampingRatio: 0.7, animations: {
 				self.playButton.transform = CGAffineTransform(scaleX: 0.2, y: 0.2)
 				self.playButton.alpha = 0
 				self.stopButton.transform = CGAffineTransform(scaleX: 1, y: 1)
@@ -46,10 +46,10 @@ class PreviewButton: UIView {
 		} else {
 			
 			self.playButton.isHidden = false
-			self.playButton.transform = CGAffineTransform(scaleX: 1.5, y: 1.5)
+			self.playButton.transform = CGAffineTransform(scaleX: 2, y: 2)
 			self.playButton.alpha = 0
 			
-			let animation = UIViewPropertyAnimator(duration: (animated! ? 0.6 : 0) * ANIMATION_SPEED_MODIFIER, dampingRatio: 0.7, animations: {
+			let animation = UIViewPropertyAnimator(duration: (animated! ? 0.8 : 0) * ANIMATION_SPEED_MODIFIER, dampingRatio: 0.7, animations: {
 				self.playButton.transform = CGAffineTransform(scaleX: 1, y: 1)
 				self.playButton.alpha = 1
 				self.stopButton.transform = CGAffineTransform(scaleX: 0.2, y: 0.2)
@@ -82,7 +82,7 @@ class PreviewButton: UIView {
 		self.playButton.tintColor = self.tintColor
 		self.stopButton.tintColor = self.tintColor
 		
-
+		
 	}
 	
 }

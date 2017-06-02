@@ -8,7 +8,7 @@
 
 import UIKit
 
-class ArtistsViewController: DroppViewController {
+class ArtistsViewController: DroppChildViewController {
 	
 	@IBOutlet weak var searchButton: SearchButton!
 	@IBOutlet weak var settingsButton: SettingsButton!
@@ -27,11 +27,14 @@ class ArtistsViewController: DroppViewController {
 	
 	override func willMove(toParentViewController parent: UIViewController?) {
 		
-		PreferenceManager.shared.followingArtists.forEach({
-			$0.thumbnailImage = nil
-			$0.artworkImage = nil
-		})
-		
+		if parent == nil {
+			
+			PreferenceManager.shared.followingArtists.forEach({
+				$0.thumbnailImage = nil
+				$0.artworkImage = nil
+			})
+			
+		}
 		super.willMove(toParentViewController: parent)
 	}
 	
@@ -67,10 +70,13 @@ extension ArtistsViewController: UICollectionViewDataSourcePrefetching, UICollec
 		
 		indexPaths.forEach { (indexPath) in
 			
-			let artworkTask = PreferenceManager.shared.followingArtists[indexPath.row].loadArtwork(thumbnailOnly: true) {
-				self.artworkDownloadTasks[indexPath.row] = nil
+			DispatchQueue.global().async {
+				
+				let artworkTask = PreferenceManager.shared.followingArtists[indexPath.row].loadArtwork(thumbnailOnly: true) {
+					self.artworkDownloadTasks[indexPath.row] = nil
+				}
+				self.artworkDownloadTasks[indexPath.row] = artworkTask
 			}
-			self.artworkDownloadTasks[indexPath.row] = artworkTask
 		}
 	}
 	func collectionView(_ collectionView: UICollectionView, cancelPrefetchingForItemsAt indexPaths: [IndexPath]) {
@@ -94,26 +100,49 @@ extension ArtistsViewController: UICollectionViewDataSourcePrefetching, UICollec
 		
 		let artist = PreferenceManager.shared.followingArtists[indexPath.row]
 		
-		cell.artistNameLabel.text = artist.name
-		cell.backgroundColor = ThemeKit.backdropOverlayColor
-		cell.artistNameLabel.textColor = ThemeKit.primaryTextColor
-		cell.selectedBackgroundView?.backgroundColor = ThemeKit.tintColor.withAlpha(0.2)
-		cell.artistArtworkView.backgroundColor = ThemeKit.backgroundColor
-		cell.artistArtworkView.hideArtwork()
+		DispatchQueue.main.async {
 		
-		
-//		DispatchQueue.main.async {
-		
-			_ = artist.loadArtwork(thumbnailOnly: true) {
+			cell.artistNameLabel.text = artist.name
+			cell.backgroundColor = ThemeKit.backdropOverlayColor
+			cell.artistNameLabel.textColor = ThemeKit.primaryTextColor
+			cell.selectedBackgroundView?.backgroundColor = ThemeKit.tintColor.withAlpha(0.2)
+			cell.artistArtworkView.backgroundColor = ThemeKit.backgroundColor
 			
-				cell.artistArtworkView.imageView.image = artist.thumbnailImage
-				cell.artistArtworkView.showArtwork(true)
+			DispatchQueue.global().async {
+				
+				_ = artist.loadArtwork(thumbnailOnly: true) {
+					
+					DispatchQueue.main.async {
+						
+						cell.artistArtworkView.imageView.image = artist.thumbnailImage
+						cell.artistArtworkView.showArtwork(true)
+					}
+				}
 			}
-//		}
+		}
+		
 		
 		return cell
 	}
 	
+	
+	// MARK: - UICollectionViewDelegate
+	func collectionView(_ collectionView: UICollectionView, didHighlightItemAt indexPath: IndexPath) {
+		
+		DispatchQueue.global().async {
+			let artworkTask = PreferenceManager.shared.followingArtists[indexPath.row].loadArtwork {
+				self.artworkDownloadTasks[indexPath.row] = nil
+			}
+			self.artworkDownloadTasks[indexPath.row] = artworkTask
+		}
+	}
+	func collectionView(_ collectionView: UICollectionView, didUnhighlightItemAt indexPath: IndexPath) {
+		
+		DispatchQueue.global().async {
+			PreferenceManager.shared.followingArtists[indexPath.row].artworkImage = nil
+			self.artworkDownloadTasks[indexPath.row]?.cancel()
+		}
+	}
 	
 	
 	// MARK: - UICollectionViewDelegateFlowLayout

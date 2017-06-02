@@ -13,5 +13,4 @@ class ReleaseTrackCollectionViewCell: DroppCollectionViewCell {
 	@IBOutlet weak var trackNumberLabel: UILabel!
 	@IBOutlet weak var trackTitleLabel: UILabel!
 	@IBOutlet weak var previewButton: PreviewButton!
-
 }

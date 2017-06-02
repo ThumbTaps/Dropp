@@ -8,7 +8,7 @@
 
 import UIKit
 
-class ArtistSearchResultsViewController: DroppViewController {
+class ArtistSearchResultsViewController: DroppChildViewController {
 	
 	@IBOutlet weak var resultsSortingButton: SortButton!
 	@IBOutlet weak var resultCoundIndicator: UIButton!

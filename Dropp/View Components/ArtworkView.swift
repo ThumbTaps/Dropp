@@ -24,19 +24,23 @@ class ArtworkView: UIView {
 	override func awakeFromNib() {
 		super.awakeFromNib()
 		
+		self.imageView.clipsToBounds = true
+		self.imageView.layer.cornerRadius = 2 + ((self.imageView.frame.width / 300) * 5)
+		self.imageView.contentMode = .scaleAspectFill
+		
 		if self.shadowed {
-			self.shadow = DroppShadowBackdrop(frame: self.bounds, offset: CGSize(width: 0, height: 5), radius: self.bounds.width / 10, cornerRadius: self.bounds.width * 0.05, color: ThemeKit.shadowColor)
-			self.shadow?.transform = CGAffineTransform(scaleX: 0.95, y: 0.95)
+			self.shadow = DroppShadowBackdrop(frame: self.bounds, offset: .zero, radius: 8, cornerRadius: self.imageView.layer.cornerRadius, color: ThemeKit.shadowColor)
+//			self.shadow?.transform = CGAffineTransform(scaleX: 0.95, y: 0.95)
 			self.insertSubview(self.shadow!, at: 0)
 		}
 		
-		self.imageView?.clipsToBounds = true
-		self.imageView?.layer.cornerRadius = 4
-		self.imageView.contentMode = .scaleAspectFill
-
 		self.hideArtwork()
 	}
-	
+	override func layoutSubviews() {
+		super.layoutSubviews()
+		
+		self.shadow?.frame = self.bounds
+	}
 	override func tintColorDidChange() {
 		super.tintColorDidChange()
 		
@@ -47,7 +51,6 @@ class ArtworkView: UIView {
 		super.draw(rect)
 				
 //		self.layer.borderWidth = min(rect.width / 50, 4)
-		self.layer.cornerRadius = 4
 	}
 	
 	

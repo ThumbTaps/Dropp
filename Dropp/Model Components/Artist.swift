@@ -31,6 +31,7 @@ class Artist: NSObject, NSCoding {
 				if self.isBeingFollowed {
 					PreferenceManager.shared.cacheArtwork(artist: self)
 				}
+				
 			} else {
 				self._artworkImage = newValue
 			}
@@ -39,7 +40,18 @@ class Artist: NSObject, NSCoding {
 			return self._artworkImage
 		}
 	}
-	var thumbnailImage: UIImage?
+	var thumbnailImage: UIImage? {
+		didSet {
+			if self.thumbnailImage != nil {
+				
+				DispatchQueue.global().async {
+					
+					// get color palette
+					self.colorPalette = self.thumbnailImage?.getColors()
+				}
+			}
+		}
+	}
 	var releases: [Release] = []
 	var isBeingFollowed: Bool {
 		return PreferenceManager.shared.followingArtists.contains(where: { $0.itunesID == self.itunesID })
@@ -95,6 +107,7 @@ class Artist: NSObject, NSCoding {
 			}
 		}
 	}
+	var colorPalette: UIImageColors? = nil
 	
 	init(itunesID: Int!, name: String!, itunesURL: URL!) {
 		
@@ -154,7 +167,6 @@ class Artist: NSObject, NSCoding {
 		self.ignoreFeatures = aDecoder.decodeObject(forKey: "ignoreFeatures") as? Bool
 		self.includeEPs = aDecoder.decodeObject(forKey: "includeEPs") as? Bool
 		defer {
-			print("Setting last update")
 			self.lastUpdate = aDecoder.decodeObject(forKey: "lastUpdate") as? Date
 		}
 	}
@@ -166,6 +178,13 @@ class Artist: NSObject, NSCoding {
 		// only load artwork if it hasn't already been loaded and stored on the instance
 		guard (!thumbnailOnly! && self.artworkImage == nil) || (thumbnailOnly! && self.thumbnailImage == nil) else {
 			completion?()
+			return nil
+		}
+		
+		if self.artworkLoadTask != nil {
+			if completion != nil {
+				self.artworkLoadListeners.append(completion!)
+			}
 			return nil
 		}
 		
@@ -187,22 +206,15 @@ class Artist: NSObject, NSCoding {
 				return nil
 			}
 			
-			if self.artworkLoadTask != nil {
-				if completion != nil {
-					self.artworkLoadListeners.append(completion!)
-				}
-				return nil
-			}
-			
 			// load image from artwork url
 			self.artworkLoadTask = RequestManager.shared.loadImage(from: artworkURL, completion: { (image, error) in
+				self.artworkLoadTask = nil
 				guard let image = image, error == nil else {
 					print("Failed to load artwork for \(self.name): ", error ?? "")
 					return
 				}
 				
 				self.artworkImage = image
-				self.artworkLoadTask = nil
 				completion?()
 				
 				// execute any callbacks in waiting

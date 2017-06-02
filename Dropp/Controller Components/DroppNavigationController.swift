@@ -29,9 +29,9 @@ class DroppNavigationController: UIViewController {
 	
 	@IBOutlet weak var shadowBackdrop: DroppShadowBackdrop!
 	
-	var currentViewController: DroppViewController?
-	var lastViewController: DroppViewController? {
-		guard self.childViewControllers.count > 1, let lastViewController = self.childViewControllers[self.childViewControllers.index(before: self.childViewControllers.count-1)] as? DroppViewController else {
+	var currentViewController: DroppChildViewController?
+	var lastViewController: DroppChildViewController? {
+		guard self.childViewControllers.count > 1, let lastViewController = self.childViewControllers[self.childViewControllers.index(before: self.childViewControllers.count-1)] as? DroppChildViewController else {
 			return nil
 		}
 		
@@ -43,13 +43,21 @@ class DroppNavigationController: UIViewController {
 		
 		// Do any additional setup after loading the view.
 		PreferenceManager.shared.themeDidChangeNotification.add(self, selector: #selector(self.themeDidChange(_:)))
+		
+		if PreferenceManager.shared.followingArtists.isEmpty && PreferenceManager.shared.firstLaunch {
+			if let searchViewController = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: "ArtistSearch") as? ArtistSearchViewController {
+				self.push(searchViewController, animated: false)
+				PreferenceManager.shared.firstLaunch = false
+			}
+		} else {
+			if let newReleasesViewController = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: "NewReleases") as? NewReleasesViewController {
+				self.push(newReleasesViewController, animated: false)
+			}
+		}
 	}
 	override func viewWillAppear(_ animated: Bool) {
 		super.viewWillAppear(animated)
 		
-		self.view.layer.cornerRadius = 12
-		self.view.layer.masksToBounds = true
-		self.childViewContainer.layer.cornerRadius = 12
 		self.childViewContainer.layer.cornerRadius = 12
 		
 		self.adjustToTheme()
@@ -58,26 +66,22 @@ class DroppNavigationController: UIViewController {
 	func themeDidChange(_ notification: Notification) {
 		self.adjustToTheme()
 	}
-	func adjustToTheme(preparingFor viewController: DroppViewController?=nil) {
+	func adjustToTheme(preparingFor viewController: DroppChildViewController?=nil) {
 		
 		if !(viewController?.shouldIgnoreThemeChanges ?? self.currentViewController?.shouldIgnoreThemeChanges ?? false) {
+						
+			UIApplication.shared.statusBarStyle = ThemeKit.statusBarStyle
+			self.view.tintColor = ThemeKit.tintColor
 			
-			DispatchQueue.main.async {
-				
-				UIApplication.shared.statusBarStyle = ThemeKit.statusBarStyle
-				self.view.tintColor = ThemeKit.tintColor
-				
-				self.headerView.effect = UIBlurEffect(style: ThemeKit.blurEffectStyle)
-				self.headerLabel.textColor = ThemeKit.primaryTextColor
-				
-				self.footerViewContainer.backgroundColor = ThemeKit.backgroundColor
-				self.footerBackButton.destinationTitle.textColor = ThemeKit.tintColor
-				
-				self.childViewContainer.backgroundColor = ThemeKit.backgroundColor
-				self.shadowBackdrop.shadowColor = ThemeKit.shadowColor
-				
-//				(viewController ?? self.currentViewController)?.adjustToTheme()
-			}
+			self.headerView.effect = UIBlurEffect(style: ThemeKit.blurEffectStyle)
+			self.headerLabel.textColor = ThemeKit.primaryTextColor
+			
+			self.footerViewContainer.backgroundColor = ThemeKit.backgroundColor
+			self.footerBackButton.destinationTitle.textColor = ThemeKit.tintColor
+			
+			self.childViewContainer.backgroundColor = ThemeKit.backgroundColor
+			self.shadowBackdrop.shadowColor = ThemeKit.shadowColor
+			
 		}
 	}
 	
@@ -86,68 +90,58 @@ class DroppNavigationController: UIViewController {
 			return
 		}
 		
-		DispatchQueue.main.async {
-			self.childViewContainer.addSubview(childView)
-			self.childViewContainer.addConstraints([
-				NSLayoutConstraint(item: childView, attribute: .top, relatedBy: .equal, toItem: self.childViewContainer, attribute: .top, multiplier: 1, constant: 0),
-				NSLayoutConstraint(item: childView, attribute: .left, relatedBy: .equal, toItem: self.childViewContainer, attribute: .left, multiplier: 1, constant: 0),
-				NSLayoutConstraint(item: childView, attribute: .bottom, relatedBy: .equal, toItem: self.childViewContainer, attribute: .bottom, multiplier: 1, constant: 0),
-				NSLayoutConstraint(item: childView, attribute: .right, relatedBy: .equal, toItem: self.childViewContainer, attribute: .right, multiplier: 1, constant: 0)
-				])
-			self.childViewContainer.layoutIfNeeded()
-		}
+		self.childViewContainer.addSubview(childView)
+		self.childViewContainer.addConstraints([
+			NSLayoutConstraint(item: childView, attribute: .top, relatedBy: .equal, toItem: self.childViewContainer, attribute: .top, multiplier: 1, constant: 0),
+			NSLayoutConstraint(item: childView, attribute: .left, relatedBy: .equal, toItem: self.childViewContainer, attribute: .left, multiplier: 1, constant: 0),
+			NSLayoutConstraint(item: childView, attribute: .bottom, relatedBy: .equal, toItem: self.childViewContainer, attribute: .bottom, multiplier: 1, constant: 0),
+			NSLayoutConstraint(item: childView, attribute: .right, relatedBy: .equal, toItem: self.childViewContainer, attribute: .right, multiplier: 1, constant: 0)
+			])
+		self.childViewContainer.layoutIfNeeded()
 	}
 	private func addButtonView(_ buttonView: UIView?) {
 		guard let buttonView = buttonView else {
 			return
 		}
 		
-		DispatchQueue.main.async {
-			self.buttonViewContainer?.addSubview(buttonView)
-			self.buttonViewContainer.addConstraints([
-				NSLayoutConstraint(item: buttonView, attribute: .centerX, relatedBy: .equal, toItem: self.buttonViewContainer, attribute: .centerX, multiplier: 1, constant: 0),
-				NSLayoutConstraint(item: buttonView, attribute: .centerY, relatedBy: .equal, toItem: self.buttonViewContainer, attribute: .centerY, multiplier: 1, constant: 0),
-				NSLayoutConstraint(item: buttonView, attribute: .width, relatedBy: .equal, toItem: self.buttonViewContainer, attribute: .width, multiplier: 1, constant: 0),
-				NSLayoutConstraint(item: buttonView, attribute: .height, relatedBy: .equal, toItem: self.buttonViewContainer, attribute: .height, multiplier: 1, constant: 0)
-				])
-			self.buttonViewContainer.layoutIfNeeded()
-		}
+		self.buttonViewContainer?.addSubview(buttonView)
+		self.buttonViewContainer.addConstraints([
+			NSLayoutConstraint(item: buttonView, attribute: .centerX, relatedBy: .equal, toItem: self.buttonViewContainer, attribute: .centerX, multiplier: 1, constant: 0),
+			NSLayoutConstraint(item: buttonView, attribute: .centerY, relatedBy: .equal, toItem: self.buttonViewContainer, attribute: .centerY, multiplier: 1, constant: 0),
+			NSLayoutConstraint(item: buttonView, attribute: .width, relatedBy: .equal, toItem: self.buttonViewContainer, attribute: .width, multiplier: 1, constant: 0),
+			NSLayoutConstraint(item: buttonView, attribute: .height, relatedBy: .equal, toItem: self.buttonViewContainer, attribute: .height, multiplier: 1, constant: 0)
+			])
+		self.buttonViewContainer.layoutIfNeeded()
 	}
 	private func addFooterView(_ footerView: UIView?) {
 		guard let footerView = footerView else {
 			return
 		}
 		
-		DispatchQueue.main.async {
-			self.footerViewContainer?.addSubview(footerView)
-			self.footerViewContainer.addConstraints([
-				NSLayoutConstraint(item: footerView, attribute: .top, relatedBy: .equal, toItem: self.footerViewContainer, attribute: .top, multiplier: 1, constant: 0),
-				NSLayoutConstraint(item: footerView, attribute: .left, relatedBy: .equal, toItem: self.footerViewContainer, attribute: .left, multiplier: 1, constant: 0),
-				NSLayoutConstraint(item: footerView, attribute: .bottom, relatedBy: .equal, toItem: self.footerViewContainer, attribute: .bottom, multiplier: 1, constant: 0),
-				NSLayoutConstraint(item: footerView, attribute: .right, relatedBy: .equal, toItem: self.footerViewContainer, attribute: .right, multiplier: 1, constant: 0)
-				])
-			self.footerViewContainer.layoutIfNeeded()
-		}
+		self.footerViewContainer?.addSubview(footerView)
+		self.footerViewContainer.addConstraints([
+			NSLayoutConstraint(item: footerView, attribute: .top, relatedBy: .equal, toItem: self.footerViewContainer, attribute: .top, multiplier: 1, constant: 0),
+			NSLayoutConstraint(item: footerView, attribute: .left, relatedBy: .equal, toItem: self.footerViewContainer, attribute: .left, multiplier: 1, constant: 0),
+			NSLayoutConstraint(item: footerView, attribute: .bottom, relatedBy: .equal, toItem: self.footerViewContainer, attribute: .bottom, multiplier: 1, constant: 0),
+			NSLayoutConstraint(item: footerView, attribute: .right, relatedBy: .equal, toItem: self.footerViewContainer, attribute: .right, multiplier: 1, constant: 0)
+			])
+		self.footerViewContainer.layoutIfNeeded()
 	}
 	public func showFooter(_ animated: Bool=false) {
 		
-		DispatchQueue.main.async {
-			
-			self.childViewContainerBottomConstraint.constant = -(self.footerViewHeightConstraint.constant-10)
-			UIViewPropertyAnimator(duration: (animated ? 0.5 : 0) * ANIMATION_SPEED_MODIFIER, dampingRatio: 0.7) {
-				self.view.layoutIfNeeded()
-				}.startAnimation()
-			self.currentViewController?.didShowFooter()
-		}
+		self.childViewContainerBottomConstraint.constant = -(self.footerViewHeightConstraint.constant-10)
+		UIViewPropertyAnimator(duration: (animated ? 0.5 : 0) * ANIMATION_SPEED_MODIFIER, dampingRatio: 0.7) {
+			self.view.layoutIfNeeded()
+			}.startAnimation()
+		self.currentViewController?.didShowFooter()
 	}
 	public func hideFooter(_ animated: Bool=false, completion: (() -> Void)?=nil) {
-		DispatchQueue.main.async {
-			self.childViewContainerBottomConstraint.constant = 0
-			UIViewPropertyAnimator(duration: (animated ? 0.5 : 0) * ANIMATION_SPEED_MODIFIER, dampingRatio: 0.7) {
-				self.view.layoutIfNeeded()
-				}.startAnimation()
-			self.currentViewController?.didHideFooter()
-		}
+		
+		self.childViewContainerBottomConstraint.constant = 0
+		UIViewPropertyAnimator(duration: (animated ? 0.5 : 0) * ANIMATION_SPEED_MODIFIER, dampingRatio: 0.7) {
+			self.view.layoutIfNeeded()
+			}.startAnimation()
+		self.currentViewController?.didHideFooter()
 	}
 	
 	override func didReceiveMemoryWarning() {
@@ -156,7 +150,7 @@ class DroppNavigationController: UIViewController {
 	}
 	
 	// MARK: - Navigation
-	func push(_ destinationViewController: DroppViewController, animated: Bool=true, popped: Bool=false) {
+	func push(_ destinationViewController: DroppChildViewController, animated: Bool=true, popped: Bool=false) {
 		
 		// disable interaction
 		self.view.isUserInteractionEnabled = false
@@ -207,11 +201,11 @@ class DroppNavigationController: UIViewController {
 				self.footerBackButton.alpha = 0
 				
 				// adjust footer view back button
-				var previousVC: DroppViewController? = self.lastViewController
+				var previousVC: DroppChildViewController? = self.lastViewController
 				if popped {
 					if let lastVC = self.lastViewController {
 						if let lastVCIndex = self.childViewControllers.index(of: lastVC) {
-							if let previousViewController = self.childViewControllers[lastVCIndex-1] as? DroppViewController {
+							if let previousViewController = self.childViewControllers[lastVCIndex-1] as? DroppChildViewController {
 								previousVC = previousViewController
 							}
 						}
@@ -358,4 +352,6 @@ class DroppNavigationController: UIViewController {
 		self.push(lastVC, popped: true)
 	}
 	
+	@IBAction func dismissModal(_ segue: DroppStoryboardSegue?) {
+	}
 }

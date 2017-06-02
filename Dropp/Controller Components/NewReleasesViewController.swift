@@ -8,7 +8,7 @@
 
 import UIKit
 
-class NewReleasesViewController: DroppViewController {
+class NewReleasesViewController: DroppChildViewController {
 	
 	@IBOutlet weak var releaseSortingButton: SortButton!
 	@IBOutlet weak var newReleasesCountIndicator: UIButton!
@@ -36,11 +36,11 @@ class NewReleasesViewController: DroppViewController {
 		
 		self.collectionView?.refreshControl = UIRefreshControl(frame: CGRect(x: 0, y: 130, width: 45, height: 45))
 		
-		DispatchQueue.main.async {
-			
+//		DispatchQueue.main.async {
+		
 			self.newReleasesCountIndicator.transform = CGAffineTransform(translationX: 0, y: 40)
 			self.newReleasesCountIndicator.isHidden = true
-		}
+//		}
 		
 	}
 	
@@ -163,7 +163,7 @@ class NewReleasesViewController: DroppViewController {
 	func nowPlayingArtistDidChange() {
 		
 		DispatchQueue.main.async {
-			
+		
 			// if there is an artist to show quick view for AND	the artist is not already being followed
 			if self.shouldShowNowPlayingArtist {
 				
@@ -183,6 +183,7 @@ class NewReleasesViewController: DroppViewController {
 	// MARK: - Navigation
 	override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
 		// Pass the selected object to the new view controller.
+		super.prepare(for: segue, sender: sender)
 		
 		if segue.identifier == "showRelease" {
 			// set current release for release view controller
@@ -202,14 +203,12 @@ class NewReleasesViewController: DroppViewController {
 			(segue.destination as? ReleaseViewController)?.currentRelease = source[(self.collectionView?.indexPathsForSelectedItems?[0].row)!]
 			
 		}
-			
-			
+		
 			
 		else if segue.identifier == "showArtist" {
 			(segue.destination as? ArtistViewController)?.currentArtist = PreferenceManager.shared.nowPlayingArtist
 		}
 		
-		super.prepare(for: segue, sender: sender)
 	}
 }
 
@@ -221,33 +220,20 @@ extension NewReleasesViewController: UICollectionViewDataSourcePrefetching, UICo
 		indexPaths.forEach { (indexPath) in
 			
 			var source = PreferenceManager.shared.newReleases
+			var taskSource = self.newReleasesArtworkDownloadTasks
 			
 			if indexPath.section == 1 {
 				
 				source = PreferenceManager.shared.previousReleases
+				taskSource = self.previousReleasesArtworkDownloadTasks
 			}
 			
-			let artworkTask = source[indexPath.row].loadArtwork(thumbnailOnly: true) {
+			DispatchQueue.global().async {
 				
-				switch indexPath.section {
-				case 0:
-					PreferenceManager.shared.newReleases[indexPath.row].thumbnailImage = source[indexPath.row].thumbnailImage
-					break
-				case 1:
-					PreferenceManager.shared.previousReleases[indexPath.row].thumbnailImage = source[indexPath.row].thumbnailImage
-					break
-				default: break
+				let artworkTask = source[indexPath.row].loadArtwork(thumbnailOnly: true) {
+					taskSource[indexPath.row] = nil
 				}
-			}
-			
-			switch indexPath.section {
-			case 0:
-				self.newReleasesArtworkDownloadTasks[indexPath.row] = artworkTask
-				break
-			case 1:
-				self.previousReleasesArtworkDownloadTasks[indexPath.row] = artworkTask
-				break
-			default: break
+				taskSource[indexPath.row] = artworkTask
 			}
 		}
 	}
@@ -260,7 +246,6 @@ extension NewReleasesViewController: UICollectionViewDataSourcePrefetching, UICo
 			} else {
 				self.previousReleasesArtworkDownloadTasks[indexPath.row]?.cancel()
 			}
-			
 		}
 	}
 	
@@ -313,25 +298,32 @@ extension NewReleasesViewController: UICollectionViewDataSourcePrefetching, UICo
 		let release = source[indexPath.row]
 		
 		DispatchQueue.main.async {
+		
+			cell.backgroundColor = ThemeKit.backdropOverlayColor
+			
+			cell.releaseArtworkView.backgroundColor = ThemeKit.backgroundColor
 			
 			cell.releaseTitleLabel.text = release.title
-			cell.secondaryLabel.text = release.artist?.name
-			
-			cell.releaseArtworkView.hideArtwork()
-			cell.releaseArtworkView.backgroundColor = ThemeKit.backgroundColor
-			cell.backgroundColor = ThemeKit.backdropOverlayColor
 			cell.releaseTitleLabel.textColor = ThemeKit.primaryTextColor
+			
+			cell.secondaryLabel.text = release.artist?.name
 			cell.secondaryLabel.textColor = ThemeKit.secondaryTextColor
 		}
 		
-		_ = source[indexPath.row].loadArtwork(thumbnailOnly: true) {
-
-			DispatchQueue.main.async {
-				cell.releaseArtworkView.imageView.image = source[indexPath.row].thumbnailImage
-				if cell.releaseArtworkView.imageView.image != nil {
+		DispatchQueue.global().async {
+			
+			_ = release.loadArtwork(thumbnailOnly: true) {
+				
+				DispatchQueue.main.async {
+					
+					cell.releaseArtworkView.imageView.image = release.thumbnailImage
 					cell.releaseArtworkView.showArtwork(true)
 				}
 			}
+		}
+		
+		if !UIAccessibilityIsReduceMotionEnabled() {
+			cell.releaseArtworkView.enableParallax(amount: 8)
 		}
 		
 		return cell
@@ -343,12 +335,29 @@ extension NewReleasesViewController: UICollectionViewDataSourcePrefetching, UICo
 	func collectionView(_ collectionView: UICollectionView, didHighlightItemAt indexPath: IndexPath) {
 		
 		var source = PreferenceManager.shared.newReleases
+		var taskSource = self.newReleasesArtworkDownloadTasks
+		
 		if indexPath.section == 1 {
+			
 			source = PreferenceManager.shared.previousReleases
+			taskSource = self.previousReleasesArtworkDownloadTasks
 		}
 		
-		_ = source[indexPath.row].loadTracks()
-		_ = source[indexPath.row].loadArtwork(thumbnailOnly: true)
+		DispatchQueue.global().async {
+			
+			let artworkTask = source[indexPath.row].loadArtwork {
+				taskSource[indexPath.row] = nil
+			}
+			taskSource[indexPath.row] = artworkTask
+		}
+	}
+	func collectionView(_ collectionView: UICollectionView, didUnhighlightItemAt indexPath: IndexPath) {
+		
+		if indexPath.section == 0 {
+			self.newReleasesArtworkDownloadTasks[indexPath.row]?.cancel()
+		} else {
+			self.previousReleasesArtworkDownloadTasks[indexPath.row]?.cancel()
+		}
 	}
 	
 	

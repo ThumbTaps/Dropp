@@ -8,7 +8,7 @@
 
 import UIKit
 
-class ArtistSearchViewController: DroppViewController {
+class ArtistSearchViewController: DroppChildViewController {
 	
 	@IBOutlet weak var searchBar: UISearchBar!
 	

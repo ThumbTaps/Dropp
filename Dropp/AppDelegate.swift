@@ -13,7 +13,7 @@ import UserNotifications
 class AppDelegate: UIResponder, UIApplicationDelegate {
 	
 	enum ShortcutIdentifier: String {
-		case search = "com.arcyn1c.dropp.search"
+		case search = "com.thumbtaps.dropp.search"
 	}
 
 	var window: UIWindow?
@@ -63,9 +63,9 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 		
 		UNUserNotificationCenter.current().requestAuthorization(options: [.alert, .sound, .badge]) { (granted, error) in
 			if granted {
-				
 			}
 		}
+		application.registerForRemoteNotifications()
 		//		let content = UNMutableNotificationContent()
 		//		content.title = "10 Second Notification Demo"
 		//		content.subtitle = "From MakeAppPie.com"
@@ -79,7 +79,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 		//		UNUserNotificationCenter.current().add(
 		//			request, withCompletionHandler: nil)
 		
-		application.registerForRemoteNotifications()
 		
 		var launchedFromShortcut = false
 		
@@ -88,23 +87,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 			self.shortcutItem = shortcutItem
 			
 			launchedFromShortcut = true
-		} else {
-			
-
-			if let rootNavigationController = self.window?.rootViewController as? DroppNavigationController {
-				
-				if PreferenceManager.shared.followingArtists.isEmpty && PreferenceManager.shared.firstLaunch {
-					if let searchViewController = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: "ArtistSearch") as? ArtistSearchViewController {
-						rootNavigationController.push(searchViewController, animated: false)
-						PreferenceManager.shared.firstLaunch = false
-					}
-				} else {
-					if let newReleasesViewController = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: "NewReleases") as? NewReleasesViewController {
-						rootNavigationController.push(newReleasesViewController, animated: false)
-					}
-				}
-			}
-
 		}
 		
 		return !launchedFromShortcut
@@ -143,9 +125,22 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 	
 	func application(_ application: UIApplication, didRegisterForRemoteNotificationsWithDeviceToken deviceToken: Data) {
 		
+		// get device token for apns
 		let deviceTokenString = deviceToken.reduce("", {$0 + String(format: "%02X", $1)})
 		
-		print("Device token: \(deviceTokenString)")
+		// prepare request
+		var APNSRegistrationRequest = URLRequest(url: URL(string: "http://10.0.100.10/apns-register")!)
+		APNSRegistrationRequest.httpMethod = "post"
+		APNSRegistrationRequest.httpBody = "token=\(deviceTokenString)".data(using: .utf8)
+		
+		URLSession.shared.dataTask(with: APNSRegistrationRequest, completionHandler: { (data, response, error) in
+			guard let response = response, error == nil else {
+				print(error!)
+				return
+			}
+			
+			print(response)
+		}).resume()		
 	}
 	func application(_ application: UIApplication, didFailToRegisterForRemoteNotificationsWithError error: Error) {
 		

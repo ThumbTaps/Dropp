@@ -11,12 +11,17 @@ import UIKit
 @IBDesignable
 class DroppBackdrop: UIView {
 	
+	override func tintColorDidChange() {
+		super.tintColorDidChange()
+		
+		self.setNeedsDisplay()
+	}
 	// Only override draw() if you perform custom drawing.
     // An empty implementation adversely affects performance during animation.
 	override func draw(_ rect: CGRect) {
 		// Drawing code
 				
-		self.layer.backgroundColor = UIColor.blue.cgColor
+		self.layer.backgroundColor = UIColor.clear.cgColor
 		ThemeKit.drawBackdrop(frame: CGRect(x: 0, y: rect.height - rect.width, width: rect.width, height: rect.width), resizing: .aspectFit)
 	}
 	

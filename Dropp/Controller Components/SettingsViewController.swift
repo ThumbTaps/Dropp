@@ -8,7 +8,7 @@
 
 import UIKit
 
-class SettingsViewController: DroppViewController {
+class SettingsViewController: DroppChildViewController {
 	
 	override var indicator: UIView? {
 		return SettingsButton()

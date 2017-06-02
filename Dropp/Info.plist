@@ -52,8 +52,28 @@
 	<dict>
 		<key>NSExceptionDomains</key>
 		<dict>
+			<key>127.0.0.1</key>
+			<dict>
+				<key>NSExceptionAllowsInsecureHTTPLoads</key>
+				<true/>
+			</dict>
+			<key>audio.itunes.apple.com</key>
+			<dict>
+				<key>NSTemporaryExceptionAllowsInsecureHTTPLoads</key>
+				<true/>
+			</dict>
+			<key>dropp.thumbtaps.com</key>
+			<dict>
+				<key>NSTemporaryExceptionAllowsInsecureHTTPLoads</key>
+				<true/>
+			</dict>
 			<key>lastfm-img2.akamaized.net</key>
 			<string></string>
+			<key>localhost</key>
+			<dict>
+				<key>NSExceptionAllowsInsecureHTTPLoads</key>
+				<true/>
+			</dict>
 			<key>mzstatic.com</key>
 			<dict>
 				<key>NSIncludesSubdomains</key>
@@ -82,7 +102,7 @@
 			<key>UIApplicationShortcutItemTitle</key>
 			<string>Search for an artist</string>
 			<key>UIApplicationShortcutItemType</key>
-			<string>com.arcyn1c.dropp.search</string>
+			<string>com.thumbtaps.dropp.search</string>
 		</dict>
 	</array>
 	<key>UILaunchStoryboardName</key>
