@@ -31,6 +31,8 @@ class Release: Codable, Hashable {
 	let artist: Artist!
 	var genre: String?
     let classification: Classification!
+    
+    var isExplicit: Bool
 	
 	var artworkURL: String?
 	private var thumbnail_url: String?
@@ -45,7 +47,7 @@ class Release: Codable, Hashable {
 	
 	private var cache = NSCache<NSString, NSData>()
 	
-    init(by artist: Artist!, titled title: String!, on releaseDate: Date!, withIdentifer id: Int!, genre: String?=nil) {
+    init(by artist: Artist!, titled title: String!, on releaseDate: Date!, withIdentifer id: Int!, genre: String?=nil, isExplicit: Bool?=false) {
 		self.artist = artist
 		self.releaseDate = releaseDate
 		self.id = id
@@ -63,6 +65,8 @@ class Release: Codable, Hashable {
             self.title = title
             self.classification = .album
         }
+        
+        self.isExplicit = isExplicit ?? false
     }
 	
 	func getArtwork(thumbnail: Bool = false, completion: ((_ image: UIImage?, _ error: Error?) -> Void)!) {
@@ -116,7 +120,7 @@ class Release: Codable, Hashable {
 	}
 	
 	private enum CodingKeys: String, CodingKey {
-		case id, title, releaseDate, artist, genre, classification, artworkURL, thumbnailURL
+		case id, title, releaseDate, artist, genre, classification, isExplicit, artworkURL, thumbnailURL
 	}
 	
 	required init(from decoder: Decoder) throws {
@@ -129,6 +133,7 @@ class Release: Codable, Hashable {
 		self.genre = try values.decode(String?.self, forKey: .genre)
         let rawClassification = try values.decode(Int.self, forKey: .classification)
         self.classification = Classification.init(rawValue: rawClassification)
+        self.isExplicit = try values.decode(Bool.self, forKey: .isExplicit)
 		self.artworkURL = try values.decode(String?.self, forKey: .artworkURL)
 		self.thumbnailURL = try values.decode(String?.self, forKey: .thumbnailURL)
 	}
@@ -142,6 +147,7 @@ class Release: Codable, Hashable {
 		try container.encode(self.artist, forKey: .artist)
 		try container.encode(self.genre, forKey: .genre)
         try container.encode(self.classification.rawValue, forKey: .classification)
+        try container.encode(self.isExplicit, forKey: .isExplicit)
 		try container.encode(self.artworkURL, forKey: .artworkURL)
 		try container.encode(self.thumbnailURL, forKey: .thumbnailURL)
 	}

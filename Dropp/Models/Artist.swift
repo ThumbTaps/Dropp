@@ -58,19 +58,21 @@ class Artist: Codable, Hashable {
 				return
 			}
 			
-			completion(releases?.compactMap({ (releaseJSON) -> Release? in
-				guard let id = releaseJSON["collectionId"] as? String,
+			let releases = releases?.compactMap({ (releaseJSON) -> Release? in
+				guard let id = releaseJSON["collectionId"] as? Int,
 					let title = releaseJSON["collectionName"] as? String,
-					let date = releaseJSON["releaseDate"] as? String else {
+					let date = releaseJSON["releaseDate"] as? String,
+                    let genre = releaseJSON["primaryGenreName"] as? String,
+                    let explicitness = releaseJSON["collectionExplicitness"] as? String else {
 						print("Couldn't create release from JSON: ", releaseJSON)
 						return nil
 				}
-				
+                
 				let dateFormatter = DateFormatter()
 				dateFormatter.dateFormat = "yyyy-MM-dd'T'hh:mm:ssZ"
 				let releaseDate = dateFormatter.date(from: date)
 				
-				let release = Release(by: self, titled: title, on: releaseDate, withIdentifer: Int(id))
+                let release = Release(by: self, titled: title, on: releaseDate, withIdentifer: id, genre: genre, isExplicit: explicitness == "explicit")
 				
 				if let artworkURLString = releaseJSON["artworkUrl100"] as? String,
 					let lastSlashIndex = artworkURLString.lastIndex(of: "/") {
@@ -80,12 +82,15 @@ class Artist: Codable, Hashable {
 					release.thumbnailURL = urlPrefix + "200x200bb.jpg"
 				}
 				
+                // exclude release if it isn't within the from date
 				guard release.releaseDate?.compare(fromDate) == .orderedDescending else {
 					return nil
 				}
-				
+                
 				return release
-			}), nil)
+			})
+            
+            completion(releases, nil)
 		}
 	}
 	func getArtwork(thumbnail: Bool = false, completion: ((_ image: UIImage?, _ error: Error?) -> Void)? = nil) {
@@ -156,13 +161,13 @@ class Artist: Codable, Hashable {
 			}
 			
 			completion?(artists?.compactMap({ (artistJSON) -> Artist? in
-				guard let id = artistJSON["artistId"] as? String,
+				guard let id = artistJSON["artistId"] as? Int,
 					let name = artistJSON["artistName"] as? String else {
-						print("Couldn't create artist locally from JSON:", artistJSON)
+                        assertionFailure("Couldn't create artist locally from JSON.")
 						return nil
 				}
 				
-				return Artist(id: Int(id), name: name)
+				return Artist(id: id, name: name)
 			}), nil)
 		}
 	}

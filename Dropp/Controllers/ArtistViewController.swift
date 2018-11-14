@@ -8,38 +8,46 @@
 
 import UIKit
 
-class ArtistViewController: UIViewController {
+class ArtistViewController: CardViewController {
 	
+    @IBOutlet weak var followButton: DroppButton!
+    @IBOutlet weak var closeButton: DroppButton!
+    @IBOutlet weak var artistNameLabel: UILabel!
+    @IBOutlet weak var artistArtworkBackdrop: UIImageView!
+    @IBOutlet weak var artistArtworkImageView: ArtistArtworkImageView!
+    
 	var artist: Artist!
-	
-	let followButton = DroppButton()
-	
+		
     override func viewDidLoad() {
         super.viewDidLoad()
 
         // Do any additional setup after loading the view.
-		self.title = self.artist.name
-		self.navigationController?.navigationBar.setBackgroundImage(UIImage(), for: .default)
-		self.navigationController?.navigationBar.shadowImage = UIImage()
-		self.navigationController?.navigationBar.barTintColor = UIColor.clear
-		
-		self.followButton.frame = CGRect(origin: .zero, size: CGSize(width: 35, height: 35))
-		self.followButton.titleLabel?.font = UIFont.systemFont(ofSize: 20, weight: .semibold)
+        self.artistNameLabel.text = self.artist.name
+        
+        DispatchQueue.global().async {
+            self.artist.getArtwork(completion: { (image, error) in
+                guard error == nil else {
+                    return
+                }
+                
+                DispatchQueue.main.async {
+                    
+                    self.artistArtworkBackdrop.image = image
+                    self.artistArtworkImageView.image = image
+                }
+            })
+        }
 		
 		if self.artist.isFollowed {
 			self.followButton.setTitle("Unfollow", for: .normal)
 			self.followButton.glyph = .close
 			self.followButton.tintColor = UIColor(red:0.76, green:0.00, blue:0.23, alpha:1.00)
-			self.followButton.filled = true
 		} else {
 			self.followButton.setTitle("Follow", for: .normal)
 			self.followButton.glyph = .checkmark
 			self.followButton.tintColor = self.view.tintColor
-			self.followButton.filled = false
 		}
 		
-		self.followButton.addTarget(self, action: #selector(self.toggleFollowingArtist), for: .touchUpInside)
-		self.navigationItem.rightBarButtonItem = UIBarButtonItem(customView: self.followButton)
     }
 	override func viewWillDisappear(_ animated: Bool) {
 		self.navigationController?.navigationBar.setBackgroundImage(nil, for: .default)
@@ -49,7 +57,7 @@ class ArtistViewController: UIViewController {
 		super.viewWillDisappear(animated)
 	}
 	
-	@objc func toggleFollowingArtist() {
+	@IBAction func toggleFollowingArtist() {
 		if self.artist.isFollowed {
 			self.artist.unfollow()
 			
@@ -58,7 +66,6 @@ class ArtistViewController: UIViewController {
 				self.followButton.setTitle("Follow", for: .normal)
 				self.followButton.glyph = .checkmark
 				self.followButton.tintColor = self.view.tintColor
-				self.followButton.filled = false
 			}
 
 		} else {
@@ -68,8 +75,7 @@ class ArtistViewController: UIViewController {
 				
 				self.followButton.setTitle("Unfollow", for: .normal)
 				self.followButton.glyph = .close
-				self.followButton.tintColor = UIColor(red: 220, green: 30, blue: 60, alpha: 1)
-				self.followButton.filled = true
+                self.followButton.tintColor = UIColor(red:0.76, green:0.00, blue:0.23, alpha:1.00)
 			}
 		}
 	}

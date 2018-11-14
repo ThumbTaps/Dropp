@@ -8,21 +8,23 @@
 
 import UIKit
 
-class ReleaseViewController: UIViewController {
+class ReleaseViewController: CardViewController {
 	
 	var release: Release!
     
     @IBOutlet weak var releaseTitleLabel: UILabel!
     @IBOutlet weak var artistNameLabel: UILabel!
-    @IBOutlet weak var releaseArtworkImageView: UIImageView!
+    @IBOutlet weak var releaseArtworkImageView: ReleaseArtworkImageView!
     @IBOutlet weak var releaseArtworkBackdrop: UIImageView!
+    
+    @IBOutlet weak var closeButton: DroppButton!
 	
     override func viewDidLoad() {
         super.viewDidLoad()
 
         // Do any additional setup after loading the view.
-		self.releaseTitleLabel.text = release.title
-        self.artistNameLabel.text = release.artist.name
+		self.releaseTitleLabel.text = self.release.title
+        self.artistNameLabel.text = self.release.artist.name
         
         DispatchQueue.global().async {
             self.release.getArtwork(completion: { (image, error) in
@@ -31,6 +33,7 @@ class ReleaseViewController: UIViewController {
                 }
                 
                 DispatchQueue.main.async {
+                    
                     self.releaseArtworkBackdrop.image = image
                     self.releaseArtworkImageView.image = image
                 }
@@ -48,5 +51,4 @@ class ReleaseViewController: UIViewController {
         // Pass the selected object to the new view controller.
     }
     */
-
 }

@@ -128,8 +128,8 @@ class SearchTableViewController: UITableViewController, UISearchControllerDelega
 		
 		switch section {
 		case .SearchResults:
-			(cell as! SearchResultTableViewCell).artistNameLabel.text = self.searchResults[indexPath.row].name
-			(cell as! SearchResultTableViewCell).followButton.isHidden = !self.searchResults[indexPath.row].isFollowed
+            (cell as? SearchResultTableViewCell)?.artistNameLabel.text = self.searchResults[indexPath.row].name
+            (cell as? SearchResultTableViewCell)?.followButton.isHidden = !self.searchResults[indexPath.row].isFollowed
 			break
 			
 		case .ImportOptions:
@@ -216,4 +216,6 @@ class SearchTableViewController: UITableViewController, UISearchControllerDelega
 			destination.artist = self.searchResults[selectedRow]
 		}
     }
+    
+    @IBAction func unwind(segue: UIStoryboardSegue) {}
 }

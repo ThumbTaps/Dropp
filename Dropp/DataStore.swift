@@ -45,9 +45,32 @@ class DataStore {
 			}
 			
 			do {
-				let releases = try JSONDecoder().decode([Release].self, from: data)
-				return releases.sorted(by: { (release1, release2) -> Bool in
-					return release1.releaseDate.compare(release2.releaseDate) == .orderedAscending
+				var releases = try JSONDecoder().decode([Release].self, from: data)
+                
+                releases = releases.compactMap({ (release) -> Release? in
+                    // if the user prefers explicit versions and the release is not explicit
+                    if PreferenceStore.preferExplicitVersions && !release.isExplicit {
+                        
+                        // look for a corresponding explicit release
+                        let explicitVersion = releases.first(where: { (potentialMatch) -> Bool in
+                            return potentialMatch.isExplicit &&
+                                potentialMatch.title == release.title &&
+                                potentialMatch.releaseDate == release.releaseDate &&
+                                potentialMatch.classification == release.classification
+                        })
+                        
+                        if explicitVersion == nil {
+                            return release
+                        }
+                        
+                        return nil
+                    }
+                    
+                    return release.isExplicit && !PreferenceStore.preferExplicitVersions ? nil : release
+                })
+                
+                return releases.sorted(by: { (release1, release2) -> Bool in
+					return release1.releaseDate.compare(release2.releaseDate) == .orderedDescending
 				})
 			} catch {
 				print(error)

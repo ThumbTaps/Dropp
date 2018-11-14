@@ -146,10 +146,13 @@ UISearchResultsUpdating {
 		if segue.identifier == "artists->Artist" {
 			guard let destination = segue.destination as? ArtistViewController,
 				let selectedRow = self.tableView.indexPathForSelectedRow?.row else {
+                    assertionFailure("Unable to determine selected row.")
 					return
 			}
 			destination.artist = self.dataSource[selectedRow]
 		}
 	}
+    
+    @IBAction func unwind(segue: UIStoryboardSegue) {}
 }
 

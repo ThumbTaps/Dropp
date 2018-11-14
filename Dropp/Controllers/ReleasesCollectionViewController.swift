@@ -105,17 +105,40 @@ class ReleasesCollectionViewController: UICollectionViewController {
 		
 		self.refreshReleases()
 	}
+    
+    
+    
+    
+    @objc func refreshReleases() {
+        DataStore.refreshReleases {
+            DispatchQueue.main.async {
+                
+                // stop refreshing if necessary
+                if (self.collectionView.refreshControl?.isRefreshing ?? false) {
+                    // after 200 milliseconds
+                    DispatchQueue.main.asyncAfter(deadline: DispatchTime.now() + 0.2) {
+                        self.collectionView.refreshControl?.endRefreshing()
+                        
+                        DispatchQueue.main.asyncAfter(deadline: DispatchTime.now() + 0.5) {
+                            self.collectionView.reloadData()
+                        }
+                    }
+                } else {
+                    self.collectionView.reloadData()
+                }
+            }
+        }
+    }
+    
+    
 	
 	
 	// MARK: - Navigation
-	
-	// In a storyboard-based application, you will often want to do a little preparation before navigation
 	override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-	// Get the new view controller using [segue destinationViewController].
-	// Pass the selected object to the new view controller.
         if segue.identifier == "releases->Release" {
             guard let destination = segue.destination as? ReleaseViewController,
             let selectedIndexPath = self.collectionView.indexPathsForSelectedItems?.first else {
+                assertionFailure("Unable to determine selected release.")
                 return
             }
             
@@ -127,32 +150,15 @@ class ReleasesCollectionViewController: UICollectionViewController {
             destination.release = section.releases[selectedIndexPath.row]
         }
 	}
+    @IBAction func unwind(segue: UIStoryboardSegue) {}
 	
-	@objc func refreshReleases() {
-		DataStore.refreshReleases {
-			DispatchQueue.main.async {
-				
-				// stop refreshing if necessary
-				if (self.collectionView.refreshControl?.isRefreshing ?? false) {
-					// after 200 milliseconds
-					DispatchQueue.main.asyncAfter(deadline: DispatchTime.now() + 0.2) {
-						self.collectionView.refreshControl?.endRefreshing()
-						
-						DispatchQueue.main.asyncAfter(deadline: DispatchTime.now() + 0.5) {
-							self.collectionView.reloadData()
-						}
-					}
-				} else {
-					self.collectionView.reloadData()
-				}
-			}
-		}
-	}
 	
+    
+    
+    // MARK: - UITableView Data Source
 	override func numberOfSections(in collectionView: UICollectionView) -> Int {
 		return Section.count()
 	}
-	
 	override func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
 		guard let section = Section.init(rawValue: section) else {
 			assertionFailure("Unable to determine section.")
@@ -161,7 +167,6 @@ class ReleasesCollectionViewController: UICollectionViewController {
 		
 		return section.releases.count
 	}
-	
 	override func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
 		
 		guard let section = Section.init(rawValue: indexPath.section) else {
@@ -223,7 +228,7 @@ extension ReleasesCollectionViewController: UICollectionViewDelegateFlowLayout {
 			labelColor = UIColor(white: 0.35, alpha: 1)
 		}
 		header.primaryLabel.textColor = labelColor
-		header.secondaryLabel?.text = section.descriptor
+		header.secondaryLabel?.text = section.descriptor?.uppercased()
 		if section.descriptor == nil {
 			header.secondaryLabel?.font = UIFont.systemFont(ofSize: 0)
 		}

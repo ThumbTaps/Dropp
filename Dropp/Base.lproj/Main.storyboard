@@ -24,14 +24,14 @@
                             <inset key="sectionInset" minX="0.0" minY="0.0" maxX="0.0" maxY="0.0"/>
                         </collectionViewFlowLayout>
                         <cells>
-                            <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="releaseCell_artworkOnly" id="s1i-9S-S0j" customClass="ReleaseCollectionViewCell" customModule="Dropp" customModuleProvider="target">
+                            <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" misplaced="YES" reuseIdentifier="releaseCell_artworkOnly" id="s1i-9S-S0j" customClass="ReleaseCollectionViewCell" customModule="Dropp" customModuleProvider="target">
                                 <rect key="frame" x="147.66666666666666" y="100" width="80" height="80"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO">
                                     <rect key="frame" x="0.0" y="0.0" width="80" height="80"/>
                                     <autoresizingMask key="autoresizingMask"/>
                                     <subviews>
-                                        <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="xBZ-Dc-r7f">
+                                        <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" ambiguous="YES" translatesAutoresizingMaskIntoConstraints="NO" id="xBZ-Dc-r7f" customClass="ReleaseArtworkImageView" customModule="Dropp" customModuleProvider="target">
                                             <rect key="frame" x="16" y="16" width="48" height="48"/>
                                             <constraints>
                                                 <constraint firstAttribute="width" secondItem="xBZ-Dc-r7f" secondAttribute="height" multiplier="1:1" id="5Qi-Ir-7jD"/>
@@ -48,39 +48,39 @@
                                 <size key="customSize" width="80" height="80"/>
                                 <connections>
                                     <outlet property="artworkImageView" destination="xBZ-Dc-r7f" id="7GZ-t5-CRK"/>
-                                    <segue destination="mnN-JM-Blw" kind="show" identifier="releases-&gt;Release" id="8Pn-nK-idT">
+                                    <segue destination="mnN-JM-Blw" kind="presentation" identifier="releases-&gt;Release" id="8Pn-nK-idT">
                                         <segue key="commit" inheritsFrom="parent" id="U9s-at-dcv"/>
                                         <segue key="preview" inheritsFrom="commit" id="elY-gd-8Xa"/>
                                     </segue>
                                 </connections>
                             </collectionViewCell>
-                            <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="releaseCell" id="Pyc-np-jXY" customClass="ReleaseCollectionViewCell" customModule="Dropp" customModuleProvider="target">
+                            <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" misplaced="YES" reuseIdentifier="releaseCell" id="Pyc-np-jXY" customClass="ReleaseCollectionViewCell" customModule="Dropp" customModuleProvider="target">
                                 <rect key="frame" x="0.0" y="180" width="375" height="140"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO">
                                     <rect key="frame" x="0.0" y="0.0" width="375" height="140"/>
                                     <autoresizingMask key="autoresizingMask"/>
                                     <subviews>
-                                        <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="3bY-Zv-qEw">
-                                            <rect key="frame" x="16" y="16" width="108" height="108"/>
+                                        <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="3bY-Zv-qEw" customClass="ReleaseArtworkImageView" customModule="Dropp" customModuleProvider="target">
+                                            <rect key="frame" x="16" y="16" width="25" height="25"/>
                                             <constraints>
                                                 <constraint firstAttribute="width" secondItem="3bY-Zv-qEw" secondAttribute="height" multiplier="1:1" id="ket-MY-FGq"/>
                                             </constraints>
                                         </imageView>
                                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Release Title" lineBreakMode="tailTruncation" numberOfLines="2" baselineAdjustment="alignBaselines" minimumScaleFactor="0.90000000000000002" adjustsLetterSpacingToFitWidth="YES" translatesAutoresizingMaskIntoConstraints="NO" id="8Ba-Gz-Ea6">
-                                            <rect key="frame" x="140" y="46" width="104.33333333333331" height="20.333333333333329"/>
+                                            <rect key="frame" x="56.999999999999993" y="12.666666666666666" width="104.33333333333331" height="20.333333333333336"/>
                                             <fontDescription key="fontDescription" type="boldSystem" pointSize="17"/>
                                             <nil key="textColor"/>
                                             <nil key="highlightedColor"/>
                                         </label>
                                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Artist Name" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumScaleFactor="0.90000000000000002" adjustsLetterSpacingToFitWidth="YES" translatesAutoresizingMaskIntoConstraints="NO" id="bfF-VR-Ug3">
-                                            <rect key="frame" x="140" y="66.333333333333329" width="104.33333333333331" height="21"/>
+                                            <rect key="frame" x="56.999999999999993" y="33" width="104.33333333333331" height="21"/>
                                             <fontDescription key="fontDescription" type="boldSystem" pointSize="17"/>
                                             <color key="textColor" red="0.53333333333333333" green="0.53333333333333333" blue="0.53333333333333333" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
                                             <nil key="highlightedColor"/>
                                         </label>
                                         <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="NGW-bX-qrj" customClass="DroppButton" customModule="Dropp" customModuleProvider="target">
-                                            <rect key="frame" x="140" y="92.333333333333329" width="30" height="30"/>
+                                            <rect key="frame" x="57" y="59" width="30" height="30"/>
                                             <constraints>
                                                 <constraint firstAttribute="width" secondItem="NGW-bX-qrj" secondAttribute="height" multiplier="1:1" id="YR9-rz-vKc"/>
                                                 <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="30" id="lvj-Yv-2am"/>
@@ -114,39 +114,39 @@
                                     <outlet property="artworkImageView" destination="3bY-Zv-qEw" id="gjJ-aU-9aC"/>
                                     <outlet property="classificationIndicator" destination="NGW-bX-qrj" id="XMP-XQ-Skx"/>
                                     <outlet property="titleLabel" destination="8Ba-Gz-Ea6" id="EIl-fv-QI0"/>
-                                    <segue destination="mnN-JM-Blw" kind="show" id="YQT-kO-uFg">
+                                    <segue destination="mnN-JM-Blw" kind="presentation" identifier="releases-&gt;Release" id="YQT-kO-uFg">
                                         <segue key="commit" inheritsFrom="parent" id="7L8-pO-wtK"/>
                                         <segue key="preview" inheritsFrom="commit" id="tj5-vU-RuY"/>
                                     </segue>
                                 </connections>
                             </collectionViewCell>
-                            <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="releaseCell_small" id="7iE-rZ-1w4" customClass="ReleaseCollectionViewCell" customModule="Dropp" customModuleProvider="target">
+                            <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" misplaced="YES" reuseIdentifier="releaseCell_small" id="7iE-rZ-1w4" customClass="ReleaseCollectionViewCell" customModule="Dropp" customModuleProvider="target">
                                 <rect key="frame" x="0.0" y="320" width="375" height="70"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO">
                                     <rect key="frame" x="0.0" y="0.0" width="375" height="70"/>
                                     <autoresizingMask key="autoresizingMask"/>
                                     <subviews>
-                                        <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="UqX-tb-YFs">
+                                        <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" ambiguous="YES" translatesAutoresizingMaskIntoConstraints="NO" id="UqX-tb-YFs" customClass="ReleaseArtworkImageView" customModule="Dropp" customModuleProvider="target">
                                             <rect key="frame" x="16" y="16" width="38" height="38"/>
                                             <constraints>
                                                 <constraint firstAttribute="width" secondItem="UqX-tb-YFs" secondAttribute="height" multiplier="1:1" id="WLk-3N-lBX"/>
                                             </constraints>
                                         </imageView>
-                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Release Title" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumScaleFactor="0.90000000000000002" adjustsLetterSpacingToFitWidth="YES" translatesAutoresizingMaskIntoConstraints="NO" id="hCp-n0-get">
+                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" ambiguous="YES" text="Release Title" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumScaleFactor="0.90000000000000002" adjustsLetterSpacingToFitWidth="YES" translatesAutoresizingMaskIntoConstraints="NO" id="hCp-n0-get">
                                             <rect key="frame" x="70" y="17.666666666666664" width="104.66666666666669" height="20.666666666666664"/>
                                             <fontDescription key="fontDescription" type="boldSystem" pointSize="17"/>
                                             <nil key="textColor"/>
                                             <nil key="highlightedColor"/>
                                         </label>
-                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Artist Name" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumScaleFactor="0.90000000000000002" adjustsLetterSpacingToFitWidth="YES" translatesAutoresizingMaskIntoConstraints="NO" id="o7v-Pd-3a0">
+                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" ambiguous="YES" text="Artist Name" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumScaleFactor="0.90000000000000002" adjustsLetterSpacingToFitWidth="YES" translatesAutoresizingMaskIntoConstraints="NO" id="o7v-Pd-3a0">
                                             <rect key="frame" x="70" y="38.333333333333336" width="104.66666666666669" height="18"/>
                                             <fontDescription key="fontDescription" type="boldSystem" pointSize="15"/>
                                             <color key="textColor" red="0.53333333333333333" green="0.53333333333333333" blue="0.53333333333333333" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
                                             <nil key="highlightedColor"/>
                                         </label>
                                         <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="8Z0-CI-LtH" customClass="DroppButton" customModule="Dropp" customModuleProvider="target">
-                                            <rect key="frame" x="329" y="20" width="30" height="30"/>
+                                            <rect key="frame" x="329" y="-15" width="30" height="30"/>
                                             <constraints>
                                                 <constraint firstAttribute="width" secondItem="8Z0-CI-LtH" secondAttribute="height" multiplier="1:1" id="DoL-GS-KJp"/>
                                             </constraints>
@@ -186,7 +186,7 @@
                                     <outlet property="classificationIndicator" destination="8Z0-CI-LtH" id="Y3D-LL-lij"/>
                                     <outlet property="classificationIndicatorHiddenConstraint" destination="6lM-Ni-Eoe" id="D22-EQ-Hgh"/>
                                     <outlet property="titleLabel" destination="hCp-n0-get" id="8ox-zq-2ke"/>
-                                    <segue destination="mnN-JM-Blw" kind="show" identifier="releases-&gt;Release" id="GIv-9d-Sj3">
+                                    <segue destination="mnN-JM-Blw" kind="presentation" identifier="releases-&gt;Release" id="GIv-9d-Sj3">
                                         <segue key="commit" inheritsFrom="parent" id="PST-JD-ok9"/>
                                         <segue key="preview" inheritsFrom="commit" id="KzC-11-eY1"/>
                                     </segue>
@@ -246,6 +246,7 @@
                     <nil key="simulatedTopBarMetrics"/>
                 </collectionViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="EzC-LW-vD3" userLabel="First Responder" sceneMemberID="firstResponder"/>
+                <exit id="mCw-sM-6a1" userLabel="Exit" sceneMemberID="exit"/>
             </objects>
             <point key="canvasLocation" x="920.79999999999995" y="-827.13643178410803"/>
         </scene>
@@ -257,7 +258,7 @@
                         <rect key="frame" x="0.0" y="0.0" width="375" height="812"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <imageView userInteractionEnabled="NO" alpha="0.29999999999999999" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="AiJ-hL-0o6">
+                            <imageView userInteractionEnabled="NO" alpha="0.40000000000000002" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="AiJ-hL-0o6">
                                 <rect key="frame" x="0.0" y="0.0" width="375" height="812"/>
                             </imageView>
                             <visualEffectView opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="D1D-dI-3i5">
@@ -269,32 +270,60 @@
                                 <blurEffect style="light"/>
                             </visualEffectView>
                             <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="bVh-gZ-ILd" customClass="ReleaseArtworkImageView" customModule="Dropp" customModuleProvider="target">
-                                <rect key="frame" x="75" y="298.66666666666669" width="225" height="225.00000000000006"/>
+                                <rect key="frame" x="75" y="268.66666666666669" width="225" height="225"/>
                                 <constraints>
                                     <constraint firstAttribute="width" relation="lessThanOrEqual" constant="320" id="GwV-M3-Wxv"/>
                                     <constraint firstAttribute="width" secondItem="bVh-gZ-ILd" secondAttribute="height" multiplier="1:1" id="UmM-dR-ZkV"/>
                                 </constraints>
                             </imageView>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Kamikaze" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="3" baselineAdjustment="alignBaselines" minimumScaleFactor="0.80000000000000004" adjustsLetterSpacingToFitWidth="YES" translatesAutoresizingMaskIntoConstraints="NO" id="due-Pn-IlY">
-                                <rect key="frame" x="116.66666666666667" y="212.33333333333334" width="141.66666666666663" height="36"/>
+                                <rect key="frame" x="116.66666666666667" y="166.33333333333334" width="141.66666666666663" height="36"/>
                                 <fontDescription key="fontDescription" type="system" weight="heavy" pointSize="30"/>
                                 <nil key="textColor"/>
                                 <nil key="highlightedColor"/>
                             </label>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Eminem" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="2" baselineAdjustment="alignBaselines" minimumScaleFactor="0.80000000000000004" adjustsLetterSpacingToFitWidth="YES" translatesAutoresizingMaskIntoConstraints="NO" id="WEc-MH-9nx">
-                                <rect key="frame" x="146" y="256.33333333333331" width="83" height="26.333333333333314"/>
+                                <rect key="frame" x="146" y="210.33333333333334" width="83" height="26.333333333333343"/>
                                 <fontDescription key="fontDescription" type="boldSystem" pointSize="22"/>
                                 <color key="textColor" white="0.33333333333333331" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <nil key="highlightedColor"/>
                             </label>
-                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="FmT-ou-FlO" customClass="DroppButton" customModule="Dropp" customModuleProvider="target">
-                                <rect key="frame" x="110" y="547.66666666666663" width="155" height="34.333333333333371"/>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="ZNi-f2-oTM" customClass="DroppButton" customModule="Dropp" customModuleProvider="target">
+                                <rect key="frame" x="329" y="60" width="30" height="30"/>
+                                <color key="tintColor" red="0.0" green="0.0" blue="0.0" alpha="0.29999999999999999" colorSpace="calibratedRGB"/>
+                                <userDefinedRuntimeAttributes>
+                                    <userDefinedRuntimeAttribute type="number" keyPath="_glyph">
+                                        <integer key="value" value="1"/>
+                                    </userDefinedRuntimeAttribute>
+                                    <userDefinedRuntimeAttribute type="boolean" keyPath="bordered" value="NO"/>
+                                </userDefinedRuntimeAttributes>
+                                <connections>
+                                    <segue destination="mCw-sM-6a1" kind="unwind" unwindAction="unwindWithSegue:" id="9xa-oL-ncB"/>
+                                </connections>
+                            </button>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" adjustsImageWhenHighlighted="NO" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="pSi-8x-Ern" customClass="DroppButton" customModule="Dropp" customModuleProvider="target">
+                                <rect key="frame" x="250" y="541.66666666666663" width="50" height="40"/>
                                 <constraints>
-                                    <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="155" id="ALd-M3-dAG"/>
-                                    <constraint firstAttribute="width" secondItem="FmT-ou-FlO" secondAttribute="height" multiplier="9:2" id="HEf-bY-OER"/>
+                                    <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="50" id="1RS-0J-rxe"/>
+                                    <constraint firstAttribute="height" relation="greaterThanOrEqual" constant="40" id="yCF-x7-DLD"/>
                                 </constraints>
                                 <fontDescription key="fontDescription" type="boldSystem" pointSize="16"/>
-                                <inset key="contentEdgeInsets" minX="8" minY="0.0" maxX="0.0" maxY="0.0"/>
+                                <color key="tintColor" white="0.33333333333333331" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <inset key="contentEdgeInsets" minX="5" minY="0.0" maxX="0.0" maxY="0.0"/>
+                                <userDefinedRuntimeAttributes>
+                                    <userDefinedRuntimeAttribute type="number" keyPath="_glyph">
+                                        <integer key="value" value="13"/>
+                                    </userDefinedRuntimeAttribute>
+                                </userDefinedRuntimeAttributes>
+                            </button>
+                            <button opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="249" contentHorizontalAlignment="center" contentVerticalAlignment="center" adjustsImageWhenHighlighted="NO" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="FmT-ou-FlO" customClass="DroppButton" customModule="Dropp" customModuleProvider="target">
+                                <rect key="frame" x="75" y="541.66666666666663" width="167" height="40"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="160" id="ALd-M3-dAG"/>
+                                    <constraint firstAttribute="height" relation="greaterThanOrEqual" constant="40" id="gjr-Gz-dra"/>
+                                </constraints>
+                                <fontDescription key="fontDescription" type="boldSystem" pointSize="16"/>
+                                <inset key="contentEdgeInsets" minX="10" minY="0.0" maxX="0.0" maxY="0.0"/>
                                 <state key="normal" title="Track Listing"/>
                                 <userDefinedRuntimeAttributes>
                                     <userDefinedRuntimeAttribute type="number" keyPath="_glyph">
@@ -311,20 +340,25 @@
                             <constraint firstItem="due-Pn-IlY" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="bVh-gZ-ILd" secondAttribute="leading" constant="-24" id="C6V-kZ-EFQ"/>
                             <constraint firstItem="AiJ-hL-0o6" firstAttribute="centerY" secondItem="IDy-ma-S7v" secondAttribute="centerY" id="Czb-IF-BOa"/>
                             <constraint firstItem="D1D-dI-3i5" firstAttribute="centerX" secondItem="IDy-ma-S7v" secondAttribute="centerX" id="DE1-86-P7C"/>
+                            <constraint firstItem="ZNi-f2-oTM" firstAttribute="trailing" secondItem="IDy-ma-S7v" secondAttribute="trailing" constant="-16" id="GVY-2Y-rko"/>
                             <constraint firstItem="bVh-gZ-ILd" firstAttribute="centerX" secondItem="CQ6-88-pXQ" secondAttribute="centerX" id="PkC-iO-BNm"/>
-                            <constraint firstItem="bVh-gZ-ILd" firstAttribute="centerY" secondItem="CQ6-88-pXQ" secondAttribute="centerY" id="QOY-6X-FDk"/>
+                            <constraint firstItem="bVh-gZ-ILd" firstAttribute="centerY" secondItem="CQ6-88-pXQ" secondAttribute="centerY" constant="-30" id="QOY-6X-FDk"/>
+                            <constraint firstItem="pSi-8x-Ern" firstAttribute="leading" secondItem="FmT-ou-FlO" secondAttribute="trailing" constant="8" id="Y7E-fo-grC"/>
                             <constraint firstItem="D1D-dI-3i5" firstAttribute="centerY" secondItem="IDy-ma-S7v" secondAttribute="centerY" id="YeM-j1-MyZ"/>
                             <constraint firstItem="due-Pn-IlY" firstAttribute="trailing" relation="lessThanOrEqual" secondItem="bVh-gZ-ILd" secondAttribute="trailing" constant="24" id="bdI-Jz-8gv"/>
                             <constraint firstItem="WEc-MH-9nx" firstAttribute="trailing" relation="lessThanOrEqual" secondItem="bVh-gZ-ILd" secondAttribute="trailing" constant="24" id="bmV-WU-gZo"/>
                             <constraint firstItem="AiJ-hL-0o6" firstAttribute="height" secondItem="IDy-ma-S7v" secondAttribute="height" id="bml-dF-XCg"/>
+                            <constraint firstItem="pSi-8x-Ern" firstAttribute="centerY" secondItem="FmT-ou-FlO" secondAttribute="centerY" id="cRB-e6-Ldj"/>
+                            <constraint firstItem="pSi-8x-Ern" firstAttribute="trailing" secondItem="bVh-gZ-ILd" secondAttribute="trailing" id="dHb-xQ-oKG"/>
                             <constraint firstItem="due-Pn-IlY" firstAttribute="centerX" secondItem="WEc-MH-9nx" secondAttribute="centerX" id="dxq-to-WOI"/>
                             <constraint firstItem="AiJ-hL-0o6" firstAttribute="width" secondItem="IDy-ma-S7v" secondAttribute="width" id="eVC-a4-pK5"/>
-                            <constraint firstItem="WEc-MH-9nx" firstAttribute="bottom" secondItem="bVh-gZ-ILd" secondAttribute="top" constant="-16" id="iaT-yt-hPQ"/>
-                            <constraint firstItem="FmT-ou-FlO" firstAttribute="top" secondItem="bVh-gZ-ILd" secondAttribute="bottom" constant="24" id="mTH-w8-vwP"/>
+                            <constraint firstItem="WEc-MH-9nx" firstAttribute="bottom" secondItem="bVh-gZ-ILd" secondAttribute="top" constant="-32" id="iaT-yt-hPQ"/>
+                            <constraint firstItem="FmT-ou-FlO" firstAttribute="top" secondItem="bVh-gZ-ILd" secondAttribute="bottom" constant="48" id="mTH-w8-vwP"/>
+                            <constraint firstItem="FmT-ou-FlO" firstAttribute="leading" secondItem="bVh-gZ-ILd" secondAttribute="leading" id="nx8-uj-opH"/>
                             <constraint firstItem="AiJ-hL-0o6" firstAttribute="centerX" secondItem="IDy-ma-S7v" secondAttribute="centerX" id="q01-aC-Fa4"/>
                             <constraint firstItem="WEc-MH-9nx" firstAttribute="trailing" relation="lessThanOrEqual" secondItem="CQ6-88-pXQ" secondAttribute="trailing" constant="-32" id="re5-On-ZJn"/>
-                            <constraint firstItem="FmT-ou-FlO" firstAttribute="centerX" secondItem="bVh-gZ-ILd" secondAttribute="centerX" id="sj4-xC-rzJ"/>
                             <constraint firstItem="D1D-dI-3i5" firstAttribute="height" secondItem="IDy-ma-S7v" secondAttribute="height" id="uAB-Za-JE0"/>
+                            <constraint firstItem="ZNi-f2-oTM" firstAttribute="top" secondItem="IDy-ma-S7v" secondAttribute="topMargin" constant="16" id="uqp-Dj-oGb"/>
                             <constraint firstItem="bVh-gZ-ILd" firstAttribute="width" secondItem="IDy-ma-S7v" secondAttribute="width" multiplier="0.6" priority="999" id="wLd-9G-dd9"/>
                             <constraint firstItem="WEc-MH-9nx" firstAttribute="centerX" secondItem="bVh-gZ-ILd" secondAttribute="centerX" id="wYM-4f-eZo"/>
                             <constraint firstItem="WEc-MH-9nx" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="bVh-gZ-ILd" secondAttribute="leading" constant="-24" id="wvy-Uk-v84"/>
@@ -335,6 +369,7 @@
                     </view>
                     <connections>
                         <outlet property="artistNameLabel" destination="WEc-MH-9nx" id="iN4-x4-TDd"/>
+                        <outlet property="closeButton" destination="ZNi-f2-oTM" id="UeV-uU-zdp"/>
                         <outlet property="releaseArtworkBackdrop" destination="AiJ-hL-0o6" id="xXQ-Rq-ryj"/>
                         <outlet property="releaseArtworkImageView" destination="bVh-gZ-ILd" id="eGL-0M-EjH"/>
                         <outlet property="releaseTitleLabel" destination="due-Pn-IlY" id="o3Y-je-5t7"/>
@@ -360,7 +395,7 @@
                                     <rect key="frame" x="0.0" y="0.0" width="341" height="59.666666666666664"/>
                                     <autoresizingMask key="autoresizingMask"/>
                                     <subviews>
-                                        <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="G1Z-WA-28G">
+                                        <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="G1Z-WA-28G" customClass="ArtistArtworkImageView" customModule="Dropp" customModuleProvider="target">
                                             <rect key="frame" x="15.999999999999996" y="8" width="43.666666666666657" height="43.666666666666664"/>
                                             <constraints>
                                                 <constraint firstAttribute="width" secondItem="G1Z-WA-28G" secondAttribute="height" multiplier="1:1" id="Ciw-I6-InU"/>
@@ -386,10 +421,7 @@
                                 <connections>
                                     <outlet property="artworkImageView" destination="G1Z-WA-28G" id="PqS-Cn-4ia"/>
                                     <outlet property="nameLabel" destination="AI0-nv-Oja" id="c6Y-Nt-JMf"/>
-                                    <segue destination="V6R-OZ-q1e" kind="show" identifier="artists-&gt;Artist" id="1hi-CW-sf4">
-                                        <segue key="commit" inheritsFrom="parent" id="XWB-ke-5B6"/>
-                                        <segue key="preview" inheritsFrom="commit" id="yxj-lS-6ft"/>
-                                    </segue>
+                                    <segue destination="9yj-3T-lf5" kind="presentation" identifier="artists-&gt;Artist" id="9YR-NH-rvr"/>
                                 </connections>
                             </tableViewCell>
                         </prototypes>
@@ -497,7 +529,7 @@
         <!--Settings-->
         <scene sceneID="6IS-gL-WJk">
             <objects>
-                <tableViewController title="Settings" id="1qp-SV-UbD" sceneMemberID="viewController">
+                <tableViewController title="Settings" id="1qp-SV-UbD" customClass="SettingsTableViewController" customModule="Dropp" customModuleProvider="target" sceneMemberID="viewController">
                     <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="static" style="grouped" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="18" sectionFooterHeight="18" id="wfF-cz-Kqv">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="729"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -528,41 +560,81 @@
                                             <constraints>
                                                 <constraint firstItem="f64-gW-Ubl" firstAttribute="leading" secondItem="D1C-Gx-ggs" secondAttribute="leading" constant="16" id="DO3-lH-qCb"/>
                                                 <constraint firstItem="7Jh-Da-uPm" firstAttribute="centerY" secondItem="f64-gW-Ubl" secondAttribute="centerY" id="YxA-9Q-Jbe"/>
-                                                <constraint firstItem="7Jh-Da-uPm" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="f64-gW-Ubl" secondAttribute="trailing" id="p7o-St-VfO"/>
-                                                <constraint firstAttribute="trailing" secondItem="7Jh-Da-uPm" secondAttribute="trailing" constant="16" id="q4C-Jq-Tdi"/>
+                                                <constraint firstItem="7Jh-Da-uPm" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="f64-gW-Ubl" secondAttribute="trailing" constant="8" id="p7o-St-VfO"/>
+                                                <constraint firstItem="7Jh-Da-uPm" firstAttribute="trailing" secondItem="D1C-Gx-ggs" secondAttribute="trailing" constant="-16" id="q4C-Jq-Tdi"/>
                                                 <constraint firstItem="f64-gW-Ubl" firstAttribute="centerY" secondItem="D1C-Gx-ggs" secondAttribute="centerY" id="v0i-ms-WDf"/>
                                             </constraints>
                                         </tableViewCellContentView>
                                     </tableViewCell>
-                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" id="uu6-rB-HqN">
-                                        <rect key="frame" x="0.0" y="79" width="375" height="44"/>
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="none" indentationWidth="10" rowHeight="120" id="uu6-rB-HqN">
+                                        <rect key="frame" x="0.0" y="79" width="375" height="120"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="uu6-rB-HqN" id="tJV-Xm-FoN">
-                                            <rect key="frame" x="0.0" y="0.0" width="375" height="43.666666666666664"/>
+                                            <rect key="frame" x="0.0" y="0.0" width="375" height="119.66666666666667"/>
                                             <autoresizingMask key="autoresizingMask"/>
+                                            <subviews>
+                                                <pickerView contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="wMQ-13-puv">
+                                                    <rect key="frame" x="0.0" y="0.0" width="375" height="119.66666666666667"/>
+                                                    <connections>
+                                                        <outlet property="dataSource" destination="1qp-SV-UbD" id="z5h-w6-m4z"/>
+                                                        <outlet property="delegate" destination="1qp-SV-UbD" id="FIV-w8-7E6"/>
+                                                    </connections>
+                                                </pickerView>
+                                            </subviews>
+                                            <constraints>
+                                                <constraint firstItem="wMQ-13-puv" firstAttribute="top" secondItem="tJV-Xm-FoN" secondAttribute="top" id="AeF-CT-GGA"/>
+                                                <constraint firstItem="wMQ-13-puv" firstAttribute="bottom" secondItem="tJV-Xm-FoN" secondAttribute="bottom" id="cOC-4a-Yfw"/>
+                                                <constraint firstItem="wMQ-13-puv" firstAttribute="trailing" secondItem="tJV-Xm-FoN" secondAttribute="trailing" id="uHy-bw-G4J"/>
+                                                <constraint firstItem="wMQ-13-puv" firstAttribute="leading" secondItem="tJV-Xm-FoN" secondAttribute="leading" id="zSb-H2-Tcd"/>
+                                            </constraints>
                                         </tableViewCellContentView>
                                     </tableViewCell>
-                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" id="oR1-Ck-kDa">
-                                        <rect key="frame" x="0.0" y="123" width="375" height="44"/>
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="none" indentationWidth="10" id="hie-og-FOL">
+                                        <rect key="frame" x="0.0" y="199" width="375" height="44"/>
                                         <autoresizingMask key="autoresizingMask"/>
-                                        <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="oR1-Ck-kDa" id="KYZ-hH-aKM">
+                                        <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="hie-og-FOL" id="O5P-xj-tqm">
                                             <rect key="frame" x="0.0" y="0.0" width="375" height="43.666666666666664"/>
                                             <autoresizingMask key="autoresizingMask"/>
+                                            <subviews>
+                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Prefer Explicit Versions" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="seL-sR-xSC">
+                                                    <rect key="frame" x="16" y="11.333333333333336" width="175.33333333333334" height="21"/>
+                                                    <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                                    <nil key="textColor"/>
+                                                    <nil key="highlightedColor"/>
+                                                </label>
+                                                <switch opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" contentHorizontalAlignment="center" contentVerticalAlignment="center" on="YES" translatesAutoresizingMaskIntoConstraints="NO" id="ALk-qT-Me0">
+                                                    <rect key="frame" x="310" y="6.3333333333333321" width="51" height="30.999999999999996"/>
+                                                    <connections>
+                                                        <action selector="togglePreferExplicitVersions:" destination="1qp-SV-UbD" eventType="valueChanged" id="wNF-zZ-PnG"/>
+                                                    </connections>
+                                                </switch>
+                                            </subviews>
+                                            <constraints>
+                                                <constraint firstItem="ALk-qT-Me0" firstAttribute="trailing" secondItem="O5P-xj-tqm" secondAttribute="trailing" constant="-16" id="3yR-z5-vW9"/>
+                                                <constraint firstItem="seL-sR-xSC" firstAttribute="leading" secondItem="O5P-xj-tqm" secondAttribute="leading" constant="16" id="M6z-i1-v7s"/>
+                                                <constraint firstItem="ALk-qT-Me0" firstAttribute="centerY" secondItem="seL-sR-xSC" secondAttribute="centerY" id="Xyp-1q-toT"/>
+                                                <constraint firstItem="ALk-qT-Me0" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="seL-sR-xSC" secondAttribute="trailing" constant="8" id="ddj-9J-z0o"/>
+                                                <constraint firstItem="seL-sR-xSC" firstAttribute="centerY" secondItem="O5P-xj-tqm" secondAttribute="centerY" id="vja-vL-XWw"/>
+                                            </constraints>
                                         </tableViewCellContentView>
                                     </tableViewCell>
                                 </cells>
                             </tableViewSection>
                         </sections>
                         <connections>
-                            <outlet property="dataSource" destination="1qp-SV-UbD" id="7p7-ol-RNw"/>
                             <outlet property="delegate" destination="1qp-SV-UbD" id="iaX-ey-FqA"/>
                         </connections>
                     </tableView>
                     <navigationItem key="navigationItem" title="Settings" id="Kmp-hh-mz3"/>
+                    <connections>
+                        <outlet property="preferExplicitVersionsSwitch" destination="ALk-qT-Me0" id="uL8-2e-OoG"/>
+                        <outlet property="releaseHistoryPickerView" destination="wMQ-13-puv" id="e9I-xF-bwm"/>
+                        <outlet property="releaseHistoryThresholdLabel" destination="7Jh-Da-uPm" id="8M9-cQ-tjX"/>
+                    </connections>
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="T7N-2O-n2H" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="920.79999999999995" y="948.57571214392806"/>
+            <point key="canvasLocation" x="920.79999999999995" y="948.02955665024638"/>
         </scene>
         <!--Search-->
         <scene sceneID="uSg-X8-5IQ">
@@ -611,10 +683,7 @@
                                 <connections>
                                     <outlet property="artistNameLabel" destination="MV5-5z-dWr" id="Wb9-ca-rjH"/>
                                     <outlet property="followButton" destination="Dlr-BZ-VOC" id="s55-l2-VGw"/>
-                                    <segue destination="V6R-OZ-q1e" kind="show" identifier="search-&gt;Artist" id="ewi-uU-Pbn">
-                                        <segue key="commit" inheritsFrom="parent" id="C9Z-n9-cdi"/>
-                                        <segue key="preview" inheritsFrom="commit" id="ZhQ-08-Mv8"/>
-                                    </segue>
+                                    <segue destination="9yj-3T-lf5" kind="presentation" identifier="search-&gt;Artist" id="7td-qE-exR"/>
                                 </connections>
                             </tableViewCell>
                             <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="none" indentationWidth="10" reuseIdentifier="importArtistsCell" rowHeight="50" id="aM2-jO-IRX" customClass="ImportArtistsTableViewCell" customModule="Dropp" customModuleProvider="target">
@@ -660,24 +729,111 @@
             <point key="canvasLocation" x="1879" y="473"/>
         </scene>
         <!--Artist-->
-        <scene sceneID="OUu-3h-jbt">
+        <scene sceneID="Dcx-Nt-IFf">
             <objects>
-                <viewController title="Artist" hidesBottomBarWhenPushed="YES" id="V6R-OZ-q1e" customClass="ArtistViewController" customModule="Dropp" customModuleProvider="target" sceneMemberID="viewController">
-                    <view key="view" contentMode="scaleToFill" id="afJ-Qy-wka">
+                <viewController title="Artist" hidesBottomBarWhenPushed="YES" id="9yj-3T-lf5" customClass="ArtistViewController" customModule="Dropp" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="eS4-Ma-4aR">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="812"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <imageView userInteractionEnabled="NO" alpha="0.40000000000000002" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="pH3-zZ-cnh">
+                                <rect key="frame" x="0.0" y="0.0" width="375" height="812"/>
+                            </imageView>
+                            <visualEffectView opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="9Mc-51-AOe">
+                                <rect key="frame" x="0.0" y="0.0" width="375" height="812"/>
+                                <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" id="Omx-TS-mWX">
+                                    <rect key="frame" x="0.0" y="0.0" width="375" height="812"/>
+                                    <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                                </view>
+                                <blurEffect style="light"/>
+                            </visualEffectView>
+                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="DVw-hz-qoL" customClass="ArtistArtworkImageView" customModule="Dropp" customModuleProvider="target">
+                                <rect key="frame" x="75" y="268.66666666666669" width="225" height="225"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" secondItem="DVw-hz-qoL" secondAttribute="height" multiplier="1:1" id="Qoe-8l-ISy"/>
+                                    <constraint firstAttribute="width" relation="lessThanOrEqual" constant="320" id="n67-eX-MUl"/>
+                                </constraints>
+                            </imageView>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Eminem" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="3" baselineAdjustment="alignBaselines" minimumScaleFactor="0.80000001192092896" adjustsLetterSpacingToFitWidth="YES" translatesAutoresizingMaskIntoConstraints="NO" id="wAN-IX-P2Q">
+                                <rect key="frame" x="129.33333333333334" y="184.66666666666666" width="116.66666666666666" height="36"/>
+                                <fontDescription key="fontDescription" type="system" weight="heavy" pointSize="30"/>
+                                <nil key="textColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="ONe-Rg-rES" customClass="DroppButton" customModule="Dropp" customModuleProvider="target">
+                                <rect key="frame" x="329" y="60" width="30" height="30"/>
+                                <color key="tintColor" red="0.0" green="0.0" blue="0.0" alpha="0.29999999999999999" colorSpace="calibratedRGB"/>
+                                <userDefinedRuntimeAttributes>
+                                    <userDefinedRuntimeAttribute type="number" keyPath="_glyph">
+                                        <integer key="value" value="1"/>
+                                    </userDefinedRuntimeAttribute>
+                                    <userDefinedRuntimeAttribute type="boolean" keyPath="bordered" value="NO"/>
+                                </userDefinedRuntimeAttributes>
+                                <connections>
+                                    <segue destination="6dh-LO-sqs" kind="unwind" unwindAction="unwindWithSegue:" id="zpE-ky-9XE"/>
+                                </connections>
+                            </button>
+                            <button opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="249" contentHorizontalAlignment="center" contentVerticalAlignment="center" adjustsImageWhenHighlighted="NO" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="1yL-Ra-dFv" customClass="DroppButton" customModule="Dropp" customModuleProvider="target">
+                                <rect key="frame" x="117.66666666666669" y="541.66666666666663" width="140" height="40"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" relation="greaterThanOrEqual" constant="40" id="4Do-qM-Wgn"/>
+                                    <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="140" id="9VU-TS-oRU"/>
+                                </constraints>
+                                <fontDescription key="fontDescription" type="boldSystem" pointSize="20"/>
+                                <state key="normal" title="Follow"/>
+                                <userDefinedRuntimeAttributes>
+                                    <userDefinedRuntimeAttribute type="number" keyPath="_glyph">
+                                        <integer key="value" value="5"/>
+                                    </userDefinedRuntimeAttribute>
+                                </userDefinedRuntimeAttributes>
+                                <connections>
+                                    <action selector="toggleFollowingArtist" destination="9yj-3T-lf5" eventType="touchUpInside" id="BJh-l2-hq5"/>
+                                </connections>
+                            </button>
+                        </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                        <viewLayoutGuide key="safeArea" id="Ssd-UJ-KdY"/>
+                        <constraints>
+                            <constraint firstItem="DVw-hz-qoL" firstAttribute="centerY" secondItem="Fzy-pN-QXX" secondAttribute="centerY" constant="-30" id="4kK-hN-F9R"/>
+                            <constraint firstItem="wAN-IX-P2Q" firstAttribute="trailing" relation="lessThanOrEqual" secondItem="DVw-hz-qoL" secondAttribute="trailing" constant="24" id="ATh-ye-uY0"/>
+                            <constraint firstItem="9Mc-51-AOe" firstAttribute="centerY" secondItem="eS4-Ma-4aR" secondAttribute="centerY" id="BWz-nW-uoz"/>
+                            <constraint firstItem="ONe-Rg-rES" firstAttribute="trailing" secondItem="eS4-Ma-4aR" secondAttribute="trailing" constant="-16" id="ERT-xQ-JTL"/>
+                            <constraint firstItem="pH3-zZ-cnh" firstAttribute="width" secondItem="eS4-Ma-4aR" secondAttribute="width" id="EeL-Me-tqh"/>
+                            <constraint firstItem="wAN-IX-P2Q" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="Fzy-pN-QXX" secondAttribute="leading" constant="32" id="GnB-mG-pxB"/>
+                            <constraint firstItem="DVw-hz-qoL" firstAttribute="centerX" secondItem="Fzy-pN-QXX" secondAttribute="centerX" id="Ivc-Lb-ZZ9"/>
+                            <constraint firstItem="wAN-IX-P2Q" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="DVw-hz-qoL" secondAttribute="leading" constant="-24" id="K2u-Co-UtF"/>
+                            <constraint firstItem="9Mc-51-AOe" firstAttribute="width" secondItem="eS4-Ma-4aR" secondAttribute="width" id="MfD-XR-egu"/>
+                            <constraint firstItem="wAN-IX-P2Q" firstAttribute="centerX" secondItem="DVw-hz-qoL" secondAttribute="centerX" id="O44-pK-0g8"/>
+                            <constraint firstItem="wAN-IX-P2Q" firstAttribute="trailing" relation="lessThanOrEqual" secondItem="Fzy-pN-QXX" secondAttribute="trailing" constant="-32" id="QIN-Xs-AmC"/>
+                            <constraint firstItem="9Mc-51-AOe" firstAttribute="height" secondItem="eS4-Ma-4aR" secondAttribute="height" id="QoK-Nc-g61"/>
+                            <constraint firstItem="DVw-hz-qoL" firstAttribute="width" secondItem="eS4-Ma-4aR" secondAttribute="width" multiplier="0.6" priority="999" id="UZT-WN-GcM"/>
+                            <constraint firstItem="pH3-zZ-cnh" firstAttribute="centerX" secondItem="eS4-Ma-4aR" secondAttribute="centerX" id="XVY-vf-N1q"/>
+                            <constraint firstItem="wAN-IX-P2Q" firstAttribute="bottom" secondItem="DVw-hz-qoL" secondAttribute="top" constant="-48" id="aJE-gS-wkF"/>
+                            <constraint firstItem="9Mc-51-AOe" firstAttribute="centerX" secondItem="eS4-Ma-4aR" secondAttribute="centerX" id="b64-4g-FMK"/>
+                            <constraint firstItem="pH3-zZ-cnh" firstAttribute="centerY" secondItem="eS4-Ma-4aR" secondAttribute="centerY" id="f2e-Cb-sxC"/>
+                            <constraint firstItem="ONe-Rg-rES" firstAttribute="top" secondItem="eS4-Ma-4aR" secondAttribute="topMargin" constant="16" id="jWf-uP-G3I"/>
+                            <constraint firstItem="1yL-Ra-dFv" firstAttribute="centerX" secondItem="DVw-hz-qoL" secondAttribute="centerX" id="nZi-m4-IMh"/>
+                            <constraint firstItem="1yL-Ra-dFv" firstAttribute="top" secondItem="DVw-hz-qoL" secondAttribute="bottom" constant="48" id="pAH-xn-JbW"/>
+                            <constraint firstItem="pH3-zZ-cnh" firstAttribute="height" secondItem="eS4-Ma-4aR" secondAttribute="height" id="zym-7i-Rtb"/>
+                        </constraints>
+                        <viewLayoutGuide key="safeArea" id="Fzy-pN-QXX"/>
                     </view>
+                    <connections>
+                        <outlet property="artistArtworkBackdrop" destination="pH3-zZ-cnh" id="j6J-7R-LU2"/>
+                        <outlet property="artistArtworkImageView" destination="DVw-hz-qoL" id="qtv-Up-LNb"/>
+                        <outlet property="artistNameLabel" destination="wAN-IX-P2Q" id="mb6-ae-Ger"/>
+                        <outlet property="closeButton" destination="ONe-Rg-rES" id="NfE-cR-Rsn"/>
+                        <outlet property="followButton" destination="1yL-Ra-dFv" id="6NZ-I3-Hpi"/>
+                    </connections>
                 </viewController>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="ceC-bo-IoN" userLabel="First Responder" sceneMemberID="firstResponder"/>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="TxL-fd-P6u" userLabel="First Responder" sceneMemberID="firstResponder"/>
+                <exit id="6dh-LO-sqs" userLabel="Exit" sceneMemberID="exit"/>
             </objects>
-            <point key="canvasLocation" x="2845.5999999999999" y="46.326836581709152"/>
+            <point key="canvasLocation" x="2858" y="47"/>
         </scene>
     </scenes>
     <inferredMetricsTieBreakers>
-        <segue reference="ewi-uU-Pbn"/>
-        <segue reference="YQT-kO-uFg"/>
+        <segue reference="9YR-NH-rvr"/>
+        <segue reference="GIv-9d-Sj3"/>
     </inferredMetricsTieBreakers>
     <color key="tintColor" red="0.34509803921568627" green="0.33725490196078434" blue="0.83921568627450982" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
 </document>
