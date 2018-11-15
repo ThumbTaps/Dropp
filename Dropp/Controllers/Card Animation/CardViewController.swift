@@ -23,6 +23,7 @@ class CardViewController: UIViewController {
     }
     
     func commonInit() {
+        self.modalPresentationCapturesStatusBarAppearance = true
         modalPresentationStyle = .custom
         transitioningDelegate = self
     }
@@ -30,11 +31,8 @@ class CardViewController: UIViewController {
     override var preferredStatusBarStyle: UIStatusBarStyle {
         return .lightContent
     }
-    
-    override func viewDidLoad() {
-        super.viewDidLoad()
-        
-        setNeedsStatusBarAppearanceUpdate()
+    override var preferredStatusBarUpdateAnimation: UIStatusBarAnimation {
+        return .slide
     }
 }
 
@@ -61,13 +59,5 @@ extension CardViewController: UIViewControllerTransitioningDelegate {
         } else {
             return nil
         }
-    }
-    
-}
-
-extension UINavigationController {
-    
-    open override var preferredStatusBarStyle: UIStatusBarStyle {
-        return topViewController?.preferredStatusBarStyle ?? .default
     }
 }

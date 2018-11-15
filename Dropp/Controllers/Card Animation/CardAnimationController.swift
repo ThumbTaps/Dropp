@@ -29,41 +29,65 @@ extension CardAnimationController: UIViewControllerAnimatedTransitioning {
     }
     
     func animateTransition(using transitionContext: UIViewControllerContextTransitioning) {
-        let fromVC = transitionContext.viewController(forKey: UITransitionContextViewControllerKey.from)
-        let fromView = fromVC?.view
-        let toVC = transitionContext.viewController(forKey: UITransitionContextViewControllerKey.to)
-        let toView = toVC?.view
         
-        let containerView = transitionContext.containerView
-        
-        if isPresenting {
-            containerView.addSubview(toView!)
-        }
-        
-        let bottomVC = isPresenting ? fromVC : toVC
-        let bottomPresentingView = bottomVC?.view
-        
-        let topVC = isPresenting ? toVC : fromVC
-        let topPresentedView = topVC?.view
-        
-        var initialFrame = transitionContext.finalFrame(for: topVC!)
-        initialFrame.origin.y = bottomPresentingView?.frame.height ?? 0
         if self.isPresenting {
-            topPresentedView?.frame = initialFrame
+            self.present(with: transitionContext)
+        } else {
+            self.dismiss(with: transitionContext)
         }
+    }
+    
+    func present(with transitionContext: UIViewControllerContextTransitioning) {
+        guard let bottomViewController = transitionContext.viewController(forKey: .from),
+            let topViewController = transitionContext.viewController(forKey: .to) else {
+                assertionFailure("Unable to determine transitioning view controllers.")
+                return
+        }
+        
+        transitionContext.containerView.addSubview(topViewController.view)
+        
+        var initialFrame = transitionContext.finalFrame(for: topViewController)
+        initialFrame.origin.y = UIApplication.shared.keyWindow?.frame.height ?? 0
+
+        topViewController.view?.frame = initialFrame
         
         UIView.animate(withDuration: self.transitionDuration(using: transitionContext), delay: 0, usingSpringWithDamping: 0.8, initialSpringVelocity: 0.8, options: [.curveEaseOut, .allowUserInteraction, .beginFromCurrentState], animations: {
-            topPresentedView?.frame = self.isPresenting ? transitionContext.finalFrame(for: topVC!) : initialFrame
             
-            bottomPresentingView?.layer.cornerRadius = self.isPresenting ? 12 : 0
-            bottomPresentingView?.clipsToBounds = self.isPresenting
-            let scalingFactor : CGFloat = self.isPresenting ? 0.98 : 1.0
-            bottomPresentingView?.transform = CGAffineTransform.identity.scaledBy(x: scalingFactor, y: scalingFactor)
-            bottomPresentingView?.frame.origin.y = self.isPresenting ? UIApplication.shared.statusBarFrame.height : 0
+            topViewController.view?.frame = transitionContext.finalFrame(for: topViewController)
+            
+            bottomViewController.view?.layer.cornerRadius = 16
+            bottomViewController.view?.clipsToBounds = true
+            bottomViewController.view?.transform = CGAffineTransform.identity.scaledBy(x: 0.98, y: 0.98)
+            bottomViewController.view?.frame.origin.y = UIApplication.shared.statusBarFrame.height
+
         }) { (completed: Bool) in
-            if !self.isPresenting {
-                fromView?.removeFromSuperview()
-            }
+            transitionContext.completeTransition(completed)
+        }
+    }
+    
+    func dismiss(with transitionContext: UIViewControllerContextTransitioning) {
+        guard let topViewController = transitionContext.viewController(forKey: .from),
+            let bottomViewController = transitionContext.viewController(forKey: .to) else {
+                assertionFailure("Unable to determine transitioning view controllers.")
+                return
+        }
+        
+        transitionContext.containerView.addSubview(topViewController.view)
+
+        var initialFrame = transitionContext.finalFrame(for: topViewController)
+        initialFrame.origin.y = UIApplication.shared.keyWindow?.frame.height ?? 0
+        
+        UIView.animate(withDuration: self.transitionDuration(using: transitionContext) / 2, delay: 0, options: [.curveEaseOut, .allowUserInteraction, .beginFromCurrentState], animations: {
+            
+            topViewController.view?.frame = initialFrame
+            
+            bottomViewController.view?.layer.cornerRadius = 0
+            bottomViewController.view?.clipsToBounds = false
+            bottomViewController.view?.transform = CGAffineTransform.identity.scaledBy(x: 1, y: 1)
+            bottomViewController.view?.frame.origin.y = 0
+
+        }) { (completed: Bool) in
+            topViewController.view.removeFromSuperview()
             transitionContext.completeTransition(completed)
         }
     }

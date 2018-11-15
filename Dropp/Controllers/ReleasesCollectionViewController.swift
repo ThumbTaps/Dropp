@@ -291,5 +291,3 @@ extension ReleasesCollectionViewController: UICollectionViewDelegateFlowLayout {
 	*/
 	
 }
-
-

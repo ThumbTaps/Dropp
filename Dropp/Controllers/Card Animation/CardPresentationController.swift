@@ -27,7 +27,7 @@ class CardPresentationController: UIPresentationController {
                 return
         }
         
-        presentedView.layer.cornerRadius = 24
+        presentedView.layer.cornerRadius = 30
         presentedView.clipsToBounds = true
         
         // Add the dimming view and the presented view to the heirarchy
