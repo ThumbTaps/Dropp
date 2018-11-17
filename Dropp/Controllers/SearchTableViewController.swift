@@ -189,6 +189,7 @@ class SearchTableViewController: UITableViewController, UISearchControllerDelega
 			}
 			
 			guard artists != nil else {
+                print("No artists returned.")
 				return
 			}
 			

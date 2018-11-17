@@ -14,26 +14,29 @@ class SettingsTableViewController: UITableViewController {
     @IBOutlet weak var releaseHistoryPickerView: UIPickerView!
     
     @IBOutlet weak var preferExplicitVersionsSwitch: UISwitch!
-    
+    @IBOutlet weak var showFeaturesSwitch: UISwitch!
+    @IBOutlet weak var showEPsSwitch: UISwitch!
+    @IBOutlet weak var showSinglesSwitch: UISwitch!
+
     var canEditReleaseHistory: Bool = false {
         didSet {
-            tableView.reloadRows(at: [IndexPath(row: GeneralSection.ReleaseHistoryPicker.rawValue, section: Section.General.rawValue)], with: .none)
+            tableView.reloadRows(at: [IndexPath(row: ReleasesSection.ReleaseHistoryPicker.rawValue, section: Section.Releases.rawValue)], with: .none)
         }
     }
     
     private enum Section: Int {
-        case General
+        case Releases
         
         static func count() -> Int {
-            return self.General.rawValue + 1
+            return self.Releases.rawValue + 1
         }
     }
     
-    private enum GeneralSection: Int {
-        case ReleaseHistory, ReleaseHistoryPicker, PreferExplicitVersions
+    private enum ReleasesSection: Int {
+        case ReleaseHistory, ReleaseHistoryPicker, PreferExplicitVersions, ShowFeatures, ShowEPs, ShowSingles
         
         static func count() -> Int {
-            return self.PreferExplicitVersions.rawValue + 1
+            return self.ShowSingles.rawValue + 1
         }
     }
     
@@ -53,6 +56,9 @@ class SettingsTableViewController: UITableViewController {
         self.releaseHistoryPickerView.selectRow(ReleaseHistoryUnit.unitForCalendarComponent(forComponent: PreferenceStore.releaseHistoryThreshold.unit).rawValue, inComponent: ReleaseHistoryComponent.Unit.rawValue, animated: false)
         
         self.preferExplicitVersionsSwitch.isOn = PreferenceStore.preferExplicitVersions
+        self.showFeaturesSwitch.isOn = PreferenceStore.showFeatures
+        self.showEPsSwitch.isOn = PreferenceStore.showEPs
+        self.showSinglesSwitch.isOn = PreferenceStore.showSingles
     }
     
     
@@ -60,7 +66,16 @@ class SettingsTableViewController: UITableViewController {
     @IBAction func togglePreferExplicitVersions(_ sender: UISwitch) {
         PreferenceStore.preferExplicitVersions = sender.isOn
     }
-    
+    @IBAction func toggleShowFeatures(_ sender: UISwitch) {
+        PreferenceStore.showFeatures = sender.isOn
+    }
+    @IBAction func toggleShowEPs(_ sender: UISwitch) {
+        PreferenceStore.showEPs = sender.isOn
+    }
+    @IBAction func toggleShowSingles(_ sender: UISwitch) {
+        PreferenceStore.showSingles = sender.isOn
+    }
+
     
     override func numberOfSections(in tableView: UITableView) -> Int {
         return Section.count()
@@ -72,9 +87,9 @@ class SettingsTableViewController: UITableViewController {
         }
         
         switch section {
-        case .General: fallthrough
+        case .Releases: fallthrough
         default:
-            return GeneralSection.count()
+            return ReleasesSection.count()
         }
     }
     override func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
@@ -84,15 +99,18 @@ class SettingsTableViewController: UITableViewController {
         }
         
         switch section {
-        case .General:
-            guard let row = GeneralSection.init(rawValue: indexPath.row) else {
+        case .Releases:
+            guard let row = ReleasesSection.init(rawValue: indexPath.row) else {
                 assertionFailure("Unable to determine row.")
                 return 0
             }
             
             switch row {
             case .ReleaseHistory: fallthrough
-            case .PreferExplicitVersions:
+            case .PreferExplicitVersions: fallthrough
+            case .ShowFeatures: fallthrough
+            case .ShowEPs: fallthrough
+            case .ShowSingles:
                 return 44
             case .ReleaseHistoryPicker:
                 return self.canEditReleaseHistory ? 120 : 0
@@ -106,8 +124,8 @@ class SettingsTableViewController: UITableViewController {
         }
         
         switch section {
-        case .General:
-            guard let row = GeneralSection.init(rawValue: indexPath.row) else {
+        case .Releases:
+            guard let row = ReleasesSection.init(rawValue: indexPath.row) else {
                 assertionFailure("Unable to determine row.")
                 return
             }

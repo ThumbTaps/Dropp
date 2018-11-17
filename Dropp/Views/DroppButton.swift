@@ -95,7 +95,7 @@ class DroppButton: UIButton {
 		
 		var glyphFrame = CGRect(x: 0, y: 0, width: self.frame.height, height: self.frame.height)
 		let glyphResizing = StyleKit.ResizingBehavior.aspectFit
-		var glyphColor = UIColor.white
+		var glyphColor = self.titleColor(for: .normal) ?? UIColor.white
 		
 		if self.filled {
 			self.layer.backgroundColor = self.tintColor.cgColor

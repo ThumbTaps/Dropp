@@ -11,7 +11,6 @@ import UIKit
 class ArtistViewController: CardViewController {
 	
     @IBOutlet weak var followButton: DroppButton!
-    @IBOutlet weak var closeButton: DroppButton!
     @IBOutlet weak var artistNameLabel: UILabel!
     @IBOutlet weak var artistArtworkBackdrop: UIImageView!
     @IBOutlet weak var artistArtworkImageView: ArtistArtworkImageView!

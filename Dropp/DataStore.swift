@@ -69,7 +69,15 @@ class DataStore {
                     return release.isExplicit && !PreferenceStore.preferExplicitVersions ? nil : release
                 })
                 
-                return releases.sorted(by: { (release1, release2) -> Bool in
+                return releases.filter({ (release) -> Bool in
+                    if release.classification == .ep && !PreferenceStore.showEPs {
+                        return false
+                    }
+                    if release.classification == .single && !PreferenceStore.showSingles {
+                        return false
+                    }
+                    return true
+                }).sorted(by: { (release1, release2) -> Bool in
 					return release1.releaseDate.compare(release2.releaseDate) == .orderedDescending
 				})
 			} catch {

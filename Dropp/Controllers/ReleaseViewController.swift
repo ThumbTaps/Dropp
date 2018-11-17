@@ -16,9 +16,7 @@ class ReleaseViewController: CardViewController {
     @IBOutlet weak var artistNameLabel: UILabel!
     @IBOutlet weak var releaseArtworkImageView: ReleaseArtworkImageView!
     @IBOutlet weak var releaseArtworkBackdrop: UIImageView!
-    
-    @IBOutlet weak var closeButton: DroppButton!
-	
+    	
     override func viewDidLoad() {
         super.viewDidLoad()
 

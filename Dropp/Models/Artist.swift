@@ -29,6 +29,10 @@ class Artist: Codable, Hashable {
 			})
 		}
 	}
+    
+    var showFeatures: Bool = PreferenceStore.showFeatures
+    var showEPs: Bool = PreferenceStore.showEPs
+    var showSingles: Bool = PreferenceStore.showSingles
 
 	private var cache = NSCache<NSString, NSData>()
 	
@@ -159,7 +163,7 @@ class Artist: Codable, Hashable {
 				print(error!.localizedDescription)
 				return
 			}
-			
+            			
 			completion?(artists?.compactMap({ (artistJSON) -> Artist? in
 				guard let id = artistJSON["artistId"] as? Int,
 					let name = artistJSON["artistName"] as? String else {

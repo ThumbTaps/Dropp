@@ -14,6 +14,7 @@ class iTunesAPI {
 		do {
 			guard let results = try JSONSerialization.jsonObject(with: data, options: []) as? [String: Any] else {
 				// TODO: Need an error here
+                print("Parsing iTunes API results failed.")
 				return nil
 			}
 			

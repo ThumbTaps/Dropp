@@ -11,32 +11,49 @@ import Foundation
 class PreferenceStore {
 	
 	struct ReleaseHistoryThreshold {
-		var amount: Int = 3
-		var unit: Calendar.Component = .month
+        private var _amount: Int = 3
+        var amount: Int {
+            set {
+                self._amount = max(1, newValue)
+            }
+            get {
+                return self._amount
+            }
+        }
+        
+        private var _unit: Calendar.Component = .month
+        var unit: Calendar.Component {
+            set {
+                self._unit = newValue
+            }
+            get {
+                return self._unit
+            }
+        }
         
         static func integerValue(forComponent component: Calendar.Component) -> Int {
             switch component {
             case .day:
-                return 0
-            case .weekOfMonth:
                 return 1
+            case .weekOfMonth:
+                return 2
             case .year:
-                return 3
+                return 4
             case .month: fallthrough
             default:
-                return 2
+                return 3
             }
         }
         
         static func calendarComponent(forInt intValue: Int) -> Calendar.Component {
             switch intValue {
-            case 0:
-                return .day
             case 1:
+                return .day
+            case 2:
                 return .weekOfMonth
-            case 3:
+            case 4:
                 return .year
-            case 2: fallthrough
+            case 3: fallthrough
             default:
                 return .month
             }
@@ -52,7 +69,11 @@ class PreferenceStore {
 			let amount = UserDefaults.standard.integer(forKey: "releaseHistoryThreshold_amount")
             let unit = UserDefaults.standard.integer(forKey: "releaseHistoryThreshold_unit")
             
-            return ReleaseHistoryThreshold(amount: amount, unit: ReleaseHistoryThreshold.calendarComponent(forInt: unit))
+            var releaseHistoryThreshold = ReleaseHistoryThreshold()
+            releaseHistoryThreshold.amount = amount
+            releaseHistoryThreshold.unit = ReleaseHistoryThreshold.calendarComponent(forInt: unit)
+            
+            return releaseHistoryThreshold
 		}
 	}
     
@@ -62,6 +83,33 @@ class PreferenceStore {
         }
         get {
             return UserDefaults.standard.bool(forKey: "preferExplicitVersions")
+        }
+    }
+    
+    static var showFeatures: Bool {
+        set {
+            UserDefaults.standard.set(newValue, forKey: "showFeatures")
+        }
+        get {
+            return UserDefaults.standard.bool(forKey: "showFeatures")
+        }
+    }
+    
+    static var showEPs: Bool {
+        set {
+            UserDefaults.standard.set(newValue, forKey: "showEPs")
+        }
+        get {
+            return UserDefaults.standard.bool(forKey: "showEPs")
+        }
+    }
+    
+    static var showSingles: Bool {
+        set {
+            UserDefaults.standard.set(newValue, forKey: "showSingles")
+        }
+        get {
+            return UserDefaults.standard.bool(forKey: "showSingles")
         }
     }
 }

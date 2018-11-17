@@ -37,8 +37,6 @@ UISearchResultsUpdating {
 		self.navigationItem.searchController?.searchResultsUpdater = self
 		self.navigationItem.searchController?.dimsBackgroundDuringPresentation = false
 		self.navigationItem.searchController?.searchBar.tintColor = self.view.tintColor
-        
-        self.clearsSelectionOnViewWillAppear = true
 	}
 	
 	override func viewDidAppear(_ animated: Bool) {

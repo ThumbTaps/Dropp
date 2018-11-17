@@ -10,6 +10,8 @@ import UIKit
 
 class CardViewController: UIViewController {
 
+    @IBOutlet weak var closeButton: DroppButton!
+
     required init?(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
         
