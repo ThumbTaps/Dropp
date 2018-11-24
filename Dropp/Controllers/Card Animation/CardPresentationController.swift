@@ -13,8 +13,9 @@ class CardPresentationController: UIPresentationController {
     lazy var dimmingView: UIView = {
         let view = UIView(frame: self.containerView!.bounds)
         view.backgroundColor = UIColor(red: 0.0, green: 0.0, blue: 0.0, alpha: 0.5)
-        view.layer.cornerRadius = 16
+        view.layer.cornerRadius = 12
         view.clipsToBounds = true
+
         return view
     }()
     
@@ -27,7 +28,7 @@ class CardPresentationController: UIPresentationController {
                 return
         }
         
-        presentedView.layer.cornerRadius = 30
+        presentedView.layer.cornerRadius = 12
         presentedView.clipsToBounds = true
         
         // Add the dimming view and the presented view to the heirarchy

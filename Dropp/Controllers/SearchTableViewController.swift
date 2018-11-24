@@ -176,6 +176,10 @@ class SearchTableViewController: UITableViewController, UISearchControllerDelega
 			tableView.deleteRows(at: [indexPath], with: .bottom)
 		}
 	}
+    
+    override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        tableView.deselectRow(at: indexPath, animated: true)
+    }
 
 	
 	
@@ -218,5 +222,7 @@ class SearchTableViewController: UITableViewController, UISearchControllerDelega
 		}
     }
     
-    @IBAction func unwind(segue: UIStoryboardSegue) {}
+    @IBAction func unwind(segue: UIStoryboardSegue) {
+        self.tableView.reloadData()
+    }
 }

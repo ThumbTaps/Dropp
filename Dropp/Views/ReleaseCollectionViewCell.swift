@@ -17,7 +17,23 @@ class ReleaseCollectionViewCell: UICollectionViewCell {
     
     @IBOutlet weak var classificationIndicatorHiddenConstraint: NSLayoutConstraint?
     
-    
+    func commonInit() {
+        
+        self.selectedBackgroundView = UIView(frame: self.frame)
+        self.selectedBackgroundView?.backgroundColor = UIColor(white: 0, alpha: 0.1)
+        self.selectedBackgroundView?.layer.cornerRadius = 8
+        self.selectedBackgroundView?.clipsToBounds = true
+    }
+    override init(frame: CGRect) {
+        super.init(frame: frame)
+        
+        commonInit()
+    }
+    required init?(coder aDecoder: NSCoder) {
+        super.init(coder: aDecoder)
+        
+        commonInit()
+    }
     func setClassificationIndicatorHidden(_ hidden: Bool) {
         guard self.classificationIndicator != nil, self.classificationIndicatorHiddenConstraint != nil else {
             return

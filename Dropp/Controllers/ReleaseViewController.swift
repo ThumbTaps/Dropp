@@ -24,6 +24,12 @@ class ReleaseViewController: CardViewController {
 		self.releaseTitleLabel.text = self.release.title
         self.artistNameLabel.text = self.release.artist.name
         
+        let backdropDestinationAlpha = self.releaseArtworkBackdrop.alpha
+        self.releaseArtworkBackdrop.alpha = 0
+        self.releaseArtworkImageView.alpha = 0
+        let artworkDestinationTransform = self.releaseArtworkImageView.transform
+        self.releaseArtworkImageView.transform = CGAffineTransform(scaleX: 0.6, y: 0.6).rotated(by: CGFloat(-30*Float.pi/180))
+        
         DispatchQueue.global().async {
             self.release.getArtwork(completion: { (image, error) in
                 guard error == nil else {
@@ -34,9 +40,24 @@ class ReleaseViewController: CardViewController {
                     
                     self.releaseArtworkBackdrop.image = image
                     self.releaseArtworkImageView.image = image
+                    
+                    UIViewPropertyAnimator(duration: 0.5, curve: .easeOut, animations: {
+                        self.releaseArtworkBackdrop.alpha = backdropDestinationAlpha
+                        self.releaseArtworkImageView.alpha = 1
+                    }).startAnimation()
+                    
+                    UIViewPropertyAnimator(duration: 0.5, dampingRatio: 0.6/0.8, animations: {
+                        self.releaseArtworkImageView.transform = artworkDestinationTransform
+                    }).startAnimation()
                 }
             })
         }
+    }
+    
+    @IBAction func share() {
+        let activityViewController = UIActivityViewController(activityItems: [self.release.artworkURL], applicationActivities: [])
+        activityViewController.view.tintColor = self.view.tintColor
+        self.present(activityViewController, animated: true, completion: nil)
     }
     
 

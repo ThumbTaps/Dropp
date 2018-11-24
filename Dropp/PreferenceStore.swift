@@ -8,28 +8,26 @@
 
 import Foundation
 
+extension UserDefaults {
+    func keyExists(_ key: String!) -> Bool {
+        return self.object(forKey: key) != nil
+    }
+}
+
 class PreferenceStore {
 	
+    private enum Key: String {
+        case ReleaseHistoryThresholdAmountKey
+        case ReleaseHistoryThresholdUnitKey
+        case PrefereExplicitVersionsKey
+        case ShowFeaturesKey
+        case ShowEPsKey
+        case ShowSinglesKey
+    }
+    
 	struct ReleaseHistoryThreshold {
-        private var _amount: Int = 3
-        var amount: Int {
-            set {
-                self._amount = max(1, newValue)
-            }
-            get {
-                return self._amount
-            }
-        }
-        
-        private var _unit: Calendar.Component = .month
-        var unit: Calendar.Component {
-            set {
-                self._unit = newValue
-            }
-            get {
-                return self._unit
-            }
-        }
+        var amount: Int = 3
+        var unit: Calendar.Component = .month
         
         static func integerValue(forComponent component: Calendar.Component) -> Int {
             switch component {
@@ -62,54 +60,71 @@ class PreferenceStore {
 	
 	static var releaseHistoryThreshold: ReleaseHistoryThreshold {
 		set {
-			UserDefaults.standard.set(newValue.amount, forKey: "releaseHistoryThreshold_amount")
-            UserDefaults.standard.set(ReleaseHistoryThreshold.integerValue(forComponent: newValue.unit), forKey: "releaseHistoryThreshold_unit")
+			UserDefaults.standard.set(newValue.amount, forKey: Key.ReleaseHistoryThresholdAmountKey.rawValue)
+            UserDefaults.standard.set(ReleaseHistoryThreshold.integerValue(forComponent: newValue.unit), forKey: Key.ReleaseHistoryThresholdUnitKey.rawValue)
 		}
 		get {
-			let amount = UserDefaults.standard.integer(forKey: "releaseHistoryThreshold_amount")
-            let unit = UserDefaults.standard.integer(forKey: "releaseHistoryThreshold_unit")
+            guard UserDefaults.standard.keyExists(Key.ReleaseHistoryThresholdAmountKey.rawValue) &&
+                UserDefaults.standard.keyExists(Key.ReleaseHistoryThresholdUnitKey.rawValue) else {
+                    return ReleaseHistoryThreshold()
+            }
             
-            var releaseHistoryThreshold = ReleaseHistoryThreshold()
-            releaseHistoryThreshold.amount = amount
-            releaseHistoryThreshold.unit = ReleaseHistoryThreshold.calendarComponent(forInt: unit)
+			let amount = UserDefaults.standard.integer(forKey: Key.ReleaseHistoryThresholdAmountKey.rawValue)
+            let unit = UserDefaults.standard.integer(forKey: Key.ReleaseHistoryThresholdUnitKey.rawValue)
             
-            return releaseHistoryThreshold
+            return ReleaseHistoryThreshold(amount: amount, unit: ReleaseHistoryThreshold.calendarComponent(forInt: unit))
 		}
 	}
     
     static var preferExplicitVersions: Bool {
         set {
-            UserDefaults.standard.set(newValue, forKey: "preferExplicitVersions")
+            UserDefaults.standard.set(newValue, forKey: Key.PrefereExplicitVersionsKey.rawValue)
         }
         get {
-            return UserDefaults.standard.bool(forKey: "preferExplicitVersions")
+            guard UserDefaults.standard.keyExists(Key.PrefereExplicitVersionsKey.rawValue) else {
+                return false
+            }
+            
+            return UserDefaults.standard.bool(forKey: Key.PrefereExplicitVersionsKey.rawValue)
         }
     }
     
     static var showFeatures: Bool {
         set {
-            UserDefaults.standard.set(newValue, forKey: "showFeatures")
+            UserDefaults.standard.set(newValue, forKey: Key.ShowFeaturesKey.rawValue)
         }
         get {
-            return UserDefaults.standard.bool(forKey: "showFeatures")
+            guard UserDefaults.standard.keyExists(Key.ShowFeaturesKey.rawValue) else {
+                return true
+            }
+
+            return UserDefaults.standard.bool(forKey: Key.ShowFeaturesKey.rawValue)
         }
     }
     
     static var showEPs: Bool {
         set {
-            UserDefaults.standard.set(newValue, forKey: "showEPs")
+            UserDefaults.standard.set(newValue, forKey: Key.ShowEPsKey.rawValue)
         }
         get {
-            return UserDefaults.standard.bool(forKey: "showEPs")
+            guard UserDefaults.standard.keyExists(Key.ShowEPsKey.rawValue) else {
+                return true
+            }
+
+            return UserDefaults.standard.bool(forKey: Key.ShowEPsKey.rawValue)
         }
     }
     
     static var showSingles: Bool {
         set {
-            UserDefaults.standard.set(newValue, forKey: "showSingles")
+            UserDefaults.standard.set(newValue, forKey: Key.ShowSinglesKey.rawValue)
         }
         get {
-            return UserDefaults.standard.bool(forKey: "showSingles")
+            guard UserDefaults.standard.keyExists(Key.ShowSinglesKey.rawValue) else {
+                return true
+            }
+
+            return UserDefaults.standard.bool(forKey: Key.ShowSinglesKey.rawValue)
         }
     }
 }

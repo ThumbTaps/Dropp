@@ -14,6 +14,6 @@ class ArtistArtworkImageView: UIImageView {
         super.layoutSubviews()
         
         self.layer.masksToBounds = true
-        self.layer.cornerRadius = self.frame.width / 2
+        self.layer.cornerRadius = self.bounds.width / 2
     }
 }

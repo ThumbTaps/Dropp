@@ -318,6 +318,9 @@
                                         <integer key="value" value="13"/>
                                     </userDefinedRuntimeAttribute>
                                 </userDefinedRuntimeAttributes>
+                                <connections>
+                                    <action selector="share" destination="mnN-JM-Blw" eventType="touchUpInside" id="F6J-u3-BmZ"/>
+                                </connections>
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="249" contentHorizontalAlignment="center" contentVerticalAlignment="center" adjustsImageWhenHighlighted="NO" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="FmT-ou-FlO" customClass="DroppButton" customModule="Dropp" customModuleProvider="target">
                                 <rect key="frame" x="75" y="541.66666666666663" width="167" height="40"/>
@@ -404,7 +407,7 @@
                                                 <constraint firstAttribute="width" secondItem="G1Z-WA-28G" secondAttribute="height" multiplier="1:1" id="Ciw-I6-InU"/>
                                             </constraints>
                                         </imageView>
-                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Artist Name" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="AI0-nv-Oja">
+                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Artist Name" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="AI0-nv-Oja">
                                             <rect key="frame" x="75.666666666666671" y="19.333333333333332" width="249.33333333333331" height="20.999999999999996"/>
                                             <fontDescription key="fontDescription" type="system" weight="medium" pointSize="17"/>
                                             <nil key="textColor"/>
@@ -502,7 +505,7 @@
                         <rect key="frame" x="0.0" y="975" width="768" height="49"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES"/>
                         <color key="backgroundColor" red="0.0" green="0.0" blue="0.0" alpha="0.0" colorSpace="custom" customColorSpace="sRGB"/>
-                        <color key="selectedImageTintColor" red="0.34509803919999998" green="0.33725490200000002" blue="0.83921568629999999" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                        <color key="selectedImageTintColor" red="0.1058823529" green="0.32549019610000002" blue="0.5568627451" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                     </tabBar>
                     <connections>
                         <segue destination="KVK-q0-sv1" kind="relationship" relationship="viewControllers" id="9h1-af-aUG"/>
@@ -825,6 +828,14 @@
             </objects>
             <point key="canvasLocation" x="1878" y="445"/>
         </scene>
+        <!--Page View Controller-->
+        <scene sceneID="ty6-u1-YbI">
+            <objects>
+                <pageViewController autoresizesArchivedViewToFullSize="NO" transitionStyle="pageCurl" navigationOrientation="horizontal" spineLocation="min" id="2Vr-vF-n4z" sceneMemberID="viewController"/>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="JbD-Ig-IuU" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="1878" y="1136"/>
+        </scene>
         <!--Import-->
         <scene sceneID="IlF-0W-vDQ">
             <objects>
@@ -943,11 +954,11 @@
                                     <segue destination="6dh-LO-sqs" kind="unwind" unwindAction="unwindWithSegue:" id="zpE-ky-9XE"/>
                                 </connections>
                             </button>
-                            <button opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="249" contentHorizontalAlignment="center" contentVerticalAlignment="center" adjustsImageWhenHighlighted="NO" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="1yL-Ra-dFv" customClass="DroppButton" customModule="Dropp" customModuleProvider="target">
-                                <rect key="frame" x="117.66666666666669" y="541.66666666666663" width="140" height="40"/>
+                            <button opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="249" misplaced="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" adjustsImageWhenHighlighted="NO" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="1yL-Ra-dFv" customClass="DroppButton" customModule="Dropp" customModuleProvider="target">
+                                <rect key="frame" x="117.66666666666666" y="541.66666666666663" width="150" height="40"/>
                                 <constraints>
                                     <constraint firstAttribute="height" relation="greaterThanOrEqual" constant="40" id="4Do-qM-Wgn"/>
-                                    <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="140" id="9VU-TS-oRU"/>
+                                    <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="150" id="9VU-TS-oRU"/>
                                 </constraints>
                                 <fontDescription key="fontDescription" type="boldSystem" pointSize="20"/>
                                 <state key="normal" title="Follow"/>
@@ -1002,8 +1013,8 @@
         </scene>
     </scenes>
     <inferredMetricsTieBreakers>
-        <segue reference="7td-qE-exR"/>
+        <segue reference="9YR-NH-rvr"/>
         <segue reference="GIv-9d-Sj3"/>
     </inferredMetricsTieBreakers>
-    <color key="tintColor" red="0.34509803921568627" green="0.33725490196078434" blue="0.83921568627450982" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+    <color key="tintColor" red="0.10588235294117647" green="0.32549019607843138" blue="0.55686274509803924" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
 </document>

@@ -243,7 +243,7 @@ extension ReleasesCollectionViewController: UICollectionViewDelegateFlowLayout {
 			return CGSize.zero
 		}
 		
-		var width: CGFloat = collectionView.frame.width
+		var width: CGFloat = collectionView.frame.width - 16
 		var height: CGFloat = 140
 		
 		switch section.reuseIdentifier {
@@ -261,6 +261,9 @@ extension ReleasesCollectionViewController: UICollectionViewDelegateFlowLayout {
 		return CGSize(width: width, height: height)
 	}
 	
+    override func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        collectionView.deselectItem(at: indexPath, animated: true)
+    }
 	/*
 	// Uncomment this method to specify if the specified item should be highlighted during tracking
 	override func collectionView(_ collectionView: UICollectionView, shouldHighlightItemAt indexPath: IndexPath) -> Bool {

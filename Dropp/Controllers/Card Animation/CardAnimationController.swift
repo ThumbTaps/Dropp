@@ -55,7 +55,7 @@ extension CardAnimationController: UIViewControllerAnimatedTransitioning {
             
             topViewController.view?.frame = transitionContext.finalFrame(for: topViewController)
             
-            bottomViewController.view?.layer.cornerRadius = 16
+            bottomViewController.view?.layer.cornerRadius = 12
             bottomViewController.view?.clipsToBounds = true
             bottomViewController.view?.transform = CGAffineTransform.identity.scaledBy(x: 0.98, y: 0.98)
             bottomViewController.view?.frame.origin.y = UIApplication.shared.statusBarFrame.height

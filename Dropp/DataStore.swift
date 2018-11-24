@@ -10,38 +10,53 @@ import Foundation
 
 class DataStore {
 	
+    private static var _followedArtists: [Artist]?
 	class var followedArtists: [Artist] {
 		get {
+            if self._followedArtists != nil {
+                return self._followedArtists!
+            }
+            
 			guard let data = UserDefaults.standard.data(forKey: "followedArtists") else {
-				return []
+				self._followedArtists = []
+                return self._followedArtists!
 			}
 			
 			do {
 				let artists = try JSONDecoder().decode([Artist].self, from: data)
-				return artists.sorted(by: { (artist1, artist2) -> Bool in
+				self._followedArtists = artists.sorted(by: { (artist1, artist2) -> Bool in
 					return artist1.name.compare(artist2.name) == .orderedAscending
 				})
 			} catch {
-				print(error)
+				assertionFailure("Unable to parse followed artists.")
 			}
 			
-			return []
+			return self._followedArtists!
 		}
 		set {
 			do {
-				let data = try JSONEncoder().encode(Array(Set<Artist>(newValue)) /* unique values */)
-				UserDefaults.standard.set(data, forKey: "followedArtists")
-				UserDefaults.standard.synchronize()
+                self._followedArtists = Array<Artist>(newValue)
+                
+                let data = try JSONEncoder().encode(Array(self._followedArtists!) /* unique values */)
+                UserDefaults.standard.set(data, forKey: "followedArtists")
+                UserDefaults.standard.synchronize()
+                
 			} catch {
 				print(error)
 			}
 		}
 	}
-	
+    
+    private static var _releases: [Release]?
 	class var releases: [Release] {
 		get {
+            if self._releases != nil {
+                return self._releases!
+            }
+            
 			guard let data = UserDefaults.standard.data(forKey: "releases") else {
-				return []
+				self._releases = []
+                return self._releases!
 			}
 			
 			do {
@@ -69,7 +84,7 @@ class DataStore {
                     return release.isExplicit && !PreferenceStore.preferExplicitVersions ? nil : release
                 })
                 
-                return releases.filter({ (release) -> Bool in
+                self._releases = releases.filter({ (release) -> Bool in
                     if release.classification == .ep && !PreferenceStore.showEPs {
                         return false
                     }
@@ -81,10 +96,10 @@ class DataStore {
 					return release1.releaseDate.compare(release2.releaseDate) == .orderedDescending
 				})
 			} catch {
-				print(error)
+				assertionFailure("Unable to parse releases.")
 			}
 			
-			return []
+			return self._releases!
 		}
 		set {
 			

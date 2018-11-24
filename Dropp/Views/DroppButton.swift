@@ -113,7 +113,7 @@ class DroppButton: UIButton {
 			self.layer.borderWidth = 0
 		}
 		
-		self.titleEdgeInsets = UIEdgeInsets(top: 0, left: self.glyph != .none ? glyphFrame.width : 4, bottom: 0, right: 4)
+		self.titleEdgeInsets = UIEdgeInsets(top: 0, left: self.glyph != .none ? glyphFrame.width : 0, bottom: 0, right: 0)
         self.contentEdgeInsets = UIEdgeInsets(top: 0, left: (self.frame.width - glyphFrame.width) / 2, bottom: 0, right: 0)
         if self.glyph != .none && !(self.titleLabel?.text?.isEmpty ?? true) {
             self.contentEdgeInsets.left = (self.frame.width - glyphFrame.width - (self.titleLabel?.frame.width ?? 0)) / 3
