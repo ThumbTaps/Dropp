@@ -25,7 +25,7 @@ UISearchResultsUpdating {
 		super.viewDidLoad()
 		
 		// Uncomment the following line to display an Edit button in the navigation bar for this view controller.
-		self.navigationItem.leftBarButtonItem = self.editButtonItem
+//        self.navigationItem.leftBarButtonItem = self.editButtonItem
 		
 		self.navigationItem.searchController = UISearchController(searchResultsController: nil)
 		if let searchBar = self.navigationItem.searchController?.searchBar {

@@ -12,11 +12,14 @@ class SettingsTableViewController: UITableViewController {
     
     @IBOutlet weak var releaseHistoryThresholdLabel: UILabel!
     @IBOutlet weak var releaseHistoryPickerView: UIPickerView!
-    
     @IBOutlet weak var preferExplicitVersionsSwitch: UISwitch!
     @IBOutlet weak var showFeaturesSwitch: UISwitch!
     @IBOutlet weak var showEPsSwitch: UISwitch!
     @IBOutlet weak var showSinglesSwitch: UISwitch!
+    
+    @IBOutlet weak var changeAutomaticallySwitch: UISwitch!
+    @IBOutlet weak var alwaysDarkSwitch: UISwitch!
+    @IBOutlet weak var pureBlackSwitch: UISwitch!
 
     var canEditReleaseHistory: Bool = false {
         didSet {
@@ -25,10 +28,10 @@ class SettingsTableViewController: UITableViewController {
     }
     
     private enum Section: Int {
-        case Releases
+        case Releases, Theme
         
         static func count() -> Int {
-            return self.Releases.rawValue + 1
+            return self.Theme.rawValue + 1
         }
     }
     
@@ -37,6 +40,14 @@ class SettingsTableViewController: UITableViewController {
         
         static func count() -> Int {
             return self.ShowSingles.rawValue + 1
+        }
+    }
+    
+    private enum ThemeSection: Int {
+        case ChangeAutomatically, AlwaysDark, PureBlack, ChangeIcon
+        
+        static func count() -> Int {
+            return self.ChangeIcon.rawValue + 1
         }
     }
     
@@ -59,6 +70,10 @@ class SettingsTableViewController: UITableViewController {
         self.showFeaturesSwitch.isOn = PreferenceStore.showFeatures
         self.showEPsSwitch.isOn = PreferenceStore.showEPs
         self.showSinglesSwitch.isOn = PreferenceStore.showSingles
+        
+        self.changeAutomaticallySwitch.isOn = PreferenceStore.changeThemeAutomatically
+        self.alwaysDarkSwitch.isOn = PreferenceStore.alwaysDarkTheme
+        self.pureBlackSwitch.isOn = PreferenceStore.pureBlackDarkTheme
     }
     
     
@@ -75,6 +90,19 @@ class SettingsTableViewController: UITableViewController {
     @IBAction func toggleShowSingles(_ sender: UISwitch) {
         PreferenceStore.showSingles = sender.isOn
     }
+    
+    @IBAction func toggleChangeAutomatically(_ sender: UISwitch) {
+        PreferenceStore.changeThemeAutomatically = sender.isOn
+        
+        // update table
+        self.tableView.reloadRows(at: [IndexPath(row: ThemeSection.AlwaysDark.rawValue, section: Section.Theme.rawValue)], with: .none)
+    }
+    @IBAction func toggleAlwaysDark(_ sender: UISwitch) {
+        PreferenceStore.alwaysDarkTheme = sender.isOn
+    }
+    @IBAction func togglePureBlack(_ sender: UISwitch) {
+        PreferenceStore.pureBlackDarkTheme = sender.isOn
+    }
 
     
     override func numberOfSections(in tableView: UITableView) -> Int {
@@ -87,9 +115,10 @@ class SettingsTableViewController: UITableViewController {
         }
         
         switch section {
-        case .Releases: fallthrough
-        default:
+        case .Releases:
             return ReleasesSection.count()
+        case .Theme:
+            return ThemeSection.count()
         }
     }
     override func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
@@ -115,6 +144,21 @@ class SettingsTableViewController: UITableViewController {
             case .ReleaseHistoryPicker:
                 return self.canEditReleaseHistory ? 120 : 0
             }
+            
+        case .Theme:
+            guard let row = ThemeSection.init(rawValue: indexPath.row) else {
+                assertionFailure("Unable to determine row.")
+                return 0
+            }
+            
+            switch row {
+            case .ChangeAutomatically: fallthrough
+            case .PureBlack: fallthrough
+            case .ChangeIcon:
+                return 44
+            case .AlwaysDark:
+                return !PreferenceStore.changeThemeAutomatically ? 44 : 0
+            }
         }
     }
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
@@ -136,6 +180,9 @@ class SettingsTableViewController: UITableViewController {
             default:
                 return
             }
+            
+        case .Theme:
+            return
         }
         
         tableView.deselectRow(at: indexPath, animated: true)

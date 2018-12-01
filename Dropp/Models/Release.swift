@@ -69,7 +69,7 @@ class Release: Codable, Hashable {
         self.isExplicit = isExplicit ?? false
     }
 	
-	func getArtwork(thumbnail: Bool = false, completion: ((_ image: UIImage?, _ error: Error?) -> Void)!) {
+	func getArtwork(thumbnail: Bool = false, completion: ((_ image: UIImage?, _ error: Error?) -> Void)?=nil) {
 		var imageData: Data?
 		if thumbnail {
 			imageData = self.cache.object(forKey: "thumbnailImage") as Data?
@@ -78,19 +78,19 @@ class Release: Codable, Hashable {
 		}
 		
 		guard imageData == nil else {
-			completion(UIImage(data: imageData!), nil)
+			completion?(UIImage(data: imageData!), nil)
 			return
 		}
 		
 		guard let urlString = thumbnail ? self.thumbnailURL : self.artworkURL,
 			let imageURL = URL(string: urlString) else {
-			completion(nil, nil)
+			completion?(nil, nil)
 			return
 		}
 		
 		Utilities.loadImage(imageURL: imageURL) { (image, error) in
 			guard error == nil else {
-				completion(nil, error)
+				completion?(nil, error)
 				return
 			}
 			
@@ -104,7 +104,7 @@ class Release: Codable, Hashable {
 				print("Cached artwork for \(self.title!)...")
 			}
 
-			completion(image, nil)
+			completion?(image, nil)
 		}
 	}
 	

@@ -16,18 +16,11 @@
 			<dict>
 				<key>CFBundleIconFiles</key>
 				<array>
-					<string>AppIcon_dark.appiconset</string>
+					<string>Dark.appiconset</string>
 				</array>
+				<key>UIPrerenderedIcon</key>
+				<false/>
 			</dict>
-		</dict>
-		<key>CFBundlePrimaryIcon</key>
-		<dict>
-			<key>CFBundleIconFiles</key>
-			<array>
-				<string></string>
-			</array>
-			<key>UIPrerenderedIcon</key>
-			<false/>
 		</dict>
 	</dict>
 	<key>CFBundleIcons~ipad</key>

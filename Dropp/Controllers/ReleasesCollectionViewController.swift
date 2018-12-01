@@ -89,16 +89,14 @@ class ReleasesCollectionViewController: UICollectionViewController {
 	
 	override func viewDidLoad() {
 		super.viewDidLoad()
-		
-		self.navigationController?.isNavigationBarHidden = true
-		
-		let refreshControl = UIRefreshControl()
+				
+		let refreshControl = ReleasesRefreshControl()
 		refreshControl.addTarget(self, action: #selector(self.refreshReleases), for: .valueChanged)
 		self.collectionView.refreshControl = refreshControl
-		
-		(self.collectionViewLayout as? UICollectionViewFlowLayout)?.sectionHeadersPinToVisibleBounds = true
-		
-		self.collectionView.contentInset.top = -UIApplication.shared.statusBarFrame.height
+        
+        (self.collectionViewLayout as? UICollectionViewFlowLayout)?.sectionHeadersPinToVisibleBounds = true
+        
+        self.collectionView.contentInset.top = -UIApplication.shared.statusBarFrame.height
 	}
 	override func viewDidAppear(_ animated: Bool) {
 		super.viewDidAppear(animated)
@@ -155,7 +153,7 @@ class ReleasesCollectionViewController: UICollectionViewController {
 	
     
     
-    // MARK: - UITableView Data Source
+    // MARK: - UICollectionView Data Source
 	override func numberOfSections(in collectionView: UICollectionView) -> Int {
 		return Section.count()
 	}
@@ -195,6 +193,27 @@ class ReleasesCollectionViewController: UICollectionViewController {
 		
 		return cell
 	}
+    
+    
+    // MARK: - UICollectionViewDelegate
+    override func collectionView(_ collectionView: UICollectionView, willDisplaySupplementaryView view: UICollectionReusableView, forElementKind elementKind: String, at indexPath: IndexPath) {
+        view.layer.zPosition = 0.0
+    }
+}
+
+extension ReleasesCollectionViewController: UICollectionViewDataSourcePrefetching {
+    
+    func collectionView(_ collectionView: UICollectionView, prefetchItemsAt indexPaths: [IndexPath]) {
+        indexPaths.forEach { (indexPath) in
+            guard let section = Section.init(rawValue: indexPath.section) else {
+                return
+            }
+            
+            let release = section.releases[indexPath.row]
+            
+            release.getArtwork(thumbnail: true)
+        }
+    }
 }
 
 extension ReleasesCollectionViewController: UICollectionViewDelegateFlowLayout {
@@ -264,33 +283,14 @@ extension ReleasesCollectionViewController: UICollectionViewDelegateFlowLayout {
     override func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         collectionView.deselectItem(at: indexPath, animated: true)
     }
-	/*
-	// Uncomment this method to specify if the specified item should be highlighted during tracking
-	override func collectionView(_ collectionView: UICollectionView, shouldHighlightItemAt indexPath: IndexPath) -> Bool {
-	return true
-	}
-	*/
-	
-	/*
-	// Uncomment this method to specify if the specified item should be selected
-	override func collectionView(_ collectionView: UICollectionView, shouldSelectItemAt indexPath: IndexPath) -> Bool {
-	return true
-	}
-	*/
-	
-	/*
-	// Uncomment these methods to specify if an action menu should be displayed for the specified item, and react to actions performed on the item
-	override func collectionView(_ collectionView: UICollectionView, shouldShowMenuForItemAt indexPath: IndexPath) -> Bool {
-	return false
-	}
-	
-	override func collectionView(_ collectionView: UICollectionView, canPerformAction action: Selector, forItemAt indexPath: IndexPath, withSender sender: Any?) -> Bool {
-	return false
-	}
-	
-	override func collectionView(_ collectionView: UICollectionView, performAction action: Selector, forItemAt indexPath: IndexPath, withSender sender: Any?) {
-	
-	}
-	*/
-	
+}
+
+
+class ReleasesRefreshControl: UIRefreshControl {
+    
+    override func layoutSubviews() {
+        super.layoutSubviews()
+        
+        self.frame.origin.y += UIApplication.shared.statusBarFrame.height
+    }
 }

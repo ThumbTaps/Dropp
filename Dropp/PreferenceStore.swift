@@ -23,6 +23,10 @@ class PreferenceStore {
         case ShowFeaturesKey
         case ShowEPsKey
         case ShowSinglesKey
+        
+        case ChangeThemeAutomaticallyKey
+        case AlwaysDarkThemeKey
+        case PureBlackDarkThemeKey
     }
     
 	struct ReleaseHistoryThreshold {
@@ -125,6 +129,45 @@ class PreferenceStore {
             }
 
             return UserDefaults.standard.bool(forKey: Key.ShowSinglesKey.rawValue)
+        }
+    }
+    
+    static var changeThemeAutomatically: Bool {
+        set {
+            UserDefaults.standard.set(newValue, forKey: Key.ChangeThemeAutomaticallyKey.rawValue)
+        }
+        get {
+            guard UserDefaults.standard.keyExists(Key.ChangeThemeAutomaticallyKey.rawValue) else {
+                return false
+            }
+            
+            return UserDefaults.standard.bool(forKey: Key.ChangeThemeAutomaticallyKey.rawValue)
+        }
+    }
+    
+    static var alwaysDarkTheme: Bool {
+        set {
+            UserDefaults.standard.set(newValue, forKey: Key.AlwaysDarkThemeKey.rawValue)
+        }
+        get {
+            guard UserDefaults.standard.keyExists(Key.AlwaysDarkThemeKey.rawValue) else {
+                return false
+            }
+            
+            return UserDefaults.standard.bool(forKey: Key.AlwaysDarkThemeKey.rawValue)
+        }
+    }
+    
+    static var pureBlackDarkTheme: Bool {
+        set {
+            UserDefaults.standard.set(newValue, forKey: Key.PureBlackDarkThemeKey.rawValue)
+        }
+        get {
+            guard UserDefaults.standard.keyExists(Key.PureBlackDarkThemeKey.rawValue) else {
+                return false
+            }
+            
+            return UserDefaults.standard.bool(forKey: Key.PureBlackDarkThemeKey.rawValue)
         }
     }
 }
