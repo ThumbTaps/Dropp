@@ -103,6 +103,8 @@ class DataStore {
 		}
 		set {
 			
+            self._releases = nil
+            
 			do {
 				let data = try JSONEncoder().encode(Array(Set<Release>(newValue)) /* unique values */)
 				UserDefaults.standard.set(data, forKey: "releases")

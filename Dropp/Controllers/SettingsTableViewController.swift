@@ -189,6 +189,19 @@ class SettingsTableViewController: UITableViewController {
     }
 }
 
+extension Calendar.Component {
+    
+    var stringValue: String {
+        switch self {
+        case .day: return "day"
+        case .weekOfMonth: return "week"
+        case .month: return "month"
+        case .year: return "year"
+        default: return ""
+        }
+    }
+}
+
 extension SettingsTableViewController: UIPickerViewDataSource, UIPickerViewDelegate {
     
     private enum ReleaseHistoryComponent: Int {
@@ -233,16 +246,7 @@ extension SettingsTableViewController: UIPickerViewDataSource, UIPickerViewDeleg
         }
         
         var stringValue: String {
-            switch self {
-            case .Day:
-                return "day"
-            case .Week:
-                return "week"
-            case .Month:
-                return "month"
-            case .Year:
-                return "year"
-            }
+            return ReleaseHistoryUnit.calendarComponent(forUnit: self).stringValue
         }
     }
     
@@ -320,14 +324,13 @@ extension SettingsTableViewController: UIPickerViewDataSource, UIPickerViewDeleg
             
             switch component {
             case .Amount:
-                let unit = ReleaseHistoryUnit.unitForCalendarComponent(forComponent: PreferenceStore.releaseHistoryThreshold.unit)
                 PreferenceStore.releaseHistoryThreshold.amount = row+1
-                self.releaseHistoryThresholdLabel.text = "\(PreferenceStore.releaseHistoryThreshold.amount) \(unit.stringValue)\(PreferenceStore.releaseHistoryThreshold.amount != 1 ? "s" : "")"
+                self.releaseHistoryThresholdLabel.text = "\(PreferenceStore.releaseHistoryThreshold.amount) \(PreferenceStore.releaseHistoryThreshold.unit.stringValue)\(PreferenceStore.releaseHistoryThreshold.amount != 1 ? "s" : "")"
                 
             case .Unit:
                 let unit = ReleaseHistoryUnit.init(rawValue: row) ?? .Month
                 PreferenceStore.releaseHistoryThreshold.unit = ReleaseHistoryUnit.calendarComponent(forUnit: unit)
-                self.releaseHistoryThresholdLabel.text = "\(PreferenceStore.releaseHistoryThreshold.amount) \(unit.stringValue)\(PreferenceStore.releaseHistoryThreshold.amount != 1 ? "s" : "")"
+                self.releaseHistoryThresholdLabel.text = "\(PreferenceStore.releaseHistoryThreshold.amount) \(PreferenceStore.releaseHistoryThreshold.unit.stringValue)\(PreferenceStore.releaseHistoryThreshold.amount != 1 ? "s" : "")"
             }
         }
         

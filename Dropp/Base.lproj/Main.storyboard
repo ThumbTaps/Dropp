@@ -25,7 +25,7 @@
                         </collectionViewFlowLayout>
                         <cells>
                             <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" misplaced="YES" reuseIdentifier="releaseCell_artworkOnly" id="s1i-9S-S0j" customClass="ReleaseCollectionViewCell" customModule="Dropp" customModuleProvider="target">
-                                <rect key="frame" x="147.66666666666666" y="100" width="80" height="80"/>
+                                <rect key="frame" x="147.66666666666666" y="80" width="80" height="80"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO">
                                     <rect key="frame" x="0.0" y="0.0" width="80" height="80"/>
@@ -55,7 +55,7 @@
                                 </connections>
                             </collectionViewCell>
                             <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" misplaced="YES" reuseIdentifier="releaseCell" id="Pyc-np-jXY" customClass="ReleaseCollectionViewCell" customModule="Dropp" customModuleProvider="target">
-                                <rect key="frame" x="0.0" y="180" width="375" height="140"/>
+                                <rect key="frame" x="0.0" y="160" width="375" height="140"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO">
                                     <rect key="frame" x="0.0" y="0.0" width="375" height="140"/>
@@ -67,20 +67,20 @@
                                                 <constraint firstAttribute="width" secondItem="3bY-Zv-qEw" secondAttribute="height" multiplier="1:1" id="ket-MY-FGq"/>
                                             </constraints>
                                         </imageView>
-                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" ambiguous="YES" text="Release Title" lineBreakMode="tailTruncation" numberOfLines="2" baselineAdjustment="alignBaselines" minimumScaleFactor="0.90000000000000002" adjustsLetterSpacingToFitWidth="YES" translatesAutoresizingMaskIntoConstraints="NO" id="8Ba-Gz-Ea6">
-                                            <rect key="frame" x="56.999999999999993" y="12.666666666666668" width="104.33333333333331" height="20.333333333333332"/>
+                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Release Title" lineBreakMode="tailTruncation" numberOfLines="2" baselineAdjustment="alignBaselines" minimumScaleFactor="0.90000000000000002" adjustsLetterSpacingToFitWidth="YES" translatesAutoresizingMaskIntoConstraints="NO" id="8Ba-Gz-Ea6">
+                                            <rect key="frame" x="56.999999999999993" y="-42.666666666666664" width="104.33333333333331" height="20.333333333333332"/>
                                             <fontDescription key="fontDescription" type="boldSystem" pointSize="17"/>
                                             <nil key="textColor"/>
                                             <nil key="highlightedColor"/>
                                         </label>
-                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" ambiguous="YES" text="Artist Name" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumScaleFactor="0.90000000000000002" adjustsLetterSpacingToFitWidth="YES" translatesAutoresizingMaskIntoConstraints="NO" id="bfF-VR-Ug3">
-                                            <rect key="frame" x="56.999999999999993" y="33" width="104.33333333333331" height="21"/>
+                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Artist Name" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumScaleFactor="0.90000000000000002" adjustsLetterSpacingToFitWidth="YES" translatesAutoresizingMaskIntoConstraints="NO" id="bfF-VR-Ug3">
+                                            <rect key="frame" x="56.999999999999993" y="-22.333333333333332" width="104.33333333333331" height="20.333333333333332"/>
                                             <fontDescription key="fontDescription" type="boldSystem" pointSize="17"/>
                                             <color key="textColor" red="0.53333333333333333" green="0.53333333333333333" blue="0.53333333333333333" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
                                             <nil key="highlightedColor"/>
                                         </label>
-                                        <button opaque="NO" contentMode="scaleToFill" ambiguous="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="NGW-bX-qrj" customClass="DroppButton" customModule="Dropp" customModuleProvider="target">
-                                            <rect key="frame" x="57" y="59" width="30" height="30"/>
+                                        <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="NGW-bX-qrj" customClass="DroppButton" customModule="Dropp" customModuleProvider="target">
+                                            <rect key="frame" x="57" y="3" width="30" height="30"/>
                                             <constraints>
                                                 <constraint firstAttribute="width" secondItem="NGW-bX-qrj" secondAttribute="height" multiplier="1:1" id="YR9-rz-vKc"/>
                                                 <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="30" id="lvj-Yv-2am"/>
@@ -100,15 +100,15 @@
                                     <constraint firstItem="bfF-VR-Ug3" firstAttribute="trailing" secondItem="8Ba-Gz-Ea6" secondAttribute="trailing" id="GDu-pf-Brl"/>
                                     <constraint firstItem="3bY-Zv-qEw" firstAttribute="top" secondItem="Pyc-np-jXY" secondAttribute="top" constant="16" id="GZj-Qf-WVx"/>
                                     <constraint firstItem="NGW-bX-qrj" firstAttribute="top" secondItem="bfF-VR-Ug3" secondAttribute="bottom" constant="5" id="Sga-9l-oMk"/>
+                                    <constraint firstItem="NGW-bX-qrj" firstAttribute="bottom" secondItem="3bY-Zv-qEw" secondAttribute="bottom" constant="-8" id="SxU-LD-Upg"/>
                                     <constraint firstItem="bfF-VR-Ug3" firstAttribute="leading" secondItem="8Ba-Gz-Ea6" secondAttribute="leading" id="TVK-xg-Ag5"/>
                                     <constraint firstItem="3bY-Zv-qEw" firstAttribute="leading" secondItem="Pyc-np-jXY" secondAttribute="leading" constant="16" id="a4t-fL-62M"/>
+                                    <constraint firstItem="8Ba-Gz-Ea6" firstAttribute="centerY" relation="lessThanOrEqual" secondItem="3bY-Zv-qEw" secondAttribute="centerY" multiplier="0.8" id="ddF-bQ-XSO"/>
                                     <constraint firstItem="NGW-bX-qrj" firstAttribute="trailing" relation="lessThanOrEqual" secondItem="Pyc-np-jXY" secondAttribute="trailing" symbolic="YES" id="dga-ja-4Ow"/>
                                     <constraint firstItem="3bY-Zv-qEw" firstAttribute="bottom" secondItem="Pyc-np-jXY" secondAttribute="bottom" constant="-16" id="duq-cd-1zM"/>
-                                    <constraint firstItem="NGW-bX-qrj" firstAttribute="bottom" relation="lessThanOrEqual" secondItem="3bY-Zv-qEw" secondAttribute="bottom" id="ipq-so-iXE"/>
                                     <constraint firstItem="8Ba-Gz-Ea6" firstAttribute="leading" secondItem="3bY-Zv-qEw" secondAttribute="trailing" constant="16" id="mOi-i6-2sd"/>
                                     <constraint firstItem="NGW-bX-qrj" firstAttribute="leading" secondItem="bfF-VR-Ug3" secondAttribute="leading" priority="999" id="now-Tr-zOH"/>
                                     <constraint firstItem="bfF-VR-Ug3" firstAttribute="top" secondItem="8Ba-Gz-Ea6" secondAttribute="bottom" id="skJ-s2-wvd"/>
-                                    <constraint firstItem="8Ba-Gz-Ea6" firstAttribute="centerY" relation="lessThanOrEqual" secondItem="3bY-Zv-qEw" secondAttribute="centerY" multiplier="0.8" id="xBd-fL-qip"/>
                                 </constraints>
                                 <size key="customSize" width="375" height="140"/>
                                 <connections>
@@ -123,7 +123,7 @@
                                 </connections>
                             </collectionViewCell>
                             <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" misplaced="YES" reuseIdentifier="releaseCell_small" id="7iE-rZ-1w4" customClass="ReleaseCollectionViewCell" customModule="Dropp" customModuleProvider="target">
-                                <rect key="frame" x="0.0" y="320" width="375" height="70"/>
+                                <rect key="frame" x="0.0" y="300" width="375" height="70"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO">
                                     <rect key="frame" x="0.0" y="0.0" width="375" height="70"/>
@@ -136,13 +136,13 @@
                                             </constraints>
                                         </imageView>
                                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" ambiguous="YES" text="Release Title" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumScaleFactor="0.90000000000000002" adjustsLetterSpacingToFitWidth="YES" translatesAutoresizingMaskIntoConstraints="NO" id="hCp-n0-get">
-                                            <rect key="frame" x="70" y="17.666666666666664" width="104.66666666666669" height="20.666666666666664"/>
+                                            <rect key="frame" x="70" y="16" width="104.66666666666669" height="20.666666666666671"/>
                                             <fontDescription key="fontDescription" type="boldSystem" pointSize="17"/>
                                             <nil key="textColor"/>
                                             <nil key="highlightedColor"/>
                                         </label>
                                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" ambiguous="YES" text="Artist Name" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumScaleFactor="0.90000000000000002" adjustsLetterSpacingToFitWidth="YES" translatesAutoresizingMaskIntoConstraints="NO" id="o7v-Pd-3a0">
-                                            <rect key="frame" x="70" y="38.333333333333336" width="104.66666666666669" height="18"/>
+                                            <rect key="frame" x="70" y="36.666666666666664" width="104.66666666666669" height="18"/>
                                             <fontDescription key="fontDescription" type="boldSystem" pointSize="15"/>
                                             <color key="textColor" red="0.53333333333333333" green="0.53333333333333333" blue="0.53333333333333333" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
                                             <nil key="highlightedColor"/>
@@ -170,7 +170,7 @@
                                     <constraint firstItem="8Z0-CI-LtH" firstAttribute="trailing" secondItem="7iE-rZ-1w4" secondAttribute="trailing" priority="999" constant="-16" id="JZp-tb-CeJ"/>
                                     <constraint firstItem="hCp-n0-get" firstAttribute="leading" secondItem="UqX-tb-YFs" secondAttribute="trailing" constant="16" id="Kwn-oN-DJK"/>
                                     <constraint firstItem="hCp-n0-get" firstAttribute="trailing" relation="lessThanOrEqual" secondItem="8Z0-CI-LtH" secondAttribute="leading" constant="-8" id="M7h-Be-tbN"/>
-                                    <constraint firstItem="hCp-n0-get" firstAttribute="centerY" secondItem="UqX-tb-YFs" secondAttribute="centerY" multiplier="0.8" id="NIg-dG-pFF"/>
+                                    <constraint firstItem="hCp-n0-get" firstAttribute="centerY" secondItem="UqX-tb-YFs" secondAttribute="centerY" multiplier="0.75" id="NIg-dG-pFF"/>
                                     <constraint firstItem="o7v-Pd-3a0" firstAttribute="trailing" secondItem="hCp-n0-get" secondAttribute="trailing" id="QcJ-xU-xfi"/>
                                     <constraint firstItem="o7v-Pd-3a0" firstAttribute="leading" secondItem="hCp-n0-get" secondAttribute="leading" id="bfd-kt-r8v"/>
                                     <constraint firstItem="UqX-tb-YFs" firstAttribute="bottom" secondItem="7iE-rZ-1w4" secondAttribute="bottom" constant="-16" id="nQ3-UO-sba"/>
@@ -194,27 +194,80 @@
                                     </segue>
                                 </connections>
                             </collectionViewCell>
+                            <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" misplaced="YES" reuseIdentifier="noReleasesCell" id="oB1-08-7cQ" customClass="NoResultsCollectionViewCell" customModule="Dropp" customModuleProvider="target">
+                                <rect key="frame" x="0.0" y="370" width="375" height="500"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO">
+                                    <rect key="frame" x="0.0" y="0.0" width="375" height="500"/>
+                                    <autoresizingMask key="autoresizingMask"/>
+                                    <subviews>
+                                        <imageView opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" image="Hero Icons/releases" translatesAutoresizingMaskIntoConstraints="NO" id="q5w-na-OpS">
+                                            <rect key="frame" x="67.666666666666686" y="88.666666666666686" width="240" height="240"/>
+                                        </imageView>
+                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="There haven't been any releases in the past 3 months." textAlignment="center" lineBreakMode="wordWrap" numberOfLines="3" baselineAdjustment="alignBaselines" minimumScaleFactor="0.94999999999999996" adjustsLetterSpacingToFitWidth="YES" adjustsFontForContentSizeCategory="YES" translatesAutoresizingMaskIntoConstraints="NO" id="jJa-j9-vQV">
+                                            <rect key="frame" x="37.666666666666657" y="328.66666666666669" width="300" height="40.666666666666686"/>
+                                            <fontDescription key="fontDescription" type="system" weight="medium" pointSize="17"/>
+                                            <color key="textColor" white="0.66666666666666663" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                            <nil key="highlightedColor"/>
+                                        </label>
+                                        <button opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="255" horizontalCompressionResistancePriority="998" misplaced="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="clip" translatesAutoresizingMaskIntoConstraints="NO" id="d93-ST-d63" customClass="DroppButton" customModule="Dropp" customModuleProvider="target">
+                                            <rect key="frame" x="128" y="387" width="130" height="40"/>
+                                            <constraints>
+                                                <constraint firstAttribute="height" constant="40" id="dFX-Kg-c3m"/>
+                                                <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="130" id="dif-vg-G0Y"/>
+                                            </constraints>
+                                            <fontDescription key="fontDescription" type="boldSystem" pointSize="16"/>
+                                            <state key="normal" title="Settings"/>
+                                            <userDefinedRuntimeAttributes>
+                                                <userDefinedRuntimeAttribute type="number" keyPath="_glyph">
+                                                    <integer key="value" value="7"/>
+                                                </userDefinedRuntimeAttribute>
+                                            </userDefinedRuntimeAttributes>
+                                            <connections>
+                                                <outlet property="widthConstraint" destination="dif-vg-G0Y" id="7Is-23-MTb"/>
+                                            </connections>
+                                        </button>
+                                    </subviews>
+                                </view>
+                                <constraints>
+                                    <constraint firstItem="q5w-na-OpS" firstAttribute="centerX" secondItem="oB1-08-7cQ" secondAttribute="centerX" id="0p9-JV-JKG"/>
+                                    <constraint firstItem="d93-ST-d63" firstAttribute="centerX" secondItem="jJa-j9-vQV" secondAttribute="centerX" id="G61-Qm-QPN"/>
+                                    <constraint firstItem="jJa-j9-vQV" firstAttribute="trailing" relation="lessThanOrEqual" secondItem="oB1-08-7cQ" secondAttribute="trailingMargin" constant="-24" id="Oxt-sd-dSm"/>
+                                    <constraint firstItem="jJa-j9-vQV" firstAttribute="centerX" secondItem="q5w-na-OpS" secondAttribute="centerX" id="UCO-nk-j6R"/>
+                                    <constraint firstItem="jJa-j9-vQV" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="oB1-08-7cQ" secondAttribute="leadingMargin" constant="24" id="W61-ce-TY8"/>
+                                    <constraint firstItem="jJa-j9-vQV" firstAttribute="width" secondItem="oB1-08-7cQ" secondAttribute="width" multiplier="0.8" priority="999" id="eat-WN-Nmk"/>
+                                    <constraint firstItem="jJa-j9-vQV" firstAttribute="top" secondItem="q5w-na-OpS" secondAttribute="bottom" id="ifm-fa-DYi"/>
+                                    <constraint firstItem="d93-ST-d63" firstAttribute="top" secondItem="jJa-j9-vQV" secondAttribute="bottom" constant="24" id="mqa-Wt-YeT"/>
+                                    <constraint firstItem="q5w-na-OpS" firstAttribute="centerY" secondItem="oB1-08-7cQ" secondAttribute="centerY" id="tIp-Ox-KbP"/>
+                                </constraints>
+                                <size key="customSize" width="375" height="500"/>
+                                <connections>
+                                    <outlet property="actionButton" destination="d93-ST-d63" id="r0p-cL-1FN"/>
+                                    <outlet property="descriptionLabel" destination="jJa-j9-vQV" id="Eg4-6O-9Ae"/>
+                                    <outlet property="iconImageView" destination="q5w-na-OpS" id="9nj-cD-jHc"/>
+                                </connections>
+                            </collectionViewCell>
                         </cells>
                         <collectionReusableView key="sectionHeaderView" opaque="NO" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" reuseIdentifier="headerReusableView" id="PCy-KP-LO1" customClass="HeaderCollectionReusableView" customModule="Dropp" customModuleProvider="target">
-                            <rect key="frame" x="0.0" y="0.0" width="375" height="100"/>
+                            <rect key="frame" x="0.0" y="0.0" width="375" height="80"/>
                             <autoresizingMask key="autoresizingMask"/>
                             <subviews>
                                 <visualEffectView opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Nck-15-RhW">
-                                    <rect key="frame" x="0.0" y="0.0" width="375" height="100"/>
+                                    <rect key="frame" x="0.0" y="0.0" width="375" height="80"/>
                                     <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" id="9Ni-vK-72h">
-                                        <rect key="frame" x="0.0" y="0.0" width="375" height="100"/>
+                                        <rect key="frame" x="0.0" y="0.0" width="375" height="80"/>
                                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                     </view>
                                     <blurEffect style="regular"/>
                                 </visualEffectView>
                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="TODAY" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsLetterSpacingToFitWidth="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="cza-zc-Hkp">
-                                    <rect key="frame" x="16" y="42.666666666666664" width="343" height="29.999999999999993"/>
+                                    <rect key="frame" x="16" y="22.666666666666671" width="343" height="30"/>
                                     <fontDescription key="fontDescription" type="system" weight="heavy" pointSize="25"/>
                                     <nil key="textColor"/>
                                     <nil key="highlightedColor"/>
                                 </label>
                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="OCTOBER 8" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsLetterSpacingToFitWidth="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="sn5-ES-Osm">
-                                    <rect key="frame" x="16" y="72.666666666666671" width="343" height="19.333333333333329"/>
+                                    <rect key="frame" x="16" y="52.666666666666664" width="343" height="19.333333333333336"/>
                                     <fontDescription key="fontDescription" type="system" weight="semibold" pointSize="16"/>
                                     <color key="textColor" red="0.53333333333333333" green="0.53333333333333333" blue="0.53333333333333333" alpha="1" colorSpace="calibratedRGB"/>
                                     <nil key="highlightedColor"/>
@@ -243,7 +296,7 @@
                             <outlet property="prefetchDataSource" destination="3fa-oG-YvZ" id="4PA-y1-7fQ"/>
                         </connections>
                     </collectionView>
-                    <tabBarItem key="tabBarItem" title="Releases" image="releases" id="KEe-lr-AW2"/>
+                    <tabBarItem key="tabBarItem" title="Releases" image="Tab Icons/releases" id="KEe-lr-AW2"/>
                     <navigationItem key="navigationItem" title="Releases" id="dfH-ds-gMx">
                         <barButtonItem key="backBarButtonItem" title="Releases" id="JeX-Ay-s0U"/>
                     </navigationItem>
@@ -253,8 +306,9 @@
                 </collectionViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="EzC-LW-vD3" userLabel="First Responder" sceneMemberID="firstResponder"/>
                 <exit id="mCw-sM-6a1" userLabel="Exit" sceneMemberID="exit"/>
+                <customObject id="GwP-wT-wQ5" customClass="StyleKit" customModule="Dropp" customModuleProvider="target"/>
             </objects>
-            <point key="canvasLocation" x="-154" y="-828"/>
+            <point key="canvasLocation" x="-154.40000000000001" y="-828.32512315270935"/>
         </scene>
         <!--Release-->
         <scene sceneID="2MB-Ch-vSm">
@@ -332,16 +386,18 @@
                                 <rect key="frame" x="75" y="541.66666666666663" width="167" height="40"/>
                                 <constraints>
                                     <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="160" id="ALd-M3-dAG"/>
-                                    <constraint firstAttribute="height" relation="greaterThanOrEqual" constant="40" id="gjr-Gz-dra"/>
+                                    <constraint firstAttribute="height" constant="40" id="gjr-Gz-dra"/>
                                 </constraints>
                                 <fontDescription key="fontDescription" type="boldSystem" pointSize="16"/>
-                                <inset key="contentEdgeInsets" minX="10" minY="0.0" maxX="0.0" maxY="0.0"/>
                                 <state key="normal" title="Track Listing"/>
                                 <userDefinedRuntimeAttributes>
                                     <userDefinedRuntimeAttribute type="number" keyPath="_glyph">
                                         <integer key="value" value="21"/>
                                     </userDefinedRuntimeAttribute>
                                 </userDefinedRuntimeAttributes>
+                                <connections>
+                                    <outlet property="widthConstraint" destination="ALd-M3-dAG" id="2ni-Ui-ctX"/>
+                                </connections>
                             </button>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
@@ -472,7 +528,7 @@
         <scene sceneID="YvI-cr-kTz">
             <objects>
                 <navigationController title="Artists" id="Grh-rf-EVu" sceneMemberID="viewController">
-                    <tabBarItem key="tabBarItem" title="Artists" image="artists" id="1Ts-K8-VCC"/>
+                    <tabBarItem key="tabBarItem" title="Artists" image="Tab Icons/artists" id="1Ts-K8-VCC"/>
                     <navigationBar key="navigationBar" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" largeTitles="YES" id="UQr-cd-qeC">
                         <rect key="frame" x="0.0" y="44" width="375" height="96"/>
                         <autoresizingMask key="autoresizingMask"/>
@@ -510,7 +566,7 @@
         <scene sceneID="8xD-Mc-ufg">
             <objects>
                 <navigationController title="Settings" id="KWD-gs-Mue" sceneMemberID="viewController">
-                    <tabBarItem key="tabBarItem" title="Settings" image="settings" id="GGa-Pp-zrZ"/>
+                    <tabBarItem key="tabBarItem" title="Settings" image="Tab Icons/settings" id="GGa-Pp-zrZ"/>
                     <navigationBar key="navigationBar" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" largeTitles="YES" id="BLq-91-Xqj">
                         <rect key="frame" x="0.0" y="44" width="375" height="96"/>
                         <autoresizingMask key="autoresizingMask"/>
@@ -1191,9 +1247,10 @@
         </scene>
     </scenes>
     <resources>
-        <image name="artists" width="35" height="35"/>
-        <image name="releases" width="35" height="35"/>
-        <image name="settings" width="35" height="35"/>
+        <image name="Hero Icons/releases" width="240" height="240"/>
+        <image name="Tab Icons/artists" width="35" height="35"/>
+        <image name="Tab Icons/releases" width="35" height="35"/>
+        <image name="Tab Icons/settings" width="35" height="35"/>
     </resources>
     <inferredMetricsTieBreakers>
         <segue reference="9YR-NH-rvr"/>

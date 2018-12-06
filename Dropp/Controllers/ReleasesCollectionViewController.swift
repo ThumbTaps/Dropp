@@ -155,9 +155,17 @@ class ReleasesCollectionViewController: UICollectionViewController {
     
     // MARK: - UICollectionView Data Source
 	override func numberOfSections(in collectionView: UICollectionView) -> Int {
+        if DataStore.releases.isEmpty {
+            return 1
+        }
+        
 		return Section.count()
 	}
 	override func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+        if DataStore.releases.isEmpty {
+            return 1
+        }
+        
 		guard let section = Section.init(rawValue: section) else {
 			assertionFailure("Unable to determine section.")
 			return 0
@@ -166,6 +174,25 @@ class ReleasesCollectionViewController: UICollectionViewController {
 		return section.releases.count
 	}
 	override func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+        if DataStore.releases.isEmpty {
+            let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "noReleasesCell", for: indexPath) as! NoResultsCollectionViewCell
+            
+            // determine most probable reason for lack of releases
+            if DataStore.followedArtists.count < 10 {
+                // not following any artists
+                cell.descriptionLabel.text = "Nothing to see here. Try following some artists."
+                cell.actionButton.glyph = .artists
+                cell.actionButton.setTitle("Add Artists", for: .normal)
+                
+                return cell
+            }
+            
+            cell.descriptionLabel.text = "There haven't been any releases in the past\(PreferenceStore.releaseHistoryThreshold.amount == 1 ? "" : " \(PreferenceStore.releaseHistoryThreshold.amount)") \(PreferenceStore.releaseHistoryThreshold.unit.stringValue)\(PreferenceStore.releaseHistoryThreshold.amount == 1 ? "" : "s"). Maybe try adjusting your release settings?"
+            cell.actionButton.glyph = .settings
+            cell.actionButton.setTitle("Settings", for: .normal)
+            
+            return cell
+        }
 		
 		guard let section = Section.init(rawValue: indexPath.section) else {
 			assertionFailure("Unable to determine section.")
@@ -205,6 +232,10 @@ extension ReleasesCollectionViewController: UICollectionViewDataSourcePrefetchin
     
     func collectionView(_ collectionView: UICollectionView, prefetchItemsAt indexPaths: [IndexPath]) {
         indexPaths.forEach { (indexPath) in
+            if DataStore.releases.isEmpty {
+                return
+            }
+            
             guard let section = Section.init(rawValue: indexPath.section) else {
                 return
             }
@@ -219,6 +250,10 @@ extension ReleasesCollectionViewController: UICollectionViewDataSourcePrefetchin
 extension ReleasesCollectionViewController: UICollectionViewDelegateFlowLayout {
 	
 	func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, referenceSizeForHeaderInSection section: Int) -> CGSize {
+        if DataStore.releases.isEmpty {
+            return CGSize.zero
+        }
+        
 		guard let section = Section.init(rawValue: section) else {
 			assertionFailure("Unable to determine section.")
 			return CGSize.zero
@@ -228,6 +263,9 @@ extension ReleasesCollectionViewController: UICollectionViewDelegateFlowLayout {
 	}
 	
 	override func collectionView(_ collectionView: UICollectionView, viewForSupplementaryElementOfKind kind: String, at indexPath: IndexPath) -> UICollectionReusableView {
+        if DataStore.releases.isEmpty {
+            return UICollectionReusableView()
+        }
 		
 		guard let section = Section.init(rawValue: indexPath.section) else {
 			assertionFailure("Unable to determine section.")
@@ -256,6 +294,9 @@ extension ReleasesCollectionViewController: UICollectionViewDelegateFlowLayout {
 	}
 	
 	func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
+        if DataStore.releases.isEmpty {
+            return CGSize(width: collectionView.frame.width, height: collectionView.frame.height-10)
+        }
 		
 		guard let section = Section.init(rawValue: indexPath.section) else {
 			assertionFailure("Unable to determine section.")

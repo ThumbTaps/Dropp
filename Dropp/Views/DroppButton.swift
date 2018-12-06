@@ -67,8 +67,17 @@ class DroppButton: UIButton {
 		}
 	}
     @IBInspectable var haptic: Bool = false
+    
+    @IBOutlet weak var widthConstraint: NSLayoutConstraint?
+    
+    override func layoutSubviews() {
+        super.layoutSubviews()
+        
+        self.titleEdgeInsets = UIEdgeInsets(top: 0, left: self.glyph != .none ? (self.frame.height + 8) : 0, bottom: 0, right: self.glyph != .none ? 16 : 0)
 
-	
+        self.widthConstraint?.constant = self.titleEdgeInsets.left + (self.titleLabel?.intrinsicContentSize.width ?? 0) + self.titleEdgeInsets.right
+    }
+    
     override func setTitle(_ title: String?, for state: UIControl.State) {
         super.setTitle(title, for: state)
         
@@ -113,20 +122,12 @@ class DroppButton: UIButton {
 			self.layer.borderWidth = 0
 		}
 		
-		self.titleEdgeInsets = UIEdgeInsets(top: 0, left: self.glyph != .none ? glyphFrame.width : 0, bottom: 0, right: 0)
-        self.contentEdgeInsets = UIEdgeInsets(top: 0, left: (self.frame.width - glyphFrame.width) / 2, bottom: 0, right: 0)
-        if self.glyph != .none && !(self.titleLabel?.text?.isEmpty ?? true) {
-            self.contentEdgeInsets.left = (self.frame.width - glyphFrame.width - (self.titleLabel?.frame.width ?? 0)) / 3
+        if (self.titleLabel?.frame.width ?? 0) > 0 {
+            glyphFrame.origin.x = 8
         }
-        glyphFrame.origin = CGPoint(x: self.contentEdgeInsets.left, y: self.contentEdgeInsets.top)
         
 		if (self.glyph != .none) {
 			self.contentHorizontalAlignment = .left
-		}
-		
-		// ditch the title if it won't fit
-		if self.frame.width < (self.titleLabel?.frame.width ?? 0) + self.titleEdgeInsets.left + self.titleEdgeInsets.right {
-			self.titleLabel?.alpha = 0
 		}
 		
 		switch self.glyph {
