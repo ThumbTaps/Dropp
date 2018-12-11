@@ -148,6 +148,12 @@ class ReleasesCollectionViewController: UICollectionViewController {
             destination.release = section.releases[selectedIndexPath.row]
         }
 	}
+    @objc func gotoArtists() {
+        self.tabBarController?.selectedIndex = 1
+    }
+    @objc func gotoSettings() {
+        self.tabBarController?.selectedIndex = 2
+    }
     @IBAction func unwind(segue: UIStoryboardSegue) {}
 	
 	
@@ -180,9 +186,10 @@ class ReleasesCollectionViewController: UICollectionViewController {
             // determine most probable reason for lack of releases
             if DataStore.followedArtists.count < 10 {
                 // not following any artists
-                cell.descriptionLabel.text = "Nothing to see here. Try following some artists."
+                cell.descriptionLabel.text = "Nothing to see here. Try following some\(DataStore.followedArtists.isEmpty ? " " : " more ")artists."
                 cell.actionButton.glyph = .artists
-                cell.actionButton.setTitle("Add Artists", for: .normal)
+                cell.actionButton.setTitle("Go to Artists", for: .normal)
+                cell.actionButton.addTarget(self, action: #selector(self.gotoArtists), for: .touchUpInside)
                 
                 return cell
             }
@@ -190,6 +197,7 @@ class ReleasesCollectionViewController: UICollectionViewController {
             cell.descriptionLabel.text = "There haven't been any releases in the past\(PreferenceStore.releaseHistoryThreshold.amount == 1 ? "" : " \(PreferenceStore.releaseHistoryThreshold.amount)") \(PreferenceStore.releaseHistoryThreshold.unit.stringValue)\(PreferenceStore.releaseHistoryThreshold.amount == 1 ? "" : "s"). Maybe try adjusting your release settings?"
             cell.actionButton.glyph = .settings
             cell.actionButton.setTitle("Settings", for: .normal)
+            cell.actionButton.addTarget(self, action: #selector(self.gotoSettings), for: .touchUpInside)
             
             return cell
         }

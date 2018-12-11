@@ -62,6 +62,13 @@ UISearchResultsUpdating {
 		
 		self.tableView.reloadData()
 	}
+    
+    @objc func gotoSettings() {
+        self.performSegue(withIdentifier: "artists->Search", sender: self)
+    }
+    @objc func gotoSettingsWithSearch() {
+        self.performSegue(withIdentifier: "artists->Search", sender: self.navigationItem.searchController?.searchBar.text)
+    }
 	
 	
 	
@@ -70,16 +77,53 @@ UISearchResultsUpdating {
 			self.dataSource[indexPath.row].getArtwork(thumbnail: true)
 		}
 	}
+    
 	// MARK: - Table view data source
+    override func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+        if self.dataSource.isEmpty {
+            return tableView.frame.height - (self.navigationController?.navigationBar.frame.height ?? 0)
+        }
+        
+        return 60
+    }
 	override func numberOfSections(in tableView: UITableView) -> Int {
 		return 1
 	}
 	
 	override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        if self.dataSource.isEmpty {
+            return 1
+        }
+        
 		return self.dataSource.count
 	}
 	
 	override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        if self.dataSource.isEmpty {
+            guard let cell = tableView.dequeueReusableCell(withIdentifier: "noArtistsCell", for: indexPath) as? NoResultsTableViewCell else {
+                return UITableViewCell()
+            }
+            
+            cell.separatorInset = UIEdgeInsets(top: 0, left: cell.bounds.width, bottom: 0, right: 0)
+            cell.actionButton.removeTarget(nil, action: nil, for: .touchUpInside)
+            
+            if self.isSearching {
+                cell.iconImageView.image = UIImage(named: "Hero Icons/search")
+                cell.descriptionLabel.text = "None of the artists you're following match your search."
+                cell.actionButton.setTitle("Search for Artist", for: .normal)
+                cell.actionButton.addTarget(self, action: #selector(self.gotoSettingsWithSearch), for: .touchUpInside)
+                
+                return cell
+            }
+            
+            cell.iconImageView.image = UIImage(named: "Hero Icons/artists")
+            cell.descriptionLabel.text = "You aren't following any artists yet."
+            cell.actionButton.setTitle("Add an Artist", for: .normal)
+            cell.actionButton.addTarget(self, action: #selector(self.gotoSettings), for: .touchUpInside)
+            
+            return cell
+        }
+        
 		guard let cell = tableView.dequeueReusableCell(withIdentifier: "artistCell", for: indexPath) as? ArtistTableViewCell else {
 			return UITableViewCell()
 		}
@@ -102,7 +146,7 @@ UISearchResultsUpdating {
 	// Override to support conditional editing of the table view.
 	override func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
 		// Return false if you do not want the specified item to be editable.
-		return true
+		return !self.dataSource.isEmpty
 	}
 	
 	// Override to support editing the table view.
