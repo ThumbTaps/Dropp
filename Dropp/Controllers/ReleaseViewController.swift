@@ -16,6 +16,7 @@ class ReleaseViewController: CardViewController {
     @IBOutlet weak var artistNameLabel: UILabel!
     @IBOutlet weak var releaseArtworkImageView: ReleaseArtworkImageView!
     @IBOutlet weak var releaseArtworkBackdrop: UIImageView!
+    @IBOutlet weak var releaseDateLabel: UILabel!
     	
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -23,6 +24,9 @@ class ReleaseViewController: CardViewController {
         // Do any additional setup after loading the view.
 		self.releaseTitleLabel.text = self.release.title
         self.artistNameLabel.text = self.release.artist.name
+        let formatter = DateFormatter()
+        formatter.dateStyle = .long
+        self.releaseDateLabel.text = formatter.string(from: self.release.releaseDate)
         
         let backdropDestinationAlpha = self.releaseArtworkBackdrop.alpha
         self.releaseArtworkBackdrop.alpha = 0

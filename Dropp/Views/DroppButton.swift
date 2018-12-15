@@ -124,6 +124,8 @@ class DroppButton: UIButton {
 		
         if (self.titleLabel?.frame.width ?? 0) > 0 {
             glyphFrame.origin.x = 8
+        } else {
+            glyphFrame.origin.x = (self.frame.width - glyphFrame.width) / 2
         }
         
 		if (self.glyph != .none) {

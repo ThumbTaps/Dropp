@@ -293,7 +293,7 @@ extension ReleasesCollectionViewController: UICollectionViewDelegateFlowLayout {
 			labelColor = UIColor(white: 0.35, alpha: 1)
 		}
 		header.primaryLabel.textColor = labelColor
-		header.secondaryLabel?.text = section.descriptor?.uppercased()
+		header.secondaryLabel?.text = section.descriptor
 		if section.descriptor == nil {
 			header.secondaryLabel?.font = UIFont.systemFont(ofSize: 0)
 		}
